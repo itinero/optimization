@@ -39,11 +39,17 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Solvers\IOperator.cs" />
+    <Compile Include="Solvers\IPerturber.cs" />
+    <Compile Include="Solvers\ISolver.cs" />
     <Compile Include="Routes\Pair.cs" />
     <Compile Include="Routes\PairEnumerable.cs" />
     <Compile Include="Routes\Route.cs" />
     <Compile Include="Routes\Triple.cs" />
     <Compile Include="Routes\TripleEnumerable.cs" />
+    <Compile Include="Solvers\SolverBase.cs" />
+    <Compile Include="Solvers\SolverDelegates.cs" />
+    <Compile Include="Solvers\VNS\VNSSolver.cs" />
     <None Include="packages.config" />
     <None Include="README.md" />
     <Compile Include="Routes\IRoute.cs" />
@@ -79,6 +85,7 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

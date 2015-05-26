@@ -83,6 +83,12 @@
     <Compile Include="Routes\RouteStub.cs" />
     <Compile Include="Routes\RouteTests.cs" />
     <Compile Include="Routes\TripleEnumerableTests.cs" />
+    <Compile Include="Solvers\LocalSearchMock.cs" />
+    <Compile Include="Solvers\PerturberMock.cs" />
+    <Compile Include="Solvers\GeneratorMock.cs" />
+    <Compile Include="Solvers\ProblemMock.cs" />
+    <Compile Include="Solvers\SolutionMock.cs" />
+    <Compile Include="Solvers\VNS\VNSSolverTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
