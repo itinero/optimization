@@ -147,11 +147,12 @@ namespace OsmSharp.Logistics.Routes
 
         /// <summary>
         /// Removes the edge from->unknown and replaces it with the edge from->to->unknown.
-        /// 0->1:InsertAfter(0, 2):0->2-1
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <exception cref="System.ArgumentException">When from equals equals to.</exception>
+        /// <example>Route 0->1 after InsertAfter(0, 2) becomes 0->2->1.</example>
+        /// <example>Route 0 after InsertAfter(0, 1) becomes 0->1.</example>
         void InsertAfter(int from, int to);
 
         /// <summary>

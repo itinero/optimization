@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="Routes\Pair.cs" />
     <Compile Include="Routes\PairEnumerable.cs" />
+    <Compile Include="Routes\Route.cs" />
     <Compile Include="Routes\Triple.cs" />
     <Compile Include="Routes\TripleEnumerable.cs" />
     <None Include="packages.config" />
