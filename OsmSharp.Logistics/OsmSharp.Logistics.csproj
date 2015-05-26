@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Routes\Pair.cs" />
     <Compile Include="Routes\PairEnumerable.cs" />
     <Compile Include="Routes\Route.cs" />
