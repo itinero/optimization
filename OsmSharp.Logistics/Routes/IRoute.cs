@@ -160,7 +160,7 @@ namespace OsmSharp.Logistics.Routes
         /// </summary>
         /// <param name="customer"></param>
         /// <returns>The neighbours of the given customer.</returns>
-        /// <exception cref="System.ArgumentOutOfRanceException">When the customer does not exist.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">When the customer does not exist.</exception>
         int[] GetNeigbours(int customer);
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace OsmSharp.Logistics.Routes
         /// </summary>
         /// <param name="customer"></param>
         /// <returns>The index of the customer, it's position relative to the first customers.</returns>
-        /// <exception cref="System.ArgumentOutOfRanceException">When the customer does not exist.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">When the customer does not exist.</exception>
         int GetIndexOf(int customer);
 
         /// <summary>
