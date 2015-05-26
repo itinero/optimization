@@ -47,6 +47,7 @@
     <Compile Include="Routes\Route.cs" />
     <Compile Include="Routes\Triple.cs" />
     <Compile Include="Routes\TripleEnumerable.cs" />
+    <Compile Include="Solvers\Iterative\IterativeSolver.cs" />
     <Compile Include="Solvers\SolverBase.cs" />
     <Compile Include="Solvers\SolverDelegates.cs" />
     <Compile Include="Solvers\VNS\VNSSolver.cs" />

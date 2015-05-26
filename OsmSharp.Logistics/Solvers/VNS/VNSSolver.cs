@@ -32,11 +32,6 @@ namespace OsmSharp.Logistics.Solvers.VNS
         private SolverDelegates.StopConditionDelegate<TProblem, TSolution> _stopCondition;
 
         /// <summary>
-        /// Holds the stopped-flag.
-        /// </summary>
-        private bool _stopped;
-
-        /// <summary>
         /// Holds the generator.
         /// </summary>
         private ISolver<TProblem, TSolution> _generator;
@@ -113,7 +108,7 @@ namespace OsmSharp.Logistics.Solvers.VNS
 
             var i = 0;
             var level = 1;
-            while (!_stopped && 
+            while (!this.IsStopped && 
                 (_stopCondition == null || !_stopCondition.Invoke(i, problem, globalBest)))
             { // keep running until stop condition is true or this solver is stopped.
                 // shake things up a bit, or in other word change neighbourhood.
@@ -142,14 +137,6 @@ namespace OsmSharp.Logistics.Solvers.VNS
             }
             fitness = globalBestFitness;
             return globalBest;
-        }
-
-        /// <summary>
-        /// Stops execution.
-        /// </summary>
-        public override void Stop()
-        {
-            _stopped = true;
         }
     }
 }

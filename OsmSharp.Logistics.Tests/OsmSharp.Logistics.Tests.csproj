@@ -83,6 +83,7 @@
     <Compile Include="Routes\RouteStub.cs" />
     <Compile Include="Routes\RouteTests.cs" />
     <Compile Include="Routes\TripleEnumerableTests.cs" />
+    <Compile Include="Solvers\Iterative\IterativeSolverTest.cs" />
     <Compile Include="Solvers\LocalSearchMock.cs" />
     <Compile Include="Solvers\PerturberMock.cs" />
     <Compile Include="Solvers\GeneratorMock.cs" />

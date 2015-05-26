@@ -26,6 +26,11 @@ namespace OsmSharp.Logistics.Solvers
     public abstract class SolverBase<TProblem, TSolution> : ISolver<TProblem, TSolution>
     {
         /// <summary>
+        /// Holds the stopped-flag.
+        /// </summary>
+        private bool _stopped;
+
+        /// <summary>
         /// Returns the name of this solver.
         /// </summary>
         public abstract string Name
@@ -50,9 +55,23 @@ namespace OsmSharp.Logistics.Solvers
         public abstract TSolution Solve(TProblem problem, out double fitness);
 
         /// <summary>
-        /// Stops the executing of the solving process.
+        /// Returns true if this solver was stopped.
         /// </summary>
-        public abstract void Stop();
+        public bool IsStopped
+        {
+            get
+            {
+                return _stopped;
+            }
+        }
+
+        /// <summary>
+        /// Stops execution.
+        /// </summary>
+        public virtual void Stop()
+        {
+            _stopped = true;
+        }
 
         /// <summary>
         /// Reports an intermediate result if someone is interested.
