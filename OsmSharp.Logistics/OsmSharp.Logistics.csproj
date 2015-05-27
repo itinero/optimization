@@ -41,6 +41,7 @@
     </Compile>
     <Compile Include="Solutions\IMatrixWeights.cs" />
     <Compile Include="Solutions\TSP\ITSP.cs" />
+    <Compile Include="Solutions\TSP\LocalSearch\Local1Shift.cs" />
     <Compile Include="Solutions\TSP\Random\Random1Shift.cs" />
     <Compile Include="Solutions\TSP\Random\RandomSolver.cs" />
     <Compile Include="Solutions\TSP\TSPProblem.cs" />

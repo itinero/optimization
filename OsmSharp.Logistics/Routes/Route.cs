@@ -378,6 +378,10 @@ namespace OsmSharp.Logistics.Routes
 
             public bool MoveNext()
             {
+                if(_current == -2)
+                {
+                    return false;
+                }
                 if (_current == -1)
                 {
                     _current = _first;
@@ -385,7 +389,7 @@ namespace OsmSharp.Logistics.Routes
                 else
                 {
                     _current = _nextArray[_current];
-                    if (_current == _first)
+                    if (_current == END)
                     {
                         return false;
                     }
@@ -527,24 +531,31 @@ namespace OsmSharp.Logistics.Routes
                 {
                     oldBefore = idx;
                     oldAfter = _nextArray[customer];
-                    if (this.IsClosed && oldAfter == END)
-                    { // is closed and oldAfter is END then oldAfter is first.
-                        oldAfter = this.First;
-                    }
                     if(oldBefore == before)
                     { // nothing to do here!
+                        if (this.IsClosed && oldAfter == END)
+                        { // is closed and oldAfter is END then oldAfter is first.
+                            oldAfter = this.First;
+                        }
+
                         newAfter = oldAfter;
                         return true;
                     }
                     newAfter = _nextArray[before];
-                    if(this.IsClosed && newAfter == END)
+
+                    // reorganize route.
+                    _nextArray[before] = searchFor;
+                    _nextArray[customer] = newAfter;
+                    _nextArray[oldBefore] = oldAfter;
+
+                    if (this.IsClosed && oldAfter == END)
+                    { // is closed and oldAfter is END then oldAfter is first.
+                        oldAfter = this.First;
+                    }
+                    if (this.IsClosed && newAfter == END)
                     { // is closed and newAfter is END then newAfter is first.
                         newAfter = this.First;
                     }
-                    // reorganize route.
-                    _nextArray[before] = customer;
-                    _nextArray[customer] = newAfter;
-                    _nextArray[oldBefore] = oldAfter;
                     return true;
                 }
             }
