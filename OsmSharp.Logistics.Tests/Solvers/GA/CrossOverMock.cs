@@ -16,43 +16,44 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Logistics.Solvers;
+using OsmSharp.Logistics.Solvers.GA;
+using System;
 
-namespace OsmSharp.Logistics.Tests.Solvers
+namespace OsmSharp.Logistics.Tests.Solvers.GA
 {
     /// <summary>
-    /// A mockup of a solver that generates solution to the mockup problem of reducing a number to zero.
+    /// A mockup of a crossover operator.
     /// </summary>
-    class GeneratorMock : SolverBase<ProblemMock, SolutionMock>
+    class CrossOverMock : ICrossOverOperator<ProblemMock, SolutionMock>
     {
         /// <summary>
         /// Returns the name of this solver.
         /// </summary>
-        public override string Name
+        public string Name
         {
-            get { return "MOCK_GENERATOR"; }
+            get { return "MOCK_CROSSOVER"; }
         }
 
         /// <summary>
-        /// Solves the given problem.
+        /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
         /// <returns></returns>
-        public override SolutionMock Solve(ProblemMock problem, out double fitness)
+        public SolutionMock Apply(ProblemMock problem, SolutionMock solution1, SolutionMock solution2, out double fitness)
         {
-            var solution = new SolutionMock()
+            if (solution1.Value < solution2.Value)
             {
-                Value = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(problem.Max)
+                fitness = solution1.Value + OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(
+                    solution2.Value - solution1.Value);
+            }
+            else
+            {
+                fitness = solution2.Value + OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(
+                    solution1.Value - solution2.Value);
+            }
+            return new SolutionMock()
+            {
+                Value = fitness
             };
-            fitness = solution.Value;
-            return solution;
-        }
-
-        /// <summary>
-        /// Stops execution.
-        /// </summary>
-        public override void Stop()
-        {
-
         }
     }
 }

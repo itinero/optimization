@@ -47,6 +47,11 @@
     <Compile Include="Solutions\TSP\Random\Random1Shift.cs" />
     <Compile Include="Solutions\TSP\Random\RandomSolver.cs" />
     <Compile Include="Solutions\TSP\TSPProblem.cs" />
+    <Compile Include="Solvers\GA\GASettings.cs" />
+    <Compile Include="Solvers\GA\GASolver.cs" />
+    <Compile Include="Solvers\GA\ICrossOverOperator.cs" />
+    <Compile Include="Solvers\GA\Individual.cs" />
+    <Compile Include="Solvers\GA\ISelectionOperator.cs" />
     <Compile Include="Solvers\IOperator.cs" />
     <Compile Include="Solvers\IPerturber.cs" />
     <Compile Include="Solvers\ISolver.cs" />

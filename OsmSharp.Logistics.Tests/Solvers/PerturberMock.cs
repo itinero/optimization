@@ -23,7 +23,7 @@ namespace OsmSharp.Logistics.Tests.Solvers
     /// <summary>
     /// A mockup of a perturber procedure for a very simple problem, reduce a number to zero.
     /// </summary>
-    public class PerturberMock : IPerturber<ProblemMock, SolutionMock>
+    class PerturberMock : IPerturber<ProblemMock, SolutionMock>
     {
         /// <summary>
         /// Returns the name of the operator.

@@ -23,7 +23,7 @@ namespace OsmSharp.Logistics.Tests.Solvers
     /// <summary>
     /// A mockup of a local search procedure for a very simple problem, reduce a number to zero.
     /// </summary>
-    public class LocalSearchMock : IOperator<ProblemMock, SolutionMock>
+    class LocalSearchMock : IOperator<ProblemMock, SolutionMock>
     {
         /// <summary>
         /// Returns the name of the operator.

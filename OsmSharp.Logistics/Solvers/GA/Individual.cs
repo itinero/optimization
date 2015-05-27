@@ -16,28 +16,22 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Logistics.Tests.Solvers
+namespace OsmSharp.Logistics.Solvers.GA
 {
     /// <summary>
-    /// A mockup of a solution that consists of a single double.
+    /// Represents an individual in a GA population.
     /// </summary>
-    class SolutionMock : ICloneable
+    /// <typeparam name="TSolution"></typeparam>
+    public struct Individual<TSolution>
     {
         /// <summary>
-        /// Gets or sets the value.
+        /// Gets or sets the fitness.
         /// </summary>
-        public double Value { get; set; }
+        public double Fitness { get; set; }
 
         /// <summary>
-        /// Clones this solution.
+        /// Gets or sets the solution.
         /// </summary>
-        /// <returns></returns>
-        public object Clone()
-        {
-            return new SolutionMock()
-            {
-                Value = this.Value
-            };
-        }
+        public TSolution Solution { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace OsmSharp.Logistics.Tests.Solvers
     /// <summary>
     /// A mockup of a very simple problem, reduce a number to zero.
     /// </summary>
-    public class ProblemMock
+    class ProblemMock
     {
         /// <summary>
         /// The maximum value of a value that should be reduced to zero.

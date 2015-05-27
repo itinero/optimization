@@ -16,28 +16,25 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Logistics.Tests.Solvers
+namespace OsmSharp.Logistics.Solvers.GA
 {
     /// <summary>
-    /// A mockup of a solution that consists of a single double.
+    /// Abstract representation of a crossover operation.
     /// </summary>
-    class SolutionMock : ICloneable
+    public interface ICrossOverOperator<TProblem, TSolution>
     {
         /// <summary>
-        /// Gets or sets the value.
+        /// Returns the name of the operator.
         /// </summary>
-        public double Value { get; set; }
+        string Name
+        {
+            get;
+        }
 
         /// <summary>
-        /// Clones this solution.
+        /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
         /// <returns></returns>
-        public object Clone()
-        {
-            return new SolutionMock()
-            {
-                Value = this.Value
-            };
-        }
+        TSolution Apply(TProblem problem, TSolution solution1, TSolution solution2, out double fitness);
     }
 }

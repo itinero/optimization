@@ -90,6 +90,9 @@
     <Compile Include="Solutions\TSP\Random\RandomSolverTests.cs" />
     <Compile Include="Solutions\TSP\TSPProblemMock.cs" />
     <Compile Include="Solutions\TSP\TSPProblemTests.cs" />
+    <Compile Include="Solvers\GA\CrossOverMock.cs" />
+    <Compile Include="Solvers\GA\GASolverTests.cs" />
+    <Compile Include="Solvers\GA\SelectionMock.cs" />
     <Compile Include="Solvers\Iterative\IterativeSolverTest.cs" />
     <Compile Include="Solvers\LocalSearchMock.cs" />
     <Compile Include="Solvers\PerturberMock.cs" />
