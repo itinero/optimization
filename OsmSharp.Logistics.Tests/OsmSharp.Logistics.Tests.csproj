@@ -80,6 +80,7 @@
     <Compile Include="ExtraAssert.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes\PairEnumerableTests.cs" />
+    <Compile Include="Routes\PermutationEnumerableTests.cs" />
     <Compile Include="Routes\RouteStub.cs" />
     <Compile Include="Routes\RouteTests.cs" />
     <Compile Include="Routes\TripleEnumerableTests.cs" />

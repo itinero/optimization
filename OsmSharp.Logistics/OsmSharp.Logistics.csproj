@@ -39,6 +39,7 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Routes\PermutationEnumerable.cs" />
     <Compile Include="Solutions\IMatrixWeights.cs" />
     <Compile Include="Solutions\TSP\ITSP.cs" />
     <Compile Include="Solutions\TSP\LocalSearch\Local1Shift.cs" />
