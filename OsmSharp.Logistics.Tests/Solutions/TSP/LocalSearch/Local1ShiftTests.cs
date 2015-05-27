@@ -21,7 +21,7 @@ using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Solutions.TSP.LocalSearch;
 using System.Linq;
 
-namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocaSearch
+namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
 {
     /// <summary>
     /// Contains tests for the Local1Shift local search operator.

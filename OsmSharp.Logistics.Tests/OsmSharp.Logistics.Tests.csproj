@@ -84,7 +84,8 @@
     <Compile Include="Routes\RouteStub.cs" />
     <Compile Include="Routes\RouteTests.cs" />
     <Compile Include="Routes\TripleEnumerableTests.cs" />
-    <Compile Include="Solutions\TSP\LocaSearch\Local1ShiftTests.cs" />
+    <Compile Include="Solutions\TSP\BruteForceSolverTests.cs" />
+    <Compile Include="Solutions\TSP\LocalSearch\Local1ShiftTests.cs" />
     <Compile Include="Solutions\TSP\Random\Random1ShiftTests.cs" />
     <Compile Include="Solutions\TSP\Random\RandomSolverTests.cs" />
     <Compile Include="Solutions\TSP\TSPProblemMock.cs" />
