@@ -44,6 +44,24 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         }
 
         /// <summary>
+        /// Creates a new TSP.
+        /// </summary>
+        public TSPProblemMock(int first, int size, double defaultWeight, bool isClosed, bool randomize)
+        {
+            this.Weights = new double[size][];
+            for (int x = 0; x < size; x++)
+            {
+                this.Weights[x] = new double[size];
+                for (int y = 0; y < size; y++)
+                {
+                    this.Weights[x][y] = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(defaultWeight);
+                }
+            }
+            this.IsClosed = isClosed;
+            this.First = first;
+        }
+
+        /// <summary>
         /// Gets or sets the first customer.
         /// </summary>
         public int First

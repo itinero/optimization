@@ -516,24 +516,35 @@ namespace OsmSharp.Logistics.Routes
         /// <param name="newAfter">The customer that new exists after.</param>
         public bool ShiftAfter(int customer, int before, out int oldBefore, out int oldAfter, out int newAfter)
         {
+            var searchFor = customer;
             if (customer == _first)
-            { // cannot remove the first customer.
-                throw new InvalidOperationException("Cannot remove first customer from a route.");
+            { // search for END when customer to insert is the first customer.
+                searchFor = END;
             }
             for (int idx = 0; idx < _nextArray.Length; idx++)
             { // search for the 'before'.
-                if (_nextArray[idx] == customer)
+                if (_nextArray[idx] == searchFor)
                 {
                     oldBefore = idx;
                     oldAfter = _nextArray[customer];
-                    newAfter = _nextArray[before];
-
-                    if (oldBefore != before)
-                    { // reorganize route.
-                        _nextArray[before] = customer;
-                        _nextArray[customer] = newAfter;
-                        _nextArray[oldBefore] = oldAfter;
+                    if (this.IsClosed && oldAfter == END)
+                    { // is closed and oldAfter is END then oldAfter is first.
+                        oldAfter = this.First;
                     }
+                    if(oldBefore == before)
+                    { // nothing to do here!
+                        newAfter = oldAfter;
+                        return true;
+                    }
+                    newAfter = _nextArray[before];
+                    if(this.IsClosed && newAfter == END)
+                    { // is closed and newAfter is END then newAfter is first.
+                        newAfter = this.First;
+                    }
+                    // reorganize route.
+                    _nextArray[before] = customer;
+                    _nextArray[customer] = newAfter;
+                    _nextArray[oldBefore] = oldAfter;
                     return true;
                 }
             }

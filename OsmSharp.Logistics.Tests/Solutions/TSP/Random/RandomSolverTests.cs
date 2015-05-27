@@ -29,7 +29,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
     public class RandomSolverTests
     {
         /// <summary>
-        /// Tests the solver.
+        /// Tests the solver name.
         /// </summary>
         [Test]
         public void TestName()

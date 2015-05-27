@@ -83,6 +83,7 @@
     <Compile Include="Routes\RouteStub.cs" />
     <Compile Include="Routes\RouteTests.cs" />
     <Compile Include="Routes\TripleEnumerableTests.cs" />
+    <Compile Include="Solutions\TSP\Random\Random1ShiftTests.cs" />
     <Compile Include="Solutions\TSP\Random\RandomSolverTests.cs" />
     <Compile Include="Solutions\TSP\TSPProblemMock.cs" />
     <Compile Include="Solutions\TSP\TSPProblemTests.cs" />
