@@ -63,10 +63,6 @@ namespace OsmSharp.Logistics.Routes
             _nextArray = nextArray.Clone() as int[];
             _isClosed = isClosed;
 
-            // make sure the first customer fits.
-            this.Resize(_first);
-            _nextArray[first] = first;
-
             // calculate the last customer.
             this.UpdateLast();
         }
@@ -672,7 +668,7 @@ namespace OsmSharp.Logistics.Routes
                 previous = customer;
             }
 
-            nextArray[previous] = first;
+            nextArray[previous] = END;
 
             // the dynamic route.
             route = new Route(first, nextArray, isClosed);
