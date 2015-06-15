@@ -18,27 +18,27 @@
 
 using System.Collections.Generic;
 
-namespace OsmSharp.Logistics.Solutions.TSP
+namespace OsmSharp.Logistics.Solutions
 {
     /// <summary>
-    /// Abstract representation of a TSP.
+    /// Abstract representation of n-nearest neighbours.
     /// </summary>
-    public interface ITSP : IMatrixWeights
-    {
+    public interface INNearestNeighbours : IEnumerable<int>
+    {   
         /// <summary>
-        /// Gets the first customer.
+        /// Gets the # of nearest neighbours.
         /// </summary>
-        int First { get; }
+        int N { get; }
 
         /// <summary>
-        /// Returns true if this TSP is supposed to be a tour.
+        /// Gets the maximum weight.
         /// </summary>
-        bool IsClosed { get; }
+        double Max { get; }
 
         /// <summary>
-        /// Returns the n-nearest neighbours.
+        /// Determines whether this collection contains the specified element.
         /// </summary>
         /// <returns></returns>
-        INNearestNeighbours GetNNearestNeighbours(int n, int customer);
+        bool Contains(int customer);
     }
 }

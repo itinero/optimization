@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Logistics.Solutions.Algorithms;
 using OsmSharp.Logistics.Solutions.TSP;
 
 namespace OsmSharp.Logistics.Tests.Solutions.TSP
@@ -87,6 +88,17 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// Gets the n-nearest neighbours.
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        public Logistics.Solutions.INNearestNeighbours GetNNearestNeighbours(int n, int customer)
+        {
+            return NNearestNeighboursAlgorithm.Forward(this.Weights, n, customer);
         }
     }
 }

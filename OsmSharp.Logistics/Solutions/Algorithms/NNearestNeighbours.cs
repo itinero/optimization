@@ -18,27 +18,39 @@
 
 using System.Collections.Generic;
 
-namespace OsmSharp.Logistics.Solutions.TSP
+namespace OsmSharp.Logistics.Solutions.Algorithms
 {
     /// <summary>
-    /// Abstract representation of a TSP.
+    /// An enumerable containing n-nearest neighbours and some extra information like maximum weight and n.
     /// </summary>
-    public interface ITSP : IMatrixWeights
+    public class NNearestNeighbours : HashSet<int>, INNearestNeighbours
     {
         /// <summary>
-        /// Gets the first customer.
+        /// Creates a new nearest neighbours enumerable.
         /// </summary>
-        int First { get; }
+        /// <param name="n"></param>
+        public NNearestNeighbours(int n)
+        {
+            this.N = n;
+        }
 
         /// <summary>
-        /// Returns true if this TSP is supposed to be a tour.
+        /// Gets the requested N.
         /// </summary>
-        bool IsClosed { get; }
+        /// <remarks>It's possible this contains less than N if problem size is smaller than N for example.</remarks>
+        public int N
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
-        /// Returns the n-nearest neighbours.
+        /// Gets the maximum weight of the furthest customer.
         /// </summary>
-        /// <returns></returns>
-        INNearestNeighbours GetNNearestNeighbours(int n, int customer);
+        public double Max
+        {
+            get;
+            set;
+        }
     }
 }

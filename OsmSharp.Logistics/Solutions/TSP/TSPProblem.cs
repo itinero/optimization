@@ -16,6 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Logistics.Solutions.Algorithms;
+using System.Collections.Generic;
+
 namespace OsmSharp.Logistics.Solutions.TSP
 {
     /// <summary>
@@ -59,5 +62,36 @@ namespace OsmSharp.Logistics.Solutions.TSP
             get;
             private set;
         }
+
+        /// <summary>
+        /// Holds the nearest neighbours.
+        /// </summary>
+        private Dictionary<int, INNearestNeighbours[]> _nearestNeighbours;
+
+        /// <summary>
+        /// Generate the nearest neighbour list.
+        /// </summary>
+        /// <returns></returns>
+        public INNearestNeighbours GetNNearestNeighbours(int n, int customer)
+        {
+            if (_nearestNeighbours == null)
+            { // not there yet, create.
+                _nearestNeighbours = new Dictionary<int, INNearestNeighbours[]>();
+            }
+            INNearestNeighbours[] nearestNeighbours = null;
+            if(!_nearestNeighbours.TryGetValue(n, out nearestNeighbours))
+            { // not found for n, create.
+                nearestNeighbours = new INNearestNeighbours[this.Weights.Length];
+                _nearestNeighbours.Add(n, nearestNeighbours);
+            }
+            var result = nearestNeighbours[customer];
+            if (result == null)
+            { // not found, calculate.
+                result = NNearestNeighboursAlgorithm.Forward(this.Weights, n, customer);
+                nearestNeighbours[customer] = result;
+            }
+            return result;
+        }
+
     }
 }
