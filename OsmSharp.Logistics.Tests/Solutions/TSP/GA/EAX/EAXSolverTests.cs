@@ -57,7 +57,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
                 StagnationCount = 100
             });
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10; i++)
             {
                 // generate solution.
                 double fitness;
@@ -117,7 +117,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
                 StagnationCount = 100
             });
 
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < 10; i++)
             {
                 // generate solution.
                 double fitness;
