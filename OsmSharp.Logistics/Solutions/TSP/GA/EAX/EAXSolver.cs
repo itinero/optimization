@@ -33,7 +33,8 @@
 //    public class EAXSolver : GASolver<ITSP, IRoute>
 //    {
 //        public EAXSolver()
-//            : base(new HillClimbing3OptSolver(), new GA.Operators.EdgeAssemblyCrossover(30, Operators.EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true))
+//            : base(new HillClimbing3OptSolver(), new GA.Operators.EdgeAssemblyCrossover(30, Operators.EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
+//                )
 //        {
 
 //        }
