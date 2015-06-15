@@ -16,31 +16,34 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Logistics.Solvers.GA
+namespace OsmSharp.Logistics.Solvers
 {
     /// <summary>
-    /// Represents an individual in a GA population.
+    /// An empty operator that does nothing.
     /// </summary>
+    /// <typeparam name="TProblem"></typeparam>
     /// <typeparam name="TSolution"></typeparam>
-    public struct Individual<TSolution>
+    public class EmptyOperator<TProblem, TSolution> : IOperator<TProblem, TSolution>
     {
         /// <summary>
-        /// Gets or sets the fitness.
+        /// Returns the name of the operator.
         /// </summary>
-        public double Fitness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the solution.
-        /// </summary>
-        public TSolution Solution { get; set; }
-
-        /// <summary>
-        /// Returns a string representing this instance.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
+        public string Name
         {
-            return string.Format("[{0} - ({1})]", this.Fitness, this.Solution);
+            get { return "EMPTY"; }
+        }
+
+        /// <summary>
+        /// Returns true if there was an improvement, false otherwise.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="solution">The solution.</param>
+        /// <param name="delta">The difference in fitness.</param>
+        /// <returns></returns>
+        public bool Apply(TProblem problem, TSolution solution, out double delta)
+        {
+            delta = 0;
+            return false;
         }
     }
 }

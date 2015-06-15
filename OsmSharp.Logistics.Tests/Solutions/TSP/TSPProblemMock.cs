@@ -63,6 +63,16 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         }
 
         /// <summary>
+        /// Creates a new TSP.
+        /// </summary>
+        public TSPProblemMock(int first, double[][] weights, bool isClosed)
+        {
+            this.Weights = weights;
+            this.First = first;
+            this.IsClosed = isClosed;
+        }
+
+        /// <summary>
         /// Gets or sets the first customer.
         /// </summary>
         public int First

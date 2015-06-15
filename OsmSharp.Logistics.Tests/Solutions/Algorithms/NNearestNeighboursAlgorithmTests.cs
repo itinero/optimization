@@ -18,7 +18,6 @@
 
 using NUnit.Framework;
 using OsmSharp.Logistics.Solutions.Algorithms;
-using System.Linq;
 
 namespace OsmSharp.Logistics.Tests.Solutions.Algorithms
 {

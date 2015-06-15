@@ -117,7 +117,11 @@ namespace OsmSharp.Logistics.Solvers.GA
                 for (int i = 0; i < crossOver; i++)
                 {
                     // select individual.
-                    var selected = _selection.Select(problem, population, exclude);
+                    var selected = -1;
+                    while (selected < 0)
+                    {
+                        selected = _selection.Select(problem, population, exclude);
+                    }
                     crossOverIndividuals[i] = population[selected];
                     exclude.Add(selected);
                 }

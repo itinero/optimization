@@ -117,18 +117,20 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
             // loop over all customers.
             bool anyImprovement = false;
             bool improvement = true;
-            delta = -1;
+            delta = 0;
             while (improvement)
             {
                 improvement = false;
+                var moveDelta = 0.0;
                 foreach (int v1 in solution)
                 {
                     if (!this.Check(problem, v1))
                     {
-                        if (this.Try3OptMoves(problem, weights, solution, v1))
+                        if (this.Try3OptMoves(problem, weights, solution, v1, out moveDelta))
                         {
                             anyImprovement = true;
                             improvement = true;
+                            delta = delta + moveDelta;
                             break;
                         }
                         this.Set(problem, v1, true);
@@ -142,12 +144,13 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// Tries all 3Opt Moves for the neighbourhood of v1.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(ITSP problem, double[][] weights, IRoute route, int v1)
+        public bool Try3OptMoves(ITSP problem, double[][] weights, IRoute route, int v1, out double delta)
         {
             // get v_2.
             var v2 = route.GetNeigbours(v1)[0];
             if (v2 < 0)
             {
+                delta = 0;
                 return false;
             }
 
@@ -170,7 +173,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                         var weightV1V4 = weights[v1][v4];
                         var weightV1V2PlusV3V4 = weightV1V2 + weights[v3][v4];
                         var weights_3 = weights[v3];
-                        if (this.Try3OptMoves(problem, weights, route, v1, v2, v3, weights_3, v4, weightV1V2PlusV3V4, weightV1V4))
+                        if (this.Try3OptMoves(problem, weights, route, v1, v2, v3, weights_3, v4, weightV1V2PlusV3V4, weightV1V4, out delta))
                         {
                             return true;
                         }
@@ -178,6 +181,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                 }
                 v3 = v4;
             }
+            delta = 0;
             return false;
         }
 
@@ -187,14 +191,14 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// <returns></returns>
         public bool Try3OptMoves(ITSP problem, double[][] weights, IRoute route,
             int v1, int v2, double weightV1V2,
-            int v3)
+            int v3, out double delta)
         {
             // get v_4.
             var v4 = route.GetNeigbours(v3)[0];
             var weightV1V2PlusV3V4 = weightV1V2 + weights[v3][v4];
             var weightV1V4 = weights[v1][v4];
             var weightsV3 = weights[v3];
-            return this.Try3OptMoves(problem, weights, route, v1, v2, v3, weightsV3, v4, weightV1V2PlusV3V4, weightV1V4);
+            return this.Try3OptMoves(problem, weights, route, v1, v2, v3, weightsV3, v4, weightV1V2PlusV3V4, weightV1V4, out delta);
         }
 
         /// <summary>
@@ -202,7 +206,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// </summary>
         /// <returns></returns>
         public bool Try3OptMoves(ITSP problem, double[][] weights, IRoute route,
-            int v1, int v2, int v3, double[] weightsV3, int v4, double weightV1V2PlusV3V4, double weightV1V4)
+            int v1, int v2, int v3, double[] weightsV3, int v4, double weightV1V2PlusV3V4, double weightV1V4, out double delta)
         {
             var betweenV4V1Enumerator = route.Between(v4, v1).GetEnumerator();
             if (betweenV4V1Enumerator.MoveNext())
@@ -215,16 +219,17 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                         var v6 = betweenV4V1Enumerator.Current;
 
                         // calculate the total weight of the 'new' arcs.
-                        var weight_new = weightV1V4 +
+                        var weightNew = weightV1V4 +
                             weightsV3[v6] +
                             weights[v5][v2];
 
                         // calculate the total weights.
                         var weight = weightV1V2PlusV3V4 + weights[v5][v6];
 
-                        if (weight - weight_new > _epsilon)
+                        if (weight - weightNew > _epsilon)
                         { // actually do replace the vertices.
-                            int count_before = route.Count;
+                            var countBefore = route.Count;
+                            delta = weightNew - weight;
 
                             route.ReplaceEdgeFrom(v1, v4);
                             route.ReplaceEdgeFrom(v3, v6);
@@ -232,10 +237,6 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
 
                             int count_after = route.Count;
 
-                            if (count_before != count_after)
-                            {
-                                throw new Exception();
-                            }
                             // set bits.
                             this.Set(problem, v3, false);
                             this.Set(problem, v5, false);
@@ -246,6 +247,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                     }
                 }
             }
+            delta = 0;
             return false;
         }
 

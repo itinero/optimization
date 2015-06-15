@@ -140,21 +140,21 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
             var weights = problem.Weights;
 
             // first create E_a
-            var e_a = new AsymmetricCycles(solution1.Count + 1);
+            var e_a = new AsymmetricCycles(solution1.Count);
             foreach(var edge in solution1.Pairs())
             {
                 e_a.AddEdge(edge.From, edge.To);
             }
 
             // create E_b
-            var e_b = new int[solution2.Count + 1];
+            var e_b = new int[solution2.Count];
             foreach(var edge in solution2.Pairs())
             {
                 e_b[edge.To] = edge.From;
             }
 
             // create cycles.
-            var cycles = new AsymmetricAlternatingCycles(solution2.Count + 1);
+            var cycles = new AsymmetricAlternatingCycles(solution2.Count);
             for (var idx = 0; idx < e_b.Length; idx++)
             {
                 int a = e_a[idx];

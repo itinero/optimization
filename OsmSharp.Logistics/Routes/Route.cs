@@ -162,7 +162,7 @@ namespace OsmSharp.Logistics.Routes
             if (customer == _first)
             { // the next customer is actually the first customer.
                 // set the next customer of the from customer to -1.
-                customer = NOT_SET;
+                customer = END;
             }
 
             if (_nextArray.Length > from)
