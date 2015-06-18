@@ -85,6 +85,8 @@
     <Compile Include="Routes\RouteStub.cs" />
     <Compile Include="Routes\RouteTests.cs" />
     <Compile Include="Routes\TripleEnumerableTests.cs" />
+    <Compile Include="Routing\RouterMock.cs" />
+    <Compile Include="Routing\TSP\TSPRouterTests.cs" />
     <Compile Include="Solutions\Algorithms\NNearestNeighboursAlgorithmTests.cs" />
     <Compile Include="Solutions\TSP\BruteForceSolverTests.cs" />
     <Compile Include="Solutions\TSP\GA\EAX\EAXSolverTests.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="Solutions\TSP\Random\RandomSolverTests.cs" />
     <Compile Include="Solutions\TSP\TSPProblemMock.cs" />
     <Compile Include="Solutions\TSP\TSPProblemTests.cs" />
+    <Compile Include="Solutions\TSP\TSPSolverMock.cs" />
     <Compile Include="Solvers\GA\CrossOverMock.cs" />
     <Compile Include="Solvers\GA\GASolverTests.cs" />
     <Compile Include="Solvers\GA\SelectionMock.cs" />
@@ -106,9 +109,14 @@
     <Compile Include="Solvers\VNS\VNSSolverTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="data\test_network.osm" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OsmSharp.Logistics.Routing\OsmSharp.Logistics.Routing.csproj">
+      <Project>{6d3c631d-4a2a-4d56-b1e2-95ec3bcbd3d0}</Project>
+      <Name>OsmSharp.Logistics.Routing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Logistics\OsmSharp.Logistics.csproj">
       <Project>{8f2d411d-8f8e-43ef-bd20-5700806c22de}</Project>
       <Name>OsmSharp.Logistics</Name>
