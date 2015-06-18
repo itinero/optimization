@@ -175,6 +175,17 @@ namespace OsmSharp.Logistics.Routing.TSP
         }
 
         /// <summary>
+        /// Gets the raw route representing the order of the locations.
+        /// </summary>
+        public OsmSharp.Logistics.Routes.IRoute RawRoute
+        {
+            get
+            {
+                return _route;
+            }
+        }
+
+        /// <summary>
         /// Builds the resulting route.
         /// </summary>
         /// <returns></returns>
