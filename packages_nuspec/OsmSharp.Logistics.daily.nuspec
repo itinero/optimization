@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>OsmSharp.Logistics</id>
+    <version>$version$</version>
+    <title>OsmSharp - Logistical Optimization Module</title>
+    <authors>Ben Abelshausen</authors>
+    <owners>Ben Abelshausen</owners>
+    <licenseUrl>https://raw.githubusercontent.com/OsmSharp/OsmSharpService/master/LICENCE.TXT</licenseUrl>
+    <projectUrl>http://www.osmsharp.com/</projectUrl>
+    <iconUrl>http://raw.github.com/xivk/OsmSharp/master/packages_nuspec/osmsharp_logo64.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A module for solving logistical routing problems.</description>
+    <summary>A module for solving logistical routing problems based on OsmSharp.</summary>
+    <copyright>Ben Abelshausen</copyright>
+    <tags>osm, openstreetmap, routing</tags>
+  </metadata>
+  <files>
+    <file src="Output\OsmSharp.Logistics.dll" target="lib\net45\OsmSharp.Logistics.dll" />
+    <file src="Output\OsmSharp.Logistics.Routing.dll" target="lib\net45\OsmSharp.Logistics.Routing.dll" />
+  </files>
+</package>
