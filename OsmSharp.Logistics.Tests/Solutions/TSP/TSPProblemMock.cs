@@ -81,6 +81,15 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
             private set;
         }
 
+        /// <summary>
+        /// Gets or sets the last customer.
+        /// </summary>
+        public int Last
+        {
+            get;
+            private set;
+        }
+
 
         /// <summary>
         /// Gets or sets the IsClosed flag.

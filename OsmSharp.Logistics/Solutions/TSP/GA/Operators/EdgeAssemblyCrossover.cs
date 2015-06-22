@@ -157,11 +157,14 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
             var cycles = new AsymmetricAlternatingCycles(solution2.Count);
             for (var idx = 0; idx < e_b.Length; idx++)
             {
-                int a = e_a[idx];
-                int b = e_b[a];
-                if (idx != b)
+                var a = e_a[idx];
+                if (a != Route.NOT_SET)
                 {
-                    cycles.AddEdge(idx, a, b);
+                    var b = e_b[a];
+                    if (idx != b && b != Route.NOT_SET)
+                    {
+                        cycles.AddEdge(idx, a, b);
+                    }
                 }
             }
 
@@ -250,9 +253,10 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                             // check the nearest neighbours of from
                             foreach (var nn in problem.GetNNearestNeighbours(10, from))
                             {
-                                int nnTo = nextArrayA[nn];
+                                var nnTo = nextArrayA[nn];
 
-                                if (!ignoreList[nn] &&
+                                if (nnTo != Route.NOT_SET &&
+                                    !ignoreList[nn] &&
                                     !ignoreList[nnTo])
                                 {
                                     double mergeWeight =
@@ -314,7 +318,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     previous = next;
                     next = nextArrayA[next];
                 }
-                while (next != 0);
+                while (next != Route.NOT_SET);
 
                 var newFitness = 0.0;
                 foreach(var edge in newRoute.Pairs())
@@ -343,7 +347,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     previous = next;
                     next = e_a[next];
                 }
-                while (next != 0);
+                while (next != Route.NOT_SET);
 
                 fitness = 0.0;
                 foreach (var edge in best.Pairs())

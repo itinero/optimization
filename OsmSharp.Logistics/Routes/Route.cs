@@ -28,8 +28,14 @@ namespace OsmSharp.Logistics.Routes
     /// </summary>
     public class Route : IRoute
     {
-        private const int NOT_SET = -1;
-        private const int END = -2;
+        /// <summary>
+        /// When next is not set.
+        /// </summary>
+        public const int NOT_SET = -1;
+        /// <summary>
+        /// When next is the end.
+        /// </summary>
+        public const int END = -2;
 
         /// <summary>
         /// The is round flag.

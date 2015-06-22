@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Logistics.Solutions.Algorithms;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Logistics.Solutions.TSP
@@ -34,6 +35,18 @@ namespace OsmSharp.Logistics.Solutions.TSP
             this.First = first;
             this.Weights = weights;
             this.IsClosed = isClosed;
+            this.Last = null;
+        }
+
+        /// <summary>
+        /// Creates a new TSP.
+        /// </summary>
+        public TSPProblem(int first, int last, double[][] weights)
+        {
+            this.First = first;
+            this.Weights = weights;
+            this.IsClosed = first == last; // not it's not closed, except when first=last.
+            this.Last = last;
         }
 
         /// <summary>
@@ -49,6 +62,15 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// Returns true if this TSP is supposed to be a tour.
         /// </summary>
         public bool IsClosed
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the last customer.
+        /// </summary>
+        public int? Last
         {
             get;
             private set;
