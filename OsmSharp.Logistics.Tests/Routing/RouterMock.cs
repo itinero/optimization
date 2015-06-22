@@ -23,7 +23,7 @@ using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Logistics.Tests.Routing
 {
-    public class RouterMock : ITypedRouter
+    class RouterMock : ITypedRouter
     {
         private long _resolvedId = 0;
 
