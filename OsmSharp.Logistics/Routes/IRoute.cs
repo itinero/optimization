@@ -187,9 +187,9 @@ namespace OsmSharp.Logistics.Routes
         IEnumerable<Pair> Pairs();
 
         /// <summary>
-        /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2-3. If the route is a round the tuples that contain last->first are also included.
+        /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a round the tuples that contain last->first are also included.
         /// </summary>
-        /// <returns>An enumerable that enumerates all customer triples that occur in the route as 1->2-3. If the route is a round the tuples that contain last->first are also included.</returns>
+        /// <returns>An enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a round the tuples that contain last->first are also included.</returns>
         IEnumerable<Triple> Triples();
 
         /// <summary>

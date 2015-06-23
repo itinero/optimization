@@ -45,7 +45,7 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
             var tspRouter = new TSPRouter(router, Vehicle.Car,
                 new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
-                    new Math.Geo.GeoCoordinate(1, 1) }, true);
+                    new Math.Geo.GeoCoordinate(1, 1) }, true, tspSolver);
 
             // run.
             tspRouter.Run();

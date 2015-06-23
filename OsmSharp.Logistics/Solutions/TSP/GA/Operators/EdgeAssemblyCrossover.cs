@@ -19,10 +19,7 @@
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Routes.Cycles;
 using OsmSharp.Logistics.Solvers.GA;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
 {
@@ -31,11 +28,9 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
     /// </summary>
     public class EdgeAssemblyCrossover : ICrossOverOperator<ITSP, IRoute>
     {
-        private int _maxOffspring;
-
-        private EdgeAssemblyCrossoverSelectionStrategyEnum _strategy;
-
-        private bool _nn;
+        private readonly int _maxOffspring;
+        private readonly EdgeAssemblyCrossoverSelectionStrategyEnum _strategy;
+        private readonly bool _nn;
 
         /// <summary>
         /// Creates a new edge assembly crossover.
@@ -318,7 +313,8 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     previous = next;
                     next = nextArrayA[next];
                 }
-                while (next != Route.NOT_SET);
+                while (next != Route.NOT_SET &&
+                    next != problem.First);
 
                 var newFitness = 0.0;
                 foreach(var edge in newRoute.Pairs())
@@ -326,14 +322,17 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     newFitness = newFitness + weights[edge.From][edge.To];
                 }
 
-                if (best == null ||
-                    fitness > newFitness)
+                if (newRoute.Count == solution1.Count)
                 {
-                    best = newRoute;
-                    fitness = newFitness;
-                }
+                    if (best == null ||
+                        fitness > newFitness)
+                    {
+                        best = newRoute;
+                        fitness = newFitness;
+                    }
 
-                generated++;
+                    generated++;
+                }
             }
 
             if (best == null)
@@ -347,7 +346,8 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     previous = next;
                     next = e_a[next];
                 }
-                while (next != Route.NOT_SET);
+                while (next != Route.NOT_SET &&
+                    next != problem.First);
 
                 fitness = 0.0;
                 foreach (var edge in best.Pairs())
@@ -355,6 +355,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     fitness = fitness + weights[edge.From][edge.To];
                 }
             }
+
             return best;
         }
     }

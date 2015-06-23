@@ -119,5 +119,20 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         {
             return NNearestNeighboursAlgorithm.Forward(this.Weights, n, customer);
         }
+
+        /// <summary>
+        /// Converts this TSP definition to a closed equivalent version.
+        /// </summary>
+        /// <returns></returns>
+        public ITSP ToClosed()
+        {
+            var weights = new double[this.Weights.Length][];
+            for (var i = 0; i < this.Weights.Length; i++)
+            {
+                weights[i] = this.Weights[i].Clone() as double[];
+                weights[i][this.First] = 0;
+            }
+            return new TSPProblemMock(this.First, weights, true);
+        }
     }
 }

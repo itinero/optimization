@@ -40,5 +40,11 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// </summary>
         /// <returns></returns>
         INNearestNeighbours GetNNearestNeighbours(int n, int customer);
+
+        /// <summary>
+        /// Converts this TSP definition to a closed equivalent version.
+        /// </summary>
+        /// <returns></returns>
+        ITSP ToClosed();
     }
 }

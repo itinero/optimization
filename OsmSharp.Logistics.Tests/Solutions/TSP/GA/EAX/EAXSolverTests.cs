@@ -228,11 +228,11 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             var solver = new EAXSolver(new GASettings()
             {
                 CrossOverPercentage = 10,
-                ElitismPercentage = 1,
+                ElitismPercentage = 2,
                 PopulationSize = 100,
                 MaxGenerations = 100000,
                 MutationPercentage = 0,
-                StagnationCount = 100
+                StagnationCount = 200
             });
 
             for (var i = 0; i < 10; i++)

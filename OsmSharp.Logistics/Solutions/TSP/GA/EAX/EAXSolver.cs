@@ -38,5 +38,14 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
         {
 
         }
+
+        /// <summary>
+        /// Solves the given problem.
+        /// </summary>
+        /// <returns></returns>
+        public override IRoute Solve(ITSP problem, out double fitness)
+        {
+            return base.Solve(problem, out fitness);
+        }
     }
 }

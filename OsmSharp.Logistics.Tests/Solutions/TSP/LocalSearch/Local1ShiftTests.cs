@@ -57,6 +57,34 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
         }
 
         /// <summary>
+        /// Tests a route where only one shift is possible/needed.
+        /// </summary>
+        [Test]
+        public void Test1OneShiftOpen()
+        {
+            // create the problem and make sure 0->1->2->3->4 is the solution.
+            var problem = new TSPProblemMock(0, 5, 10, false);
+            problem.Weights[0][1] = 1;
+            problem.Weights[1][2] = 1;
+            problem.Weights[2][3] = 1;
+            problem.Weights[3][4] = 1;
+            problem.Weights[4][0] = 1;
+            var closedProblem = problem.ToClosed();
+
+            // create a route with one shift.
+            var route = Route.CreateFrom(new int[] { 0, 2, 3, 1, 4 }, true);
+
+            // apply the 1-shift local search, it should find the customer to replocate.
+            var localSearch = new Local1Shift();
+            var delta = 0.0;
+            localSearch.Apply(closedProblem, route, out delta);
+
+            // test result.
+            Assert.AreEqual(-27, delta);
+            Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, route.ToArray());
+        }
+
+        /// <summary>
         /// Tests a route where two shifts are possible/needed.
         /// </summary>
         [Test]
@@ -80,6 +108,34 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
 
             // test result.
             Assert.AreEqual(-45, delta);
+            Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, route.ToArray());
+        }
+
+        /// <summary>
+        /// Tests a route where two shifts are possible/needed.
+        /// </summary>
+        [Test]
+        public void Test2TwoShiftsOpen()
+        {
+            // create the problem and make sure 0->1->2->3->4 is the solution.
+            var problem = new TSPProblemMock(0, 5, 10, false);
+            problem.Weights[0][1] = 1;
+            problem.Weights[1][2] = 1;
+            problem.Weights[2][3] = 1;
+            problem.Weights[3][4] = 1;
+            problem.Weights[4][0] = 1;
+            var closedProblem = problem.ToClosed();
+
+            // create a route with one shift.
+            var route = Route.CreateFrom(new int[] { 0, 2, 4, 1, 3 }, true);
+
+            // apply the 1-shift local search, it should find the customer to replocate.
+            var localSearch = new Local1Shift();
+            var delta = 0.0;
+            localSearch.Apply(closedProblem, route, out delta);
+
+            // test result.
+            Assert.AreEqual(-36, delta);
             Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, route.ToArray());
         }
     }

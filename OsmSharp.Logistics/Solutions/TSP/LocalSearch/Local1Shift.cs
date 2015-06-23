@@ -18,6 +18,8 @@
 
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Solvers;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
 {
@@ -44,6 +46,10 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// <returns></returns>
         public bool Apply(ITSP problem, IRoute route, out double delta)
         {
+            if (!problem.IsClosed) { throw new ArgumentException("Local1Shift operator cannot be used on open TSP-problems."); }
+            if (!route.IsClosed) { throw new ArgumentException("Local1Shift operator cannot be used on open TSP-problems."); }
+            if (route.IsClosed != problem.IsClosed) { throw new ArgumentException("Route and problem have to be both closed."); }
+
             delta = 0;
             var success = false;
             var weights = problem.Weights;

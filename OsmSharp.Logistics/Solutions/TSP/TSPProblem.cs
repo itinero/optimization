@@ -115,5 +115,19 @@ namespace OsmSharp.Logistics.Solutions.TSP
             return result;
         }
 
+        /// <summary>
+        /// Converts this TSP definition to a closed equivalent version.
+        /// </summary>
+        /// <returns></returns>
+        public ITSP ToClosed()
+        {
+            var weights = new double[this.Weights.Length][];
+            for(var i = 0; i < this.Weights[i].Length; i++)
+            {
+                weights[i] = this.Weights[i].Clone() as double[];
+                weights[i][this.First] = 0;
+            }
+            return new TSPProblem(this.First, weights, true);
+        }
     }
 }
