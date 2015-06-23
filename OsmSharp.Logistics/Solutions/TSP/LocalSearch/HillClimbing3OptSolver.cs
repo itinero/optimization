@@ -82,6 +82,8 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// <returns></returns>
         public override IRoute Solve(ITSP problem, out double fitness)
         {
+            if (!problem.IsClosed) { throw new ArgumentException("OPT3 cannot be used on open TSP-problems."); }
+
             // generate some route first.
             var route = _generator.Solve(problem);
 
@@ -111,6 +113,10 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// <returns></returns>
         public bool Apply(ITSP problem, IRoute solution, out double delta)
         {
+            if (!problem.IsClosed) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
+            if (!solution.IsClosed) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
+            if (solution.IsClosed != problem.IsClosed) { throw new ArgumentException("Route and problem have to be both closed."); }
+
             _dontLookBits = new bool[problem.Weights.Length];
             var weights = problem.Weights;
 

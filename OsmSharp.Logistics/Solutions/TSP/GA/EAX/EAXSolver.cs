@@ -21,6 +21,7 @@ using OsmSharp.Logistics.Solutions.TSP.GA.Operators;
 using OsmSharp.Logistics.Solutions.TSP.LocalSearch;
 using OsmSharp.Logistics.Solvers;
 using OsmSharp.Logistics.Solvers.GA;
+using System;
 
 namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
 {
@@ -45,6 +46,8 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
         /// <returns></returns>
         public override IRoute Solve(ITSP problem, out double fitness)
         {
+            if (!problem.IsClosed) { throw new ArgumentException("AEXSolver cannot be used on open TSP-problems."); }
+
             return base.Solve(problem, out fitness);
         }
     }

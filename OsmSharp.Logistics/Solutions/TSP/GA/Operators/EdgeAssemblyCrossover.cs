@@ -19,6 +19,7 @@
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Routes.Cycles;
 using OsmSharp.Logistics.Solvers.GA;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
@@ -131,6 +132,12 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
         /// <returns></returns>
         public IRoute Apply(ITSP problem, IRoute solution1, IRoute solution2, out double fitness)
         {
+            if (!problem.IsClosed) { throw new ArgumentException("EAX operator cannot be used on open TSP-problems."); }
+            if (!solution1.IsClosed) { throw new ArgumentException("EAX operator cannot be used on open TSP-problems."); }
+            if (!solution2.IsClosed) { throw new ArgumentException("EAX operator cannot be used on open TSP-problems."); }
+            if (solution1.IsClosed != problem.IsClosed) { throw new ArgumentException("Route and problem have to be both closed."); }
+            if (solution2.IsClosed != problem.IsClosed) { throw new ArgumentException("Route and problem have to be both closed."); }
+            
             fitness = double.MaxValue;
             var weights = problem.Weights;
 

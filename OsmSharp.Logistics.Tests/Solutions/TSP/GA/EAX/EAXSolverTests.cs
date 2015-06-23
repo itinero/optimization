@@ -163,6 +163,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             problem.Weights[2][3] = 1;
             problem.Weights[3][4] = 1;
             problem.Weights[4][0] = 1;
+            var closedProblem = problem.ToClosed();
 
             // create the solver.
             var solver = new EAXSolver(new GASettings()
@@ -179,7 +180,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, out fitness);
+                var solution = solver.Solve(closedProblem, out fitness);
 
                 // test contents.
                 Assert.AreEqual(4, fitness);
@@ -223,12 +224,13 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
 
             // create problem.
             var problem = new TSPProblemMock(0, weights, false);
+            var closedProblem = problem.ToClosed();
 
             // create the solver.
             var solver = new EAXSolver(new GASettings()
             {
                 CrossOverPercentage = 10,
-                ElitismPercentage = 2,
+                ElitismPercentage = 5,
                 PopulationSize = 100,
                 MaxGenerations = 100000,
                 MutationPercentage = 0,
@@ -239,7 +241,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, out fitness);
+                var solution = solver.Solve(closedProblem, out fitness);
 
                 // test contents.
                 Assert.AreEqual(27, fitness);
