@@ -16,40 +16,21 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-
-namespace OsmSharp.Logistics.Solutions.TSP
+namespace OsmSharp.Logistics
 {
     /// <summary>
-    /// Abstract representation of a TSP.
+    /// Contains constants.
     /// </summary>
-    public interface ITSP : IMatrixWeights
+    public static class Constants
     {
         /// <summary>
-        /// Gets the first customer.
+        /// Holds the default not-set value for a customer entry.
         /// </summary>
-        int First { get; }
+        public const int NOT_SET = -1;
 
         /// <summary>
-        /// Gets the last customer if the problem is closed.
+        /// Holds the default value indicating the end of a route.
         /// </summary>
-        int Last { get; }
-
-        /// <summary>
-        /// Returns true if this TSP is supposed to be a tour.
-        /// </summary>
-        bool IsClosed { get; }
-
-        /// <summary>
-        /// Returns the n-nearest neighbours.
-        /// </summary>
-        /// <returns></returns>
-        INNearestNeighbours GetNNearestNeighbours(int n, int customer);
-
-        /// <summary>
-        /// Converts this TSP definition to a closed equivalent version.
-        /// </summary>
-        /// <returns></returns>
-        ITSP ToClosed();
+        public const int END = -2;
     }
 }

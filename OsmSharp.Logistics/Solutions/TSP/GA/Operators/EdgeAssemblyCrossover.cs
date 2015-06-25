@@ -160,10 +160,10 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
             for (var idx = 0; idx < e_b.Length; idx++)
             {
                 var a = e_a[idx];
-                if (a != Route.NOT_SET)
+                if (a != Constants.NOT_SET)
                 {
                     var b = e_b[a];
-                    if (idx != b && b != Route.NOT_SET)
+                    if (idx != b && b != Constants.NOT_SET)
                     {
                         cycles.AddEdge(idx, a, b);
                     }
@@ -257,7 +257,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                             {
                                 var nnTo = nextArrayA[nn];
 
-                                if (nnTo != Route.NOT_SET &&
+                                if (nnTo != Constants.NOT_SET &&
                                     !ignoreList[nn] &&
                                     !ignoreList[nnTo])
                                 {
@@ -320,7 +320,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     previous = next;
                     next = nextArrayA[next];
                 }
-                while (next != Route.NOT_SET &&
+                while (next != Constants.NOT_SET &&
                     next != problem.First);
 
                 var newFitness = 0.0;
@@ -353,7 +353,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     previous = next;
                     next = e_a[next];
                 }
-                while (next != Route.NOT_SET &&
+                while (next != Constants.NOT_SET &&
                     next != problem.First);
 
                 fitness = 0.0;

@@ -35,7 +35,11 @@ namespace OsmSharp.Logistics.Solutions.TSP
             this.First = first;
             this.Weights = weights;
             this.IsClosed = isClosed;
-            this.Last = null;
+            this.Last = first;
+            if(!this.IsClosed)
+            { // oeps, problem is open!
+                this.Last = Constants.NOT_SET;
+            }
         }
 
         /// <summary>
@@ -59,18 +63,18 @@ namespace OsmSharp.Logistics.Solutions.TSP
         }
 
         /// <summary>
-        /// Returns true if this TSP is supposed to be a tour.
+        /// Gets the last customer if the problem is closed.
         /// </summary>
-        public bool IsClosed
+        public int Last
         {
             get;
             private set;
         }
 
         /// <summary>
-        /// Gets the last customer.
+        /// Returns true if this TSP is supposed to be a tour.
         /// </summary>
-        public int? Last
+        public bool IsClosed
         {
             get;
             private set;

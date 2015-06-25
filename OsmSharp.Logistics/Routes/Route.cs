@@ -29,15 +29,6 @@ namespace OsmSharp.Logistics.Routes
     public class Route : IRoute
     {
         /// <summary>
-        /// When next is not set.
-        /// </summary>
-        public const int NOT_SET = -1;
-        /// <summary>
-        /// When next is the end.
-        /// </summary>
-        public const int END = -2;
-
-        /// <summary>
         /// The is round flag.
         /// </summary>
         private readonly bool _isClosed;
@@ -85,7 +76,7 @@ namespace OsmSharp.Logistics.Routes
             _nextArray = new int[size];
             for (int idx = 0; idx < size; idx++)
             {
-                _nextArray[idx] = NOT_SET;
+                _nextArray[idx] = Constants.NOT_SET;
             }
             _first = customer;
 
@@ -93,7 +84,7 @@ namespace OsmSharp.Logistics.Routes
             { // resize the array.
                 this.Resize(customer);
             }
-            _nextArray[customer] = END;
+            _nextArray[customer] = Constants.END;
 
             // calculate the last customer.
             this.UpdateLast();
@@ -124,7 +115,7 @@ namespace OsmSharp.Logistics.Routes
                 { // edge found.
                     return true;
                 }
-                else if (this.Contains(from) && _nextArray[from] == END)
+                else if (this.Contains(from) && _nextArray[from] == Constants.END)
                 { // the from customer is contained but it does not have a next customer.
                     if (this.IsClosed)
                     {
@@ -168,7 +159,7 @@ namespace OsmSharp.Logistics.Routes
             if (customer == _first)
             { // the next customer is actually the first customer.
                 // set the next customer of the from customer to -1.
-                customer = END;
+                customer = Constants.END;
             }
 
             if (_nextArray.Length > from)
@@ -218,14 +209,14 @@ namespace OsmSharp.Logistics.Routes
 
             // get the to customer if needed.
             var to = _nextArray[from];
-            if (to == NOT_SET)
+            if (to == Constants.NOT_SET)
             { // the to field is not set.
                 throw new ArgumentOutOfRangeException("from", string.Format("Customer {0} does not exist.", from));
             }
 
             // insert customer.
             _nextArray[from] = customer;
-            if (to == END)
+            if (to == Constants.END)
             { // the to-customer is END.
                 if (!this.IsClosed)
                 { // update last.
@@ -249,7 +240,7 @@ namespace OsmSharp.Logistics.Routes
             Array.Resize<int>(ref _nextArray, customer + 1);
             for (int newCustomer = old_size; newCustomer < _nextArray.Length; newCustomer++)
             { // initialize with NOT_SET.
-                _nextArray[newCustomer] = NOT_SET;
+                _nextArray[newCustomer] = Constants.NOT_SET;
             }
         }
 
@@ -395,7 +386,7 @@ namespace OsmSharp.Logistics.Routes
                 else
                 {
                     _current = _nextArray[_current];
-                    if (_current == END)
+                    if (_current == Constants.END)
                     {
                         return false;
                     }
@@ -467,7 +458,7 @@ namespace OsmSharp.Logistics.Routes
                 if (_nextArray[idx] == customer)
                 {
                     _nextArray[idx] = _nextArray[customer];
-                    _nextArray[customer] = NOT_SET;
+                    _nextArray[customer] = Constants.NOT_SET;
                     return true;
                 }
             }
@@ -495,12 +486,12 @@ namespace OsmSharp.Logistics.Routes
                     after = _nextArray[customer];
 
                     _nextArray[idx] = _nextArray[customer];
-                    _nextArray[customer] = NOT_SET;
+                    _nextArray[customer] = Constants.NOT_SET;
                     return true;
                 }
             }
-            before = NOT_SET;
-            after = NOT_SET;
+            before = Constants.NOT_SET;
+            after = Constants.NOT_SET;
             return false;
         }
 
@@ -529,7 +520,7 @@ namespace OsmSharp.Logistics.Routes
             var searchFor = customer;
             if (customer == _first)
             { // search for END when customer to insert is the first customer.
-                searchFor = END;
+                searchFor = Constants.END;
             }
             for (int idx = 0; idx < _nextArray.Length; idx++)
             { // search for the 'before'.
@@ -539,7 +530,7 @@ namespace OsmSharp.Logistics.Routes
                     oldAfter = _nextArray[customer];
                     if(oldBefore == before)
                     { // nothing to do here!
-                        if (this.IsClosed && oldAfter == END)
+                        if (this.IsClosed && oldAfter == Constants.END)
                         { // is closed and oldAfter is END then oldAfter is first.
                             oldAfter = this.First;
                         }
@@ -554,20 +545,20 @@ namespace OsmSharp.Logistics.Routes
                     _nextArray[customer] = newAfter;
                     _nextArray[oldBefore] = oldAfter;
 
-                    if (this.IsClosed && oldAfter == END)
+                    if (this.IsClosed && oldAfter == Constants.END)
                     { // is closed and oldAfter is END then oldAfter is first.
                         oldAfter = this.First;
                     }
-                    if (this.IsClosed && newAfter == END)
+                    if (this.IsClosed && newAfter == Constants.END)
                     { // is closed and newAfter is END then newAfter is first.
                         newAfter = this.First;
                     }
                     return true;
                 }
             }
-            oldBefore = NOT_SET;
-            oldAfter = NOT_SET;
-            newAfter = NOT_SET;
+            oldBefore = Constants.NOT_SET;
+            oldAfter = Constants.NOT_SET;
+            newAfter = Constants.NOT_SET;
             return false;
         }
 
@@ -609,7 +600,7 @@ namespace OsmSharp.Logistics.Routes
                 }
                 idx++;
             }
-            return NOT_SET;
+            return Constants.NOT_SET;
         }
 
         /// <summary>
@@ -696,7 +687,7 @@ namespace OsmSharp.Logistics.Routes
                 previous = customer;
             }
 
-            nextArray[previous] = END;
+            nextArray[previous] = Constants.END;
 
             // the dynamic route.
             route = new Route(first, nextArray, isClosed);
@@ -786,7 +777,7 @@ namespace OsmSharp.Logistics.Routes
                     {
                         return false;
                     }
-                    if (_current == Route.END)
+                    if (_current == Constants.END)
                     {
                         _current = _first;
                         return true;
@@ -797,7 +788,7 @@ namespace OsmSharp.Logistics.Routes
                         return true;
                     }
                     _current = _nextArray[_current];
-                    if (_current == Route.END)
+                    if (_current == Constants.END)
                     {
                         _current = _firstRoute;
                     }
