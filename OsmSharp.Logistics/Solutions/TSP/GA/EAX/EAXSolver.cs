@@ -34,7 +34,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
         /// Creates a new EAX-solver.
         /// </summary>
         public EAXSolver(GASettings settings)
-            : base(new HillClimbing3OptSolver(), new EdgeAssemblyCrossover(30, EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
+            : base(new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
             new TournamentSelectionOperator<ITSP, IRoute>(10, 0.5), new EmptyOperator<ITSP, IRoute>(), settings)
         {
 
@@ -46,8 +46,15 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
         /// <returns></returns>
         public override IRoute Solve(ITSP problem, out double fitness)
         {
-            if (!problem.IsClosed) { throw new ArgumentException("AEXSolver cannot be used on open TSP-problems."); }
+            if (!problem.IsClosed)
+            { // the problem is 'open', we need to convert problem and then solution.
+                OsmSharp.Logging.Log.TraceEvent("EAXSolver.Solve", Logging.TraceEventType.Warning,
+                    string.Format("EAX cannot solver 'open' TSP's: converting problem to a closed equivalent."));
 
+                var convertedProblem = problem.ToClosed();
+                var solution = base.Solve(convertedProblem, out fitness);
+                return new Route(solution, false, problem.IsLastFixed);
+            }
             return base.Solve(problem, out fitness);
         }
     }

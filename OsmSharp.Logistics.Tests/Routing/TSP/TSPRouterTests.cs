@@ -41,7 +41,7 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
 
             // build test case.
             var router = new RouterMock();
-            var tspSolver = new TSPSolverMock(Route.CreateFrom(new int[] { 0, 1 }), 10);
+            var tspSolver = new TSPSolverMock(new Route(new int[] { 0, 1 }), 10);
             var tspRouter = new TSPRouter(router, Vehicle.Car,
                 new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),

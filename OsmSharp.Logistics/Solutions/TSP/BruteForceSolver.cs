@@ -65,7 +65,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
                 // build route from permutation.
                 var withFirst = new List<int>(permutation);
                 withFirst.Insert(0, problem.First);
-                var localRoute = Route.CreateFrom(withFirst, problem.IsClosed);
+                var localRoute = new Route(withFirst, problem.IsClosed);
 
                 // calculate fitness.
                 var localFitness = 0.0;

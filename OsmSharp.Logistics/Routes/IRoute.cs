@@ -37,6 +37,17 @@ namespace OsmSharp.Logistics.Routes
         }
 
         /// <summary>
+        /// Returns true if the last customer is fixed.
+        /// </summary>
+        /// <remarks>
+        /// When the route's last customer is fixed.
+        /// </remarks>
+        bool IsLastFixed
+        {
+            get;
+        }
+
+        /// <summary>
         /// Returns the amount of customers in the route.
         /// </summary>
         int Count
@@ -54,11 +65,8 @@ namespace OsmSharp.Logistics.Routes
         }
 
         /// <summary>
-        /// Returns the last customer.
+        /// Returns the last customer or <see cref="Constants.NOT_SET"/> when the route is closed.
         /// </summary>
-        /// <remarks>
-        /// Returns the first customer when this route is closed, can return any customer when the route is not closed.
-        /// </remarks>
         int Last
         {
             get;

@@ -41,6 +41,11 @@ namespace OsmSharp.Logistics.Solutions.TSP
         bool IsClosed { get; }
 
         /// <summary>
+        /// Returns true if this TSP is limited to the a fixed last customer.
+        /// </summary>
+        bool IsLastFixed { get; }
+
+        /// <summary>
         /// Returns the n-nearest neighbours.
         /// </summary>
         /// <returns></returns>

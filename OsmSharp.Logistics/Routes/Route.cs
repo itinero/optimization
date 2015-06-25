@@ -28,66 +28,139 @@ namespace OsmSharp.Logistics.Routes
     /// </summary>
     public class Route : IRoute
     {
-        /// <summary>
-        /// The is round flag.
-        /// </summary>
         private readonly bool _isClosed;
-
-        /// <summary>
-        /// The next-array.
-        /// </summary>
         private int[] _nextArray;
-
-        /// <summary>
-        /// The first customer.
-        /// </summary>
         private readonly int _first;
-
-        /// <summary>
-        /// The last customer.
-        /// </summary>
         private int _last;
+        private readonly bool _lastFixed;
 
         /// <summary>
         /// Creates a new dynamic route by creating shallow copy of the array(s) given.
         /// </summary>
-        /// <param name="first"></param>
-        /// <param name="nextArray"></param>
-        /// <param name="isClosed"></param>
-        private Route(int first, int[] nextArray, bool isClosed)
+        private Route(int first, int[] nextArray, int last, bool isClosed)
         {
             _first = first;
+            _last = last;
+            _lastFixed = true;
             _nextArray = nextArray.Clone() as int[];
             _isClosed = isClosed;
-
-            // calculate the last customer.
-            this.UpdateLast();
         }
 
         /// <summary>
-        /// Creates a new dynamic assymmetric route using an initial size and customer.
+        /// Creates a new route using a preexisting sequence.
         /// </summary>
-        /// <param name="size"></param>
-        /// <param name="customer"></param>
-        /// <param name="isClosed"></param>
-        public Route(int size, int customer, bool isClosed)
+        public Route(IEnumerable<int> customers)
+            : this(customers, true)
         {
+
+        }
+
+        /// <summary>
+        /// Creates a new route using a preexisting sequence.
+        /// </summary>
+        public Route(IEnumerable<int> customers, bool isClosed)
+            : this(customers, isClosed, false)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new route using a preexisting sequence.
+        /// </summary>
+        public Route(IEnumerable<int> customers, bool isClosed, bool lastFixed)
+        {
+            var nextArray = new int[0];
+            var first = -1;
+            var previous = -1;
+            foreach (var customer in customers)
+            {
+                // resize the array if needed.
+                if (nextArray.Length <= customer)
+                {
+                    Array.Resize<int>(ref nextArray, customer + 1);
+                }
+
+                // the first customer.
+                if (first < 0)
+                { // set the first customer.
+                    first = customer;
+                }
+                else
+                { // set the next array.
+                    nextArray[previous] = customer;
+                }
+
+                previous = customer;
+            }
+
+            nextArray[previous] = Constants.END;
+
+            // set actual route-data.
+            _first = first;
+            _lastFixed = lastFixed;
+            _nextArray = nextArray;
+            _isClosed = isClosed;
+
+            // descide on the closed-open-closedwithfixed cases.
+            if(_lastFixed)
+            { // this one is easy, just set the last customer.
+                _last = previous;
+            }
+            else if (_isClosed)
+            { // also easy, just use the first customer because last->first is a part of the route.
+                _last = first;
+            }
+            else
+            { // choose the last customer, but it may change later.
+                _last = previous;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new route using an initial size and first customer.
+        /// </summary>
+        public Route(int size, int first, bool isClosed)
+        {
+            _lastFixed = false;
             _isClosed = isClosed;
             _nextArray = new int[size];
             for (int idx = 0; idx < size; idx++)
             {
                 _nextArray[idx] = Constants.NOT_SET;
             }
-            _first = customer;
+            _first = first;
 
-            if (_nextArray.Length <= customer)
+            if (_nextArray.Length <= first)
             { // resize the array.
-                this.Resize(customer);
+                this.Resize(first);
             }
-            _nextArray[customer] = Constants.END;
+            _nextArray[first] = Constants.END;
 
             // calculate the last customer.
             this.UpdateLast();
+        }
+
+        /// <summary>
+        /// Creates a new route using an initial size and first and fixed last customer.
+        /// </summary>
+        public Route(int size, int first, int last, bool isClosed)
+        {
+            _lastFixed = true;
+            _isClosed = isClosed;
+            _nextArray = new int[size];
+            for (int idx = 0; idx < size; idx++)
+            {
+                _nextArray[idx] = Constants.NOT_SET;
+            }
+            _first = first;
+
+            if (_nextArray.Length <= first)
+            { // resize the array.
+                this.Resize(first);
+            }
+            _nextArray[first] = Constants.END;
+
+            _last = last;
         }
 
         /// <summary>
@@ -98,6 +171,17 @@ namespace OsmSharp.Logistics.Routes
             get
             {
                 return _isClosed;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the last customer is fixed.
+        /// </summary>
+        public bool IsLastFixed
+        {
+            get
+            {
+                return _lastFixed;
             }
         }
 
@@ -196,6 +280,10 @@ namespace OsmSharp.Logistics.Routes
             { // the customer are identical.
                 throw new ArgumentException("Cannot add a customer after itself.");
             }
+            if(_lastFixed && from == _last)
+            { // cannot insert a customer after a fixed last.
+                throw new ArgumentException("Cannot add a customer after a fixed last.");
+            }
 
             // resize the array if needed.
             if (_nextArray.Length <= from)
@@ -290,11 +378,16 @@ namespace OsmSharp.Logistics.Routes
         /// <returns></returns>
         public int[] GetNeigbours(int customer)
         {
-            int[] neighbour = new int[1];
+            var neighbour = new int[1];
             neighbour[0] = _nextArray[customer];
-            if (neighbour[0] < 0 && this.IsClosed)
+            if (neighbour[0] < 0)
             {
-                neighbour[0] = this.First;
+                if (this.IsClosed)
+                {
+                    neighbour[0] = this.First;
+                    return neighbour;
+                }
+                return new int[0];
             }
             return neighbour;
         }
@@ -315,7 +408,7 @@ namespace OsmSharp.Logistics.Routes
         /// <returns></returns>
         public object Clone()
         {
-            return new Route(_first, _nextArray.Clone() as int[], _isClosed);
+            return new Route(_first, _nextArray.Clone() as int[], _last, _isClosed);
         }
 
         #region Enumerators
@@ -408,7 +501,7 @@ namespace OsmSharp.Logistics.Routes
         /// <returns></returns>
         public IEnumerable<int> Between(int from, int to)
         {
-            return new RouteBetweenEnumerable(_nextArray, from, to, _first);
+            return new RouteBetweenEnumerable(_nextArray, _isClosed, from, to, _first);
         }
 
         /// <summary>
@@ -453,12 +546,20 @@ namespace OsmSharp.Logistics.Routes
             { // cannot remove the first customer.
                 throw new InvalidOperationException("Cannot remove first customer from a route.");
             }
+            if(customer == _last && _lastFixed)
+            {// cannot remove the last customer if fixed.
+                throw new InvalidOperationException("Cannot remove last customer from a route with a fixed last customer.");
+            }
             for (int idx = 0; idx < _nextArray.Length; idx++)
             {
                 if (_nextArray[idx] == customer)
                 {
                     _nextArray[idx] = _nextArray[customer];
                     _nextArray[customer] = Constants.NOT_SET;
+                    if(customer == _last && !this.IsClosed)
+                    { // update last if open problem.
+                        _last = idx;
+                    }
                     return true;
                 }
             }
@@ -580,6 +681,10 @@ namespace OsmSharp.Logistics.Routes
         {
             get
             {
+                if (_isClosed)
+                { // when closed there is no last customer.
+                    return Constants.NOT_SET;
+                }
                 return _last;
             }
         }
@@ -642,60 +747,6 @@ namespace OsmSharp.Logistics.Routes
             return result.ToString();
         }
 
-        #region Static Constructors
-
-        /// <summary>
-        /// Creates a dynamic route from an enumerable collection of customers.
-        /// </summary>
-        /// <param name="customers"></param>
-        /// <returns></returns>
-        public static Route CreateFrom(IEnumerable<int> customers)
-        {
-            return Route.CreateFrom(customers, true);
-        }
-
-        /// <summary>
-        /// Creates a dynamic route from an enumerable collection of customers.
-        /// </summary>
-        /// <param name="customers"></param>
-        /// <param name="isClosed"></param>
-        /// <returns></returns>
-        public static Route CreateFrom(IEnumerable<int> customers, bool isClosed)
-        {
-            Route route = null;
-            int[] nextArray = new int[0];
-            int first = -1;
-            int previous = -1;
-            foreach (int customer in customers)
-            {
-                // resize the array if needed.
-                if (nextArray.Length <= customer)
-                {
-                    Array.Resize<int>(ref nextArray, customer + 1);
-                }
-
-                // the first customer.
-                if (first < 0)
-                { // set the first customer.
-                    first = customer;
-                }
-                else
-                { // set the next array.
-                    nextArray[previous] = customer;
-                }
-
-                previous = customer;
-            }
-
-            nextArray[previous] = Constants.END;
-
-            // the dynamic route.
-            route = new Route(first, nextArray, isClosed);
-            return route;
-        }
-
-        #endregion
-
         /// <summary>
         /// Clears out all the customers in this route.
         /// </summary>
@@ -708,24 +759,19 @@ namespace OsmSharp.Logistics.Routes
         /// </summary>
         internal class RouteBetweenEnumerable : IEnumerable<int>
         {
-            private int _first;
-
-            private int _last;
-
-            private int _firstRoute;
-
-            private int[] _nextArray;
+            private readonly int _first;
+            private readonly int _last;
+            private readonly int _firstRoute;
+            private readonly int[] _nextArray;
+            private readonly bool _isClosed;
 
             /// <summary>
             /// Creates a new between enumerable.
             /// </summary>
-            /// <param name="nextArray"></param>
-            /// <param name="first"></param>
-            /// <param name="last"></param>
-            /// <param name="firstRoute"></param>
-            public RouteBetweenEnumerable(int[] nextArray, int first, int last, int firstRoute)
+            public RouteBetweenEnumerable(int[] nextArray, bool isClosed, int first, int last, int firstRoute)
             {
                 _nextArray = nextArray;
+                _isClosed = isClosed;
                 _first = first;
                 _last = last;
 
@@ -735,18 +781,16 @@ namespace OsmSharp.Logistics.Routes
             private class BetweenEnumerator : IEnumerator<int>
             {
                 private int _current = -1;
+                private readonly int _first;
+                private readonly int _last;
+                private readonly int _firstRoute;
+                private readonly int[] _nextArray;
+                private readonly bool _isClosed;
 
-                private int _first;
-
-                private int _last;
-
-                private int _firstRoute;
-
-                private int[] _nextArray;
-
-                public BetweenEnumerator(int[] nextArray, int first, int last, int firstRoute)
+                public BetweenEnumerator(int[] nextArray, bool isClosed, int first, int last, int firstRoute)
                 {
                     _nextArray = nextArray;
+                    _isClosed = isClosed;
                     _first = first;
                     _last = last;
 
@@ -773,6 +817,10 @@ namespace OsmSharp.Logistics.Routes
 
                 public bool MoveNext()
                 {
+                    if(!_isClosed && _first > _last)
+                    {
+                        return false;
+                    }
                     if (_current == _last)
                     {
                         return false;
@@ -807,7 +855,7 @@ namespace OsmSharp.Logistics.Routes
             /// <returns></returns>
             public IEnumerator<int> GetEnumerator()
             {
-                return new BetweenEnumerator(_nextArray, _first, _last, _firstRoute);
+                return new BetweenEnumerator(_nextArray, _isClosed, _first, _last, _firstRoute);
             }
 
             /// <summary>

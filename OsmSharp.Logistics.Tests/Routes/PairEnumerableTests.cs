@@ -32,9 +32,26 @@ namespace OsmSharp.Logistics.Tests.Routes
         /// Tests the pair enumerable on a route that isn't a round.
         /// </summary>
         [Test]
-        public void Test1NoRound()
+        public void Test1NotClosedNotFixed()
         {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, false);
+            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, false, false);
+            var pairEnumerable = new PairEnumerable(route);
+            var pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(4, pairs.Count);
+            Assert.Contains(new Pair(0, 1), pairs);
+            Assert.Contains(new Pair(1, 2), pairs);
+            Assert.Contains(new Pair(2, 3), pairs);
+            Assert.Contains(new Pair(3, 4), pairs);
+        }
+
+        /// <summary>
+        /// Tests the pair enumerable on a route that isn't a round.
+        /// </summary>
+        [Test]
+        public void Test1NotClosedFixed()
+        {
+            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, false, true);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
@@ -49,9 +66,27 @@ namespace OsmSharp.Logistics.Tests.Routes
         /// Tests the pair enumerable on a route that is a round.
         /// </summary>
         [Test]
-        public void Test2Round()
+        public void Test2ClosedNotFixed()
         {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, true);
+            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, true, false);
+            var pairEnumerable = new PairEnumerable(route);
+            var pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(5, pairs.Count);
+            Assert.Contains(new Pair(0, 1), pairs);
+            Assert.Contains(new Pair(1, 2), pairs);
+            Assert.Contains(new Pair(2, 3), pairs);
+            Assert.Contains(new Pair(3, 4), pairs);
+            Assert.Contains(new Pair(4, 0), pairs);
+        }
+
+        /// <summary>
+        /// Tests the pair enumerable on a route that is a round.
+        /// </summary>
+        [Test]
+        public void Test2ClosedFixed()
+        {
+            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, true, true);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 

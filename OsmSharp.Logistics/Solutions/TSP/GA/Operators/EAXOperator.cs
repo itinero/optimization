@@ -27,23 +27,29 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
     /// <summary>
     /// An edge assembly crossover.
     /// </summary>
-    public class EdgeAssemblyCrossover : ICrossOverOperator<ITSP, IRoute>
+    public class EAXOperator : ICrossOverOperator<ITSP, IRoute>
     {
         private readonly int _maxOffspring;
         private readonly EdgeAssemblyCrossoverSelectionStrategyEnum _strategy;
         private readonly bool _nn;
 
         /// <summary>
-        /// Creates a new edge assembly crossover.
+        /// Creates a new EAX crossover.
         /// </summary>
-        /// <param name="max_offspring"></param>
-        /// <param name="strategy"></param>
-        /// <param name="nn"></param>
-        public EdgeAssemblyCrossover(int max_offspring,
+        public EAXOperator()
+            : this(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new EAX crossover.
+        /// </summary>
+        public EAXOperator(int maxOffspring,
             EdgeAssemblyCrossoverSelectionStrategyEnum strategy,
             bool nn)
         {
-            _maxOffspring = max_offspring;
+            _maxOffspring = maxOffspring;
             _strategy = strategy;
             _nn = nn;
         }
@@ -89,8 +95,6 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
             MultipleRandom
         }
 
-
-
         #region ICrossOverOperation<int,Problem> Members
 
         private List<int> SelectCycles(
@@ -123,18 +127,24 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
         #endregion
 
         /// <summary>
-        /// 
+        /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
-        /// <param name="problem"></param>
-        /// <param name="solution1"></param>
-        /// <param name="solution2"></param>
-        /// <param name="fitness"></param>
         /// <returns></returns>
         public IRoute Apply(ITSP problem, IRoute solution1, IRoute solution2, out double fitness)
         {
-            if (!problem.IsClosed) { throw new ArgumentException("EAX operator cannot be used on open TSP-problems."); }
-            if (!solution1.IsClosed) { throw new ArgumentException("EAX operator cannot be used on open TSP-problems."); }
-            if (!solution2.IsClosed) { throw new ArgumentException("EAX operator cannot be used on open TSP-problems."); }
+            var originalProblem = problem;
+            var originalSolution1 = solution1;
+            var originalSolution2 = solution2;
+            if (!problem.IsClosed)
+            { // convert to closed problem.
+                OsmSharp.Logging.Log.TraceEvent("EAXOperator.Apply", Logging.TraceEventType.Warning,
+                    string.Format("EAX overator cannot be applied to 'open' TSP's: converting problem to a closed equivalent."));
+
+                problem = problem.ToClosed();
+                solution1 = new Route(solution1, true);
+                solution2 = new Route(solution2, true);
+            }
+
             if (solution1.IsClosed != problem.IsClosed) { throw new ArgumentException("Route and problem have to be both closed."); }
             if (solution2.IsClosed != problem.IsClosed) { throw new ArgumentException("Route and problem have to be both closed."); }
             
@@ -361,6 +371,11 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                 {
                     fitness = fitness + weights[edge.From][edge.To];
                 }
+            }
+
+            if(!originalProblem.IsClosed)
+            { // the original problem was 'open' so convert the route again.
+                best = new Route(best, false);
             }
 
             return best;

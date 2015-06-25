@@ -27,36 +27,48 @@ namespace OsmSharp.Logistics.Tests.Routes
     /// </summary>
     public class RouteStub : IRoute
     {
-        /// <summary>
-        /// Holds the list of customers.
-        /// </summary>
         private List<int> _customers;
-
-        /// <summary>
-        /// Holds the is round flag.
-        /// </summary>
         private bool _isClosed;
+        private bool _lastFixed;
 
         /// <summary>
         /// Creates a new route.
         /// </summary>
-        /// <param name="customers"></param>
-        /// <param name="is_round"></param>
-        public RouteStub(List<int> customers, bool is_round)
+        public RouteStub(List<int> customers, bool isClosed)
         {
             _customers = customers;
-            _isClosed = is_round;
+            _isClosed = isClosed;
+            _lastFixed = false;
         }
 
         /// <summary>
         /// Creates a new route.
         /// </summary>
-        /// <param name="customers"></param>
-        /// <param name="isClosed"></param>
         public RouteStub(int[] customers, bool isClosed)
         {
             _customers = new List<int>(customers);
             _isClosed = isClosed;
+            _lastFixed = false;
+        }
+
+        /// <summary>
+        /// Creates a new route.
+        /// </summary>
+        public RouteStub(List<int> customers, bool isClosed, bool lastFixed)
+        {
+            _customers = customers;
+            _isClosed = isClosed;
+            _lastFixed = lastFixed;
+        }
+
+        /// <summary>
+        /// Creates a new route.
+        /// </summary>
+        public RouteStub(int[] customers, bool isClosed, bool lastFixed)
+        {
+            _customers = new List<int>(customers);
+            _isClosed = isClosed;
+            _lastFixed = lastFixed;
         }
 
         /// <summary>
@@ -78,6 +90,17 @@ namespace OsmSharp.Logistics.Tests.Routes
             get
             {
                 return _isClosed;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the last customer is fixed.
+        /// </summary>
+        public bool IsLastFixed
+        {
+            get
+            {
+                return _lastFixed;
             }
         }
 

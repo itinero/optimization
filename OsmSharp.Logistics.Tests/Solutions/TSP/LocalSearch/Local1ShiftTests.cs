@@ -44,7 +44,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             problem.Weights[4][0] = 1;
 
             // create a route with one shift.
-            var route = Route.CreateFrom(new int[] { 0, 2, 3, 1, 4 }, true);
+            var route = new Route(new int[] { 0, 2, 3, 1, 4 }, true);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
@@ -72,7 +72,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             var closedProblem = problem.ToClosed();
 
             // create a route with one shift.
-            var route = Route.CreateFrom(new int[] { 0, 2, 3, 1, 4 }, true);
+            var route = new Route(new int[] { 0, 2, 3, 1, 4 }, true);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
@@ -99,7 +99,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             problem.Weights[4][0] = 1;
 
             // create a route with one shift.
-            var route = Route.CreateFrom(new int[] { 0, 2, 4, 1, 3 }, true);
+            var route = new Route(new int[] { 0, 2, 4, 1, 3 }, true);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
@@ -127,7 +127,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             var closedProblem = problem.ToClosed();
 
             // create a route with one shift.
-            var route = Route.CreateFrom(new int[] { 0, 2, 4, 1, 3 }, true);
+            var route = new Route(new int[] { 0, 2, 4, 1, 3 }, true);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();

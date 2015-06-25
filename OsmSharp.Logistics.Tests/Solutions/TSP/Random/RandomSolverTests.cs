@@ -18,7 +18,9 @@
 
 using NUnit.Framework;
 using OsmSharp.Logistics.Solutions.TSP.Random;
+using OsmSharp.Math.Random;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
 {
@@ -41,11 +43,87 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
         }
 
         /// <summary>
-        /// Tests the solver.
+        /// Tests the solver on a 'open' tsp.
         /// </summary>
         [Test]
-        public void TestSolutions()
+        public void TestSolutionNotClosedNotFixed()
         {
+            StaticRandomGenerator.Set(4541247);
+
+            // create problem.
+            var problem = new TSPProblemMock(0, 5, 10, false);
+
+            // create the solver.
+            var solver = new RandomSolver();
+
+            for (int i = 0; i < 100; i++)
+            {
+                // generate solution.
+                double fitness;
+                var solution = solver.Solve(problem, out fitness);
+
+                // test contents.
+                Assert.AreEqual(40, fitness);
+                Assert.AreEqual(false, solution.IsClosed);
+                Assert.AreEqual(0, solution.First);
+                Assert.AreEqual(solution.Last(), solution.Last);
+
+                var solutionList = new List<int>(solution);
+                Assert.AreEqual(0, solutionList[0]);
+                Assert.IsTrue(solutionList.Remove(0));
+                Assert.IsTrue(solutionList.Remove(1));
+                Assert.IsTrue(solutionList.Remove(2));
+                Assert.IsTrue(solutionList.Remove(3));
+                Assert.IsTrue(solutionList.Remove(4));
+                Assert.AreEqual(0, solutionList.Count);
+            }
+        }
+
+        /// <summary>
+        /// Tests the solver on a 'open' tsp.
+        /// </summary>
+        [Test]
+        public void TestSolutionNotClosedFixed()
+        {
+            StaticRandomGenerator.Set(4541247);
+
+            // create problem.
+            var problem = new TSPProblemMock(0, 4, 5, 10, false, false);
+
+            // create the solver.
+            var solver = new RandomSolver();
+
+            for (var i = 0; i < 100; i++)
+            {
+                // generate solution.
+                double fitness;
+                var solution = solver.Solve(problem, out fitness);
+
+                // test contents.
+                Assert.AreEqual(40, fitness);
+                Assert.AreEqual(false, solution.IsClosed);
+                Assert.AreEqual(problem.First, solution.First);
+                //Assert.AreEqual(problem.Last, solution.Last);
+
+                var solutionList = new List<int>(solution);
+                Assert.AreEqual(0, solutionList[0]);
+                Assert.IsTrue(solutionList.Remove(0));
+                Assert.IsTrue(solutionList.Remove(1));
+                Assert.IsTrue(solutionList.Remove(2));
+                Assert.IsTrue(solutionList.Remove(3));
+                Assert.IsTrue(solutionList.Remove(4));
+                Assert.AreEqual(0, solutionList.Count);
+            }
+        }
+
+        /// <summary>
+        /// Tests the solver on a closed tsp.
+        /// </summary>
+        [Test]
+        public void TestSolutionClosedNotFixed()
+        {
+            StaticRandomGenerator.Set(4541247);
+
             // create problem.
             var problem = new TSPProblemMock(0, 5, 10, true);
 
@@ -53,14 +131,54 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
             var solver = new RandomSolver();
 
             for (int i = 0; i < 100; i++)
-            { 
+            {
                 // generate solution.
                 double fitness;
                 var solution = solver.Solve(problem, out fitness);
 
                 // test contents.
                 Assert.AreEqual(50, fitness);
+                Assert.AreEqual(true, solution.IsClosed);
+                Assert.AreEqual(0, solution.First);
+                Assert.AreEqual(Constants.NOT_SET, solution.Last);
                 var solutionList = new List<int>(solution);
+                Assert.AreEqual(0, solutionList[0]);
+                Assert.IsTrue(solutionList.Remove(0));
+                Assert.IsTrue(solutionList.Remove(1));
+                Assert.IsTrue(solutionList.Remove(2));
+                Assert.IsTrue(solutionList.Remove(3));
+                Assert.IsTrue(solutionList.Remove(4));
+                Assert.AreEqual(0, solutionList.Count);
+            }
+        }
+
+        /// <summary>
+        /// Tests the solver on a closed tsp.
+        /// </summary>
+        [Test]
+        public void TestSolutionClosedFixed()
+        {
+            StaticRandomGenerator.Set(4541247);
+
+            // create problem.
+            var problem = new TSPProblemMock(0, 4, 5, 10, true, true);
+
+            // create the solver.
+            var solver = new RandomSolver();
+
+            for (int i = 0; i < 100; i++)
+            {
+                // generate solution.
+                double fitness;
+                var solution = solver.Solve(problem, out fitness);
+
+                // test contents.
+                Assert.AreEqual(50, fitness);
+                Assert.AreEqual(true, solution.IsClosed);
+                Assert.AreEqual(0, solution.First);
+                Assert.AreEqual(Constants.NOT_SET, solution.Last);
+                var solutionList = new List<int>(solution);
+                Assert.AreEqual(problem.Last, solutionList[solutionList.Count - 1]);
                 Assert.AreEqual(0, solutionList[0]);
                 Assert.IsTrue(solutionList.Remove(0));
                 Assert.IsTrue(solutionList.Remove(1));

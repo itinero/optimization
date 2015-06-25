@@ -60,7 +60,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
             for(int i = 0; i < 1000; i++)
             {
                 // create solution.
-                var solution = Route.CreateFrom(new int[] { 0, 1, 2, 3, 4 });
+                var solution = new Route(new int[] { 0, 1, 2, 3, 4 });
                 var fitnessBefore = 0.0;
                 foreach (var pair in solution.Pairs())
                 {
