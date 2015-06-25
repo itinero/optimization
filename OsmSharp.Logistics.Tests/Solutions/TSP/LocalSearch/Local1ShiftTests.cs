@@ -33,10 +33,10 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
         /// Tests a route where only one shift is possible/needed.
         /// </summary>
         [Test]
-        public void Test1OneShift()
+        public void Test1OneShiftClosed()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = new TSPProblemMock(0, 5, 10, true);
+            var problem = new TSPProblemMock(0, 0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -44,7 +44,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             problem.Weights[4][0] = 1;
 
             // create a route with one shift.
-            var route = new Route(new int[] { 0, 2, 3, 1, 4 }, true);
+            var route = new Route(new int[] { 0, 2, 3, 1, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
@@ -63,21 +63,20 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
         public void Test1OneShiftOpen()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = new TSPProblemMock(0, 5, 10, false);
+            var problem = new TSPProblemMock(0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
             problem.Weights[3][4] = 1;
             problem.Weights[4][0] = 1;
-            var closedProblem = problem.ToClosed();
 
             // create a route with one shift.
-            var route = new Route(new int[] { 0, 2, 3, 1, 4 }, true);
+            var route = new Route(new int[] { 0, 2, 3, 1, 4 }, null);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
             var delta = 0.0;
-            localSearch.Apply(closedProblem, route, out delta);
+            localSearch.Apply(problem, route, out delta);
 
             // test result.
             Assert.AreEqual(-27, delta);
@@ -88,10 +87,10 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
         /// Tests a route where two shifts are possible/needed.
         /// </summary>
         [Test]
-        public void Test2TwoShifts()
+        public void Test2TwoShiftsClosed()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = new TSPProblemMock(0, 5, 10, true);
+            var problem = new TSPProblemMock(0, 0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -99,7 +98,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             problem.Weights[4][0] = 1;
 
             // create a route with one shift.
-            var route = new Route(new int[] { 0, 2, 4, 1, 3 }, true);
+            var route = new Route(new int[] { 0, 2, 4, 1, 3 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
@@ -118,21 +117,20 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
         public void Test2TwoShiftsOpen()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = new TSPProblemMock(0, 5, 10, false);
+            var problem = new TSPProblemMock(0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
             problem.Weights[3][4] = 1;
             problem.Weights[4][0] = 1;
-            var closedProblem = problem.ToClosed();
 
             // create a route with one shift.
-            var route = new Route(new int[] { 0, 2, 4, 1, 3 }, true);
+            var route = new Route(new int[] { 0, 2, 4, 1, 3 }, null);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
             var delta = 0.0;
-            localSearch.Apply(closedProblem, route, out delta);
+            localSearch.Apply(problem, route, out delta);
 
             // test result.
             Assert.AreEqual(-36, delta);

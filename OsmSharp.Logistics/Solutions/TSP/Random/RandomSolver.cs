@@ -46,18 +46,18 @@ namespace OsmSharp.Logistics.Solutions.TSP.Random
             for (var customer = 0; customer < problem.Weights.Length; customer++)
             {
                 if (customer != problem.First &&
-                    (!problem.IsLastFixed || customer != problem.Last))
+                    customer != problem.Last)
                 {
                     customers.Add(customer);
                 }
             }
             customers.Shuffle<int>();
             customers.Insert(0, problem.First);
-            if(problem.IsLastFixed && problem.Last != problem.First)
+            if (problem.Last.HasValue && problem.First != problem.Last)
             { // the special case of a fixed last customer.
-                customers.Add(problem.Last);
+                customers.Add(problem.Last.Value);
             }
-            var route = new Route(customers, problem.IsClosed, problem.IsLastFixed);
+            var route = new Route(customers, problem.Last);
 
             // calculate fitness.
             fitness = 0;

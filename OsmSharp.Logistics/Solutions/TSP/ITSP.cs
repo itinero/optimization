@@ -33,17 +33,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// <summary>
         /// Gets the last customer if the problem is closed.
         /// </summary>
-        int Last { get; }
-
-        /// <summary>
-        /// Returns true if this TSP is supposed to be a tour.
-        /// </summary>
-        bool IsClosed { get; }
-
-        /// <summary>
-        /// Returns true if this TSP is limited to the a fixed last customer.
-        /// </summary>
-        bool IsLastFixed { get; }
+        int? Last { get; }
 
         /// <summary>
         /// Returns the n-nearest neighbours.
@@ -52,7 +42,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         INNearestNeighbours GetNNearestNeighbours(int n, int customer);
 
         /// <summary>
-        /// Converts this TSP definition to a closed equivalent version.
+        /// Returns an equivalent closed version.
         /// </summary>
         /// <returns></returns>
         ITSP ToClosed();

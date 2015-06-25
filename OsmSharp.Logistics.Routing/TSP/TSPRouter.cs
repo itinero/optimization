@@ -38,18 +38,14 @@ namespace OsmSharp.Logistics.Routing.TSP
         private readonly ITypedRouter _router;
         private readonly Vehicle _vehicle;
         private readonly GeoCoordinate[] _locations;
-        private readonly bool _isClosed;
+        private readonly int _first;
+        private readonly int? _last;
 
         /// <summary>
         /// Creates a new router with default solver and settings.
         /// </summary>
-        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, bool isClosed)
-        {
-            _router = router;
-            _vehicle = vehicle;
-            _locations = locations;
-            _isClosed = isClosed;
-            _solver = new EAXSolver(new GASettings()
+        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first)
+            : this(router, vehicle, locations, first, null, new EAXSolver(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -57,20 +53,40 @@ namespace OsmSharp.Logistics.Routing.TSP
                 MaxGenerations = 100000,
                 MutationPercentage = 0,
                 StagnationCount = 100
-            });
+            }))
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new router with default solver and settings.
+        /// </summary>
+        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first, int last)
+            : this(router, vehicle, locations, first, last, new EAXSolver(new GASettings()
+            {
+                CrossOverPercentage = 10,
+                ElitismPercentage = 1,
+                PopulationSize = 100,
+                MaxGenerations = 100000,
+                MutationPercentage = 0,
+                StagnationCount = 100
+            }))
+        {
+
         }
 
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, bool isClosed, 
+        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first, int? last, 
             ISolver<ITSP, OsmSharp.Logistics.Routes.IRoute> solver)
         {
             _router = router;
             _vehicle = vehicle;
             _locations = locations;
-            _isClosed = isClosed;
             _solver = solver;
+            _first = first;
+            _last = last;
         }
 
         private OsmSharp.Logistics.Routes.IRoute _route = null;
@@ -119,7 +135,15 @@ namespace OsmSharp.Logistics.Routing.TSP
             var nonNullWeights = _router.CalculateManyToManyWeight(_vehicle, nonNullResolvedArray, nonNullResolvedArray);
 
             // solve.
-            _route = _solver.Solve(new TSPProblem(0, nonNullWeights, _isClosed));
+            var first = _first;
+            if(_last.HasValue)
+            { // the last customer was set.
+                _route = _solver.Solve(new TSPProblem(first, _last.Value, nonNullWeights));
+            }
+            else
+            { // the last customer was not set.
+                _route = _solver.Solve(new TSPProblem(first, nonNullWeights));
+            }
 
             this.HasSucceeded = true;
         }
@@ -195,7 +219,7 @@ namespace OsmSharp.Logistics.Routing.TSP
 
             // sort resolved and coordinates.
             var solution = _route.ToArray();
-            var size = _isClosed ? solution.Length + 1 : solution.Length;
+            var size = _first == _last ? solution.Length + 1 : solution.Length;
             var sortedResolved = new RouterPoint[size];
             var sortedCoordinates = new GeoCoordinate[size];
             for (var idx = 0; idx < solution.Length; idx++)
@@ -205,7 +229,7 @@ namespace OsmSharp.Logistics.Routing.TSP
             }
 
             // make round if needed.
-            if (_isClosed)
+            if (_first == _last)
             {
                 sortedResolved[size - 1] = sortedResolved[0];
                 sortedCoordinates[size - 1] = sortedCoordinates[0];

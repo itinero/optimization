@@ -32,26 +32,9 @@ namespace OsmSharp.Logistics.Tests.Routes
         /// Tests the pair enumerable on a route that isn't a round.
         /// </summary>
         [Test]
-        public void Test1NotClosedNotFixed()
+        public void Test1NotClosed()
         {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, false, false);
-            var pairEnumerable = new PairEnumerable(route);
-            var pairs = new List<Pair>(pairEnumerable);
-
-            Assert.AreEqual(4, pairs.Count);
-            Assert.Contains(new Pair(0, 1), pairs);
-            Assert.Contains(new Pair(1, 2), pairs);
-            Assert.Contains(new Pair(2, 3), pairs);
-            Assert.Contains(new Pair(3, 4), pairs);
-        }
-
-        /// <summary>
-        /// Tests the pair enumerable on a route that isn't a round.
-        /// </summary>
-        [Test]
-        public void Test1NotClosedFixed()
-        {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, false, true);
+            var route = new Route(new int[] { 0, 1, 2, 3, 4 }, null);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
@@ -66,27 +49,9 @@ namespace OsmSharp.Logistics.Tests.Routes
         /// Tests the pair enumerable on a route that is a round.
         /// </summary>
         [Test]
-        public void Test2ClosedNotFixed()
+        public void Test2Closed()
         {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, true, false);
-            var pairEnumerable = new PairEnumerable(route);
-            var pairs = new List<Pair>(pairEnumerable);
-
-            Assert.AreEqual(5, pairs.Count);
-            Assert.Contains(new Pair(0, 1), pairs);
-            Assert.Contains(new Pair(1, 2), pairs);
-            Assert.Contains(new Pair(2, 3), pairs);
-            Assert.Contains(new Pair(3, 4), pairs);
-            Assert.Contains(new Pair(4, 0), pairs);
-        }
-
-        /// <summary>
-        /// Tests the pair enumerable on a route that is a round.
-        /// </summary>
-        [Test]
-        public void Test2ClosedFixed()
-        {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, true, true);
+            var route = new Route(new int[] { 0, 1, 2, 3, 4 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
@@ -104,13 +69,13 @@ namespace OsmSharp.Logistics.Tests.Routes
         [Test]
         public void Test3Empty()
         {
-            var route = new RouteStub(new int[0], true);
+            var route = new Route(new int[] { 0 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(0, pairs.Count);
 
-            route = new RouteStub(new int[0], false);
+            route = new Route(new int[] { 0 }, null);
             pairEnumerable = new PairEnumerable(route);
             pairs = new List<Pair>(pairEnumerable);
 
@@ -123,7 +88,7 @@ namespace OsmSharp.Logistics.Tests.Routes
         [Test]
         public void Test4Reset()
         {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, true);
+            var route = new Route(new int[] { 0, 1, 2, 3, 4 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairEnumerator = pairEnumerable.GetEnumerator();
 
@@ -162,13 +127,13 @@ namespace OsmSharp.Logistics.Tests.Routes
         [Test]
         public void Test5OneCustomer()
         {
-            var route = new RouteStub(new int[] { 0 }, true);
+            var route = new Route(new int[] { 0 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(0, pairs.Count);
 
-            route = new RouteStub(new int[] { 0 }, false);
+            route = new Route(new int[] { 0 }, null);
             pairEnumerable = new PairEnumerable(route);
             pairs = new List<Pair>(pairEnumerable);
 

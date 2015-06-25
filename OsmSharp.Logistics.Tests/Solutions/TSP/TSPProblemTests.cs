@@ -33,20 +33,29 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         [Test]
         public void Test()
         {
-            var weights = new double[1][];
+            var weights = new double[2][];
+            weights[0] = new double[] { 0, 1 };
+            weights[1] = new double[] { 1, 0 };
             var first = 0;
+            var last = 1;
 
             // create an open problem.
-            var problem = new TSPProblem(first, weights, false);
+            var problem = new TSPProblem(first, weights);
             Assert.AreEqual(first, problem.First);
+            Assert.IsNull(problem.Last);
             Assert.AreEqual(weights, problem.Weights);
-            Assert.IsFalse(problem.IsClosed);
 
             // create a closed problem.
-            problem = new TSPProblem(first, weights, true);
+            problem = new TSPProblem(first, first, weights);
             Assert.AreEqual(first, problem.First);
+            Assert.AreEqual(first, problem.Last);
             Assert.AreEqual(weights, problem.Weights);
-            Assert.IsTrue(problem.IsClosed);
+
+            // create a fixed problem.
+            problem = new TSPProblem(first, last, weights);
+            Assert.AreEqual(first, problem.First);
+            Assert.AreEqual(last, problem.Last);
+            Assert.AreEqual(weights, problem.Weights);
         }
     }
 }

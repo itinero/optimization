@@ -26,28 +26,6 @@ namespace OsmSharp.Logistics.Routes
     public interface IRoute : IEnumerable<int>, ICloneable
     {
         /// <summary>
-        /// Returns true if the last customer is linked with the first one.
-        /// </summary>
-        /// <remarks>
-        /// When the route is closed the first customer follows the last. This means the a pair and triple will existing containing the part last->first.
-        /// </remarks>
-        bool IsClosed
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Returns true if the last customer is fixed.
-        /// </summary>
-        /// <remarks>
-        /// When the route's last customer is fixed.
-        /// </remarks>
-        bool IsLastFixed
-        {
-            get;
-        }
-
-        /// <summary>
         /// Returns the amount of customers in the route.
         /// </summary>
         int Count
@@ -65,9 +43,9 @@ namespace OsmSharp.Logistics.Routes
         }
 
         /// <summary>
-        /// Returns the last customer or <see cref="Constants.NOT_SET"/> when the route is closed.
+        /// Returns the last customer.
         /// </summary>
-        int Last
+        int? Last
         {
             get;
         }

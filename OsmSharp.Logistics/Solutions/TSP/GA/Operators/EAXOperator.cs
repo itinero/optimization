@@ -132,21 +132,21 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
         /// <returns></returns>
         public IRoute Apply(ITSP problem, IRoute solution1, IRoute solution2, out double fitness)
         {
-            var originalProblem = problem;
-            var originalSolution1 = solution1;
-            var originalSolution2 = solution2;
-            if (!problem.IsClosed)
-            { // convert to closed problem.
-                OsmSharp.Logging.Log.TraceEvent("EAXOperator.Apply", Logging.TraceEventType.Warning,
-                    string.Format("EAX overator cannot be applied to 'open' TSP's: converting problem to a closed equivalent."));
+            //var originalProblem = problem;
+            //var originalSolution1 = solution1;
+            //var originalSolution2 = solution2;
+            //if (!problem.IsClosed)
+            //{ // convert to closed problem.
+            //    OsmSharp.Logging.Log.TraceEvent("EAXOperator.Apply", Logging.TraceEventType.Warning,
+            //        string.Format("EAX overator cannot be applied to 'open' TSP's: converting problem to a closed equivalent."));
 
-                problem = problem.ToClosed();
-                solution1 = new Route(solution1, true);
-                solution2 = new Route(solution2, true);
-            }
+            //    problem = problem.ToClosed();
+            //    solution1 = new Route(solution1, true);
+            //    solution2 = new Route(solution2, true);
+            //}
 
-            if (solution1.IsClosed != problem.IsClosed) { throw new ArgumentException("Route and problem have to be both closed."); }
-            if (solution2.IsClosed != problem.IsClosed) { throw new ArgumentException("Route and problem have to be both closed."); }
+            if ((solution1.First == solution1.Last) != problem.Last.HasValue) { throw new ArgumentException("Route and problem have to be both closed."); }
+            if ((solution2.First == solution2.Last) != problem.Last.HasValue) { throw new ArgumentException("Route and problem have to be both closed."); }
             
             fitness = double.MaxValue;
             var weights = problem.Weights;
@@ -321,7 +321,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     cycleCount--;
                 }
 
-                var newRoute = new Route(a.Length, problem.First, problem.IsClosed);
+                var newRoute = new Route(new int[] { problem.First }, problem.Last);
                 var previous = problem.First;
                 var next = nextArrayA[problem.First];
                 do
@@ -354,7 +354,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
 
             if (best == null)
             {
-                best = new Route(problem.Weights.Length, problem.First, problem.IsClosed);
+                best = new Route(new int[] { problem.First }, problem.Last);
                 var previous = problem.First;
                 var next = e_a[problem.First];
                 do
@@ -373,10 +373,10 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                 }
             }
 
-            if(!originalProblem.IsClosed)
-            { // the original problem was 'open' so convert the route again.
-                best = new Route(best, false);
-            }
+            //if(!originalProblem.IsClosed)
+            //{ // the original problem was 'open' so convert the route again.
+            //    best = new Route(best, false);
+            //}
 
             return best;
         }

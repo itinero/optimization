@@ -46,14 +46,20 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
         /// <returns></returns>
         public override IRoute Solve(ITSP problem, out double fitness)
         {
-            if (!problem.IsClosed)
-            { // the problem is 'open', we need to convert problem and then solution.
+            if (problem.Last == null)
+            { // the problem is 'open', we need to convert the problem and then solution.
                 OsmSharp.Logging.Log.TraceEvent("EAXSolver.Solve", Logging.TraceEventType.Warning,
                     string.Format("EAX cannot solver 'open' TSP's: converting problem to a closed equivalent."));
 
                 var convertedProblem = problem.ToClosed();
                 var solution = base.Solve(convertedProblem, out fitness);
-                return new Route(solution, false, problem.IsLastFixed);
+                var route = new Route(solution, null);
+                fitness = 0;
+                foreach(var pair in route.Pairs())
+                {
+                    fitness = fitness + problem.Weights[pair.From][pair.To];
+                }
+                return route;
             }
             return base.Solve(problem, out fitness);
         }

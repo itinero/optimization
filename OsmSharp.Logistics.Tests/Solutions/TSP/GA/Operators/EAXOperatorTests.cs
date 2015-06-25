@@ -32,14 +32,14 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.Operators
         /// Tests the EAX operator on a problem with 5 customers.
         /// </summary>
         [Test]
-        public void Test5CrossOverNotClosedNotFixed()
+        public void Test5CrossOverFixed()
         {
             // create problem.
-            var problem = new TSPProblemMock(0, 5, 10, false);
+            var problem = new TSPProblemMock(0, 4, 5, 10);
 
             // create solutions.
-            var solution1 = new Route(new int[] { 0, 1, 2, 3, 4 }, false, false);
-            var solution2 = new Route(new int[] { 0, 1, 3, 2, 4 }, false, false);
+            var solution1 = new Route(new int[] { 0, 1, 2, 3, 4 }, 4);
+            var solution2 = new Route(new int[] { 0, 1, 3, 2, 4 }, 4);
 
             // execute crossover.
             var crossover = new EAXOperator();
@@ -54,14 +54,14 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.Operators
         /// Tests the EAX operator on a problem with 5 customers.
         /// </summary>
         [Test]
-        public void Test5CrossOverClosedNotFixed()
+        public void Test5CrossOverClosed()
         {
             // create problem.
-            var problem = new TSPProblemMock(0, 4, 5, 10, true, false);
+            var problem = new TSPProblemMock(0, 0, 5, 10);
 
             // create solutions.
-            var solution1 = new Route(new int[] { 0, 1, 2, 3, 4 }, true, false);
-            var solution2 = new Route(new int[] { 0, 1, 3, 2, 4 }, true, false);
+            var solution1 = new Route(new int[] { 0, 1, 2, 3, 4 }, 0);
+            var solution2 = new Route(new int[] { 0, 1, 3, 2, 4 }, 0);
 
             // execute crossover.
             var crossover = new EAXOperator();
@@ -76,36 +76,14 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.Operators
         /// Tests the EAX operator on a problem with 5 customers.
         /// </summary>
         [Test]
-        public void Test5CrossOverNotClosedFixed()
+        public void Test5CrossOverOpen()
         {
             // create problem.
-            var problem = new TSPProblemMock(0, 4, 5, 10, false, true);
+            var problem = new TSPProblemMock(0, 5, 10);
 
             // create solutions.
-            var solution1 = new Route(new int[] { 0, 1, 2, 3, 4 }, false, true);
-            var solution2 = new Route(new int[] { 0, 1, 3, 2, 4 }, false, true);
-
-            // execute crossover.
-            var crossover = new EAXOperator();
-            double fitness;
-            var result = crossover.Apply(problem, solution1, solution2, out fitness);
-
-            Assert.IsNotNull(result);
-            Assert.AreEqual(5, result.Count);
-        }
-
-        /// <summary>
-        /// Tests the EAX operator on a problem with 5 customers.
-        /// </summary>
-        [Test]
-        public void Test5CrossOverClosedFixed()
-        {
-            // create problem.
-            var problem = new TSPProblemMock(0, 4, 5, 10, true, true);
-
-            // create solutions.
-            var solution1 = new Route(new int[] { 0, 1, 2, 3, 4 }, true, true);
-            var solution2 = new Route(new int[] { 0, 1, 3, 2, 4 }, true, true);
+            var solution1 = new Route(new int[] { 0, 1, 2, 3, 4 }, null);
+            var solution2 = new Route(new int[] { 0, 1, 3, 2, 4 }, null);
 
             // execute crossover.
             var crossover = new EAXOperator();

@@ -29,7 +29,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public TSPProblemMock(int first, int size, double defaultWeight, bool isClosed)
+        public TSPProblemMock(int first, int size, double defaultWeight)
         {
             this.Weights = new double[size][];
             for (int x = 0; x < size; x++)
@@ -40,38 +40,14 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
                     this.Weights[x][y] = defaultWeight;
                 }
             }
-            this.IsClosed = isClosed;
             this.First = first;
-            this.Last = Constants.NOT_SET;
+            this.Last = null;
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public TSPProblemMock(int first, int size, double defaultWeight, bool isClosed, bool randomize)
-        {
-            this.Weights = new double[size][];
-            for (int x = 0; x < size; x++)
-            {
-                this.Weights[x] = new double[size];
-                for (int y = 0; y < size; y++)
-                {
-                    this.Weights[x][y] = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(defaultWeight);
-                }
-            }
-            this.IsClosed = isClosed;
-            this.First = first;
-            this.Last = first;
-            if(!this.IsClosed)
-            {
-                this.Last = Constants.NOT_SET;
-            }
-        }
-
-        /// <summary>
-        /// Creates a new TSP.
-        /// </summary>
-        public TSPProblemMock(int first, int last, int size, double defaultWeight, bool isClosed, bool isLastFixed)
+        public TSPProblemMock(int first, int last, int size, double defaultWeight)
         {
             this.Weights = new double[size][];
             for (int x = 0; x < size; x++)
@@ -82,56 +58,27 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
                     this.Weights[x][y] = defaultWeight;
                 }
             }
-            this.IsClosed = isClosed;
             this.First = first;
             this.Last = last;
-            this.IsLastFixed = isLastFixed;
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public TSPProblemMock(int first, int last, int size, double defaultWeight, bool isClosed, bool isLastFixed, bool randomize)
-        {
-            this.Weights = new double[size][];
-            for (int x = 0; x < size; x++)
-            {
-                this.Weights[x] = new double[size];
-                for (int y = 0; y < size; y++)
-                {
-                    this.Weights[x][y] = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(defaultWeight);
-                }
-            }
-            this.IsClosed = true;
-            this.First = first;
-            this.Last = last;
-            this.IsLastFixed = isLastFixed;
-        }
-
-        /// <summary>
-        /// Creates a new TSP.
-        /// </summary>
-        public TSPProblemMock(int first, double[][] weights, bool isClosed)
+        public TSPProblemMock(int first, double[][] weights)
         {
             this.Weights = weights;
             this.First = first;
-            this.IsClosed = isClosed;
-            this.IsLastFixed = false;
-            if(this.IsClosed)
-            {
-                this.Last = Constants.NOT_SET;
-            }
+            this.Last = null;
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public TSPProblemMock(int first, int last, double[][] weights, bool isClosed, bool isLastFixed)
+        public TSPProblemMock(int first, int last, double[][] weights)
         {
             this.Weights = weights;
             this.First = first;
-            this.IsClosed = isClosed;
-            this.IsLastFixed = isLastFixed;
             this.Last = last;
         }
 
@@ -147,25 +94,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         /// <summary>
         /// Gets or sets the last customer.
         /// </summary>
-        public int Last
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets or sets the IsClosed flag.
-        /// </summary>
-        public bool IsClosed
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the is last fixed flag.
-        /// </summary>
-        public bool IsLastFixed
+        public int? Last
         {
             get;
             private set;
@@ -192,18 +121,12 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         }
 
         /// <summary>
-        /// Converts this TSP definition to a closed equivalent version.
+        /// Converts this problem to it's closed equivalent.
         /// </summary>
         /// <returns></returns>
         public ITSP ToClosed()
         {
-            var weights = new double[this.Weights.Length][];
-            for (var i = 0; i < this.Weights.Length; i++)
-            {
-                weights[i] = this.Weights[i].Clone() as double[];
-                weights[i][this.First] = 0;
-            }
-            return new TSPProblemMock(this.First, weights, true);
+            return new TSPProblemMock(this.First, this.First, this.Weights);
         }
     }
 }

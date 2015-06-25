@@ -28,28 +28,30 @@ namespace OsmSharp.Logistics.Solutions.TSP
     public class TSPProblem : ITSP
     {
         /// <summary>
-        /// Creates a new TSP.
+        /// Creates a new TSP 'open' TSP with only a start customer.
         /// </summary>
-        public TSPProblem(int first, double[][] weights, bool isClosed)
+        public TSPProblem(int first, double[][] weights)
         {
             this.First = first;
+            this.Last = null;
             this.Weights = weights;
-            this.IsClosed = isClosed;
-            this.Last = first;
-            this.IsLastFixed = false;
-            this.Last = Constants.NOT_SET;
+
+            for (var x = 0; x < this.Weights.Length; x++)
+            {
+                this.Weights[x][first] = 0;
+            }
         }
 
         /// <summary>
-        /// Creates a new TSP.
+        /// Creates a new TSP, 'closed' when first equals last.
         /// </summary>
-        public TSPProblem(int first, int last, double[][] weights, bool isClosed, bool isLastFixed)
+        public TSPProblem(int first, int last, double[][] weights)
         {
             this.First = first;
             this.Last = last;
             this.Weights = weights;
-            this.IsClosed = isClosed;
-            this.IsLastFixed = isLastFixed;
+
+            this.Weights[first][last] = 0;
         }
 
         /// <summary>
@@ -64,25 +66,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// <summary>
         /// Gets the last customer.
         /// </summary>
-        public int Last
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Returns true if this TSP is supposed to be a tour.
-        /// </summary>
-        public bool IsClosed
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Returns true if the last customer is fixed.
-        /// </summary>
-        public bool IsLastFixed
+        public int? Last
         {
             get;
             private set;
@@ -128,18 +112,12 @@ namespace OsmSharp.Logistics.Solutions.TSP
         }
 
         /// <summary>
-        /// Converts this TSP definition to a closed equivalent version.
+        /// Converts this problem to it's closed equivalent.
         /// </summary>
         /// <returns></returns>
         public ITSP ToClosed()
         {
-            var weights = new double[this.Weights.Length][];
-            for(var i = 0; i < this.Weights[i].Length; i++)
-            {
-                weights[i] = this.Weights[i].Clone() as double[];
-                weights[i][this.First] = 0;
-            }
-            return new TSPProblem(this.First, weights, true);
+            return new TSPProblem(this.First, this.First, this.Weights);
         }
     }
 }
