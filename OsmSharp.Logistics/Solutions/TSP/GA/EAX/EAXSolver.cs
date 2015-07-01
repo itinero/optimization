@@ -61,6 +61,22 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
                 }
                 return route;
             }
+            else if(problem.First != problem.Last)
+            { // the problem is 'closed' but has a fixed end point.
+                OsmSharp.Logging.Log.TraceEvent("EAXSolver.Solve", Logging.TraceEventType.Warning,
+                    string.Format("EAX cannot solver 'closed' TSP's with a fixed endpoint: converting problem to a closed equivalent."));
+
+                var convertedProblem = problem.ToClosed();
+                var convertedRoute = base.Solve(convertedProblem, out fitness);
+                convertedRoute.InsertAfter(System.Linq.Enumerable.Last(convertedRoute), problem.Last.Value);
+                var route = new Route(convertedRoute, problem.Last.Value);
+                fitness = 0;
+                foreach (var pair in route.Pairs())
+                {
+                    fitness = fitness + problem.Weights[pair.From][pair.To];
+                }
+                return route;
+            }
             return base.Solve(problem, out fitness);
         }
     }

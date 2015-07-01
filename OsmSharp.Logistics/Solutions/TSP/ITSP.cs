@@ -23,7 +23,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
     /// <summary>
     /// Abstract representation of a TSP.
     /// </summary>
-    public interface ITSP : IMatrixWeights
+    public interface ITSP : IMatrixWeights, ICloneable
     {
         /// <summary>
         /// Gets the first customer.

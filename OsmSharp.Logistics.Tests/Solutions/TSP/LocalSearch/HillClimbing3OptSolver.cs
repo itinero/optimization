@@ -38,7 +38,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             StaticRandomGenerator.Set(4541247);
 
             // create problem.
-            var problem = new TSPProblemMock(0, 0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;

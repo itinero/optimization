@@ -39,7 +39,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             StaticRandomGenerator.Set(4541247);
 
             // create problem.
-            var problem = new TSPProblemMock(0, 4, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -85,7 +85,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             StaticRandomGenerator.Set(4541247);
 
             // create problem.
-            var problem = new TSPProblemMock(0, 4, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -131,7 +131,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             StaticRandomGenerator.Set(4541247);
 
             // create problem.
-            var problem = new TSPProblemMock(0, 0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -177,7 +177,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             StaticRandomGenerator.Set(4541247);
 
             // create problem.
-            var problem = new TSPProblemMock(0, 4, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -202,7 +202,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
                 var solution = solver.Solve(problem, out fitness);
 
                 // test contents.
-                Assert.AreEqual(5, fitness);
+                Assert.AreEqual(4, fitness);
                 var solutionList = new List<int>(solution);
                 Assert.AreEqual(0, solutionList[0]);
                 Assert.IsTrue(solutionList.Remove(0));
@@ -242,7 +242,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
                 new double[] {   5,   5,  26,  12,  12,   8,   8,   0,   0,   5,   5,   5,   5,  26,   8,   8,9999}};
 
             // create problem.
-            var problem = new TSPProblemMock(0, 16, weights);
+            var problem = TSPHelper.CreateTSP(0, 16, weights);
 
             // create the solver.
             var solver = new EAXSolver(new GASettings()
@@ -262,7 +262,9 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
                 var solution = solver.Solve(problem, out fitness);
 
                 // test contents.
-                Assert.AreEqual(27, fitness);
+                Assert.AreEqual(0, solution.First);
+                Assert.AreEqual(16, solution.Last);
+                Assert.AreEqual(34, fitness);
                 var solutionList = new List<int>(solution);
                 Assert.AreEqual(0, solutionList[0]);
                 Assert.IsTrue(solutionList.Remove(0));
@@ -314,7 +316,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
                 new double[] {   5,   5,  26,  12,  12,   8,   8,   0,   0,   5,   5,   5,   5,  26,   8,   8,9999}};
 
             // create problem.
-            var problem = new TSPProblemMock(0, 0, weights);
+            var problem = TSPHelper.CreateTSP(0, 0, weights);
 
             // create the solver.
             var solver = new EAXSolver(new GASettings()
@@ -386,7 +388,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
                 new double[] {   5,   5,  26,  12,  12,   8,   8,   0,   0,   5,   5,   5,   5,  26,   8,   8,9999}};
 
             // create problem.
-            var problem = new TSPProblemMock(0, weights);
+            var problem = TSPHelper.CreateTSP(0, weights);
 
             // create the solver.
             var solver = new EAXSolver(new GASettings()

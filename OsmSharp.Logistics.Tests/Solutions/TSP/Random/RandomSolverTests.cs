@@ -51,7 +51,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
             StaticRandomGenerator.Set(4541247);
 
             // create problem.
-            var problem = new TSPProblemMock(0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 5, 10);
 
             // create the solver.
             var solver = new RandomSolver();
@@ -87,7 +87,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
             StaticRandomGenerator.Set(4541247);
 
             // create problem.
-            var problem = new TSPProblemMock(0, 0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
 
             // create the solver.
             var solver = new RandomSolver();
@@ -122,7 +122,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
             StaticRandomGenerator.Set(4541247);
 
             // create problem.
-            var problem = new TSPProblemMock(0, 4, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
 
             // create the solver.
             var solver = new RandomSolver();

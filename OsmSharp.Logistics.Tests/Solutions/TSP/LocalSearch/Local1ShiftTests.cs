@@ -36,7 +36,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
         public void Test1OneShiftClosed()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = new TSPProblemMock(0, 0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -63,7 +63,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
         public void Test1OneShiftOpen()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = new TSPProblemMock(0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -90,7 +90,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
         public void Test2TwoShiftsClosed()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = new TSPProblemMock(0, 0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -117,7 +117,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
         public void Test2TwoShiftsOpen()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = new TSPProblemMock(0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;

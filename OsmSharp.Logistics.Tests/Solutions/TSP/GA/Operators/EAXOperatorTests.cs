@@ -18,6 +18,7 @@
 
 using NUnit.Framework;
 using OsmSharp.Logistics.Routes;
+using OsmSharp.Logistics.Solutions.TSP;
 using OsmSharp.Logistics.Solutions.TSP.GA.Operators;
 
 namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.Operators
@@ -35,7 +36,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.Operators
         public void Test5CrossOverFixed()
         {
             // create problem.
-            var problem = new TSPProblemMock(0, 4, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
 
             // create solutions.
             var solution1 = new Route(new int[] { 0, 1, 2, 3, 4 }, 4);
@@ -57,7 +58,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.Operators
         public void Test5CrossOverClosed()
         {
             // create problem.
-            var problem = new TSPProblemMock(0, 0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
 
             // create solutions.
             var solution1 = new Route(new int[] { 0, 1, 2, 3, 4 }, 0);
@@ -79,7 +80,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.Operators
         public void Test5CrossOverOpen()
         {
             // create problem.
-            var problem = new TSPProblemMock(0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 5, 10);
 
             // create solutions.
             var solution1 = new Route(new int[] { 0, 1, 2, 3, 4 }, null);

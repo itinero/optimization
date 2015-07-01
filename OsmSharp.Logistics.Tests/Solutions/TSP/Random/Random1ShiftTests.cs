@@ -54,7 +54,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
             var perturber = new Random1Shift();
 
             // create a problem.
-            var problem = new TSPProblemMock(0, 0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
 
             // execute random shifts.
             for(int i = 0; i < 1000; i++)

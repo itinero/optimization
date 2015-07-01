@@ -47,7 +47,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         public void TestSolverClosed()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = new TSPProblemMock(0, 0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -69,7 +69,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         public void TestSolverOpen()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = new TSPProblemMock(0, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -91,7 +91,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         public void TestSolverFixed()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = new TSPProblemMock(0, 4, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -106,7 +106,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
             Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, solution.ToArray());
 
             // create the problem and make sure 0->...->3 is the solution.
-            problem = new TSPProblemMock(0, 3, 5, 10);
+            problem = TSPHelper.CreateTSP(0, 3, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
