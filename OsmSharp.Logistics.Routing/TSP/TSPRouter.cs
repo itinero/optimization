@@ -238,5 +238,41 @@ namespace OsmSharp.Logistics.Routing.TSP
             // build the route.
             return this.BuildRoute(_vehicle, sortedResolved, sortedCoordinates);
         }
+
+        /// <summary>
+        /// Builds the result route in segments divided by routes between customers.
+        /// </summary>
+        /// <returns></returns>
+        public Route[] BuildRoutes()
+        {
+            this.CheckHasRunAndHasSucceeded();
+
+            // sort resolved and coordinates.
+            var solution = _route.ToArray();
+            var size = _first == _last ? solution.Length + 1 : solution.Length;
+            var sortedResolved = new RouterPoint[size];
+            var sortedCoordinates = new GeoCoordinate[size];
+            for (var idx = 0; idx < solution.Length; idx++)
+            {
+                sortedResolved[idx] = _resolvedPoints[solution[idx]];
+                sortedCoordinates[idx] = _locations[solution[idx]];
+            }
+
+            // make round if needed.
+            if (_first == _last)
+            {
+                sortedResolved[size - 1] = sortedResolved[0];
+                sortedCoordinates[size - 1] = sortedCoordinates[0];
+            }
+
+            // build the route.
+            var routes = new Route[sortedResolved.Length - 1];
+            for (var i = 0; i < sortedResolved.Length - 1; i++)
+            {
+                routes[i] = this.BuildRoute(_vehicle, new RouterPoint[] { sortedResolved[i], sortedResolved[i + 1] },
+                    new GeoCoordinate[] { sortedCoordinates[i], sortedCoordinates[i + 1] });
+            }
+            return routes;
+        }
     }
 }
