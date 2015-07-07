@@ -41,6 +41,16 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
         }
 
         /// <summary>
+        /// Creates a new EAX-solver.
+        /// </summary>
+        public EAXSolver(GASettings settings, IOperator<ITSP, IRoute> mutation)
+            : base(new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
+            new TournamentSelectionOperator<ITSP, IRoute>(10, 0.5), mutation, settings)
+        {
+
+        }
+
+        /// <summary>
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
