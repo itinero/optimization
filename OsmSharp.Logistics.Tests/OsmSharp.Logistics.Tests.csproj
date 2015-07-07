@@ -90,6 +90,7 @@
     <Compile Include="Solutions\TSP\BruteForceSolverTests.cs" />
     <Compile Include="Solutions\TSP\GA\EAX\EAXSolverTests.cs" />
     <Compile Include="Solutions\TSP\GA\Operators\EAXOperatorTests.cs" />
+    <Compile Include="Solutions\TSP\LocalSearch\ClusterMutationOperatorTests.cs" />
     <Compile Include="Solutions\TSP\LocalSearch\HillClimbing3OptSolver.cs" />
     <Compile Include="Solutions\TSP\LocalSearch\Local1ShiftTests.cs" />
     <Compile Include="Solutions\TSP\Random\Random1ShiftTests.cs" />
