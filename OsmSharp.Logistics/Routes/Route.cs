@@ -628,7 +628,6 @@ namespace OsmSharp.Logistics.Routes
             throw new ArgumentOutOfRangeException(string.Format("No customer found at index {0}.", index));
         }
 
-
         private int _internalLast;
 
         /// <summary>

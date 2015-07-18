@@ -36,7 +36,7 @@ namespace OsmSharp.Logistics.Solvers
         /// </summary>
         /// <param name="problem">The problem.</param>
         /// <param name="solution">The solution.</param>
-        /// <param name="delta">The difference in fitness.</param>
+        /// <param name="delta">The difference in fitness, when > 0 there was an improvement and a reduction in fitness.</param>
         /// <returns></returns>
         bool Apply(TProblem problem, TSolution solution, out double delta);
     }

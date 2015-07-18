@@ -87,6 +87,8 @@
     <Compile Include="Routing\RouterMock.cs" />
     <Compile Include="Routing\TSP\TSPRouterTests.cs" />
     <Compile Include="Solutions\Algorithms\NNearestNeighboursAlgorithmTests.cs" />
+    <Compile Include="Solutions\TSPTW\LocalSearch\Local1ShiftTimeWindowTests.cs" />
+    <Compile Include="Solutions\TSPTW\TSPTWHelper.cs" />
     <Compile Include="Solutions\TSP\BruteForceSolverTests.cs" />
     <Compile Include="Solutions\TSP\GA\EAX\EAXSolverTests.cs" />
     <Compile Include="Solutions\TSP\GA\Operators\EAXOperatorTests.cs" />

@@ -49,7 +49,11 @@
     <Compile Include="Solutions\IMatrixWeights.cs" />
     <Compile Include="Solutions\ITimeWindows.cs" />
     <Compile Include="Solutions\TimeWindow.cs" />
+    <Compile Include="Solutions\TSPTW\Extensions.cs" />
     <Compile Include="Solutions\TSPTW\ITSPTW.cs" />
+    <Compile Include="Solutions\TSPTW\LocalSearch\Local1TimeWindowShift.cs" />
+    <Compile Include="Solutions\TSPTW\TSPTWProblem.cs" />
+    <Compile Include="Solutions\TSPTW\VNS\VNSConstructionSolver.cs" />
     <Compile Include="Solutions\TSP\BruteForceSolver.cs" />
     <Compile Include="Solutions\TSP\GA\EAX\EAXSolver.cs" />
     <Compile Include="Solutions\TSP\LocalSearch\ClusterMutationOperator.cs" />

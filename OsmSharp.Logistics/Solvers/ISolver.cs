@@ -40,7 +40,9 @@ namespace OsmSharp.Logistics.Solvers
         /// <summary>
         /// Solves the given problem.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="problem">The problem to solver.</param>
+        /// <param name="fitness">The fitness value if the solution. Smaller is better.</param>
+        /// <returns>The solution.</returns>
         TSolution Solve(TProblem problem, out double fitness);
 
         /// <summary>

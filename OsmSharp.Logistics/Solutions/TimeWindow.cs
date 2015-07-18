@@ -32,5 +32,33 @@ namespace OsmSharp.Logistics.Solutions
         /// The maximum time in seconds.
         /// </summary>
         public int Max { get; set; }
+
+        /// <summary>
+        /// Returns true if this window is valid at the given seconds.
+        /// </summary>
+        /// <param name="seconds">The time.</param>
+        /// <returns></returns>
+        public bool IsValidAt(double seconds)
+        {
+            return this.Min <= seconds && this.Max >= seconds;
+        }
+
+        /// <summary>
+        /// Returns the minimum difference.
+        /// </summary>
+        /// <param name="seconds">The time.</param>
+        /// <returns></returns>
+        public double MinDiff(double seconds)
+        {
+            if(this.Min <= seconds && this.Max >= seconds)
+            { // the time is within the window, no difference.
+                return 0;
+            }
+            if(seconds < this.Min)
+            { // time window too late.
+                return this.Min - seconds;
+            }
+            return seconds - this.Max;
+        }
     }
 }
