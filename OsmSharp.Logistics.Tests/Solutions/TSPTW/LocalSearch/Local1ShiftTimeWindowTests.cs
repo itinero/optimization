@@ -106,7 +106,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
         }
 
         /// <summary>
-        /// Tests an infeasible route where a violated customer can be moved backward.
+        /// Tests an infeasible route where a non-violated customer can be moved backward.
         /// </summary>
         [Test]
         public void Test1OneShiftNonViolatedBackward()
@@ -138,6 +138,46 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
 
             // apply the 1-shift local search, it should find the customer to replocate.
             Assert.IsFalse(localSearch.MoveNonViolatedBackward(problem, route, out delta));
+        }
+
+        /// <summary>
+        /// Tests an infeasible route where a violated customer can be moved forward.
+        /// </summary>
+        [Test]
+        public void Test1OneShiftViolatedForward()
+        {
+            // create the problem and make sure 0->1->2->3->4 is the solution.
+            var problem = TSPTWHelper.CreateTSP(0, 0, 5, 10);
+            problem.Weights[0][3] = 1;
+            problem.Weights[3][1] = 1;
+            problem.Windows[1] = new Logistics.Solutions.TimeWindow()
+            {
+                Min = 1,
+                Max = 3
+            };
+            problem.Windows[3] = new Logistics.Solutions.TimeWindow()
+            {
+                Min = 0,
+                Max = 2
+            };
+
+            // create a route with one shift.
+            var route = new Route(new int[] { 0, 1, 3, 2, 4 }, 0);
+
+            // apply the 1-shift local search, it should find the customer to replocate.
+            var localSearch = new Local1TimeWindowShift();
+            var delta = 0.0;
+            Assert.IsTrue(localSearch.MoveViolatedForward(problem, route, out delta)); // shifts 1 after 3.
+
+            // test result.
+            Assert.AreEqual(25, delta);
+            Assert.AreEqual(new int[] { 0, 3, 1, 2, 4 }, route.ToArray());
+
+            // create a feasible route.
+            route = new Route(new int[] { 0, 3, 1, 2, 4 }, 0);
+
+            // apply the 1-shift local search, it should find the customer to replocate.
+            Assert.IsFalse(localSearch.MoveViolatedForward(problem, route, out delta));
         }
     }
 }

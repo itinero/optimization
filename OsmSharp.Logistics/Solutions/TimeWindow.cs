@@ -26,12 +26,12 @@ namespace OsmSharp.Logistics.Solutions
         /// <summary>
         /// The minimum time in seconds.
         /// </summary>
-        public int Min { get; set; }
+        public double Min { get; set; }
 
         /// <summary>
         /// The maximum time in seconds.
         /// </summary>
-        public int Max { get; set; }
+        public double Max { get; set; }
 
         /// <summary>
         /// Returns true if this window is valid at the given seconds.
