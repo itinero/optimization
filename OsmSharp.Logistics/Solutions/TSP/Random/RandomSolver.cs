@@ -60,11 +60,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.Random
             var route = new Route(customers, problem.Last);
 
             // calculate fitness.
-            fitness = 0;
-            foreach (var pair in route.Pairs())
-            {
-                fitness = fitness + problem.Weights[pair.From][pair.To];
-            }
+            fitness = problem.Objective.Calculate(problem, route);
             return route;
         }
     }

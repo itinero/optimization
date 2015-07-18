@@ -49,6 +49,7 @@
     <Compile Include="Solutions\IMatrixWeights.cs" />
     <Compile Include="Solutions\TSP\BruteForceSolver.cs" />
     <Compile Include="Solutions\TSP\GA\EAX\EAXSolver.cs" />
+    <Compile Include="Solutions\TSP\ITSPObjective.cs" />
     <Compile Include="Solutions\TSP\LocalSearch\ClusterMutationOperator.cs" />
     <Compile Include="Solutions\TSP\GA\Operators\EAXOperator.cs" />
     <Compile Include="Solutions\TSP\ITSP.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Solutions\TSP\LocalSearch\HillClimbing3OptSolver.cs" />
     <Compile Include="Solutions\TSP\Random\Random1Shift.cs" />
     <Compile Include="Solutions\TSP\Random\RandomSolver.cs" />
+    <Compile Include="Solutions\TSP\MinimumWeightObjective.cs" />
     <Compile Include="Solutions\TSP\TSPProblem.cs" />
     <Compile Include="Solvers\EmptyOperator.cs" />
     <Compile Include="Solvers\GA\GASettings.cs" />

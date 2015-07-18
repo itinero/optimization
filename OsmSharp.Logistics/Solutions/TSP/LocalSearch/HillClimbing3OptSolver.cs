@@ -83,16 +83,17 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         public override IRoute Solve(ITSP problem, out double fitness)
         {
             if (!problem.Last.HasValue) { throw new ArgumentException("OPT3 cannot be used on open TSP-problems."); }
+            if (problem.Objective.Name != MinimumWeightObjective.MinimumWeightObjectiveName) 
+            { // check, because assumptions are made in this operator about the objective.
+                throw new ArgumentOutOfRangeException(string.Format("{0} cannot handle objective {1}.", this.Name, 
+                    problem.Objective.Name));
+            }
 
             // generate some route first.
             var route = _generator.Solve(problem);
 
             // calculate fitness.
-            fitness = 0.0;
-            foreach(var pair in route.Pairs())
-            {
-                fitness = fitness + problem.Weights[pair.From][pair.To];
-            }
+            fitness = problem.Objective.Calculate(problem, route);
 
             // improve the existing solution.
             double difference;

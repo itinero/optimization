@@ -18,6 +18,7 @@
 
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Solvers;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
@@ -47,6 +48,12 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// <returns></returns>
         public bool Apply(ITSP problem, IRoute solution, out double delta)
         {
+            if (problem.Objective.Name != MinimumWeightObjective.MinimumWeightObjectiveName) 
+            { // check, because assumptions are made in this operator about the objective.
+                throw new ArgumentOutOfRangeException(string.Format("{0} cannot handle objective {1}.", this.Name, 
+                    problem.Objective.Name));
+            }
+
             if(_shouldFollow == null || _problem != problem)
             {
                 _problem = problem;
@@ -69,41 +76,18 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
             {
                 var insert = pair.Key;
                 var customer = pair.Value;
-                delta = delta + this.ShiftAfter(solution, weights, insert, customer);
+                double localDelta;
+                problem.Objective.ShiftAfter(problem, solution, customer, insert, out localDelta);
+                delta = delta + localDelta;
 
                 insert = customer;
                 if (_shouldFollow.TryGetValue(insert, out customer))
                 { // move again because the customer before was just moved.
-                    delta = delta + this.ShiftAfter(solution, weights, insert, customer);
+                    problem.Objective.ShiftAfter(problem, solution, customer, insert, out localDelta);
+                    delta = delta + localDelta;
                 }
             }
             return delta < 0;
-        }
-
-        /// <summary>
-        /// Shifts after and returns delta.
-        /// </summary>
-        /// <returns></returns>
-        private double ShiftAfter(IRoute solution, double[][] weights, int insert, int customer)
-        {
-            int oldBefore, newAfter, oldAfter;
-            solution.ShiftAfter(customer, insert, out oldBefore, out oldAfter, out newAfter);
-            if (oldAfter == Constants.END)
-            {
-                oldAfter = solution.First;
-            }
-            if (newAfter == Constants.END)
-            {
-                newAfter = solution.First;
-            }
-
-            // calculate difference.
-            return - weights[oldBefore][customer]
-                - weights[customer][oldAfter]
-                + weights[oldBefore][oldAfter]
-                - weights[insert][newAfter]
-                + weights[insert][customer]
-                + weights[customer][newAfter];
         }
     }
 }

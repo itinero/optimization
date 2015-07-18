@@ -31,10 +31,20 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// Creates a new TSP 'open' TSP with only a start customer.
         /// </summary>
         public TSPProblem(int first, double[][] weights)
+            : this(first, weights, new MinimumWeightObjective())
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new TSP 'open' TSP with only a start customer.
+        /// </summary>
+        public TSPProblem(int first, double[][] weights, ITSPObjective fitness)
         {
             this.First = first;
             this.Last = null;
             this.Weights = weights;
+            this.Objective = fitness;
 
             for (var x = 0; x < this.Weights.Length; x++)
             {
@@ -46,10 +56,20 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// Creates a new TSP, 'closed' when first equals last.
         /// </summary>
         public TSPProblem(int first, int last, double[][] weights)
+            : this(first, last, weights, new MinimumWeightObjective())
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new TSP, 'closed' when first equals last.
+        /// </summary>
+        public TSPProblem(int first, int last, double[][] weights, ITSPObjective fitness)
         {
             this.First = first;
             this.Last = last;
             this.Weights = weights;
+            this.Objective = fitness;
 
             this.Weights[first][last] = 0;
         }
@@ -84,6 +104,15 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// Gets the weights.
         /// </summary>
         public double[][] Weights
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the fitness type.
+        /// </summary>
+        public ITSPObjective Objective
         {
             get;
             private set;
@@ -128,7 +157,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
             if(this.Last == null)
             { // 'open' problem, just set weights to first to 0.
                 // REMARK: weights already set in constructor.
-                return new TSPProblem(this.First, this.First, this.Weights);
+                return new TSPProblem(this.First, this.First, this.Weights, this.Objective);
             }
             else if(this.First != this.Last)
             { // 'open' problem but with fixed weights.
@@ -173,7 +202,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
                         }
                     }
                 }
-                return new TSPProblem(this.First, this.First, weights);
+                return new TSPProblem(this.First, this.First, weights, this.Objective);
             }
             return this; // problem already closed with first==last.
         }
@@ -193,6 +222,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
             clone.First = this.First;
             clone.Last = this.Last;
             clone.Weights = this.Weights;
+            clone.Objective = this.Objective;
             return clone;
         }
     }

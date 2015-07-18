@@ -73,12 +73,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
                 var localRoute = new Route(withFirst, problem.Last);
 
                 // calculate fitness.
-                var localFitness = 0.0;
-                foreach(var pair in localRoute.Pairs())
-                {
-                    localFitness = localFitness +
-                        problem.Weights[pair.From][pair.To];
-                }
+                var localFitness = problem.Objective.Calculate(problem, localRoute);
                 if (localFitness < bestFitness)
                 { // the best weight has improved.
                     bestFitness = localFitness;
