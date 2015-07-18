@@ -34,7 +34,7 @@ namespace OsmSharp.Logistics.Routing.TSP
     /// </summary>
     public class TSPRouter : RoutingAlgorithmBase
     {
-        private readonly ISolver<ITSP, OsmSharp.Logistics.Routes.IRoute> _solver;
+        private readonly ISolver<ITSP, ITSPObjective, OsmSharp.Logistics.Routes.IRoute> _solver;
         private readonly ITypedRouter _router;
         private readonly Vehicle _vehicle;
         private readonly GeoCoordinate[] _locations;
@@ -79,7 +79,7 @@ namespace OsmSharp.Logistics.Routing.TSP
         /// Creates a new router with a given solver.
         /// </summary>
         public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first, int? last, 
-            ISolver<ITSP, OsmSharp.Logistics.Routes.IRoute> solver)
+            ISolver<ITSP, ITSPObjective, OsmSharp.Logistics.Routes.IRoute> solver)
         {
             _router = router;
             _vehicle = vehicle;
@@ -139,11 +139,11 @@ namespace OsmSharp.Logistics.Routing.TSP
             var first = _first;
             if(_last.HasValue)
             { // the last customer was set.
-                _route = _solver.Solve(new TSPProblem(first, _last.Value, nonNullWeights));
+                _route = _solver.Solve(new TSPProblem(first, _last.Value, nonNullWeights), new MinimumWeightObjective());
             }
             else
             { // the last customer was not set.
-                _route = _solver.Solve(new TSPProblem(first, nonNullWeights));
+                _route = _solver.Solve(new TSPProblem(first, nonNullWeights), new MinimumWeightObjective());
             }
 
             this.HasSucceeded = true;

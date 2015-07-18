@@ -46,13 +46,5 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// </summary>
         /// <returns></returns>
         ITSP ToClosed();
-
-        /// <summary>
-        /// Returns the objective.
-        /// </summary>
-        ITSPObjective Objective
-        {
-            get;
-        }
     }
 }

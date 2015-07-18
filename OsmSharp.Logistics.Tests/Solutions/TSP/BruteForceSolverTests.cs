@@ -56,7 +56,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
 
             // create the solver.
             var solver = new BruteForceSolver();
-            var solution = solver.Solve(problem);
+            var solution = solver.Solve(problem, new MinimumWeightObjective());
 
             // verify solution.
             Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, solution.ToArray());
@@ -78,7 +78,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
 
             // create the solver.
             var solver = new BruteForceSolver();
-            var solution = solver.Solve(problem);
+            var solution = solver.Solve(problem, new MinimumWeightObjective());
 
             // verify solution.
             Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, solution.ToArray());
@@ -100,7 +100,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
 
             // create the solver.
             var solver = new BruteForceSolver();
-            var solution = solver.Solve(problem);
+            var solution = solver.Solve(problem, new MinimumWeightObjective());
 
             // verify solution.
             Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, solution.ToArray());
@@ -115,7 +115,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
 
             // create the solver.
             solver = new BruteForceSolver();
-            solution = solver.Solve(problem);
+            solution = solver.Solve(problem, new MinimumWeightObjective());
 
             // verify solution.
             var array = solution.ToArray();

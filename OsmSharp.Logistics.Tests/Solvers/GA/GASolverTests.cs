@@ -34,7 +34,7 @@ namespace OsmSharp.Logistics.Tests.Solvers.GA
         public void TestName()
         {
             // create the solver.
-            var solver = new GASolver<ProblemMock, SolutionMock>(
+            var solver = new GASolver<ProblemMock, ObjectiveMock, SolutionMock>(new ObjectiveMock(),
                 new GeneratorMock(), new CrossOverMock(),
                 new SelectionMock(), new LocalSearchMock());
 
@@ -48,7 +48,7 @@ namespace OsmSharp.Logistics.Tests.Solvers.GA
         public void Test()
         {
             // create the solver.
-            var solver = new GASolver<ProblemMock, SolutionMock>(
+            var solver = new GASolver<ProblemMock, ObjectiveMock, SolutionMock>(new ObjectiveMock(),
                 new GeneratorMock(), new CrossOverMock(),
                 new SelectionMock(), new LocalSearchMock());
 
@@ -57,7 +57,7 @@ namespace OsmSharp.Logistics.Tests.Solvers.GA
             var solution = solver.Solve(new ProblemMock()
             {
                 Max = 1000
-            }, out solutionFitness);
+            }, new ObjectiveMock(), out solutionFitness);
 
             Assert.AreEqual(0, solution.Value);
         }

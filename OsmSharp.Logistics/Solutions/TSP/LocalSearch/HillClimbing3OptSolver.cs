@@ -26,9 +26,9 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
     /// <summary>
     /// A 3-opt solver.
     /// </summary>
-    public class HillClimbing3OptSolver : SolverBase<ITSP, IRoute>, IOperator<ITSP, IRoute>
+    public class HillClimbing3OptSolver : SolverBase<ITSP, ITSPObjective, IRoute>, IOperator<ITSP, ITSPObjective, IRoute>
     {
-        private readonly ISolver<ITSP, IRoute> _generator;
+        private readonly ISolver<ITSP, ITSPObjective, IRoute> _generator;
         private readonly bool _nearestNeighbours = false;
         private readonly bool _dontLook = false;
         private readonly double _epsilon = 0.001f;
@@ -46,7 +46,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public HillClimbing3OptSolver(ISolver<ITSP, IRoute> generator, bool nearestNeighbours, bool dontLook)
+        public HillClimbing3OptSolver(ISolver<ITSP, ITSPObjective, IRoute> generator, bool nearestNeighbours, bool dontLook)
         {
             _generator = generator;
             _dontLook = dontLook;
@@ -77,27 +77,31 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         }
 
         /// <summary>
+        /// Returns true if the given objective is supported.
+        /// </summary>
+        /// <returns></returns>
+        public bool Supports(ITSPObjective objective)
+        {
+            return objective.Name == MinimumWeightObjective.MinimumWeightObjectiveName;
+        }
+
+        /// <summary>
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP problem, out double fitness)
+        public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
         {
             if (!problem.Last.HasValue) { throw new ArgumentException("OPT3 cannot be used on open TSP-problems."); }
-            if (problem.Objective.Name != MinimumWeightObjective.MinimumWeightObjectiveName) 
-            { // check, because assumptions are made in this operator about the objective.
-                throw new ArgumentOutOfRangeException(string.Format("{0} cannot handle objective {1}.", this.Name, 
-                    problem.Objective.Name));
-            }
 
             // generate some route first.
-            var route = _generator.Solve(problem);
+            var route = _generator.Solve(problem, objective);
 
             // calculate fitness.
-            fitness = problem.Objective.Calculate(problem, route);
+            fitness = objective.Calculate(problem, route);
 
             // improve the existing solution.
             double difference;
-            if(this.Apply(problem, route, out difference))
+            if(this.Apply(problem, objective, route, out difference))
             { // improvement!
                 fitness = fitness + difference;
             }
@@ -108,11 +112,8 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The solution.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(ITSP problem, IRoute solution, out double delta)
+        public bool Apply(ITSP problem, ITSPObjective objective, IRoute solution, out double delta)
         {
             if (!problem.Last.HasValue) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
             if (solution.First != solution.Last) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }

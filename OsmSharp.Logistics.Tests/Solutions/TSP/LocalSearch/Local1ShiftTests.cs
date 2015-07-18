@@ -18,6 +18,7 @@
 
 using NUnit.Framework;
 using OsmSharp.Logistics.Routes;
+using OsmSharp.Logistics.Solutions.TSP;
 using OsmSharp.Logistics.Solutions.TSP.LocalSearch;
 using System.Linq;
 
@@ -49,7 +50,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
             var delta = 0.0;
-            localSearch.Apply(problem, route, out delta);
+            localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
 
             // test result.
             Assert.AreEqual(-27, delta);
@@ -76,7 +77,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
             var delta = 0.0;
-            localSearch.Apply(problem, route, out delta);
+            localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
 
             // test result.
             Assert.AreEqual(-27, delta);
@@ -103,7 +104,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
             var delta = 0.0;
-            localSearch.Apply(problem, route, out delta);
+            localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
 
             // test result.
             Assert.AreEqual(-45, delta);
@@ -130,7 +131,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
             var delta = 0.0;
-            localSearch.Apply(problem, route, out delta);
+            localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
 
             // test result.
             Assert.AreEqual(-36, delta);

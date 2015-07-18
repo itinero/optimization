@@ -26,7 +26,7 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
     /// <summary>
     /// A local search procedure to move around and improve the time window 'violations' in a solution.
     /// </summary>
-    public class Local1TimeWindowShift : IOperator<ITSPTW, IRoute>
+    public class Local1TimeWindowShift : IOperator<ITSPTW, ITSPTWObjective, IRoute>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -37,13 +37,19 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
         }
 
         /// <summary>
+        /// Returns true if the given objective is supported.
+        /// </summary>
+        /// <returns></returns>
+        public bool Supports(ITSPTWObjective objective)
+        {
+            return objective.Name == FeasibleObjective.FeasibleObjectiveName;
+        }
+
+        /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The route.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(ITSPTW problem, IRoute solution, out double delta)
+        public bool Apply(ITSPTW problem, ITSPTWObjective objective, IRoute solution, out double delta)
         {
             // STRATEGY: 
             // 1: try to move a violated customer backwards.
@@ -59,6 +65,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                 return true;
             }
             if (this.MoveNonViolatedBackward(problem, solution, out delta))
+            { // success already, don't try anything else.
+                return true;
+            }
+            if (this.MoveViolatedForward(problem, solution, out delta))
             { // success already, don't try anything else.
                 return true;
             }

@@ -16,27 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Logistics.Routes;
-using OsmSharp.Logistics.Solutions.TSPTW.Random;
-using OsmSharp.Logistics.Solvers.VNS;
-
-namespace OsmSharp.Logistics.Solutions.TSPTW.VNS
+namespace OsmSharp.Logistics.Tests.Solvers
 {
     /// <summary>
-    /// Implements a VNS-strategy to construct feasible solution for the TSP-TW from random tours.
+    /// A mockup of an objective.
     /// </summary>
-    public class VNSConstructionSolver : VNSSolver<ITSPTW, ITSPTWObjective, IRoute>
+    class ObjectiveMock
     {
-        /// <summary>
-        /// Creates a new VNS construction solver.
-        /// </summary>
-        public VNSConstructionSolver()
-            : base(new RandomSolver(), new Random1Shift(), new LocalSearch.Local1TimeWindowShift(), (i, p, o, r) =>
-            {
-                return o.Calculate(p, r) == 0;
-            })
-        {
 
-        }
     }
 }

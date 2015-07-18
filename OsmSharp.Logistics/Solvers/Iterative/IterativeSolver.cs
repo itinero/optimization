@@ -21,9 +21,7 @@ namespace OsmSharp.Logistics.Solvers.Iterative
     /// <summary>
     /// A solver that let's another solver try n-times and keeps the best obtained solution.
     /// </summary>
-    /// <typeparam name="TProblem"></typeparam>
-    /// <typeparam name="TSolution"></typeparam>
-    public class IterativeSolver<TProblem, TSolution> : SolverBase<TProblem, TSolution>
+    public class IterativeSolver<TProblem, TObjective, TSolution> : SolverBase<TProblem, TObjective, TSolution>
     {
         /// <summary>
         /// The number of times to try.
@@ -33,19 +31,19 @@ namespace OsmSharp.Logistics.Solvers.Iterative
         /// <summary>
         /// The solver to try.
         /// </summary>
-        private ISolver<TProblem, TSolution> _solver;
+        private ISolver<TProblem, TObjective, TSolution> _solver;
 
         /// <summary>
         /// Holds the stop condition.
         /// </summary>
-        private SolverDelegates.StopConditionDelegate<TProblem, TSolution> _stopCondition;
+        private SolverDelegates.StopConditionDelegate<TProblem, TObjective, TSolution> _stopCondition;
 
         /// <summary>
         /// Creates a new iterative improvement solver.
         /// </summary>
         /// <param name="solver"></param>
         /// <param name="n"></param>
-        public IterativeSolver(ISolver<TProblem, TSolution> solver, int n)
+        public IterativeSolver(ISolver<TProblem, TObjective, TSolution> solver, int n)
         {
             _solver = solver;
             _n = n;
@@ -57,8 +55,8 @@ namespace OsmSharp.Logistics.Solvers.Iterative
         /// <param name="solver"></param>
         /// <param name="n"></param>
         /// <param name="stopCondition"></param>
-        public IterativeSolver(ISolver<TProblem, TSolution> solver, int n, 
-            SolverDelegates.StopConditionDelegate<TProblem, TSolution> stopCondition)
+        public IterativeSolver(ISolver<TProblem, TObjective, TSolution> solver, int n, 
+            SolverDelegates.StopConditionDelegate<TProblem, TObjective, TSolution> stopCondition)
         {
             _solver = solver;
             _n = n;
@@ -77,18 +75,19 @@ namespace OsmSharp.Logistics.Solvers.Iterative
         /// Solves the given problem.
         /// </summary>
         /// <param name="problem">The problem to solve.</param>
+        /// <param name="objective">The objective to reach.</param>
         /// <param name="fitness">The fitness of the solution found.</param>
         /// <returns></returns>
-        public override TSolution Solve(TProblem problem, out double fitness)
+        public override TSolution Solve(TProblem problem, TObjective objective, out double fitness)
         {
             var i = 0;
             TSolution best = default(TSolution);
             fitness = double.MaxValue;
             while (i < _n && !this.IsStopped &&
-                (_stopCondition == null || !_stopCondition.Invoke(i, problem, best)))
+                (_stopCondition == null || !_stopCondition.Invoke(i, problem, objective, best)))
             {
                 var nextFitness = double.MaxValue;
-                var nextRoute = _solver.Solve(problem, out nextFitness);
+                var nextRoute = _solver.Solve(problem, objective, out nextFitness);
                 if (nextFitness < fitness)
                 { // yep, found a better solution!
                     best = nextRoute;

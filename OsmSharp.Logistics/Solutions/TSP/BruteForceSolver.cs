@@ -25,7 +25,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
     /// <summary>
     /// Implements a brute force solver by checking all possible combinations.
     /// </summary>
-    public class BruteForceSolver : SolverBase<ITSP, IRoute>
+    public class BruteForceSolver : SolverBase<ITSP, ITSPObjective, IRoute>
     {
         /// <summary>
         /// Returns a new for this solver.
@@ -42,7 +42,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP problem, out double fitness)
+        public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
         {
             // initialize.
             var solution = new List<int>();
@@ -73,7 +73,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
                 var localRoute = new Route(withFirst, problem.Last);
 
                 // calculate fitness.
-                var localFitness = problem.Objective.Calculate(problem, localRoute);
+                var localFitness = objective.Calculate(problem, localRoute);
                 if (localFitness < bestFitness)
                 { // the best weight has improved.
                     bestFitness = localFitness;

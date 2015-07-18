@@ -26,8 +26,11 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
     /// <summary>
     /// An operator that uses best-effort to transform the route into a route that contains no edge a->b while an edge a->c with weight 0 exists.
     /// </summary>
-    public class ClusterMutationOperator : IOperator<ITSP, IRoute>
+    public class ClusterMutationOperator : IOperator<ITSP, ITSPObjective, IRoute>
     {
+        private Dictionary<int, int> _shouldFollow;
+        private ITSP _problem;
+
         /// <summary>
         /// Returns the name of the operator.
         /// </summary>
@@ -36,22 +39,26 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
             get { return "CLST"; }
         }
 
-        private Dictionary<int, int> _shouldFollow;
-        private ITSP _problem;
+        /// <summary>
+        /// Returns true if the given objective is supported.
+        /// </summary>
+        /// <param name="objective"></param>
+        /// <returns></returns>
+        public bool Supports(ITSPObjective objective)
+        {
+            return objective.Name == MinimumWeightObjective.MinimumWeightObjectiveName;
+        }
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The solution.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(ITSP problem, IRoute solution, out double delta)
+        public bool Apply(ITSP problem, ITSPObjective objective, IRoute solution, out double delta)
         {
-            if (problem.Objective.Name != MinimumWeightObjective.MinimumWeightObjectiveName) 
+            if (objective.Name != MinimumWeightObjective.MinimumWeightObjectiveName) 
             { // check, because assumptions are made in this operator about the objective.
                 throw new ArgumentOutOfRangeException(string.Format("{0} cannot handle objective {1}.", this.Name, 
-                    problem.Objective.Name));
+                    objective.Name));
             }
 
             if(_shouldFollow == null || _problem != problem)
@@ -77,13 +84,13 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                 var insert = pair.Key;
                 var customer = pair.Value;
                 double localDelta;
-                problem.Objective.ShiftAfter(problem, solution, customer, insert, out localDelta);
+                objective.ShiftAfter(problem, solution, customer, insert, out localDelta);
                 delta = delta + localDelta;
 
                 insert = customer;
                 if (_shouldFollow.TryGetValue(insert, out customer))
                 { // move again because the customer before was just moved.
-                    problem.Objective.ShiftAfter(problem, solution, customer, insert, out localDelta);
+                    objective.ShiftAfter(problem, solution, customer, insert, out localDelta);
                     delta = delta + localDelta;
                 }
             }

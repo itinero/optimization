@@ -45,7 +45,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.Operators
             // execute crossover.
             var crossover = new EAXOperator();
             double fitness;
-            var result = crossover.Apply(problem, solution1, solution2, out fitness);
+            var result = crossover.Apply(problem, new MinimumWeightObjective(), solution1, solution2, out fitness);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Count);
@@ -67,7 +67,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.Operators
             // execute crossover.
             var crossover = new EAXOperator();
             double fitness;
-            var result = crossover.Apply(problem, solution1, solution2, out fitness);
+            var result = crossover.Apply(problem, new MinimumWeightObjective(), solution1, solution2, out fitness);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Count);
@@ -89,7 +89,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.Operators
             // execute crossover.
             var crossover = new EAXOperator();
             double fitness;
-            var result = crossover.Apply(problem, solution1, solution2, out fitness);
+            var result = crossover.Apply(problem, new MinimumWeightObjective(), solution1, solution2, out fitness);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Count);

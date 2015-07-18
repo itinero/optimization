@@ -27,7 +27,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
     /// A local 1-Shift search for the TSP with Time Window.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere.</remarks>
-    public class Local1Shift : IOperator<ITSP, IRoute>
+    public class Local1Shift : IOperator<ITSP, ITSPObjective, IRoute>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -38,26 +38,26 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         }
 
         /// <summary>
+        /// Returns true if the given objective is supported.
+        /// </summary>
+        /// <returns></returns>
+        public bool Supports(ITSPObjective objective)
+        {
+            return objective.Name == MinimumWeightObjective.MinimumWeightObjectiveName;
+        }
+
+        /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="route">The route.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(ITSP problem, IRoute route, out double delta)
+        public bool Apply(ITSP problem, ITSPObjective objective, IRoute route, out double delta)
         {
-            if (problem.Objective.Name != MinimumWeightObjective.MinimumWeightObjectiveName) 
-            { // check, because assumptions are made in this operator about the objective.
-                throw new ArgumentOutOfRangeException(string.Format("{0} cannot handle objective {1}.", this.Name, 
-                    problem.Objective.Name));
-            }
-
             var originalRoute = route;
             var originalProblem = problem;
             var originalFitness = 0.0;
             if (!problem.Last.HasValue)
             { // the problem is 'open', convert to a closed equivalent.
-                originalFitness = problem.Objective.Calculate(problem, route);
+                originalFitness = objective.Calculate(problem, route);
                 problem = problem.ToClosed();
                 route = new Route(route, problem.Last);
             }
@@ -80,7 +80,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                         if (pair.From != triple.Along &&
                             pair.To != triple.Along)
                         { // this candidate may fit here.
-                            var localDelta = problem.Objective.IfShiftAfter(problem, route, triple.Along, pair.From, triple.From, triple.To, pair.To);
+                            var localDelta = objective.IfShiftAfter(problem, route, triple.Along, pair.From, triple.From, triple.To, pair.To);
                             if (localDelta < bestDelta)
                             { // this means a (better) improvement.
                                 bestDelta = localDelta;
@@ -112,7 +112,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                     }
                 }
 
-                var newFitness = problem.Objective.Calculate(problem, originalRoute);
+                var newFitness = objective.Calculate(problem, originalRoute);
                 delta = newFitness - originalFitness;
             }
             return success;

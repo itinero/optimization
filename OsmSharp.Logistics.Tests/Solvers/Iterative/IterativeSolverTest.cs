@@ -34,7 +34,7 @@ namespace OsmSharp.Logistics.Tests.Solvers.Iterative
         public void TestName()
         {
             // create solver.
-            var solver = new IterativeSolver<ProblemMock, SolutionMock>(
+            var solver = new IterativeSolver<ProblemMock, ObjectiveMock, SolutionMock>(
                 new GeneratorMock(), 10);
 
             Assert.AreEqual("ITER_[10xMOCK_GENERATOR]", solver.Name);
@@ -50,14 +50,14 @@ namespace OsmSharp.Logistics.Tests.Solvers.Iterative
             OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
 
             // create solver.
-            var solver = new IterativeSolver<ProblemMock, SolutionMock>(
+            var solver = new IterativeSolver<ProblemMock, ObjectiveMock, SolutionMock>(
                 new GeneratorMock(), 10);
 
             // run solver.
             var solution = solver.Solve(new ProblemMock()
             {
                 Max = 1000
-            });
+            }, new ObjectiveMock());
 
             // nothing we can say about the state of the solution. 
             // IDEA: improve testability by creating a mock random generator and letting is generate best solutions and then check the result.
@@ -75,9 +75,9 @@ namespace OsmSharp.Logistics.Tests.Solvers.Iterative
 
             // create solver.
             var best = new SolutionMock() { Value = 1000 };
-            IterativeSolver<ProblemMock, SolutionMock> solver = null;
-            solver = new IterativeSolver<ProblemMock, SolutionMock>(
-                new GeneratorMock(), 10, (i, p, s) =>
+            IterativeSolver<ProblemMock, ObjectiveMock, SolutionMock> solver = null;
+            solver = new IterativeSolver<ProblemMock, ObjectiveMock, SolutionMock>(
+                new GeneratorMock(), 10, (i, p, o, s) =>
             {
                 if(s != null && best.Value > s.Value)
                 { // keep best solution.
@@ -99,7 +99,7 @@ namespace OsmSharp.Logistics.Tests.Solvers.Iterative
             var solution = solver.Solve(new ProblemMock()
             {
                 Max = 1000
-            });
+            }, new ObjectiveMock());
             Assert.AreEqual(best.Value, solution.Value);
         }
 
@@ -114,9 +114,9 @@ namespace OsmSharp.Logistics.Tests.Solvers.Iterative
 
             // create solver.
             var best = new SolutionMock() { Value = 1000 };
-            IterativeSolver<ProblemMock, SolutionMock> solver = null;
-            solver = new IterativeSolver<ProblemMock, SolutionMock>(
-                new GeneratorMock(), 10, (i, p, s) =>
+            IterativeSolver<ProblemMock, ObjectiveMock, SolutionMock> solver = null;
+            solver = new IterativeSolver<ProblemMock, ObjectiveMock, SolutionMock>(
+                new GeneratorMock(), 10, (i, p, o, s) =>
                 {
                     if (s != null && best.Value > s.Value)
                     { // keep best solution.
@@ -133,7 +133,7 @@ namespace OsmSharp.Logistics.Tests.Solvers.Iterative
             var solution = solver.Solve(new ProblemMock()
             {
                 Max = 1000
-            });
+            }, new ObjectiveMock());
             Assert.AreEqual(best.Value, solution.Value);
         }
     }

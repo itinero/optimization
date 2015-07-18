@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using OsmSharp.Logistics.Solutions.TSP;
 using OsmSharp.Logistics.Solutions.TSP.LocalSearch;
 using OsmSharp.Logistics.Solutions.TSP.Random;
 using OsmSharp.Math.Random;
@@ -39,6 +40,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             StaticRandomGenerator.Set(4541247);
 
             // create problem.
+            var objective = new MinimumWeightObjective();
             var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][1] = 0;
             problem.Weights[1][2] = 0;
@@ -53,11 +55,11 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             {
                 // create random solution problem.
                 var solver = new RandomSolver();
-                var solution = solver.Solve(problem);
+                var solution = solver.Solve(problem, objective);
 
                 // apply local search.
                 var localSearch = new ClusterMutationOperator();
-                localSearch.Apply(problem, solution, out delta);
+                localSearch.Apply(problem, new MinimumWeightObjective(), solution, out delta);
 
                 Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, solution.ToArray());
 
@@ -85,11 +87,11 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             {
                 // create random solution problem.
                 var solver = new RandomSolver();
-                var solution = solver.Solve(problem);
+                var solution = solver.Solve(problem, new MinimumWeightObjective());
 
                 // apply local search.
                 var localSearch = new ClusterMutationOperator();
-                localSearch.Apply(problem, solution, out delta);
+                localSearch.Apply(problem, new MinimumWeightObjective(), solution, out delta);
 
                 Assert.AreEqual(new int[] { 3 }, solution.GetNeigbours(2));
                 Assert.AreEqual(new int[] { 2 }, solution.GetNeigbours(5));

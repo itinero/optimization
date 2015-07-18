@@ -25,7 +25,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
     /// <summary>
     /// A mock-solver that has a pre-determined order.
     /// </summary>
-    public class TSPSolverMock : SolverBase<ITSP, IRoute>
+    public class TSPSolverMock : SolverBase<ITSP, ITSPObjective, IRoute>
     {
         private readonly IRoute _route;
         private readonly double _fitness;
@@ -51,7 +51,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP problem, out double fitness)
+        public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
         {
             fitness = _fitness;
             return _route;

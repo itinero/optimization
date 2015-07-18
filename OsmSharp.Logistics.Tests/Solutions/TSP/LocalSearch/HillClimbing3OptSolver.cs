@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using OsmSharp.Logistics.Solutions.TSP;
 using OsmSharp.Logistics.Solutions.TSP.LocalSearch;
 using OsmSharp.Math.Random;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             StaticRandomGenerator.Set(4541247);
 
             // create problem.
+            var objective = new MinimumWeightObjective();
             var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
@@ -47,7 +49,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
 
             // solve problem.
             var solver = new HillClimbing3OptSolver();
-            var solution = solver.Solve(problem);
+            var solution = solver.Solve(problem, objective);
 
             // check result.
             var last = solution.Last();

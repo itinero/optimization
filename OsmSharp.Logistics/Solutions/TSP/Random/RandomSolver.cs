@@ -25,7 +25,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.Random
     /// <summary>
     /// Just generates random solutions.
     /// </summary>
-    public class RandomSolver : SolverBase<ITSP, IRoute>
+    public class RandomSolver : SolverBase<ITSP, ITSPObjective, IRoute>
     {
         /// <summary>
         /// Returns the name of this solver.
@@ -39,7 +39,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.Random
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP problem, out double fitness)
+        public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
         {
             // generate random solution.
             var customers = new List<int>();
@@ -60,7 +60,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.Random
             var route = new Route(customers, problem.Last);
 
             // calculate fitness.
-            fitness = problem.Objective.Calculate(problem, route);
+            fitness = objective.Calculate(problem, route);
             return route;
         }
     }

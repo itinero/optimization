@@ -26,7 +26,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
     public interface ITSPObjective
     {
         /// <summary>
-        /// Returns the name of this fitness type.
+        /// Returns the name of this objective.
         /// </summary>
         string Name
         {

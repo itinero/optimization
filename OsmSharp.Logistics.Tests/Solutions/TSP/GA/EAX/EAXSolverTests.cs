@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using OsmSharp.Logistics.Solutions.TSP;
 using OsmSharp.Logistics.Solutions.TSP.GA.EAX;
 using OsmSharp.Logistics.Solvers.GA;
 using OsmSharp.Math.Random;
@@ -61,7 +62,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, out fitness);
+                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(4, fitness);
@@ -107,7 +108,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, out fitness);
+                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(4, fitness);
@@ -153,7 +154,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, out fitness);
+                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(5, fitness);
@@ -199,7 +200,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, out fitness);
+                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(4, fitness);
@@ -259,7 +260,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, out fitness);
+                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(0, solution.First);
@@ -333,7 +334,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, out fitness);
+                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(39, fitness);
@@ -405,7 +406,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, out fitness);
+                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
 
                 // test contents.
                 Assert.IsTrue(fitness <= 39);

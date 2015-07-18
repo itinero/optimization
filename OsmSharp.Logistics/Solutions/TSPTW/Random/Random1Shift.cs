@@ -16,35 +16,43 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Logistics.Solvers
+using OsmSharp.Logistics.Routes;
+using OsmSharp.Logistics.Solvers;
+using System;
+
+namespace OsmSharp.Logistics.Solutions.TSPTW.Random
 {
     /// <summary>
-    /// Represents a heuristic/solver operator that is applied to a single instance and may lead to better/worse solution.
+    /// An operator to execute n random 1-shift* relocations.
     /// </summary>
-    public interface IOperator<TProblem, TObjective, TSolution>
+    /// <remarks>* 1-shift: Remove a customer and relocate it somewhere.</remarks>
+    public class Random1Shift : TSP.Random.Random1Shift, IPerturber<ITSPTW, ITSPTWObjective, IRoute>
     {
         /// <summary>
-        /// Returns the name of the operator.
-        /// </summary>
-        string Name
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Returns true if the given object is supported.
+        /// Returns true if the given objective is supported.
         /// </summary>
         /// <returns></returns>
-        bool Supports(TObjective objective);
+        public bool Supports(ITSPTWObjective objective)
+        {
+            return true;
+        }
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="objective">The objective.</param>
-        /// <param name="solution">The solution.</param>
-        /// <param name="delta">The difference in fitness, when > 0 there was an improvement and a reduction in fitness.</param>
         /// <returns></returns>
-        bool Apply(TProblem problem, TObjective objective, TSolution solution, out double delta);
+        public bool Apply(ITSPTW problem, ITSPTWObjective objective, IRoute solution, out double delta)
+        {
+            return base.Apply(problem, objective, solution, out delta);
+        }
+
+        /// <summary>
+        /// Returns true if there was an improvement, false otherwise.
+        /// </summary>
+        /// <returns></returns>
+        public bool Apply(ITSPTW problem, ITSPTWObjective objective, IRoute solution, int level, out double delta)
+        {
+            return base.Apply(problem, objective, solution, level, out delta);
+        }
     }
 }

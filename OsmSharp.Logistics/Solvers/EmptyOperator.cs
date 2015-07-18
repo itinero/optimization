@@ -21,9 +21,7 @@ namespace OsmSharp.Logistics.Solvers
     /// <summary>
     /// An empty operator that does nothing.
     /// </summary>
-    /// <typeparam name="TProblem"></typeparam>
-    /// <typeparam name="TSolution"></typeparam>
-    public class EmptyOperator<TProblem, TSolution> : IOperator<TProblem, TSolution>
+    public class EmptyOperator<TProblem, TObjective, TSolution> : IOperator<TProblem, TObjective, TSolution>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -34,13 +32,19 @@ namespace OsmSharp.Logistics.Solvers
         }
 
         /// <summary>
+        /// Returns true if the given objective is supported.
+        /// </summary>
+        /// <returns></returns>
+        public bool Supports(TObjective objective)
+        {
+            return true;
+        }
+
+        /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The solution.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(TProblem problem, TSolution solution, out double delta)
+        public bool Apply(TProblem problem, TObjective objective, TSolution solution, out double delta)
         {
             delta = 0;
             return false;

@@ -28,14 +28,14 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
     /// <summary>
     /// A solver using a GA and the edge-assembly crossover.
     /// </summary> 
-    public class EAXSolver : GASolver<ITSP, IRoute>
+    public class EAXSolver : GASolver<ITSP, ITSPObjective, IRoute>
     {
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
         public EAXSolver(GASettings settings)
-            : base(new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<ITSP, IRoute>(10, 0.5), new EmptyOperator<ITSP, IRoute>(), settings)
+            : base(new MinimumWeightObjective(), new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
+            new TournamentSelectionOperator<ITSP, IRoute>(10, 0.5), new EmptyOperator<ITSP, ITSPObjective, IRoute>(), settings)
         {
 
         }
@@ -43,8 +43,8 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
-        public EAXSolver(GASettings settings, IOperator<ITSP, IRoute> mutation)
-            : base(new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
+        public EAXSolver(GASettings settings, IOperator<ITSP, ITSPObjective, IRoute> mutation)
+            : base(new MinimumWeightObjective(), new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
             new TournamentSelectionOperator<ITSP, IRoute>(10, 0.5), mutation, settings)
         {
 
@@ -54,21 +54,15 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP problem, out double fitness)
+        public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
         {
-            if (problem.Objective.Name != MinimumWeightObjective.MinimumWeightObjectiveName) 
-            { // check, because assumptions are made in this operator about the objective.
-                throw new ArgumentOutOfRangeException(string.Format("{0} cannot handle objective {1}.", this.Name, 
-                    problem.Objective.Name));
-            }
-
             if (problem.Last == null)
             { // the problem is 'open', we need to convert the problem and then solution.
                 OsmSharp.Logging.Log.TraceEvent("EAXSolver.Solve", Logging.TraceEventType.Warning,
                     string.Format("EAX cannot solver 'open' TSP's: converting problem to a closed equivalent."));
 
                 var convertedProblem = problem.ToClosed();
-                var solution = base.Solve(convertedProblem, out fitness);
+                var solution = base.Solve(convertedProblem, objective, out fitness);
                 var route = new Route(solution, null);
                 fitness = 0;
                 foreach(var pair in route.Pairs())
@@ -83,7 +77,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
                     string.Format("EAX cannot solver 'closed' TSP's with a fixed endpoint: converting problem to a closed equivalent."));
 
                 var convertedProblem = problem.ToClosed();
-                var convertedRoute = base.Solve(convertedProblem, out fitness);
+                var convertedRoute = base.Solve(convertedProblem, objective, out fitness);
                 convertedRoute.InsertAfter(System.Linq.Enumerable.Last(convertedRoute), problem.Last.Value);
                 var route = new Route(convertedRoute, problem.Last.Value);
                 fitness = 0;
@@ -93,7 +87,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
                 }
                 return route;
             }
-            return base.Solve(problem, out fitness);
+            return base.Solve(problem, objective, out fitness);
         }
     }
 }

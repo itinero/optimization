@@ -23,7 +23,7 @@ namespace OsmSharp.Logistics.Tests.Solvers
     /// <summary>
     /// A mockup of a perturber procedure for a very simple problem, reduce a number to zero.
     /// </summary>
-    class PerturberMock : IPerturber<ProblemMock, SolutionMock>
+    class PerturberMock : IPerturber<ProblemMock, ObjectiveMock, SolutionMock>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -34,26 +34,28 @@ namespace OsmSharp.Logistics.Tests.Solvers
         }
 
         /// <summary>
+        /// Returns true if the given object is supported.
+        /// </summary>
+        /// <returns></returns>
+        public bool Supports(ObjectiveMock objective)
+        {
+            return true;
+        }
+
+        /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The solution.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(ProblemMock problem, SolutionMock solution, out double delta)
+        public bool Apply(ProblemMock problem, ObjectiveMock objective, SolutionMock solution, out double delta)
         {
-            return this.Apply(problem, solution, 1, out delta);
+            return this.Apply(problem, objective, solution, 1, out delta);
         }
         
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The solution.</param>
-        /// <param name="level">The level.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(ProblemMock problem, SolutionMock solution, int level, out double delta)
+        public bool Apply(ProblemMock problem, ObjectiveMock objective, SolutionMock solution, int level, out double delta)
         {
             var fitnessBefore = problem.Max - solution.Value;
             delta = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(problem.Max / 100);

@@ -16,35 +16,31 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Logistics.Solvers
+using OsmSharp.Logistics.Routes;
+
+namespace OsmSharp.Logistics.Solutions.TSPTW
 {
     /// <summary>
-    /// Represents a heuristic/solver operator that is applied to a single instance and may lead to better/worse solution.
+    /// Abstract representation of a basic TSPTW-objective.
     /// </summary>
-    public interface IOperator<TProblem, TObjective, TSolution>
+    public interface ITSPTWObjective : OsmSharp.Logistics.Solutions.TSP.ITSPObjective
     {
         /// <summary>
-        /// Returns the name of the operator.
-        /// </summary>
-        string Name
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Returns true if the given object is supported.
+        /// Calculates the fitness of a TSP solution.
         /// </summary>
         /// <returns></returns>
-        bool Supports(TObjective objective);
+        double Calculate(ITSPTW problem, IRoute solution);
 
         /// <summary>
-        /// Returns true if there was an improvement, false otherwise.
+        /// Executes the shift-after and returns the difference between the solution before the shift and after the shift.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="objective">The objective.</param>
-        /// <param name="solution">The solution.</param>
-        /// <param name="delta">The difference in fitness, when > 0 there was an improvement and a reduction in fitness.</param>
         /// <returns></returns>
-        bool Apply(TProblem problem, TObjective objective, TSolution solution, out double delta);
+        bool ShiftAfter(ITSPTW problem, IRoute route, int customer, int before, out double difference);
+
+        /// <summary>
+        /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
+        /// </summary>
+        /// <returns></returns>
+        double IfShiftAfter(ITSPTW problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter);
     }
 }
