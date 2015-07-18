@@ -54,13 +54,13 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
             var perturber = new Random1Shift();
 
             // create a problem.
-            var problem = new TSPProblemMock(0, 5, 10, true, true);
+            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
 
             // execute random shifts.
             for(int i = 0; i < 1000; i++)
             {
                 // create solution.
-                var solution = Route.CreateFrom(new int[] { 0, 1, 2, 3, 4 });
+                var solution = new Route(new int[] { 0, 1, 2, 3, 4 });
                 var fitnessBefore = 0.0;
                 foreach (var pair in solution.Pairs())
                 {

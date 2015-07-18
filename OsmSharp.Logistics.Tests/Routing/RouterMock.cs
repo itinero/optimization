@@ -20,6 +20,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Routing.Vehicles;
+using System.Collections.Generic;
 
 namespace OsmSharp.Logistics.Tests.Routing
 {
@@ -55,7 +56,7 @@ namespace OsmSharp.Logistics.Tests.Routing
             throw new System.NotImplementedException();
         }
 
-        public double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
+        public double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, HashSet<int> invalidSet)
         {
             var weights = new double[sources.Length][];
             for(var s = 0; s < sources.Length; s++)
@@ -74,7 +75,7 @@ namespace OsmSharp.Logistics.Tests.Routing
             throw new System.NotImplementedException();
         }
 
-        public double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
+        public double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, HashSet<int> invalidSet)
         {
             throw new System.NotImplementedException();
         }

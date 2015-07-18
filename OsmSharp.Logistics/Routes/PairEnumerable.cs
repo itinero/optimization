@@ -132,7 +132,7 @@ namespace OsmSharp.Logistics.Routes
         /// <returns></returns>
         public IEnumerator<Pair> GetEnumerator()
         {
-            if (_route.IsClosed)
+            if (_route.First == _route.Last)
             {
                 return new PairEnumerator(_route.GetEnumerator(), _route.First);
             }

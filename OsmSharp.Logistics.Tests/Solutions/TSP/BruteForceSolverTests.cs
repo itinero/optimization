@@ -44,10 +44,10 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         /// Tests the solver.
         /// </summary>
         [Test]
-        public void TestSolver()
+        public void TestSolverClosed()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = new TSPProblemMock(0, 5, 10, true);
+            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -60,6 +60,67 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
 
             // verify solution.
             Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, solution.ToArray());
+        }
+
+        /// <summary>
+        /// Tests the solver.
+        /// </summary>
+        [Test]
+        public void TestSolverOpen()
+        {
+            // create the problem and make sure 0->1->2->3->4 is the solution.
+            var problem = TSPHelper.CreateTSP(0, 5, 10);
+            problem.Weights[0][1] = 1;
+            problem.Weights[1][2] = 1;
+            problem.Weights[2][3] = 1;
+            problem.Weights[3][4] = 1;
+            problem.Weights[4][0] = 1;
+
+            // create the solver.
+            var solver = new BruteForceSolver();
+            var solution = solver.Solve(problem);
+
+            // verify solution.
+            Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, solution.ToArray());
+        }
+
+        /// <summary>
+        /// Tests the solver.
+        /// </summary>
+        [Test]
+        public void TestSolverFixed()
+        {
+            // create the problem and make sure 0->1->2->3->4 is the solution.
+            var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
+            problem.Weights[0][1] = 1;
+            problem.Weights[1][2] = 1;
+            problem.Weights[2][3] = 1;
+            problem.Weights[3][4] = 1;
+            problem.Weights[4][0] = 1;
+
+            // create the solver.
+            var solver = new BruteForceSolver();
+            var solution = solver.Solve(problem);
+
+            // verify solution.
+            Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, solution.ToArray());
+
+            // create the problem and make sure 0->...->3 is the solution.
+            problem = TSPHelper.CreateTSP(0, 3, 5, 10);
+            problem.Weights[0][1] = 1;
+            problem.Weights[1][2] = 1;
+            problem.Weights[2][3] = 1;
+            problem.Weights[3][4] = 1;
+            problem.Weights[4][0] = 1;
+
+            // create the solver.
+            solver = new BruteForceSolver();
+            solution = solver.Solve(problem);
+
+            // verify solution.
+            var array = solution.ToArray();
+            Assert.AreEqual(0, array[0]);
+            Assert.AreEqual(3, array[4]);
         }
     }
 }

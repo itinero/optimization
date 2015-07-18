@@ -21,33 +21,35 @@ using OsmSharp.Logistics.Routes.Cycles;
 using OsmSharp.Logistics.Solvers.GA;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
 {
     /// <summary>
     /// An edge assembly crossover.
     /// </summary>
-    public class EdgeAssemblyCrossover : ICrossOverOperator<ITSP, IRoute>
+    public class EAXOperator : ICrossOverOperator<ITSP, IRoute>
     {
-        private int _maxOffspring;
-
-        private EdgeAssemblyCrossoverSelectionStrategyEnum _strategy;
-
-        private bool _nn;
+        private readonly int _maxOffspring;
+        private readonly EdgeAssemblyCrossoverSelectionStrategyEnum _strategy;
+        private readonly bool _nn;
 
         /// <summary>
-        /// Creates a new edge assembly crossover.
+        /// Creates a new EAX crossover.
         /// </summary>
-        /// <param name="max_offspring"></param>
-        /// <param name="strategy"></param>
-        /// <param name="nn"></param>
-        public EdgeAssemblyCrossover(int max_offspring,
+        public EAXOperator()
+            : this(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new EAX crossover.
+        /// </summary>
+        public EAXOperator(int maxOffspring,
             EdgeAssemblyCrossoverSelectionStrategyEnum strategy,
             bool nn)
         {
-            _maxOffspring = max_offspring;
+            _maxOffspring = maxOffspring;
             _strategy = strategy;
             _nn = nn;
         }
@@ -93,8 +95,6 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
             MultipleRandom
         }
 
-
-
         #region ICrossOverOperation<int,Problem> Members
 
         private List<int> SelectCycles(
@@ -127,15 +127,37 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
         #endregion
 
         /// <summary>
-        /// 
+        /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
-        /// <param name="problem"></param>
-        /// <param name="solution1"></param>
-        /// <param name="solution2"></param>
-        /// <param name="fitness"></param>
         /// <returns></returns>
         public IRoute Apply(ITSP problem, IRoute solution1, IRoute solution2, out double fitness)
         {
+            if (solution1.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
+            if (solution2.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
+            
+            var originalProblem = problem;
+            var originalSolution1 = solution1;
+            var originalSolution2 = solution2;
+            if (!problem.Last.HasValue)
+            { // convert to closed problem.
+                OsmSharp.Logging.Log.TraceEvent("EAXOperator.Apply", Logging.TraceEventType.Warning,
+                    string.Format("EAX operator cannot be applied to 'open' TSP's: converting problem and routes to a closed equivalent."));
+
+                problem = (problem.Clone() as ITSP).ToClosed();
+                solution1 = new Route(solution1, 0);
+                solution2 = new Route(solution2, 0);
+            }
+            else if(problem.First != problem.Last)
+            { // last is set but is not the same as first.
+                OsmSharp.Logging.Log.TraceEvent("EAXSolver.Solve", Logging.TraceEventType.Warning,
+                    string.Format("EAX operator cannot be applied to 'closed' TSP's with a fixed endpoint: converting problem and routes to a closed equivalent."));
+
+                problem = (problem.Clone() as ITSP).ToClosed();
+                solution1 = new Route(solution1, 0);
+                solution2 = new Route(solution2, 0);
+                solution1.Remove(originalProblem.Last.Value);
+                solution2.Remove(originalProblem.Last.Value);
+            }
             fitness = double.MaxValue;
             var weights = problem.Weights;
 
@@ -157,11 +179,14 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
             var cycles = new AsymmetricAlternatingCycles(solution2.Count);
             for (var idx = 0; idx < e_b.Length; idx++)
             {
-                int a = e_a[idx];
-                int b = e_b[a];
-                if (idx != b)
+                var a = e_a[idx];
+                if (a != Constants.NOT_SET)
                 {
-                    cycles.AddEdge(idx, a, b);
+                    var b = e_b[a];
+                    if (idx != b && b != Constants.NOT_SET)
+                    {
+                        cycles.AddEdge(idx, a, b);
+                    }
                 }
             }
 
@@ -250,9 +275,10 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                             // check the nearest neighbours of from
                             foreach (var nn in problem.GetNNearestNeighbours(10, from))
                             {
-                                int nnTo = nextArrayA[nn];
+                                var nnTo = nextArrayA[nn];
 
-                                if (!ignoreList[nn] &&
+                                if (nnTo != Constants.NOT_SET &&
+                                    !ignoreList[nn] &&
                                     !ignoreList[nnTo])
                                 {
                                     double mergeWeight =
@@ -305,7 +331,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     cycleCount--;
                 }
 
-                var newRoute = new Route(a.Length, problem.First, problem.IsClosed);
+                var newRoute = new Route(new int[] { problem.First }, problem.Last);
                 var previous = problem.First;
                 var next = nextArrayA[problem.First];
                 do
@@ -314,7 +340,8 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     previous = next;
                     next = nextArrayA[next];
                 }
-                while (next != 0);
+                while (next != Constants.NOT_SET &&
+                    next != problem.First);
 
                 var newFitness = 0.0;
                 foreach(var edge in newRoute.Pairs())
@@ -322,19 +349,22 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     newFitness = newFitness + weights[edge.From][edge.To];
                 }
 
-                if (best == null ||
-                    fitness > newFitness)
+                if (newRoute.Count == solution1.Count)
                 {
-                    best = newRoute;
-                    fitness = newFitness;
-                }
+                    if (best == null ||
+                        fitness > newFitness)
+                    {
+                        best = newRoute;
+                        fitness = newFitness;
+                    }
 
-                generated++;
+                    generated++;
+                }
             }
 
             if (best == null)
             {
-                best = new Route(problem.Weights.Length, problem.First, problem.IsClosed);
+                best = new Route(new int[] { problem.First }, problem.Last);
                 var previous = problem.First;
                 var next = e_a[problem.First];
                 do
@@ -343,12 +373,33 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
                     previous = next;
                     next = e_a[next];
                 }
-                while (next != 0);
+                while (next != Constants.NOT_SET &&
+                    next != problem.First);
 
                 fitness = 0.0;
                 foreach (var edge in best.Pairs())
                 {
                     fitness = fitness + weights[edge.From][edge.To];
+                }
+            }
+
+            if(!originalProblem.Last.HasValue)
+            { // original problem as an 'open' problem, convert to an 'open' route.
+                best = new Route(best, null);
+                fitness = 0;
+                foreach (var pair in best.Pairs())
+                {
+                    fitness = fitness + originalProblem.Weights[pair.From][pair.To];
+                }
+            }
+            else if(originalProblem.First != originalProblem.Last)
+            { // original problem was a problem with a fixed last point different from the first point.
+                best.InsertAfter(System.Linq.Enumerable.Last(best), originalProblem.Last.Value);
+                best = new Route(best, problem.Last.Value);
+                fitness = 0;
+                foreach (var pair in best.Pairs())
+                {
+                    fitness = fitness + originalProblem.Weights[pair.From][pair.To];
                 }
             }
             return best;

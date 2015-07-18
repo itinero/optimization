@@ -41,11 +41,11 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
 
             // build test case.
             var router = new RouterMock();
-            var tspSolver = new TSPSolverMock(Route.CreateFrom(new int[] { 0, 1 }), 10);
+            var tspSolver = new TSPSolverMock(new Route(new int[] { 0, 1 }), 10);
             var tspRouter = new TSPRouter(router, Vehicle.Car,
                 new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
-                    new Math.Geo.GeoCoordinate(1, 1) }, true);
+                    new Math.Geo.GeoCoordinate(1, 1) }, 0, 0, tspSolver);
 
             // run.
             tspRouter.Run();
@@ -62,6 +62,16 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
             Assert.AreEqual(1, route.Segments[1].Longitude);
             Assert.AreEqual(0, route.Segments[0].Latitude);
             Assert.AreEqual(0, route.Segments[0].Longitude);
+            var routes = tspRouter.BuildRoutes();
+            Assert.AreEqual(2, routes.Length);
+            Assert.AreEqual(0, routes[0].Segments[0].Latitude);
+            Assert.AreEqual(0, routes[0].Segments[0].Longitude);
+            Assert.AreEqual(1, routes[0].Segments[1].Latitude);
+            Assert.AreEqual(1, routes[0].Segments[1].Longitude);
+            Assert.AreEqual(1, routes[0].Segments[1].Latitude);
+            Assert.AreEqual(1, routes[0].Segments[1].Longitude);
+            Assert.AreEqual(0, routes[0].Segments[0].Latitude);
+            Assert.AreEqual(0, routes[0].Segments[0].Longitude);
         }
     }
 }

@@ -48,7 +48,8 @@ namespace OsmSharp.Logistics.Solutions.TSP
             var solution = new List<int>();
             for (int customer = 0; customer < problem.Weights.Length; customer++)
             { // add each customer again.
-                if (customer != problem.First)
+                if (customer != problem.First &&
+                    customer != problem.Last)
                 {
                     solution.Add(customer);
                 }
@@ -65,7 +66,11 @@ namespace OsmSharp.Logistics.Solutions.TSP
                 // build route from permutation.
                 var withFirst = new List<int>(permutation);
                 withFirst.Insert(0, problem.First);
-                var localRoute = Route.CreateFrom(withFirst, problem.IsClosed);
+                if (problem.Last.HasValue && problem.First != problem.Last)
+                { // the special case of a fixed last customer.
+                    withFirst.Add(problem.Last.Value);
+                }
+                var localRoute = new Route(withFirst, problem.Last);
 
                 // calculate fitness.
                 var localFitness = 0.0;

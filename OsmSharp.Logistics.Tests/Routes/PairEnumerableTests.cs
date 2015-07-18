@@ -32,9 +32,9 @@ namespace OsmSharp.Logistics.Tests.Routes
         /// Tests the pair enumerable on a route that isn't a round.
         /// </summary>
         [Test]
-        public void Test1NoRound()
+        public void Test1NotClosed()
         {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, false);
+            var route = new Route(new int[] { 0, 1, 2, 3, 4 }, null);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
@@ -49,9 +49,9 @@ namespace OsmSharp.Logistics.Tests.Routes
         /// Tests the pair enumerable on a route that is a round.
         /// </summary>
         [Test]
-        public void Test2Round()
+        public void Test2Closed()
         {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, true);
+            var route = new Route(new int[] { 0, 1, 2, 3, 4 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
@@ -69,13 +69,13 @@ namespace OsmSharp.Logistics.Tests.Routes
         [Test]
         public void Test3Empty()
         {
-            var route = new RouteStub(new int[0], true);
+            var route = new Route(new int[] { 0 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(0, pairs.Count);
 
-            route = new RouteStub(new int[0], false);
+            route = new Route(new int[] { 0 }, null);
             pairEnumerable = new PairEnumerable(route);
             pairs = new List<Pair>(pairEnumerable);
 
@@ -88,7 +88,7 @@ namespace OsmSharp.Logistics.Tests.Routes
         [Test]
         public void Test4Reset()
         {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, true);
+            var route = new Route(new int[] { 0, 1, 2, 3, 4 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairEnumerator = pairEnumerable.GetEnumerator();
 
@@ -127,13 +127,13 @@ namespace OsmSharp.Logistics.Tests.Routes
         [Test]
         public void Test5OneCustomer()
         {
-            var route = new RouteStub(new int[] { 0 }, true);
+            var route = new Route(new int[] { 0 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(0, pairs.Count);
 
-            route = new RouteStub(new int[] { 0 }, false);
+            route = new Route(new int[] { 0 }, null);
             pairEnumerable = new PairEnumerable(route);
             pairs = new List<Pair>(pairEnumerable);
 

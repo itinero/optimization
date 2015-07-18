@@ -34,7 +34,7 @@ namespace OsmSharp.Logistics.Tests.Routes
         [Test]
         public void Test1NoRound()
         {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, false);
+            var route = new Route(new int[] { 0, 1, 2, 3, 4 }, null);
             var tripleEnumerable = new TripleEnumerable(route);
             var triples = new List<Triple>(tripleEnumerable);
 
@@ -50,7 +50,7 @@ namespace OsmSharp.Logistics.Tests.Routes
         [Test]
         public void Test2Round()
         {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, true);
+            var route = new Route(new int[] { 0, 1, 2, 3, 4 }, 0);
             var tripleEnumerable = new TripleEnumerable(route);
             var triples = new List<Triple>(tripleEnumerable);
 
@@ -68,13 +68,13 @@ namespace OsmSharp.Logistics.Tests.Routes
         [Test]
         public void Test3Empty()
         {
-            var route = new RouteStub(new int[0], true);
+            var route = new Route(new int[] { 0 }, 0);
             var tripleEnumerable = new TripleEnumerable(route);
             var triples = new List<Triple>(tripleEnumerable);
 
             Assert.AreEqual(0, triples.Count);
 
-            route = new RouteStub(new int[0], false);
+            route = new Route(new int[] { 0 }, null);
             tripleEnumerable = new TripleEnumerable(route);
             triples = new List<Triple>(tripleEnumerable);
 
@@ -87,7 +87,7 @@ namespace OsmSharp.Logistics.Tests.Routes
         [Test]
         public void Test4Reset()
         {
-            var route = new RouteStub(new int[] { 0, 1, 2, 3, 4 }, true);
+            var route = new Route(new int[] { 0, 1, 2, 3, 4 }, 0);
             var tripleEnumerable = new TripleEnumerable(route);
             var tripleEnumerator = tripleEnumerable.GetEnumerator();
 
@@ -126,13 +126,13 @@ namespace OsmSharp.Logistics.Tests.Routes
         [Test]
         public void Test5OneCustomer()
         {
-            var route = new RouteStub(new int[] { 0 }, true);
+            var route = new Route(new int[] { 0 }, 0);
             var tripleEnumerable = new TripleEnumerable(route);
             var triples = new List<Triple>(tripleEnumerable);
 
             Assert.AreEqual(0, triples.Count);
 
-            route = new RouteStub(new int[] { 0 }, false);
+            route = new Route(new int[] { 0 }, null);
             tripleEnumerable = new TripleEnumerable(route);
             triples = new List<Triple>(tripleEnumerable);
 
@@ -145,13 +145,13 @@ namespace OsmSharp.Logistics.Tests.Routes
         [Test]
         public void Test5TwoCustomers()
         {
-            var route = new RouteStub(new int[] { 0, 1 }, true);
+            var route = new Route(new int[] { 0, 1 }, 0);
             var tripleEnumerable = new TripleEnumerable(route);
             var triples = new List<Triple>(tripleEnumerable);
 
             Assert.AreEqual(0, triples.Count);
 
-            route = new RouteStub(new int[] { 0, 1 }, false);
+            route = new Route(new int[] { 0, 1 }, null);
             tripleEnumerable = new TripleEnumerable(route);
             triples = new List<Triple>(tripleEnumerable);
 

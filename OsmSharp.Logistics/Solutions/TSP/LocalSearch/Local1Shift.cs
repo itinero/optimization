@@ -18,6 +18,8 @@
 
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Solvers;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
 {
@@ -44,6 +46,19 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// <returns></returns>
         public bool Apply(ITSP problem, IRoute route, out double delta)
         {
+            var originalRoute = route;
+            var originalProblem = problem;
+            var originalFitness = 0.0;
+            if (!problem.Last.HasValue)
+            { // the problem is 'open', convert to a closed equivalent.
+                foreach(var pair in route.Pairs())
+                {
+                    originalFitness = originalFitness + problem.Weights[pair.From][pair.To];
+                }
+                problem = problem.ToClosed();
+                route = new Route(route, problem.Last);
+            }
+
             delta = 0;
             var success = false;
             var weights = problem.Weights;
@@ -84,6 +99,25 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                     success = true;
                 }
             } while (bestDelta < 0);
+
+            if (!originalProblem.Last.HasValue)
+            { // the original problem was open, convert the route again.
+                originalRoute.Clear();
+                foreach(var pair in route.Pairs())
+                {
+                    if (pair.To != problem.First)
+                    {
+                        originalRoute.InsertAfter(pair.From, pair.To);
+                    }
+                }
+
+                var newFitness = 0.0;
+                foreach (var pair in originalRoute.Pairs())
+                {
+                    newFitness = newFitness + problem.Weights[pair.From][pair.To];
+                }
+                delta = newFitness - originalFitness;
+            }
             return success;
         }
     }

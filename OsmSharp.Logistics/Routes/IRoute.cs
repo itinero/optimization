@@ -26,17 +26,6 @@ namespace OsmSharp.Logistics.Routes
     public interface IRoute : IEnumerable<int>, ICloneable
     {
         /// <summary>
-        /// Returns true if the last customer is linked with the first one.
-        /// </summary>
-        /// <remarks>
-        /// When the route is closed the first customer follows the last. This means the a pair and triple will existing containing the part last->first.
-        /// </remarks>
-        bool IsClosed
-        {
-            get;
-        }
-
-        /// <summary>
         /// Returns the amount of customers in the route.
         /// </summary>
         int Count
@@ -56,10 +45,7 @@ namespace OsmSharp.Logistics.Routes
         /// <summary>
         /// Returns the last customer.
         /// </summary>
-        /// <remarks>
-        /// Returns the first customer when this route is closed, can return any customer when the route is not closed.
-        /// </remarks>
-        int Last
+        int? Last
         {
             get;
         }
@@ -187,9 +173,9 @@ namespace OsmSharp.Logistics.Routes
         IEnumerable<Pair> Pairs();
 
         /// <summary>
-        /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2-3. If the route is a round the tuples that contain last->first are also included.
+        /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a round the tuples that contain last->first are also included.
         /// </summary>
-        /// <returns>An enumerable that enumerates all customer triples that occur in the route as 1->2-3. If the route is a round the tuples that contain last->first are also included.</returns>
+        /// <returns>An enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a round the tuples that contain last->first are also included.</returns>
         IEnumerable<Triple> Triples();
 
         /// <summary>

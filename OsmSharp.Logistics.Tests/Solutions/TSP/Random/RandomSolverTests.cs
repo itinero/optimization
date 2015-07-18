@@ -18,7 +18,9 @@
 
 using NUnit.Framework;
 using OsmSharp.Logistics.Solutions.TSP.Random;
+using OsmSharp.Math.Random;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
 {
@@ -39,28 +41,104 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
 
             Assert.AreEqual("RAN", solver.Name);
         }
-
+        
         /// <summary>
-        /// Tests the solver.
+        /// Tests the solver on a 'open' tsp.
         /// </summary>
         [Test]
-        public void TestSolutions()
+        public void TestSolutionOpen()
         {
+            StaticRandomGenerator.Set(4541247);
+
             // create problem.
-            var problem = new TSPProblemMock(0, 5, 10, true);
+            var problem = TSPHelper.CreateTSP(0, 5, 10);
+
+            // create the solver.
+            var solver = new RandomSolver();
+
+            for (var i = 0; i < 100; i++)
+            {
+                // generate solution.
+                double fitness;
+                var solution = solver.Solve(problem, out fitness);
+
+                // test contents.
+                Assert.AreEqual(40, fitness);
+                Assert.AreEqual(problem.First, solution.First);
+                Assert.AreEqual(null, solution.Last);
+
+                var solutionList = new List<int>(solution);
+                Assert.AreEqual(0, solutionList[0]);
+                Assert.IsTrue(solutionList.Remove(0));
+                Assert.IsTrue(solutionList.Remove(1));
+                Assert.IsTrue(solutionList.Remove(2));
+                Assert.IsTrue(solutionList.Remove(3));
+                Assert.IsTrue(solutionList.Remove(4));
+                Assert.AreEqual(0, solutionList.Count);
+            }
+        }
+
+        /// <summary>
+        /// Tests the solver on a closed tsp.
+        /// </summary>
+        [Test]
+        public void TestSolutionClosed()
+        {
+            StaticRandomGenerator.Set(4541247);
+
+            // create problem.
+            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
 
             // create the solver.
             var solver = new RandomSolver();
 
             for (int i = 0; i < 100; i++)
-            { 
+            {
                 // generate solution.
                 double fitness;
                 var solution = solver.Solve(problem, out fitness);
 
                 // test contents.
                 Assert.AreEqual(50, fitness);
+                Assert.AreEqual(0, solution.First);
+                Assert.AreEqual(0, solution.Last);
                 var solutionList = new List<int>(solution);
+                Assert.AreEqual(0, solutionList[0]);
+                Assert.IsTrue(solutionList.Remove(0));
+                Assert.IsTrue(solutionList.Remove(1));
+                Assert.IsTrue(solutionList.Remove(2));
+                Assert.IsTrue(solutionList.Remove(3));
+                Assert.IsTrue(solutionList.Remove(4));
+                Assert.AreEqual(0, solutionList.Count);
+            }
+        }
+
+        /// <summary>
+        /// Tests the solver on a closed tsp.
+        /// </summary>
+        [Test]
+        public void TestSolutionFixed()
+        {
+            StaticRandomGenerator.Set(4541247);
+
+            // create problem.
+            var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
+
+            // create the solver.
+            var solver = new RandomSolver();
+
+            for (int i = 0; i < 100; i++)
+            {
+                // generate solution.
+                double fitness;
+                var solution = solver.Solve(problem, out fitness);
+
+                // test contents.
+                Assert.AreEqual(40, fitness);
+                Assert.AreEqual(0, solution.First);
+                Assert.AreEqual(4, solution.Last);
+                var solutionList = new List<int>(solution);
+                Assert.AreEqual(problem.Last, solutionList[solutionList.Count - 1]);
                 Assert.AreEqual(0, solutionList[0]);
                 Assert.IsTrue(solutionList.Remove(0));
                 Assert.IsTrue(solutionList.Remove(1));

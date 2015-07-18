@@ -82,6 +82,8 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// <returns></returns>
         public override IRoute Solve(ITSP problem, out double fitness)
         {
+            if (!problem.Last.HasValue) { throw new ArgumentException("OPT3 cannot be used on open TSP-problems."); }
+
             // generate some route first.
             var route = _generator.Solve(problem);
 
@@ -111,6 +113,10 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// <returns></returns>
         public bool Apply(ITSP problem, IRoute solution, out double delta)
         {
+            if (!problem.Last.HasValue) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
+            if (solution.First != solution.Last) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
+            if ((solution.First == solution.Last) != problem.Last.HasValue) { throw new ArgumentException("Route and problem have to be both closed."); }
+
             _dontLookBits = new bool[problem.Weights.Length];
             var weights = problem.Weights;
 
@@ -156,6 +162,10 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
 
             var betweenV2V1 = route.Between(v2, v1);
             var weightV1V2 = weights[v1][v2];
+            if (v2 == problem.First && !problem.Last.HasValue)
+            { // set to zero if not closed.
+                weightV1V2 = 0;
+            }
             int v3 = -1;
             INNearestNeighbours neighbours = null;
             if (_nearestNeighbours)
@@ -171,9 +181,15 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                         neighbours.Contains(v4))
                     {
                         var weightV1V4 = weights[v1][v4];
-                        var weightV1V2PlusV3V4 = weightV1V2 + weights[v3][v4];
-                        var weights_3 = weights[v3];
-                        if (this.Try3OptMoves(problem, weights, route, v1, v2, v3, weights_3, v4, weightV1V2PlusV3V4, weightV1V4, out delta))
+                        var weightV3V4 = weights[v3][v4];
+                        if (v4 == problem.First && !problem.Last.HasValue)
+                        { // set to zero if not closed.
+                            weightV1V4 = 0;
+                            weightV3V4 = 0;
+                        }
+                        var weightV1V2PlusV3V4 = weightV1V2 + weightV3V4;
+                        var weightsV3 = weights[v3];
+                        if (this.Try3OptMoves(problem, weights, route, v1, v2, v3, weightsV3, v4, weightV1V2PlusV3V4, weightV1V4, out delta))
                         {
                             return true;
                         }
@@ -197,6 +213,10 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
             var v4 = route.GetNeigbours(v3)[0];
             var weightV1V2PlusV3V4 = weightV1V2 + weights[v3][v4];
             var weightV1V4 = weights[v1][v4];
+            if (v4 == problem.First && !problem.Last.HasValue)
+            { // set to zero if not closed.
+                weightV1V4 = 0;
+            }
             var weightsV3 = weights[v3];
             return this.Try3OptMoves(problem, weights, route, v1, v2, v3, weightsV3, v4, weightV1V2PlusV3V4, weightV1V4, out delta);
         }
@@ -217,14 +237,24 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                     while (betweenV4V1Enumerator.MoveNext())
                     {
                         var v6 = betweenV4V1Enumerator.Current;
+                        var weightV3V6 = weightsV3[v6];
+                        var weightV5V2 = weights[v5][v2];
+                        var weightV5V6 = weights[v5][v6];
+                        if (v6 == problem.First && !problem.Last.HasValue)
+                        { // set to zero if not closed.
+                            weightV3V6 = 0;
+                            weightV5V6 = 0;
+                        }
+                        if (v2 == problem.First && !problem.Last.HasValue)
+                        { // set to zero if not closed.
+                            weightV5V2 = 0;
+                        }
 
                         // calculate the total weight of the 'new' arcs.
-                        var weightNew = weightV1V4 +
-                            weightsV3[v6] +
-                            weights[v5][v2];
+                        var weightNew = weightV1V4 + weightV3V6 + weightV5V2;
 
                         // calculate the total weights.
-                        var weight = weightV1V2PlusV3V4 + weights[v5][v6];
+                        var weight = weightV1V2PlusV3V4 + weightV5V6;
 
                         if (weight - weightNew > _epsilon)
                         { // actually do replace the vertices.
