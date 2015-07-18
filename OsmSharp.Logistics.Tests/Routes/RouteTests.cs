@@ -82,6 +82,31 @@ namespace OsmSharp.Logistics.Tests.Routes
             Assert.AreEqual(0, route.First);
             Assert.AreEqual(0, route.Last);
         }
+        
+        /// <summary>
+        /// Tests get customer at in a route.
+        /// </summary>
+        [Test]
+        public void TestGetCustomerAt()
+        {
+            var routeEnumerable = new int[] { 0, 1, 3, 2, 4 };
+            var route = new Route(routeEnumerable, 0);
+
+            Assert.AreEqual(routeEnumerable[0], route.GetCustomerAt(0));
+            Assert.AreEqual(routeEnumerable[1], route.GetCustomerAt(1));
+            Assert.AreEqual(routeEnumerable[2], route.GetCustomerAt(2));
+            Assert.AreEqual(routeEnumerable[3], route.GetCustomerAt(3));
+            Assert.AreEqual(routeEnumerable[4], route.GetCustomerAt(4));
+
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+                {
+                    route.GetCustomerAt(-1);
+                });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+                {
+                    route.GetCustomerAt(5);
+                });
+        }
 
         /// <summary>
         /// Tests enumerable constructors.
