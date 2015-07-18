@@ -520,6 +520,7 @@ namespace OsmSharp.Logistics.Routes
         /// <param name="newAfter">The customer that new exists after.</param>
         public bool ShiftAfter(int customer, int before, out int oldBefore, out int oldAfter, out int newAfter)
         {
+            if (customer == before) { throw new ArgumentException("Cannot shift a customer after itself."); }
             var searchFor = customer;
             if (customer == _first)
             { // search for END when customer to insert is the first customer.

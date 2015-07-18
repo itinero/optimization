@@ -49,6 +49,7 @@
     <Compile Include="Solutions\IMatrixWeights.cs" />
     <Compile Include="Solutions\TSP\BruteForceSolver.cs" />
     <Compile Include="Solutions\TSP\GA\EAX\EAXSolver.cs" />
+    <Compile Include="Solutions\TSP\LocalSearch\ClusterMutationOperator.cs" />
     <Compile Include="Solutions\TSP\GA\Operators\EAXOperator.cs" />
     <Compile Include="Solutions\TSP\ITSP.cs" />
     <Compile Include="Solutions\TSP\LocalSearch\Local1Shift.cs" />
