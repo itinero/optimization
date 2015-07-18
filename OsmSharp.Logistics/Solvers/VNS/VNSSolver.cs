@@ -21,8 +21,6 @@ namespace OsmSharp.Logistics.Solvers.VNS
     /// <summary>
     /// A Variable Neighbourhood Search (VNS) solver.
     /// </summary>
-    /// <typeparam name="TSolution"></typeparam>
-    /// <typeparam name="TProblem"></typeparam>
     public class VNSSolver<TProblem, TSolution> : SolverBase<TProblem, TSolution>
         where TSolution : ICloneable
     {

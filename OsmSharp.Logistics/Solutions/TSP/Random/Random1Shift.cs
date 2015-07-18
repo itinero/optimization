@@ -60,7 +60,6 @@ namespace OsmSharp.Logistics.Solutions.TSP.Random
         {
             difference = 0;
             var rand = OsmSharp.Math.Random.StaticRandomGenerator.Get();
-            var weights = problem.Weights;
             while (level > 0)
             {
                 // remove random customer after another random customer.
@@ -71,22 +70,13 @@ namespace OsmSharp.Logistics.Solutions.TSP.Random
                     insert++;
                 }
 
-                // shift after and keep all info.
-                int oldBefore, oldAfter, newAfter;
-                if (!route.ShiftAfter(customer, insert, out oldBefore, out oldAfter, out newAfter))
-                { // shift did not succeed.
+                double shiftDiff;
+                if (!problem.Objective.ShiftAfter(problem, route, customer, insert, out shiftDiff))
+                {
                     throw new Exception(
                         string.Format("Failed to shift customer {0} after {1} in route {2}.", customer, insert, route.ToInvariantString()));
                 }
-
-                // calculate difference.
-                difference = difference 
-                    - weights[oldBefore][customer] 
-                    - weights[customer][oldAfter]
-                    + weights[oldBefore][oldAfter]
-                    - weights[insert][newAfter]
-                    + weights[insert][customer]
-                    + weights[customer][newAfter];
+                difference += shiftDiff;
 
                 // decrease level.
                 level--;

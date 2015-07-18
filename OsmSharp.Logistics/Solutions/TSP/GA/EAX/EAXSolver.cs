@@ -56,6 +56,12 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
         /// <returns></returns>
         public override IRoute Solve(ITSP problem, out double fitness)
         {
+            if (problem.Objective.Name != MinimumWeightObjective.MinimumWeightObjectiveName) 
+            { // check, because assumptions are made in this operator about the objective.
+                throw new ArgumentOutOfRangeException(string.Format("{0} cannot handle objective {1}.", this.Name, 
+                    problem.Objective.Name));
+            }
+
             if (problem.Last == null)
             { // the problem is 'open', we need to convert the problem and then solution.
                 OsmSharp.Logging.Log.TraceEvent("EAXSolver.Solve", Logging.TraceEventType.Warning,

@@ -132,6 +132,11 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
         /// <returns></returns>
         public IRoute Apply(ITSP problem, IRoute solution1, IRoute solution2, out double fitness)
         {
+            if (problem.Objective.Name != MinimumWeightObjective.MinimumWeightObjectiveName) 
+            { // check, because assumptions are made in this operator about the objective.
+                throw new ArgumentOutOfRangeException(string.Format("{0} cannot handle objective {1}.", this.Name, 
+                    problem.Objective.Name));
+            }
             if (solution1.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
             if (solution2.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
             
@@ -386,21 +391,13 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
             if(!originalProblem.Last.HasValue)
             { // original problem as an 'open' problem, convert to an 'open' route.
                 best = new Route(best, null);
-                fitness = 0;
-                foreach (var pair in best.Pairs())
-                {
-                    fitness = fitness + originalProblem.Weights[pair.From][pair.To];
-                }
+                fitness = originalProblem.Objective.Calculate(problem, best);
             }
             else if(originalProblem.First != originalProblem.Last)
             { // original problem was a problem with a fixed last point different from the first point.
                 best.InsertAfter(System.Linq.Enumerable.Last(best), originalProblem.Last.Value);
                 best = new Route(best, problem.Last.Value);
-                fitness = 0;
-                foreach (var pair in best.Pairs())
-                {
-                    fitness = fitness + originalProblem.Weights[pair.From][pair.To];
-                }
+                fitness = originalProblem.Objective.Calculate(originalProblem, best);
             }
             return best;
         }
