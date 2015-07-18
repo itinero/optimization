@@ -132,7 +132,8 @@ namespace OsmSharp.Logistics.Routing.TSP
 
             // calculate weights.
             var nonNullResolvedArray = nonNullResolved.ToArray();
-            var nonNullWeights = _router.CalculateManyToManyWeight(_vehicle, nonNullResolvedArray, nonNullResolvedArray);
+            var nonNullInvalids = new HashSet<int>();
+            var nonNullWeights = _router.CalculateManyToManyWeight(_vehicle, nonNullResolvedArray, nonNullResolvedArray, nonNullInvalids);
 
             // solve.
             var first = _first;
