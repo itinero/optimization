@@ -58,6 +58,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
             { // success already, don't try anything else.
                 return true;
             }
+            if (this.MoveNonViolatedBackward(problem, solution, out delta))
+            { // success already, don't try anything else.
+                return true;
+            }
             return false;
         }
 
@@ -222,5 +226,87 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
             delta = 0;
             return false;
         }
+
+        /// <summary>
+        /// Returns true if there was an improvement, false otherwise.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="solution">The route.</param>
+        /// <param name="delta">The difference in fitness.</param>
+        /// <returns></returns>
+        public bool MoveNonViolatedBackward(ITSPTW problem, IRoute solution, out double delta)
+        {
+            // search for the first invalid customer.
+            var enumerator = solution.GetEnumerator();
+            double time = 0;
+            double fitness = 0;
+            var position = 0;
+            var valids = new List<Tuple<int, int>>(); // al list of customer-position pairs.
+            var previous = Constants.NOT_SET;
+            while (enumerator.MoveNext())
+            {
+                var window = problem.Windows[enumerator.Current];
+                if (previous != Constants.NOT_SET)
+                { // keep track of time.
+                    time += problem.Weights[previous][enumerator.Current];
+                }
+                if (position > 1 && window.IsValidAt(time))
+                { // window is invalid and customer is not the first 'moveable' customer.
+                    valids.Add(new Tuple<int, int>(enumerator.Current, position));
+                }
+
+                // add the difference with the time window.
+                fitness += window.MinDiff(time);
+
+                // increase position.
+                position++;
+                previous = enumerator.Current;
+            }
+
+            // ... ok, if an invalid customer was found, try to move it.
+            foreach (var valid in valids)
+            {
+                // ok try the new position.
+                for (var newPosition = 1; newPosition < valid.Item2; newPosition++)
+                {
+                    var before = solution.GetCustomerAt(newPosition - 1);
+
+                    // calculate new total min diff.
+                    double newFitness = 0.0;
+                    previous = Constants.NOT_SET;
+                    time = 0;
+                    enumerator = solution.GetEnumerator();
+                    while (enumerator.MoveNext())
+                    {
+                        var current = enumerator.Current;
+                        if (current != valid.Item1)
+                        { // ignore invalid, add it after 'before'.
+                            if (previous != Constants.NOT_SET)
+                            { // keep track if time.
+                                time += problem.Weights[previous][current];
+                            }
+                            newFitness += problem.Windows[current].MinDiff(time);
+                            previous = current;
+                            if (current == before)
+                            { // also add the before->invalid.
+                                time += problem.Weights[current][valid.Item1];
+                                newFitness += problem.Windows[valid.Item1].MinDiff(time);
+                                previous = valid.Item1;
+                            }
+                        }
+                    }
+
+                    if (newFitness < fitness)
+                    {
+                        delta = fitness - newFitness;
+                        solution.ShiftAfter(valid.Item1, before);
+                        return true;
+                    }
+                }
+            }
+            delta = 0;
+            return false;
+        }
+
     }
 }
