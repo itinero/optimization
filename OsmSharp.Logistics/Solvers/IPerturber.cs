@@ -21,16 +21,17 @@ namespace OsmSharp.Logistics.Solvers
     /// <summary>
     /// An operator on the current solution that makes sure the neighbourhood varies.
     /// </summary>
-    public interface IPerturber<TProblem, TSolution> : IOperator<TProblem, TSolution>
+    public interface IPerturber<TProblem, TObjective, TSolution> : IOperator<TProblem, TObjective, TSolution>
     {
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <param name="problem">The problem.</param>
+        /// <param name="objective">The objective.</param>
         /// <param name="solution">The solution.</param>
         /// <param name="level">The level.</param>
         /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        bool Apply(TProblem problem, TSolution solution, int level, out double delta);
+        bool Apply(TProblem problem, TObjective objective, TSolution solution, int level, out double delta);
     }
 }

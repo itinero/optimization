@@ -40,24 +40,24 @@
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp, Version=4.4.0.1036, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.4.4.0.1036-beta\lib\net45\OsmSharp.dll</HintPath>
+    <Reference Include="OsmSharp, Version=4.4.0.1043, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.4.4.0.1043-beta\lib\net45\OsmSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.Osm, Version=4.4.0.1036, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.4.4.0.1036-beta\lib\net45\OsmSharp.Osm.dll</HintPath>
+    <Reference Include="OsmSharp.Osm, Version=4.4.0.1043, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.4.4.0.1043-beta\lib\net45\OsmSharp.Osm.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.Routing, Version=4.4.0.1036, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.4.4.0.1036-beta\lib\net45\OsmSharp.Routing.dll</HintPath>
+    <Reference Include="OsmSharp.Routing, Version=4.4.0.1043, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.4.4.0.1043-beta\lib\net45\OsmSharp.Routing.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.UI, Version=4.4.0.1036, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.4.4.0.1036-beta\lib\net45\OsmSharp.UI.dll</HintPath>
+    <Reference Include="OsmSharp.UI, Version=4.4.0.1043, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.4.4.0.1043-beta\lib\net45\OsmSharp.UI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.WinForms.UI, Version=4.4.0.1036, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.4.4.0.1036-beta\lib\net45\OsmSharp.WinForms.UI.dll</HintPath>
+    <Reference Include="OsmSharp.WinForms.UI, Version=4.4.0.1043, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.4.4.0.1043-beta\lib\net45\OsmSharp.WinForms.UI.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
@@ -87,7 +87,11 @@
     <Compile Include="Routing\RouterMock.cs" />
     <Compile Include="Routing\TSP\TSPRouterTests.cs" />
     <Compile Include="Solutions\Algorithms\NNearestNeighboursAlgorithmTests.cs" />
+    <Compile Include="Solutions\TSPTW\LocalSearch\Local1ShiftTimeWindowTests.cs" />
+    <Compile Include="Solutions\TSPTW\TSPTWHelper.cs" />
+    <Compile Include="Solutions\TSPTW\VNS\VNSConstructionSolverTests.cs" />
     <Compile Include="Solutions\TSP\BruteForceSolverTests.cs" />
+    <Compile Include="Solutions\TSP\Clustering\AsymmetricClusteringSolverTests.cs" />
     <Compile Include="Solutions\TSP\Clustering\AsymmetricClusteringTests.cs" />
     <Compile Include="Solutions\TSP\GA\EAX\EAXSolverTests.cs" />
     <Compile Include="Solutions\TSP\GA\Operators\EAXOperatorTests.cs" />
@@ -105,6 +109,7 @@
     <Compile Include="Solvers\GA\TournamentSelectionOperatorTests.cs" />
     <Compile Include="Solvers\Iterative\IterativeSolverTest.cs" />
     <Compile Include="Solvers\LocalSearchMock.cs" />
+    <Compile Include="Solvers\ObjectiveMock.cs" />
     <Compile Include="Solvers\PerturberMock.cs" />
     <Compile Include="Solvers\GeneratorMock.cs" />
     <Compile Include="Solvers\ProblemMock.cs" />

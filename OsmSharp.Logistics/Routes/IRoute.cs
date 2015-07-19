@@ -152,10 +152,17 @@ namespace OsmSharp.Logistics.Routes
         /// <summary>
         /// Returns the index of the given customer the first being zero.
         /// </summary>
-        /// <param name="customer"></param>
+        /// <param name="customer">The customer to search for.</param>
         /// <returns>The index of the customer, it's position relative to the first customers.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">When the customer does not exist.</exception>
         int GetIndexOf(int customer);
+
+        /// <summary>
+        /// Gets the customer at the given index.
+        /// </summary>
+        /// <param name="index">The position of the customer in the route, the first being at O.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">When the index is out of range.</exception>
+        int GetCustomerAt(int index);
 
         /// <summary>
         /// Returns an enumerable that enumerates between the two given customers.

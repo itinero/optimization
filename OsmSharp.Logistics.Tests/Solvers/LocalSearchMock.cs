@@ -23,7 +23,7 @@ namespace OsmSharp.Logistics.Tests.Solvers
     /// <summary>
     /// A mockup of a local search procedure for a very simple problem, reduce a number to zero.
     /// </summary>
-    class LocalSearchMock : IOperator<ProblemMock, SolutionMock>
+    class LocalSearchMock : IOperator<ProblemMock, ObjectiveMock, SolutionMock>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -34,13 +34,19 @@ namespace OsmSharp.Logistics.Tests.Solvers
         }
 
         /// <summary>
+        /// Returns true if the given object is supported.
+        /// </summary>
+        /// <returns></returns>
+        public bool Supports(ObjectiveMock objective)
+        {
+            return true;
+        }
+
+        /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The solution.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(ProblemMock problem, SolutionMock solution, out double delta)
+        public bool Apply(ProblemMock problem, ObjectiveMock objective, SolutionMock solution, out double delta)
         {
             var fitnessBefore = solution.Value;
             var reduction = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(problem.Max / 50);

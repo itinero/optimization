@@ -34,7 +34,7 @@ namespace OsmSharp.Logistics.Tests.Solvers.VNS
         public void TestName()
         {
             // create solver.
-            var solver = new VNSSolver<ProblemMock, SolutionMock>(
+            var solver = new VNSSolver<ProblemMock, ObjectiveMock, SolutionMock>(
                 new GeneratorMock(), new PerturberMock(), new LocalSearchMock());
 
             Assert.AreEqual("VNS_[MOCK_GENERATOR_MOCK_PERTURBER_MOCK_LOCALSEARCH]", solver.Name);
@@ -50,7 +50,7 @@ namespace OsmSharp.Logistics.Tests.Solvers.VNS
             OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
 
             // create solver.
-            var solver = new VNSSolver<ProblemMock, SolutionMock>(
+            var solver = new VNSSolver<ProblemMock, ObjectiveMock, SolutionMock>(
                 new GeneratorMock(), new PerturberMock(), new LocalSearchMock());
 
             // run solver but stop when after a few reported improvements.
@@ -72,7 +72,7 @@ namespace OsmSharp.Logistics.Tests.Solvers.VNS
             var solution = solver.Solve(new ProblemMock()
             {
                 Max = 1000
-            });
+            }, new ObjectiveMock());
 
             Assert.AreEqual(best.Value, solution.Value);
         }
@@ -87,8 +87,8 @@ namespace OsmSharp.Logistics.Tests.Solvers.VNS
             OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
 
             // create solver.
-            var solver = new VNSSolver<ProblemMock, SolutionMock>(
-                new GeneratorMock(), new PerturberMock(), new LocalSearchMock(), (i, p, s) =>
+            var solver = new VNSSolver<ProblemMock, ObjectiveMock, SolutionMock>(
+                new GeneratorMock(), new PerturberMock(), new LocalSearchMock(), (i, p, o, s) =>
             {
                 return s.Value < 100;
             });
@@ -102,7 +102,7 @@ namespace OsmSharp.Logistics.Tests.Solvers.VNS
             var solution = solver.Solve(new ProblemMock()
             {
                 Max = 1000
-            });
+            }, new ObjectiveMock());
 
             Assert.AreEqual(best.Value, solution.Value);
             Assert.IsTrue(solution.Value < 100);

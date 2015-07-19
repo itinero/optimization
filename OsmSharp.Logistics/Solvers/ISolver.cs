@@ -21,7 +21,7 @@ namespace OsmSharp.Logistics.Solvers
     /// <summary>
     /// Abstract representation of a solver.
     /// </summary>
-    public interface ISolver<TProblem, TSolution>
+    public interface ISolver<TProblem, TObjective, TSolution>
     {
         /// <summary>
         /// Returns the name of this solver.
@@ -35,13 +35,16 @@ namespace OsmSharp.Logistics.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        TSolution Solve(TProblem problem);
+        TSolution Solve(TProblem problem, TObjective objective);
 
         /// <summary>
         /// Solves the given problem.
         /// </summary>
-        /// <returns></returns>
-        TSolution Solve(TProblem problem, out double fitness);
+        /// <param name="problem">The details about the problem to solve.</param>
+        /// <param name="objective">The objective.</param>
+        /// <param name="fitness">The fitness value if the solution. Smaller is better.</param>
+        /// <returns>The solution.</returns>
+        TSolution Solve(TProblem problem, TObjective objective, out double fitness);
 
         /// <summary>
         /// Stops the executing of the solving process.

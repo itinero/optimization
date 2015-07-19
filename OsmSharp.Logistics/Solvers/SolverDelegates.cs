@@ -32,10 +32,7 @@ namespace OsmSharp.Logistics.Solvers
         /// <summary>
         /// A delegate for a stop condition.
         /// </summary>
-        /// <param name="iteration">The iteration count.</param>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The solution.</param>
         /// <returns></returns>
-        public delegate bool StopConditionDelegate<TProblem, TSolution>(int iteration, TProblem problem, TSolution solution);
+        public delegate bool StopConditionDelegate<TProblem, TObjective, TSolution>(int iteration, TProblem problem, TObjective objective, TSolution solution);
     }
 }

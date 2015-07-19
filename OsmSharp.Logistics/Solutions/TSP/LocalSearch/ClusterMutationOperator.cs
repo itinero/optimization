@@ -18,6 +18,7 @@
 
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Solvers;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
@@ -25,8 +26,11 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
     /// <summary>
     /// An operator that uses best-effort to transform the route into a route that contains no edge a->b while an edge a->c with weight 0 exists.
     /// </summary>
-    public class ClusterMutationOperator : IOperator<ITSP, IRoute>
+    public class ClusterMutationOperator : IOperator<ITSP, ITSPObjective, IRoute>
     {
+        private Dictionary<int, int> _shouldFollow;
+        private ITSP _problem;
+
         /// <summary>
         /// Returns the name of the operator.
         /// </summary>
@@ -35,18 +39,28 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
             get { return "CLST"; }
         }
 
-        private Dictionary<int, int> _shouldFollow;
-        private ITSP _problem;
+        /// <summary>
+        /// Returns true if the given objective is supported.
+        /// </summary>
+        /// <param name="objective"></param>
+        /// <returns></returns>
+        public bool Supports(ITSPObjective objective)
+        {
+            return objective.Name == MinimumWeightObjective.MinimumWeightObjectiveName;
+        }
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The solution.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(ITSP problem, IRoute solution, out double delta)
+        public bool Apply(ITSP problem, ITSPObjective objective, IRoute solution, out double delta)
         {
+            if (objective.Name != MinimumWeightObjective.MinimumWeightObjectiveName) 
+            { // check, because assumptions are made in this operator about the objective.
+                throw new ArgumentOutOfRangeException(string.Format("{0} cannot handle objective {1}.", this.Name, 
+                    objective.Name));
+            }
+
             if(_shouldFollow == null || _problem != problem)
             {
                 _problem = problem;
@@ -69,41 +83,18 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
             {
                 var insert = pair.Key;
                 var customer = pair.Value;
-                delta = delta + this.ShiftAfter(solution, weights, insert, customer);
+                double localDelta;
+                objective.ShiftAfter(problem, solution, customer, insert, out localDelta);
+                delta = delta + localDelta;
 
                 insert = customer;
                 if (_shouldFollow.TryGetValue(insert, out customer))
                 { // move again because the customer before was just moved.
-                    delta = delta + this.ShiftAfter(solution, weights, insert, customer);
+                    objective.ShiftAfter(problem, solution, customer, insert, out localDelta);
+                    delta = delta + localDelta;
                 }
             }
             return delta < 0;
-        }
-
-        /// <summary>
-        /// Shifts after and returns delta.
-        /// </summary>
-        /// <returns></returns>
-        private double ShiftAfter(IRoute solution, double[][] weights, int insert, int customer)
-        {
-            int oldBefore, newAfter, oldAfter;
-            solution.ShiftAfter(customer, insert, out oldBefore, out oldAfter, out newAfter);
-            if (oldAfter == Constants.END)
-            {
-                oldAfter = solution.First;
-            }
-            if (newAfter == Constants.END)
-            {
-                newAfter = solution.First;
-            }
-
-            // calculate difference.
-            return - weights[oldBefore][customer]
-                - weights[customer][oldAfter]
-                + weights[oldBefore][oldAfter]
-                - weights[insert][newAfter]
-                + weights[insert][customer]
-                + weights[customer][newAfter];
         }
     }
 }

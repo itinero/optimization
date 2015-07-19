@@ -50,9 +50,23 @@
     <Compile Include="Routes\PermutationEnumerable.cs" />
     <Compile Include="Solutions\IMatrixWeights.cs" />
     <Compile Include="Solutions\ISortedNearestNeighbours.cs" />
+    <Compile Include="Solutions\ITimeWindows.cs" />
+    <Compile Include="Solutions\TimeWindow.cs" />
+    <Compile Include="Solutions\TSPTW\Extensions.cs" />
+    <Compile Include="Solutions\TSPTW\ITSPTW.cs" />
+    <Compile Include="Solutions\TSPTW\ITSPTWObjective.cs" />
+    <Compile Include="Solutions\TSPTW\LocalSearch\Local1TimeWindowShift.cs" />
+    <Compile Include="Solutions\TSPTW\Random\Random1Shift.cs" />
+    <Compile Include="Solutions\TSPTW\Random\RandomSolver.cs" />
+    <Compile Include="Solutions\TSPTW\FeasibleObjective.cs" />
+    <Compile Include="Solutions\TSPTW\TSPTWObjectiveBase.cs" />
+    <Compile Include="Solutions\TSPTW\TSPTWProblem.cs" />
+    <Compile Include="Solutions\TSPTW\VNS\VNSConstructionSolver.cs" />
     <Compile Include="Solutions\TSP\BruteForceSolver.cs" />
     <Compile Include="Solutions\TSP\Clustering\AsymmetricClustering.cs" />
+    <Compile Include="Solutions\TSP\Clustering\AsymmetricClusteringSolver.cs" />
     <Compile Include="Solutions\TSP\GA\EAX\EAXSolver.cs" />
+    <Compile Include="Solutions\TSP\ITSPObjective.cs" />
     <Compile Include="Solutions\TSP\LocalSearch\ClusterMutationOperator.cs" />
     <Compile Include="Solutions\TSP\GA\Operators\EAXOperator.cs" />
     <Compile Include="Solutions\TSP\ITSP.cs" />
@@ -60,6 +74,7 @@
     <Compile Include="Solutions\TSP\LocalSearch\HillClimbing3OptSolver.cs" />
     <Compile Include="Solutions\TSP\Random\Random1Shift.cs" />
     <Compile Include="Solutions\TSP\Random\RandomSolver.cs" />
+    <Compile Include="Solutions\TSP\MinimumWeightObjective.cs" />
     <Compile Include="Solutions\TSP\TSPProblem.cs" />
     <Compile Include="Solvers\EmptyOperator.cs" />
     <Compile Include="Solvers\GA\GASettings.cs" />
@@ -90,20 +105,20 @@
       <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.2\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp, Version=4.4.0.1036, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.4.4.0.1036-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.dll</HintPath>
+    <Reference Include="OsmSharp, Version=4.4.0.1043, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.4.4.0.1043-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.Osm, Version=4.4.0.1036, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.4.4.0.1036-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.Osm.dll</HintPath>
+    <Reference Include="OsmSharp.Osm, Version=4.4.0.1043, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.4.4.0.1043-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.Osm.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.Routing, Version=4.4.0.1036, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.4.4.0.1036-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.Routing.dll</HintPath>
+    <Reference Include="OsmSharp.Routing, Version=4.4.0.1043, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.4.4.0.1043-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.Routing.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.UI, Version=4.4.0.1036, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.4.4.0.1036-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.UI.dll</HintPath>
+    <Reference Include="OsmSharp.UI, Version=4.4.0.1043, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.4.4.0.1043-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.UI.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">

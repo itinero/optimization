@@ -607,6 +607,26 @@ namespace OsmSharp.Logistics.Routes
             return Constants.NOT_SET;
         }
 
+        /// <summary>
+        /// Gets the customer at the given index.
+        /// </summary>
+        /// <param name="index">The position of the customer in the route, the first being at O.</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">When the index is out of range.</exception>
+        public int GetCustomerAt(int index)
+        {
+            if (index < 0) { new ArgumentOutOfRangeException("No customer can ever exist at an index smaller than 0."); }
+
+            var idx = 0;
+            foreach (var possibleCustomer in this)
+            {
+                if (idx == index)
+                {
+                    return possibleCustomer;
+                }
+                idx++;
+            }
+            throw new ArgumentOutOfRangeException(string.Format("No customer found at index {0}.", index));
+        }
 
         private int _internalLast;
 

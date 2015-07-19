@@ -23,7 +23,7 @@ namespace OsmSharp.Logistics.Tests.Solvers
     /// <summary>
     /// A mockup of a solver that generates solution to the mockup problem of reducing a number to zero.
     /// </summary>
-    class GeneratorMock : SolverBase<ProblemMock, SolutionMock>
+    class GeneratorMock : SolverBase<ProblemMock, ObjectiveMock, SolutionMock>
     {
         /// <summary>
         /// Returns the name of this solver.
@@ -37,7 +37,7 @@ namespace OsmSharp.Logistics.Tests.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override SolutionMock Solve(ProblemMock problem, out double fitness)
+        public override SolutionMock Solve(ProblemMock problem, ObjectiveMock objective, out double fitness)
         {
             var solution = new SolutionMock()
             {

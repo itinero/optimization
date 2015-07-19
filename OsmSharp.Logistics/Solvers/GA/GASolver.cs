@@ -24,23 +24,21 @@ namespace OsmSharp.Logistics.Solvers.GA
     /// <summary>
     /// A Genetic Algorithm (GA) solver.
     /// </summary>
-    /// <typeparam name="TSolution"></typeparam>
-    /// <typeparam name="TProblem"></typeparam>
-    public class GASolver<TProblem, TSolution> : SolverBase<TProblem, TSolution>
+    public class GASolver<TProblem, TObjective, TSolution> : SolverBase<TProblem, TObjective, TSolution>
     {
-        private readonly ISolver<TProblem, TSolution> _generator;
-        private readonly ICrossOverOperator<TProblem, TSolution> _crossOver;
+        private readonly ISolver<TProblem, TObjective, TSolution> _generator;
+        private readonly ICrossOverOperator<TProblem, TObjective, TSolution> _crossOver;
         private readonly ISelectionOperator<TProblem, TSolution> _selection;
-        private readonly IOperator<TProblem, TSolution> _mutation;
+        private readonly IOperator<TProblem, TObjective, TSolution> _mutation;
         private readonly GASettings _settings;
 
         /// <summary>
         /// Creates a new GA solver.
         /// </summary>
-        public GASolver(ISolver<TProblem, TSolution> generator,
-            ICrossOverOperator<TProblem, TSolution> crossOver, ISelectionOperator<TProblem, TSolution> selection,
-            IOperator<TProblem, TSolution> mutation)
-            : this(generator, crossOver, selection, mutation, GASettings.Default)
+        public GASolver(TObjective objective, ISolver<TProblem, TObjective, TSolution> generator,
+            ICrossOverOperator<TProblem, TObjective, TSolution> crossOver, ISelectionOperator<TProblem, TSolution> selection,
+            IOperator<TProblem, TObjective, TSolution> mutation)
+            : this(objective, generator, crossOver, selection, mutation, GASettings.Default)
         {
 
         }
@@ -48,9 +46,9 @@ namespace OsmSharp.Logistics.Solvers.GA
         /// <summary>
         /// Creates a new GA solver.
         /// </summary>
-        public GASolver(ISolver<TProblem, TSolution> generator,
-            ICrossOverOperator<TProblem, TSolution> crossOver, ISelectionOperator<TProblem, TSolution> selection,
-            IOperator<TProblem, TSolution> mutation, GASettings settings)
+        public GASolver(TObjective objective, ISolver<TProblem, TObjective, TSolution> generator,
+            ICrossOverOperator<TProblem, TObjective, TSolution> crossOver, ISelectionOperator<TProblem, TSolution> selection,
+            IOperator<TProblem, TObjective, TSolution> mutation, GASettings settings)
         {
             _generator = generator;
             _crossOver = crossOver;
@@ -75,7 +73,7 @@ namespace OsmSharp.Logistics.Solvers.GA
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override TSolution Solve(TProblem problem, out double fitness)
+        public override TSolution Solve(TProblem problem, TObjective objective, out double fitness)
         {
             var population = new Individual<TSolution>[_settings.PopulationSize];
 
@@ -84,7 +82,7 @@ namespace OsmSharp.Logistics.Solvers.GA
             while (solutionCount < _settings.PopulationSize)
             {
                 double localFitness;
-                var solution = _generator.Solve(problem, out localFitness);
+                var solution = _generator.Solve(problem, objective, out localFitness);
                 population[solutionCount] = new Individual<TSolution>()
                 {
                     Fitness = localFitness,
@@ -139,7 +137,7 @@ namespace OsmSharp.Logistics.Solvers.GA
 
                     // create offspring.
                     var offspringFitness = 0.0;
-                    var offspring = _crossOver.Apply(problem, population[individual1].Solution,
+                    var offspring = _crossOver.Apply(problem, objective, population[individual1].Solution,
                         population[individual2].Solution, out offspringFitness);
                     population[i] = new Individual<TSolution>()
                     {
@@ -154,7 +152,7 @@ namespace OsmSharp.Logistics.Solvers.GA
                     if (OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(100) <= _settings.MutationPercentage)
                     { // ok, mutate this individual.
                         var mutatedDelta = 0.0;
-                        if (_mutation.Apply(problem, population[i].Solution, out mutatedDelta))
+                        if (_mutation.Apply(problem, objective, population[i].Solution, out mutatedDelta))
                         { // mutation succeeded.
                             population[i].Fitness = population[i].Fitness - mutatedDelta;
                         }

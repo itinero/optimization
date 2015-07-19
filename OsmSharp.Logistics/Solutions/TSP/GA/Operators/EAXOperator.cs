@@ -27,7 +27,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
     /// <summary>
     /// An edge assembly crossover.
     /// </summary>
-    public class EAXOperator : ICrossOverOperator<ITSP, IRoute>
+    public class EAXOperator : ICrossOverOperator<ITSP, ITSPObjective, IRoute>
     {
         private readonly int _maxOffspring;
         private readonly EdgeAssemblyCrossoverSelectionStrategyEnum _strategy;
@@ -130,7 +130,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
         /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
         /// <returns></returns>
-        public IRoute Apply(ITSP problem, IRoute solution1, IRoute solution2, out double fitness)
+        public IRoute Apply(ITSP problem, ITSPObjective objective, IRoute solution1, IRoute solution2, out double fitness)
         {
             if (solution1.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
             if (solution2.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
@@ -386,21 +386,13 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
             if(!originalProblem.Last.HasValue)
             { // original problem as an 'open' problem, convert to an 'open' route.
                 best = new Route(best, null);
-                fitness = 0;
-                foreach (var pair in best.Pairs())
-                {
-                    fitness = fitness + originalProblem.Weights[pair.From][pair.To];
-                }
+                fitness = objective.Calculate(problem, best);
             }
             else if(originalProblem.First != originalProblem.Last)
             { // original problem was a problem with a fixed last point different from the first point.
                 best.InsertAfter(System.Linq.Enumerable.Last(best), originalProblem.Last.Value);
                 best = new Route(best, problem.Last.Value);
-                fitness = 0;
-                foreach (var pair in best.Pairs())
-                {
-                    fitness = fitness + originalProblem.Weights[pair.From][pair.To];
-                }
+                fitness = objective.Calculate(originalProblem, best);
             }
             return best;
         }

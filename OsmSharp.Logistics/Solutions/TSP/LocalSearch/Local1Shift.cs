@@ -24,10 +24,10 @@ using System.Collections.Generic;
 namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
 {
     /// <summary>
-    /// A local 1-Shift search for the TSP with Time Window.
+    /// A local 1-Shift search for the TSP.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere.</remarks>
-    public class Local1Shift : IOperator<ITSP, IRoute>
+    public class Local1Shift : IOperator<ITSP, ITSPObjective, IRoute>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -38,30 +38,32 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         }
 
         /// <summary>
+        /// Returns true if the given objective is supported.
+        /// </summary>
+        /// <returns></returns>
+        public bool Supports(ITSPObjective objective)
+        {
+            return objective.Name == MinimumWeightObjective.MinimumWeightObjectiveName;
+        }
+
+        /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="route">The route.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(ITSP problem, IRoute route, out double delta)
+        public bool Apply(ITSP problem, ITSPObjective objective, IRoute route, out double delta)
         {
             var originalRoute = route;
             var originalProblem = problem;
             var originalFitness = 0.0;
             if (!problem.Last.HasValue)
             { // the problem is 'open', convert to a closed equivalent.
-                foreach(var pair in route.Pairs())
-                {
-                    originalFitness = originalFitness + problem.Weights[pair.From][pair.To];
-                }
+                originalFitness = objective.Calculate(problem, route);
                 problem = problem.ToClosed();
                 route = new Route(route, problem.Last);
             }
 
             delta = 0;
             var success = false;
-            var weights = problem.Weights;
 
             var bestDelta = 0.0;
             do
@@ -78,8 +80,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                         if (pair.From != triple.Along &&
                             pair.To != triple.Along)
                         { // this candidate may fit here.
-                            var localDelta = weights[triple.From][triple.To] - weights[triple.From][triple.Along] - weights[triple.Along][triple.To] +
-                                weights[pair.From][triple.Along] + weights[triple.Along][pair.To] - weights[pair.From][pair.To];
+                            var localDelta = objective.IfShiftAfter(problem, route, triple.Along, pair.From, triple.From, triple.To, pair.To);
                             if (localDelta < bestDelta)
                             { // this means a (better) improvement.
                                 bestDelta = localDelta;
@@ -111,11 +112,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                     }
                 }
 
-                var newFitness = 0.0;
-                foreach (var pair in originalRoute.Pairs())
-                {
-                    newFitness = newFitness + problem.Weights[pair.From][pair.To];
-                }
+                var newFitness = objective.Calculate(problem, originalRoute);
                 delta = newFitness - originalFitness;
             }
             return success;

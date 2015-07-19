@@ -21,7 +21,7 @@ namespace OsmSharp.Logistics.Solvers
     /// <summary>
     /// Represents a heuristic/solver operator that is applied to a single instance and may lead to better/worse solution.
     /// </summary>
-    public interface IOperator<TProblem, TSolution>
+    public interface IOperator<TProblem, TObjective, TSolution>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -32,12 +32,19 @@ namespace OsmSharp.Logistics.Solvers
         }
 
         /// <summary>
+        /// Returns true if the given object is supported.
+        /// </summary>
+        /// <returns></returns>
+        bool Supports(TObjective objective);
+
+        /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <param name="problem">The problem.</param>
+        /// <param name="objective">The objective.</param>
         /// <param name="solution">The solution.</param>
-        /// <param name="delta">The difference in fitness.</param>
+        /// <param name="delta">The difference in fitness, when > 0 there was an improvement and a reduction in fitness.</param>
         /// <returns></returns>
-        bool Apply(TProblem problem, TSolution solution, out double delta);
+        bool Apply(TProblem problem, TObjective objective, TSolution solution, out double delta);
     }
 }

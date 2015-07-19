@@ -18,6 +18,7 @@
 
 using NUnit.Framework;
 using OsmSharp.Logistics.Routes;
+using OsmSharp.Logistics.Solutions.TSP;
 using OsmSharp.Logistics.Solutions.TSP.Random;
 using System.Collections.Generic;
 
@@ -70,7 +71,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
 
                 // shift one customer.
                 double difference;
-                perturber.Apply(problem, solution, out difference);
+                perturber.Apply(problem, new MinimumWeightObjective(), solution, out difference);
 
                 // check if valid solution.
                 var solutionList = new List<int>(solution);

@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using OsmSharp.Logistics.Solutions.TSP;
 using OsmSharp.Logistics.Solutions.TSP.Random;
 using OsmSharp.Math.Random;
 using System.Collections.Generic;
@@ -55,12 +56,13 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
 
             // create the solver.
             var solver = new RandomSolver();
+            var objective = new MinimumWeightObjective();
 
             for (var i = 0; i < 100; i++)
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, out fitness);
+                var solution = solver.Solve(problem, objective, out fitness);
 
                 // test contents.
                 Assert.AreEqual(40, fitness);
@@ -96,7 +98,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, out fitness);
+                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(50, fitness);
@@ -131,7 +133,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, out fitness);
+                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(40, fitness);

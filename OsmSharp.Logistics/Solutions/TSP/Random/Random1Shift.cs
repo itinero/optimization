@@ -26,7 +26,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.Random
     /// An operator to execute n random 1-shift* relocations.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere.</remarks>
-    public class Random1Shift : IPerturber<ITSP, IRoute>
+    public class Random1Shift : IPerturber<ITSP, ITSPObjective, IRoute>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -37,30 +37,31 @@ namespace OsmSharp.Logistics.Solutions.TSP.Random
         }
 
         /// <summary>
-        /// Returns true if there was an improvement, false otherwise.
+        /// Returns true if the given objective is supported.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="route">The route.</param>
-        /// <param name="difference">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(ITSP problem, IRoute route, out double difference)
+        public bool Supports(ITSPObjective objective)
         {
-            return this.Apply(problem, route, 1, out difference);
+            return objective.Name == MinimumWeightObjective.MinimumWeightObjectiveName;
         }
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="route">The route.</param>
-        /// <param name="level">The level.</param>
-        /// <param name="difference">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(ITSP problem, IRoute route, int level, out double difference)
+        public bool Apply(ITSP problem, ITSPObjective objective, IRoute route, out double difference)
+        {
+            return this.Apply(problem, objective, route, 1, out difference);
+        }
+
+        /// <summary>
+        /// Returns true if there was an improvement, false otherwise.
+        /// </summary>
+        /// <returns></returns>
+        public bool Apply(ITSP problem, ITSPObjective objective, IRoute route, int level, out double difference)
         {
             difference = 0;
             var rand = OsmSharp.Math.Random.StaticRandomGenerator.Get();
-            var weights = problem.Weights;
             while (level > 0)
             {
                 // remove random customer after another random customer.
@@ -71,22 +72,13 @@ namespace OsmSharp.Logistics.Solutions.TSP.Random
                     insert++;
                 }
 
-                // shift after and keep all info.
-                int oldBefore, oldAfter, newAfter;
-                if (!route.ShiftAfter(customer, insert, out oldBefore, out oldAfter, out newAfter))
-                { // shift did not succeed.
+                double shiftDiff;
+                if (!objective.ShiftAfter(problem, route, customer, insert, out shiftDiff))
+                {
                     throw new Exception(
                         string.Format("Failed to shift customer {0} after {1} in route {2}.", customer, insert, route.ToInvariantString()));
                 }
-
-                // calculate difference.
-                difference = difference 
-                    - weights[oldBefore][customer] 
-                    - weights[customer][oldAfter]
-                    + weights[oldBefore][oldAfter]
-                    - weights[insert][newAfter]
-                    + weights[insert][customer]
-                    + weights[customer][newAfter];
+                difference += shiftDiff;
 
                 // decrease level.
                 level--;

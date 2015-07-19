@@ -57,7 +57,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// <summary>
         /// An empty constructor used just to clone stuff.
         /// </summary>
-        private TSPProblem()
+        protected TSPProblem()
         {
 
         }
@@ -68,7 +68,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         public int First
         {
             get;
-            private set;
+            protected set;
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         public int? Last
         {
             get;
-            private set;
+            protected set;
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         public double[][] Weights
         {
             get;
-            private set;
+            protected set;
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// Converts this problem to it's closed equivalent.
         /// </summary>
         /// <returns></returns>
-        public ITSP ToClosed()
+        public virtual ITSP ToClosed()
         {
             if(this.Last == null)
             { // 'open' problem, just set weights to first to 0.
@@ -272,7 +272,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// Creates a deep-copy of this problem.
         /// </summary>
         /// <returns></returns>
-        public object Clone()
+        public virtual object Clone()
         {
             var weights = new double[this.Weights.Length][];
             for (var i = 0; i < this.Weights.Length; i++)

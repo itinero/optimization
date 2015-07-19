@@ -21,7 +21,7 @@ namespace OsmSharp.Logistics.Solvers.GA
     /// <summary>
     /// Abstract representation of a crossover operation.
     /// </summary>
-    public interface ICrossOverOperator<TProblem, TSolution>
+    public interface ICrossOverOperator<TProblem, TObjective, TSolution>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -35,6 +35,6 @@ namespace OsmSharp.Logistics.Solvers.GA
         /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
         /// <returns></returns>
-        TSolution Apply(TProblem problem, TSolution solution1, TSolution solution2, out double fitness);
+        TSolution Apply(TProblem problem, TObjective objective, TSolution solution1, TSolution solution2, out double fitness);
     }
 }

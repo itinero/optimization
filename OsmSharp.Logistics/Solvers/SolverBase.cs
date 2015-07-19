@@ -21,9 +21,7 @@ namespace OsmSharp.Logistics.Solvers
     /// <summary>
     /// A base implementation for a solver.
     /// </summary>
-    /// <typeparam name="TProblem"></typeparam>
-    /// <typeparam name="TSolution"></typeparam>
-    public abstract class SolverBase<TProblem, TSolution> : ISolver<TProblem, TSolution>
+    public abstract class SolverBase<TProblem, TObjective, TSolution> : ISolver<TProblem, TObjective, TSolution>
     {
         /// <summary>
         /// Holds the stopped-flag.
@@ -42,17 +40,17 @@ namespace OsmSharp.Logistics.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public TSolution Solve(TProblem problem)
+        public TSolution Solve(TProblem problem, TObjective objective)
         {
             double fitness;
-            return this.Solve(problem, out fitness);
+            return this.Solve(problem, objective, out fitness);
         }
 
         /// <summary>
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public abstract TSolution Solve(TProblem problem, out double fitness);
+        public abstract TSolution Solve(TProblem problem, TObjective objective, out double fitness);
 
         /// <summary>
         /// Returns true if this solver was stopped.
