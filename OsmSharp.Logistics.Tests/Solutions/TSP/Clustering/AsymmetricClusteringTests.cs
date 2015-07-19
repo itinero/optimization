@@ -55,7 +55,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Clustering
             clustering.Run();
 
             // check result.
-            var clusters = clustering.Cluster;
+            var clusters = clustering.Clusters;
             Assert.AreEqual(3, clusters.Count);
             Assert.AreEqual(1, clusters[0].Count);
             Assert.AreEqual(0, clusters[0][0]);
@@ -107,7 +107,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Clustering
             clustering.Run();
 
             // check result.
-            var clusters = clustering.Cluster;
+            var clusters = clustering.Clusters;
             Assert.AreEqual(2, clusters.Count);
             Assert.AreEqual(1, clusters[0].Count);
             Assert.AreEqual(0, clusters[0][0]);
@@ -172,7 +172,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Clustering
             clustering.Run();
 
             // check result.
-            var clusters = clustering.Cluster;
+            var clusters = clustering.Clusters;
             Assert.AreEqual(6, clusters.Count);
             Assert.AreEqual(1, clusters[0].Count);
             Assert.AreEqual(0, clusters[0][0]);

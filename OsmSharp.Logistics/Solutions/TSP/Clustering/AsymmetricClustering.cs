@@ -39,13 +39,32 @@ namespace OsmSharp.Logistics.Solutions.TSP.Clustering
             _weights = weights;
         }
 
+        /// <summary>
+        /// Creates a new instance of this algorithm.
+        /// </summary>
+        public AsymmetricClustering(double[][] weights, double threshold)
+        {
+            _threshold = threshold;
+            _weights = weights;
+        }
+
+        /// <summary>
+        /// Creates a new instance of this algorithm.
+        /// </summary>
+        public AsymmetricClustering(double[][] weights, double threshold, double e)
+        {
+            _threshold = threshold;
+            _e = e;
+            _weights = weights;
+        }
+
         private List<List<int>> _clusters;
         private double[][] _clusteredWeights;
 
         /// <summary>
         /// Get the resulting clusters.
         /// </summary>
-        public List<List<int>> Cluster
+        public List<List<int>> Clusters
         {
             get
             {

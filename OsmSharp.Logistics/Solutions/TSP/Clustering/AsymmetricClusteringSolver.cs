@@ -18,6 +18,7 @@
 
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Solvers;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Logistics.Solutions.TSP.Clustering
@@ -28,13 +29,37 @@ namespace OsmSharp.Logistics.Solutions.TSP.Clustering
     public class AsymmetricClusteringSolver : SolverBase<ITSP, ITSPObjective, IRoute>
     {
         private readonly SolverBase<ITSP, ITSPObjective, IRoute> _solver;
+        private readonly Func<ITSP, AsymmetricClustering> _createClustering;
+        private readonly IOperator<ITSP, ITSPObjective, IRoute> _localSearch;
 
         /// <summary>
         /// Creates a new solver.
         /// </summary>
         public AsymmetricClusteringSolver(SolverBase<ITSP, ITSPObjective, IRoute> solver)
+            : this(solver, (p) => new AsymmetricClustering(p.Weights))
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new solver.
+        /// </summary>
+        public AsymmetricClusteringSolver(SolverBase<ITSP, ITSPObjective, IRoute> solver, 
+            Func<ITSP, AsymmetricClustering> createClustering)
+            : this(solver, new LocalSearch.Local1Shift(), createClustering)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new solver.
+        /// </summary>
+        public AsymmetricClusteringSolver(SolverBase<ITSP, ITSPObjective, IRoute> solver, 
+            IOperator<ITSP, ITSPObjective, IRoute> localSearch, Func<ITSP, AsymmetricClustering> createClustering)
         {
             _solver = solver;
+            _createClustering = createClustering;
+            _localSearch = localSearch;
         }
 
         /// <summary>
@@ -42,7 +67,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.Clustering
         /// </summary>
         public override string Name
         {
-            get { return string.Format("CLUST({0})", _solver.Name); }
+            get { return string.Format("CLUST_[{0} {1}]", _solver.Name, _localSearch.Name); }
         }
 
         /// <summary>
@@ -52,11 +77,42 @@ namespace OsmSharp.Logistics.Solutions.TSP.Clustering
         public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
         {
             // do the clustering.
-            var clustering = new AsymmetricClustering(problem.Weights);
+            var clustering =_createClustering(problem);
             clustering.Run();
 
             // define the new problem.
-            var clusteredProblem = new TSPProblem(problem.First, clustering.Weights);
+            TSPProblem clusteredProblem;
+            if (problem.Last.HasValue)
+            { // convert the problem, also convert last->clustered last and first->clustered first.
+                var clusteredLast = -1;
+                var clusteredFirst = -1;
+                for (var i = 0; i < clustering.Clusters.Count; i++)
+                {
+                    var cluster = clustering.Clusters[i];
+                    if (cluster.Contains(problem.Last.Value))
+                    { // ok, it's this cluster that contains the old last, so make this the new last.
+                        clusteredLast = i;
+                    }
+                    if (cluster.Contains(problem.First))
+                    { // ok, it's this cluster that contains the old first, so make this the new first.
+                        clusteredFirst = i;
+                    }
+                }
+                clusteredProblem = new TSPProblem(clusteredFirst, clusteredLast, clustering.Weights);
+            }
+            else
+            { // convert the problem, also convert first->clustered first.
+                var clusteredFirst = -1;
+                for (var i = 0; i < clustering.Clusters.Count; i++)
+                {
+                    var cluster = clustering.Clusters[i];
+                    if (cluster.Contains(problem.First))
+                    { // ok, it's this cluster that contains the old first, so make this the new first.
+                        clusteredFirst = i;
+                    }
+                }
+                clusteredProblem = new TSPProblem(clusteredFirst, clustering.Weights);
+            }
 
             // execute the solver.
             var clusteredRoute = _solver.Solve(clusteredProblem, objective);
@@ -65,14 +121,27 @@ namespace OsmSharp.Logistics.Solutions.TSP.Clustering
             var unclusteredRouteList = new List<int>(problem.Weights.Length);
             foreach(var clusteredCustomer in clusteredRoute)
             {
-                unclusteredRouteList.AddRange(clustering.Cluster[clusteredCustomer]);
+                unclusteredRouteList.AddRange(clustering.Clusters[clusteredCustomer]);
             }
-            var unclusteredRoute = new Route(unclusteredRouteList);
+            IRoute unclusteredRoute;
+            if(problem.Last.HasValue && problem.First == problem.Last)
+            { // build a circular route.
+                unclusteredRoute = new Route(unclusteredRouteList, problem.Last);
+            }
+            else if(problem.Last.HasValue)
+            { // build a route with a fixed last.
+                unclusteredRouteList.Remove(problem.Last.Value);
+                unclusteredRouteList.Add(problem.Last.Value);
+                unclusteredRoute = new Route(unclusteredRouteList, problem.Last);
+            }
+            else
+            { // a circular route.
+                unclusteredRoute = new Route(unclusteredRouteList);
+            }
 
             // execute a local search to optimize the clusters.
             double delta;
-            var localSearch = new LocalSearch.Local1Shift();
-            while (localSearch.Apply(problem, objective, unclusteredRoute, out delta)) { }
+            while (_localSearch.Apply(problem, objective, unclusteredRoute, out delta)) { }
 
             // calculate fitness.
             fitness = objective.Calculate(problem, unclusteredRoute);
