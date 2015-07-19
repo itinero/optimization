@@ -23,34 +23,41 @@ namespace OsmSharp.Logistics.Solutions.Algorithms
     /// <summary>
     /// An enumerable containing n-nearest neighbours and some extra information like maximum weight and n.
     /// </summary>
-    public class NNearestNeighbours : HashSet<int>, INNearestNeighbours
+    public class SortedNearestNeighbours : List<int>, ISortedNearestNeighbours
     {
         /// <summary>
-        /// Creates a new nearest neighbours enumerable.
+        /// Creates a new sorted nearest neighbour collection.
         /// </summary>
-        /// <param name="n"></param>
-        public NNearestNeighbours(int n)
+        /// <param name="max"></param>
+        public SortedNearestNeighbours(double max)
         {
-            this.N = n;
+            this.Max = max;
         }
 
         /// <summary>
-        /// Gets the requested N.
+        /// Gets the customer at the given index.
         /// </summary>
-        /// <remarks>It's possible this contains less than N if problem size is smaller than N for example.</remarks>
+        /// <returns></returns>
+        public int Get(int idx)
+        {
+            return this[idx];
+        }
+
+        /// <summary>
+        /// Gets the # of nearest neighbours.
+        /// </summary>
         public int N
         {
-            get;
-            private set;
+            get { return this.Count; }
         }
 
         /// <summary>
-        /// Gets the maximum weight of the furthest customer.
+        /// Gets the maximum weight.
         /// </summary>
         public double Max
         {
             get;
-            set;
+            private set;
         }
     }
 }

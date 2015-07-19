@@ -88,6 +88,7 @@
     <Compile Include="Routing\TSP\TSPRouterTests.cs" />
     <Compile Include="Solutions\Algorithms\NNearestNeighboursAlgorithmTests.cs" />
     <Compile Include="Solutions\TSP\BruteForceSolverTests.cs" />
+    <Compile Include="Solutions\TSP\Clustering\AsymmetricClusteringTests.cs" />
     <Compile Include="Solutions\TSP\GA\EAX\EAXSolverTests.cs" />
     <Compile Include="Solutions\TSP\GA\Operators\EAXOperatorTests.cs" />
     <Compile Include="Solutions\TSP\LocalSearch\ClusterMutationOperatorTests.cs" />

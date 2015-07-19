@@ -38,6 +38,10 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
                 for (int y = 0; y < size; y++)
                 {
                     weights[x][y] = defaultWeight;
+                    if(x == y)
+                    {
+                        weights[x][y] = 0;
+                    }
                 }
             }
             return new TSPProblem(0, weights);

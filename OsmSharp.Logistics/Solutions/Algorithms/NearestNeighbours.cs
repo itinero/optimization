@@ -18,27 +18,39 @@
 
 using System.Collections.Generic;
 
-namespace OsmSharp.Logistics.Solutions
+namespace OsmSharp.Logistics.Solutions.Algorithms
 {
     /// <summary>
-    /// Abstract representation of nearest neighbours.
+    /// An enumerable containing n-nearest neighbours and some extra information like maximum weight and n.
     /// </summary>
-    public interface INearestNeighbours : IEnumerable<int>
-    {   
+    public class NearestNeighbours : HashSet<int>, INearestNeighbours
+    {
         /// <summary>
-        /// Gets the # of nearest neighbours.
+        /// Creates a new nearest neighbours enumerable.
         /// </summary>
-        int N { get; }
+        /// <param name="n"></param>
+        public NearestNeighbours(int n)
+        {
+            this.N = n;
+        }
 
         /// <summary>
-        /// Gets the maximum weight.
+        /// Gets the requested N.
         /// </summary>
-        double Max { get; }
+        /// <remarks>It's possible this contains less than N if problem size is smaller than N for example.</remarks>
+        public int N
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
-        /// Determines whether this collection contains the specified element.
+        /// Gets the maximum weight of the furthest customer.
         /// </summary>
-        /// <returns></returns>
-        bool Contains(int customer);
+        public double Max
+        {
+            get;
+            set;
+        }
     }
 }

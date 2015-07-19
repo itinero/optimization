@@ -39,15 +39,19 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Algorithm.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Routes\Cycles\AsymmetricAlternatingCycles.cs" />
     <Compile Include="Routes\Cycles\AsymmetricCycles.cs" />
-    <Compile Include="Solutions\Algorithms\NNearestNeighbours.cs" />
-    <Compile Include="Solutions\Algorithms\NNearestNeighboursAlgorithm.cs" />
+    <Compile Include="Solutions\Algorithms\NearestNeighbours.cs" />
+    <Compile Include="Solutions\Algorithms\NearestNeighboursAlgorithm.cs" />
+    <Compile Include="Solutions\Algorithms\SortedNearestNeighbours.cs" />
     <Compile Include="Solutions\INearestNeighbours.cs" />
     <Compile Include="Routes\PermutationEnumerable.cs" />
     <Compile Include="Solutions\IMatrixWeights.cs" />
+    <Compile Include="Solutions\ISortedNearestNeighbours.cs" />
     <Compile Include="Solutions\TSP\BruteForceSolver.cs" />
+    <Compile Include="Solutions\TSP\Clustering\AsymmetricClustering.cs" />
     <Compile Include="Solutions\TSP\GA\EAX\EAXSolver.cs" />
     <Compile Include="Solutions\TSP\LocalSearch\ClusterMutationOperator.cs" />
     <Compile Include="Solutions\TSP\GA\Operators\EAXOperator.cs" />
