@@ -169,10 +169,10 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                 weightV1V2 = 0;
             }
             int v3 = -1;
-            INNearestNeighbours neighbours = null;
+            INearestNeighbours neighbours = null;
             if (_nearestNeighbours)
             {
-                neighbours = problem.GetNNearestNeighbours(10, v1);
+                neighbours = problem.GetNNearestNeighboursForward(10, v1);
             }
 
             foreach (int v4 in betweenV2V1)

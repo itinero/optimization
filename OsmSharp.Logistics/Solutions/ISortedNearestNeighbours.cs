@@ -16,29 +16,17 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-
 namespace OsmSharp.Logistics.Solutions
 {
     /// <summary>
-    /// Abstract representation of nearest neighbours.
+    /// Abstract representation of nearest neighbours in a sorted collection.
     /// </summary>
-    public interface INearestNeighbours : IEnumerable<int>
-    {   
+    public interface ISortedNearestNeighbours : INearestNeighbours
+    {
         /// <summary>
-        /// Gets the # of nearest neighbours.
-        /// </summary>
-        int N { get; }
-
-        /// <summary>
-        /// Gets the maximum weight.
-        /// </summary>
-        double Max { get; }
-
-        /// <summary>
-        /// Determines whether this collection contains the specified element.
+        /// Gets the customer at the given index.
         /// </summary>
         /// <returns></returns>
-        bool Contains(int customer);
+        int Get(int idx);
     }
 }

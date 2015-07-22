@@ -24,21 +24,14 @@ namespace OsmSharp.Logistics.Solutions.TSPTW
     /// <summary>
     /// A TSP with time windows.
     /// </summary>
-    public class TSPTWProblem : ITSPTW
+    public class TSPTWProblem : OsmSharp.Logistics.Solutions.TSP.TSPProblem, ITSPTW
     {
         /// <summary>
         /// Creates a new TSP 'open' TSP with only a start customer.
         /// </summary>
         public TSPTWProblem(int first, double[][] weights, TimeWindow[] windows)
+            : base(first, weights)
         {
-            this.First = first;
-            this.Last = null;
-            this.Weights = weights;
-
-            for (var x = 0; x < this.Weights.Length; x++)
-            {
-                this.Weights[x][first] = 0;
-            }
             this.Windows = windows;
         }
 
@@ -46,12 +39,8 @@ namespace OsmSharp.Logistics.Solutions.TSPTW
         /// Creates a new TSP, 'closed' when first equals last.
         /// </summary>
         public TSPTWProblem(int first, int last, double[][] weights, TimeWindow[] windows)
+            : base(first, last, weights)
         {
-            this.First = first;
-            this.Last = last;
-            this.Weights = weights;
-
-            this.Weights[first][last] = 0;
             this.Windows = windows;
         }
 
@@ -59,35 +48,9 @@ namespace OsmSharp.Logistics.Solutions.TSPTW
         /// An empty constructor used just to clone stuff.
         /// </summary>
         private TSPTWProblem()
+            : base()
         {
 
-        }
-
-        /// <summary>
-        /// Gets the first customer.
-        /// </summary>
-        public int First
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the last customer.
-        /// </summary>
-        public int? Last
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the weights.
-        /// </summary>
-        public double[][] Weights
-        {
-            get;
-            private set;
         }
 
         /// <summary>
@@ -100,40 +63,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW
         }
 
         /// <summary>
-        /// Holds the nearest neighbours.
-        /// </summary>
-        private Dictionary<int, INNearestNeighbours[]> _nearestNeighbours;
-
-        /// <summary>
-        /// Generate the nearest neighbour list.
-        /// </summary>
-        /// <returns></returns>
-        public INNearestNeighbours GetNNearestNeighbours(int n, int customer)
-        {
-            if (_nearestNeighbours == null)
-            { // not there yet, create.
-                _nearestNeighbours = new Dictionary<int, INNearestNeighbours[]>();
-            }
-            INNearestNeighbours[] nearestNeighbours = null;
-            if (!_nearestNeighbours.TryGetValue(n, out nearestNeighbours))
-            { // not found for n, create.
-                nearestNeighbours = new INNearestNeighbours[this.Weights.Length];
-                _nearestNeighbours.Add(n, nearestNeighbours);
-            }
-            var result = nearestNeighbours[customer];
-            if (result == null)
-            { // not found, calculate.
-                result = NNearestNeighboursAlgorithm.Forward(this.Weights, n, customer);
-                nearestNeighbours[customer] = result;
-            }
-            return result;
-        }
-
-        /// <summary>
         /// Converts this problem to it's closed equivalent.
         /// </summary>
         /// <returns></returns>
-        public TSP.ITSP ToClosed()
+        public override TSP.ITSP ToClosed()
         {
             if (this.Last == null)
             { // 'open' problem, just set weights to first to 0.
@@ -192,7 +125,7 @@ namespace OsmSharp.Logistics.Solutions.TSPTW
         /// Creates a deep-copy of this problem.
         /// </summary>
         /// <returns></returns>
-        public object Clone()
+        public override object Clone()
         {
             var weights = new double[this.Weights.Length][];
             for (var i = 0; i < this.Weights.Length; i++)

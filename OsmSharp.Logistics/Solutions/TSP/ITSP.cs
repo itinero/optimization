@@ -36,10 +36,28 @@ namespace OsmSharp.Logistics.Solutions.TSP
         int? Last { get; }
 
         /// <summary>
-        /// Returns the n-nearest neighbours.
+        /// Returns the backward n-nearest neighbours.
         /// </summary>
         /// <returns></returns>
-        INNearestNeighbours GetNNearestNeighbours(int n, int customer);
+        INearestNeighbours GetNNearestNeighboursForward(int n, int customer);
+
+        /// <summary>
+        /// Returns the forward n-nearest neighbours.
+        /// </summary>
+        /// <returns></returns>
+        INearestNeighbours GetNNearestNeighboursBackward(int n, int customer);
+
+        /// <summary>
+        /// Returns the forward nearest neighbours based on weight.
+        /// </summary>
+        /// <returns>Customers are sorted based on their weight.</returns>
+        ISortedNearestNeighbours GetNearestNeighboursForward(double weight, int customer);
+
+        /// <summary>
+        /// Returns the backward nearest neighbours based on weight.
+        /// </summary>
+        /// <returns>Customers are sorted based on their weight.</returns>
+        ISortedNearestNeighbours GetNearestNeighboursBackward(double weight, int customer);
 
         /// <summary>
         /// Returns an equivalent closed version.

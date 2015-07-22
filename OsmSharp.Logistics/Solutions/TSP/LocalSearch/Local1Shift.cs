@@ -24,7 +24,7 @@ using System.Collections.Generic;
 namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
 {
     /// <summary>
-    /// A local 1-Shift search for the TSP with Time Window.
+    /// A local 1-Shift search for the TSP.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere.</remarks>
     public class Local1Shift : IOperator<ITSP, ITSPObjective, IRoute>

@@ -31,20 +31,10 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// Creates a new TSP 'open' TSP with only a start customer.
         /// </summary>
         public TSPProblem(int first, double[][] weights)
-            : this(first, weights, new MinimumWeightObjective())
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new TSP 'open' TSP with only a start customer.
-        /// </summary>
-        public TSPProblem(int first, double[][] weights, ITSPObjective fitness)
         {
             this.First = first;
             this.Last = null;
             this.Weights = weights;
-            this.Objective = fitness;
 
             for (var x = 0; x < this.Weights.Length; x++)
             {
@@ -56,20 +46,10 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// Creates a new TSP, 'closed' when first equals last.
         /// </summary>
         public TSPProblem(int first, int last, double[][] weights)
-            : this(first, last, weights, new MinimumWeightObjective())
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new TSP, 'closed' when first equals last.
-        /// </summary>
-        public TSPProblem(int first, int last, double[][] weights, ITSPObjective fitness)
         {
             this.First = first;
             this.Last = last;
             this.Weights = weights;
-            this.Objective = fitness;
 
             this.Weights[first][last] = 0;
         }
@@ -77,7 +57,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// <summary>
         /// An empty constructor used just to clone stuff.
         /// </summary>
-        private TSPProblem()
+        protected TSPProblem()
         {
 
         }
@@ -88,7 +68,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         public int First
         {
             get;
-            private set;
+            protected set;
         }
 
         /// <summary>
@@ -97,7 +77,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         public int? Last
         {
             get;
-            private set;
+            protected set;
         }
 
         /// <summary>
@@ -106,43 +86,124 @@ namespace OsmSharp.Logistics.Solutions.TSP
         public double[][] Weights
         {
             get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the fitness type.
-        /// </summary>
-        public ITSPObjective Objective
-        {
-            get;
-            private set;
+            protected set;
         }
 
         /// <summary>
         /// Holds the nearest neighbours.
         /// </summary>
-        private Dictionary<int, INNearestNeighbours[]> _nearestNeighbours;
+        private Dictionary<int, INearestNeighbours[]> _forwardNearestNeighbours;
 
         /// <summary>
         /// Generate the nearest neighbour list.
         /// </summary>
         /// <returns></returns>
-        public INNearestNeighbours GetNNearestNeighbours(int n, int customer)
+        public INearestNeighbours GetNNearestNeighboursForward(int n, int customer)
         {
-            if (_nearestNeighbours == null)
+            if (_forwardNearestNeighbours == null)
             { // not there yet, create.
-                _nearestNeighbours = new Dictionary<int, INNearestNeighbours[]>();
+                _forwardNearestNeighbours = new Dictionary<int, INearestNeighbours[]>();
             }
-            INNearestNeighbours[] nearestNeighbours = null;
-            if(!_nearestNeighbours.TryGetValue(n, out nearestNeighbours))
+            INearestNeighbours[] nearestNeighbours = null;
+            if(!_forwardNearestNeighbours.TryGetValue(n, out nearestNeighbours))
             { // not found for n, create.
-                nearestNeighbours = new INNearestNeighbours[this.Weights.Length];
-                _nearestNeighbours.Add(n, nearestNeighbours);
+                nearestNeighbours = new INearestNeighbours[this.Weights.Length];
+                _forwardNearestNeighbours.Add(n, nearestNeighbours);
             }
             var result = nearestNeighbours[customer];
             if (result == null)
             { // not found, calculate.
-                result = NNearestNeighboursAlgorithm.Forward(this.Weights, n, customer);
+                result = NearestNeighboursAlgorithm.Forward(this.Weights, n, customer);
+                nearestNeighbours[customer] = result;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Holds the nearest neighbours.
+        /// </summary>
+        private Dictionary<int, INearestNeighbours[]> _backwardNearestNeighbours;
+
+        /// <summary>
+        /// Generate the nearest neighbour list.
+        /// </summary>
+        /// <returns></returns>
+        public INearestNeighbours GetNNearestNeighboursBackward(int n, int customer)
+        {
+            if (_backwardNearestNeighbours == null)
+            { // not there yet, create.
+                _backwardNearestNeighbours = new Dictionary<int, INearestNeighbours[]>();
+            }
+            INearestNeighbours[] nearestNeighbours = null;
+            if (!_backwardNearestNeighbours.TryGetValue(n, out nearestNeighbours))
+            { // not found for n, create.
+                nearestNeighbours = new INearestNeighbours[this.Weights.Length];
+                _backwardNearestNeighbours.Add(n, nearestNeighbours);
+            }
+            var result = nearestNeighbours[customer];
+            if (result == null)
+            { // not found, calculate.
+                result = NearestNeighboursAlgorithm.Backward(this.Weights, n, customer);
+                nearestNeighbours[customer] = result;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Holds the nearest neighbours.
+        /// </summary>
+        private Dictionary<double, ISortedNearestNeighbours[]> _forwardSortedNearestNeighbours;
+
+        /// <summary>
+        /// Generate the nearest neighbour list.
+        /// </summary>
+        /// <returns></returns>
+        public ISortedNearestNeighbours GetNearestNeighboursForward(double weight, int customer)
+        {
+            if (_forwardSortedNearestNeighbours == null)
+            { // not there yet, create.
+                _forwardSortedNearestNeighbours = new Dictionary<double, ISortedNearestNeighbours[]>();
+            }
+            ISortedNearestNeighbours[] nearestNeighbours = null;
+            if (!_forwardSortedNearestNeighbours.TryGetValue(weight, out nearestNeighbours))
+            { // not found for n, create.
+                nearestNeighbours = new ISortedNearestNeighbours[this.Weights.Length];
+                _forwardSortedNearestNeighbours.Add(weight, nearestNeighbours);
+            }
+            var result = nearestNeighbours[customer];
+            if (result == null)
+            { // not found, calculate.
+                result = NearestNeighboursAlgorithm.Forward(this.Weights, weight, customer);
+                nearestNeighbours[customer] = result;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Holds the nearest neighbours.
+        /// </summary>
+        private Dictionary<double, ISortedNearestNeighbours[]> _backwardSortedNearestNeighbours;
+
+        /// <summary>
+        /// Generate the nearest neighbour list.
+        /// </summary>
+        /// <returns></returns>
+        public ISortedNearestNeighbours GetNearestNeighboursBackward(double weight, int customer)
+        {
+            if (_backwardSortedNearestNeighbours == null)
+            { // not there yet, create.
+                _backwardSortedNearestNeighbours = new Dictionary<double, ISortedNearestNeighbours[]>();
+            }
+            ISortedNearestNeighbours[] nearestNeighbours = null;
+            if (!_backwardSortedNearestNeighbours.TryGetValue(weight, out nearestNeighbours))
+            { // not found for n, create.
+                nearestNeighbours = new ISortedNearestNeighbours[this.Weights.Length];
+                _backwardSortedNearestNeighbours.Add(weight, nearestNeighbours);
+            }
+            var result = nearestNeighbours[customer];
+            if (result == null)
+            { // not found, calculate.
+                result = NearestNeighboursAlgorithm.Backward(this.Weights, weight, customer);
                 nearestNeighbours[customer] = result;
             }
             return result;
@@ -152,12 +213,12 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// Converts this problem to it's closed equivalent.
         /// </summary>
         /// <returns></returns>
-        public ITSP ToClosed()
+        public virtual ITSP ToClosed()
         {
             if(this.Last == null)
             { // 'open' problem, just set weights to first to 0.
                 // REMARK: weights already set in constructor.
-                return new TSPProblem(this.First, this.First, this.Weights, this.Objective);
+                return new TSPProblem(this.First, this.First, this.Weights);
             }
             else if(this.First != this.Last)
             { // 'open' problem but with fixed weights.
@@ -202,7 +263,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
                         }
                     }
                 }
-                return new TSPProblem(this.First, this.First, weights, this.Objective);
+                return new TSPProblem(this.First, this.First, weights);
             }
             return this; // problem already closed with first==last.
         }
@@ -211,7 +272,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// Creates a deep-copy of this problem.
         /// </summary>
         /// <returns></returns>
-        public object Clone()
+        public virtual object Clone()
         {
             var weights = new double[this.Weights.Length][];
             for (var i = 0; i < this.Weights.Length; i++)
@@ -222,7 +283,6 @@ namespace OsmSharp.Logistics.Solutions.TSP
             clone.First = this.First;
             clone.Last = this.Last;
             clone.Weights = this.Weights;
-            clone.Objective = this.Objective;
             return clone;
         }
     }
