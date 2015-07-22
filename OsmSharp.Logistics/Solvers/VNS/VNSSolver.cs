@@ -24,7 +24,7 @@ namespace OsmSharp.Logistics.Solvers.VNS
     public class VNSSolver<TProblem, TObjective, TSolution> : SolverBase<TProblem, TObjective, TSolution>
         where TSolution : ICloneable
     {
-        private readonly SolverDelegates.StopConditionDelegate<TProblem, TObjective, TSolution> _stopCondition;
+        private readonly SolverDelegates.StopConditionWithLevelDelegate<TProblem, TObjective, TSolution> _stopCondition;
         private readonly ISolver<TProblem, TObjective, TSolution> _generator;
         private readonly IPerturber<TProblem, TObjective, TSolution> _perturber;
         private readonly IOperator<TProblem, TObjective, TSolution> _localSearch;
@@ -51,7 +51,7 @@ namespace OsmSharp.Logistics.Solvers.VNS
         /// <param name="localSearch">The local search that improves solutions.</param>
         /// <param name="stopCondition">The stop condition to control the number of iterations.</param>
         public VNSSolver(ISolver<TProblem, TObjective, TSolution> generator, IPerturber<TProblem, TObjective, TSolution> perturber,
-            IOperator<TProblem, TObjective, TSolution> localSearch, SolverDelegates.StopConditionDelegate<TProblem, TObjective, TSolution> stopCondition)
+            IOperator<TProblem, TObjective, TSolution> localSearch, SolverDelegates.StopConditionWithLevelDelegate<TProblem, TObjective, TSolution> stopCondition)
         {
             _generator = generator;
             _perturber = perturber;
@@ -92,7 +92,7 @@ namespace OsmSharp.Logistics.Solvers.VNS
             var i = 0;
             var level = 1;
             while (!this.IsStopped && 
-                (_stopCondition == null || !_stopCondition.Invoke(i, problem, objective, globalBest)))
+                (_stopCondition == null || !_stopCondition.Invoke(i, level, problem, objective, globalBest)))
             { // keep running until stop condition is true or this solver is stopped.
                 // shake things up a bit, or in other word change neighbourhood.
                 var perturbedSolution = (TSolution)globalBest.Clone();
@@ -101,21 +101,24 @@ namespace OsmSharp.Logistics.Solvers.VNS
 
                 // improve things by using a local search procedure.
                 var localSearchDifference = 0.0;
-                if (_localSearch.Apply(problem, objective, perturbedSolution, out localSearchDifference))
-                { // local search found improvements.
-                    if (localSearchDifference + perturbedDifference > 0)
-                    { // there was an improvement, keep new solution as global.
-                        globalBestFitness = globalBestFitness - perturbedDifference - localSearchDifference;
-                        globalBest = perturbedSolution;
-                        level = 1; // reset level.
+                var localSearchStepDifference = 0.0;
+                while (_localSearch.Apply(problem, objective, perturbedSolution, out localSearchStepDifference))
+                { // keep the local search going until no more improvements are found!
+                    localSearchDifference += localSearchStepDifference;
+                }
 
-                        // report new solution.
-                        this.ReportIntermidiateResult(globalBest);
-                    }
-                    else
-                    {
-                        level = level + 1;
-                    }
+                if (localSearchDifference + perturbedDifference > 0)
+                { // there was an improvement, keep new solution as global.
+                    globalBestFitness = globalBestFitness - perturbedDifference - localSearchDifference;
+                    globalBest = perturbedSolution;
+                    level = 1; // reset level.
+
+                    // report new solution.
+                    this.ReportIntermidiateResult(globalBest);
+                }
+                else
+                {
+                    level = level + 1;
                 }
             }
             fitness = globalBestFitness;

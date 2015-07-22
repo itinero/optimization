@@ -18,6 +18,7 @@
 
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Solutions.TSPTW.Random;
+using OsmSharp.Logistics.Solvers.Iterative;
 using OsmSharp.Logistics.Solvers.VNS;
 
 namespace OsmSharp.Logistics.Solutions.TSPTW.VNS
@@ -25,13 +26,39 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.VNS
     /// <summary>
     /// Implements a VNS-strategy to construct feasible solution for the TSP-TW from random tours.
     /// </summary>
-    public class VNSConstructionSolver : VNSSolver<ITSPTW, ITSPTWObjective, IRoute>
+    public class VNSConstructionSolver : IterativeSolver<ITSPTW, ITSPTWObjective, IRoute>
     {
         /// <summary>
         /// Creates a new VNS construction solver.
         /// </summary>
         public VNSConstructionSolver()
-            : base(new RandomSolver(), new Random1Shift(), new LocalSearch.Local1TimeWindowShift(), (i, p, o, r) =>
+            : this(10)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new VNS construction solver.
+        /// </summary>
+        public VNSConstructionSolver(int maxIterations)
+            : this(maxIterations, 1000)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new VNS construction solver.
+        /// </summary>
+        public VNSConstructionSolver(int maxIterations, int levelMax)
+            : base(new VNSSolver<ITSPTW, ITSPTWObjective, IRoute>(new RandomSolver(), new Random1Shift(),
+                new LocalSearch.Local1TimeWindowShift(), (i, l, p, o, r) =>
+            {
+                if (l > levelMax)
+                {
+                    return true;
+                }
+                return o.Calculate(p, r) == 0;
+            }), maxIterations, (i, p, o, r) =>
             {
                 return o.Calculate(p, r) == 0;
             })

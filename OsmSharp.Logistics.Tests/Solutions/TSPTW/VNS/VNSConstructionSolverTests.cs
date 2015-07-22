@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using OsmSharp.Logistics.Solutions.TSPTW.Objectives;
 using OsmSharp.Logistics.Solutions.TSPTW.VNS;
 using OsmSharp.Logistics.Solvers.GA;
 using OsmSharp.Math.Random;
@@ -36,6 +37,9 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.VNS
         [Test]
         public void TestSolutions5ClosedNotFixed()
         {
+            OsmSharp.Logging.Log.Enable();
+            OsmSharp.Logging.Log.RegisterListener(new OsmSharp.WinForms.UI.Logging.DebugTraceListener());
+
             StaticRandomGenerator.Set(4541247);
 
             // create problem.
@@ -63,12 +67,16 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.VNS
 
             // create the solver.
             var solver = new VNSConstructionSolver();
-
+            solver.IntermidiateResult += (x) =>
+            {
+                var fitness = (new FeasibleObjective()).Calculate(problem, x);
+                fitness = fitness + 0;
+            };
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, new OsmSharp.Logistics.Solutions.TSPTW.FeasibleObjective(), out fitness);
+                var solution = solver.Solve(problem, new OsmSharp.Logistics.Solutions.TSPTW.Objectives.FeasibleObjective(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(0, fitness);

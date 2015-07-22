@@ -84,7 +84,7 @@ namespace OsmSharp.Logistics.Solvers.Iterative
             TSolution best = default(TSolution);
             fitness = double.MaxValue;
             while (i < _n && !this.IsStopped &&
-                (_stopCondition == null || !_stopCondition.Invoke(i, problem, objective, best)))
+                (_stopCondition == null || best == null || !_stopCondition.Invoke(i, problem, objective, best)))
             {
                 var nextFitness = double.MaxValue;
                 var nextRoute = _solver.Solve(problem, objective, out nextFitness);

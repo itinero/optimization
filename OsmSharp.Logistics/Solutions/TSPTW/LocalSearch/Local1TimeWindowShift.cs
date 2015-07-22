@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Logistics.Routes;
+using OsmSharp.Logistics.Solutions.TSPTW.Objectives;
 using OsmSharp.Logistics.Solvers;
 using System;
 using System.Collections.Generic;
@@ -56,19 +57,19 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
             // 2: try to move a non-violated customer forward.
             // 3: try to move a non-violated customer backward.
             // 4: try to move a violated customer forward.
-            if(this.MoveViolatedBackward(problem, solution, out delta))
+            if(this.MoveViolatedBackward(problem, objective, solution, out delta))
             { // success already, don't try anything else.
                 return true;
             }
-            if (this.MoveNonViolatedForward(problem, solution, out delta))
+            if (this.MoveNonViolatedForward(problem, objective, solution, out delta))
             { // success already, don't try anything else.
                 return true;
             }
-            if (this.MoveNonViolatedBackward(problem, solution, out delta))
+            if (this.MoveNonViolatedBackward(problem, objective, solution, out delta))
             { // success already, don't try anything else.
                 return true;
             }
-            if (this.MoveViolatedForward(problem, solution, out delta))
+            if (this.MoveViolatedForward(problem, objective, solution, out delta))
             { // success already, don't try anything else.
                 return true;
             }
@@ -78,11 +79,8 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The route.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool MoveViolatedBackward(ITSPTW problem, IRoute solution, out double delta)
+        public bool MoveViolatedBackward(ITSPTW problem, ITSPTWObjective objective, IRoute solution, out double delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();
@@ -93,18 +91,21 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
             var previous = Constants.NOT_SET;
             while (enumerator.MoveNext())
             {
-                var window = problem.Windows[enumerator.Current];
+                var current = enumerator.Current;
                 if (previous != Constants.NOT_SET)
                 { // keep track of time.
-                    time += problem.Weights[previous][enumerator.Current];
+                    time += problem.Weights[previous][current];
                 }
-                if (!window.IsValidAt(time) && position > 1)
-                { // window is invalid and customer is not the first 'moveable' customer.
-                    invalids.Add(new Tuple<int,int>(enumerator.Current, position));
+                var window = problem.Windows[enumerator.Current];
+                if (window.Max < time && position > 1)
+                { // ok, unfeasible and customer is not the first 'moveable' customer.
+                    fitness += time - window.Max;
+                    invalids.Add(new Tuple<int, int>(enumerator.Current, position));
                 }
-
-                // add the difference with the time window.
-                fitness += window.MinDiff(time);
+                if (window.Min > time)
+                { // wait here!
+                    time = window.Min;
+                }
 
                 // increase position.
                 position++;
@@ -133,19 +134,35 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                             { // keep track if time.
                                 time += problem.Weights[previous][current];
                             }
-                            newFitness += problem.Windows[current].MinDiff(time);
+                            var window = problem.Windows[enumerator.Current];
+                            if (window.Max < time)
+                            { // ok, unfeasible and customer is not the first 'moveable' customer.
+                                newFitness += time - window.Max;
+                            }
+                            if (window.Min > time)
+                            { // wait here!
+                                time = window.Min;
+                            }
                             previous = current;
                             if (current == before)
                             { // also add the before->invalid.
                                 time += problem.Weights[current][invalid.Item1];
-                                newFitness += problem.Windows[invalid.Item1].MinDiff(time);
+                                window = problem.Windows[invalid.Item1];
+                                if (window.Max < time)
+                                { // ok, unfeasible and customer is not the first 'moveable' customer.
+                                    newFitness += time - window.Max;
+                                }
+                                if (window.Min > time)
+                                { // wait here!
+                                    time = window.Min;
+                                }
                                 previous = invalid.Item1;
                             }
                         }
                     }
 
                     if(newFitness < fitness)
-                    {
+                    { // there is improvement!
                         delta = fitness - newFitness;
                         solution.ShiftAfter(invalid.Item1, before);
                         return true;
@@ -159,13 +176,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The route.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool MoveNonViolatedForward(ITSPTW problem, IRoute solution, out double delta)
+        public bool MoveNonViolatedForward(ITSPTW problem, ITSPTWObjective objective, IRoute solution, out double delta)
         {
-            // search for valid customers.
+            // search for invalid customers.
             var enumerator = solution.GetEnumerator();
             double time = 0;
             double fitness = 0;
@@ -174,18 +188,24 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
             var previous = Constants.NOT_SET;
             while (enumerator.MoveNext())
             {
-                var window = problem.Windows[enumerator.Current];
+                var current = enumerator.Current;
                 if (previous != Constants.NOT_SET)
                 { // keep track of time.
-                    time += problem.Weights[previous][enumerator.Current];
+                    time += problem.Weights[previous][current];
                 }
-                if (position > 0 && position < problem.Weights.Length - 1 && window.IsValidAt(time))
-                { // window is invalid and customer is not the first 'moveable' customer.
+                var window = problem.Windows[enumerator.Current];
+                if (window.Max < time)
+                { // ok, unfeasible.
+                    fitness += time - window.Max;
+                }
+                else if (position > 0 && position < problem.Weights.Length - 1)
+                { // window is valid and customer is not the first 'moveable' customer.
                     valids.Add(new Tuple<int, int>(enumerator.Current, position));
                 }
-
-                // add the difference with the time window.
-                fitness += window.MinDiff(time);
+                if (window.Min > time)
+                { // wait here!
+                    time = window.Min;
+                }
 
                 // increase position.
                 position++;
@@ -214,19 +234,35 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                             { // keep track if time.
                                 time += problem.Weights[previous][current];
                             }
-                            newFitness += problem.Windows[current].MinDiff(time);
+                            var window = problem.Windows[enumerator.Current];
+                            if (window.Max < time)
+                            { // ok, unfeasible and customer is not the first 'moveable' customer.
+                                newFitness += time - window.Max;
+                            }
+                            if (window.Min > time)
+                            { // wait here!
+                                time = window.Min;
+                            }
                             previous = current;
                             if (current == before)
                             { // also add the before->invalid.
                                 time += problem.Weights[current][valid.Item1];
-                                newFitness += problem.Windows[valid.Item1].MinDiff(time);
+                                window = problem.Windows[valid.Item1];
+                                if (window.Max < time)
+                                { // ok, unfeasible and customer is not the first 'moveable' customer.
+                                    newFitness += time - window.Max;
+                                }
+                                if (window.Min > time)
+                                { // wait here!
+                                    time = window.Min;
+                                }
                                 previous = valid.Item1;
                             }
                         }
                     }
 
                     if (newFitness < fitness)
-                    {
+                    { // there is improvement!
                         delta = fitness - newFitness;
                         solution.ShiftAfter(valid.Item1, before);
                         return true;
@@ -240,13 +276,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The route.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool MoveNonViolatedBackward(ITSPTW problem, IRoute solution, out double delta)
+        public bool MoveNonViolatedBackward(ITSPTW problem, ITSPTWObjective objective, IRoute solution, out double delta)
         {
-            // search for the valid customers.
+            // search for invalid customers.
             var enumerator = solution.GetEnumerator();
             double time = 0;
             double fitness = 0;
@@ -255,18 +288,24 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
             var previous = Constants.NOT_SET;
             while (enumerator.MoveNext())
             {
-                var window = problem.Windows[enumerator.Current];
+                var current = enumerator.Current;
                 if (previous != Constants.NOT_SET)
                 { // keep track of time.
-                    time += problem.Weights[previous][enumerator.Current];
+                    time += problem.Weights[previous][current];
                 }
-                if (position > 1 && window.IsValidAt(time))
-                { // window is invalid and customer is not the first 'moveable' customer.
+                var window = problem.Windows[enumerator.Current];
+                if (window.Max < time)
+                { // ok, unfeasible.
+                    fitness += time - window.Max;
+                }
+                else if (position > 1)
+                { // window is valid and customer is not the first 'moveable' customer.
                     valids.Add(new Tuple<int, int>(enumerator.Current, position));
                 }
-
-                // add the difference with the time window.
-                fitness += window.MinDiff(time);
+                if (window.Min > time)
+                { // wait here!
+                    time = window.Min;
+                }
 
                 // increase position.
                 position++;
@@ -295,19 +334,35 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                             { // keep track if time.
                                 time += problem.Weights[previous][current];
                             }
-                            newFitness += problem.Windows[current].MinDiff(time);
+                            var window = problem.Windows[enumerator.Current];
+                            if (window.Max < time)
+                            { // ok, unfeasible and customer is not the first 'moveable' customer.
+                                newFitness += time - window.Max;
+                            }
+                            if (window.Min > time)
+                            { // wait here!
+                                time = window.Min;
+                            }
                             previous = current;
                             if (current == before)
                             { // also add the before->invalid.
                                 time += problem.Weights[current][valid.Item1];
-                                newFitness += problem.Windows[valid.Item1].MinDiff(time);
+                                window = problem.Windows[valid.Item1];
+                                if (window.Max < time)
+                                { // ok, unfeasible and customer is not the first 'moveable' customer.
+                                    newFitness += time - window.Max;
+                                }
+                                if (window.Min > time)
+                                { // wait here!
+                                    time = window.Min;
+                                }
                                 previous = valid.Item1;
                             }
                         }
                     }
 
                     if (newFitness < fitness)
-                    {
+                    { // there is improvement!
                         delta = fitness - newFitness;
                         solution.ShiftAfter(valid.Item1, before);
                         return true;
@@ -321,13 +376,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="solution">The route.</param>
-        /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool MoveViolatedForward(ITSPTW problem, IRoute solution, out double delta)
+        public bool MoveViolatedForward(ITSPTW problem, ITSPTWObjective objective, IRoute solution, out double delta)
         {
-            // search for the invalid customers.
+            // search for invalid customers.
             var enumerator = solution.GetEnumerator();
             double time = 0;
             double fitness = 0;
@@ -336,18 +388,21 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
             var previous = Constants.NOT_SET;
             while (enumerator.MoveNext())
             {
-                var window = problem.Windows[enumerator.Current];
+                var current = enumerator.Current;
                 if (previous != Constants.NOT_SET)
                 { // keep track of time.
-                    time += problem.Weights[previous][enumerator.Current];
+                    time += problem.Weights[previous][current];
                 }
-                if (!window.IsValidAt(time) && position > 0 && position < problem.Weights.Length)
-                { // window is invalid and customer is not the first 'moveable' customer.
+                var window = problem.Windows[enumerator.Current];
+                if (window.Max < time && position > 0 && position < problem.Weights.Length - 1)
+                { // ok, unfeasible and customer is not the first 'moveable' customer.
+                    fitness += time - window.Max;
                     invalids.Add(new Tuple<int, int>(enumerator.Current, position));
                 }
-
-                // add the difference with the time window.
-                fitness += window.MinDiff(time);
+                if (window.Min > time)
+                { // wait here!
+                    time = window.Min;
+                }
 
                 // increase position.
                 position++;
@@ -376,19 +431,35 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                             { // keep track if time.
                                 time += problem.Weights[previous][current];
                             }
-                            newFitness += problem.Windows[current].MinDiff(time);
+                            var window = problem.Windows[enumerator.Current];
+                            if (window.Max < time)
+                            { // ok, unfeasible and customer is not the first 'moveable' customer.
+                                newFitness += time - window.Max;
+                            }
+                            if (window.Min > time)
+                            { // wait here!
+                                time = window.Min;
+                            }
                             previous = current;
                             if (current == before)
                             { // also add the before->invalid.
                                 time += problem.Weights[current][invalid.Item1];
-                                newFitness += problem.Windows[invalid.Item1].MinDiff(time);
+                                window = problem.Windows[invalid.Item1];
+                                if (window.Max < time)
+                                { // ok, unfeasible and customer is not the first 'moveable' customer.
+                                    newFitness += time - window.Max;
+                                }
+                                if (window.Min > time)
+                                { // wait here!
+                                    time = window.Min;
+                                }
                                 previous = invalid.Item1;
                             }
                         }
                     }
 
                     if (newFitness < fitness)
-                    {
+                    { // there is improvement!
                         delta = fitness - newFitness;
                         solution.ShiftAfter(invalid.Item1, before);
                         return true;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Logistics.Solutions.TSPTW
+namespace OsmSharp.Logistics.Solutions.TSPTW.Objectives
 {
     /// <summary>
     /// Abstract base class for TSPTW objectives.

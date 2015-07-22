@@ -19,7 +19,7 @@
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Solutions.TSP;
 
-namespace OsmSharp.Logistics.Solutions.TSPTW
+namespace OsmSharp.Logistics.Solutions.TSPTW.Objectives
 {
     /// <summary>
     /// An objective that leads to feasible solutions for the TSP with TW.
@@ -45,8 +45,8 @@ namespace OsmSharp.Logistics.Solutions.TSPTW
         /// <returns></returns>
         public override double Calculate(ITSPTW problem, Routes.IRoute solution)
         {
-            var total = 0.0;
-            var seconds = 0.0;
+            var fitness = 0.0;
+            var time = 0.0;
             var previous = Constants.NOT_SET;
             var enumerator = solution.GetEnumerator();
             while (enumerator.MoveNext())
@@ -54,12 +54,20 @@ namespace OsmSharp.Logistics.Solutions.TSPTW
                 var current = enumerator.Current;
                 if (previous != Constants.NOT_SET)
                 { // keep track of time.
-                    seconds += problem.Weights[previous][current];
+                    time += problem.Weights[previous][current];
                 }
-                total += problem.Windows[current].MinDiff(seconds);
+                var window = problem.Windows[current];
+                if(window.Max < time)
+                { // ok, unfeasible.
+                    fitness += time - window.Max;
+                }
+                if(window.Min > time)
+                { // wait here!
+                    time = window.Min;
+                }
                 previous = current;
             }
-            return total;
+            return fitness;
         }
 
         /// <summary>

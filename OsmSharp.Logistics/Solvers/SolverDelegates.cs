@@ -33,6 +33,14 @@ namespace OsmSharp.Logistics.Solvers
         /// A delegate for a stop condition.
         /// </summary>
         /// <returns></returns>
-        public delegate bool StopConditionDelegate<TProblem, TObjective, TSolution>(int iteration, TProblem problem, TObjective objective, TSolution solution);
+        public delegate bool StopConditionDelegate<TProblem, TObjective, TSolution>(int iteration, TProblem problem,
+            TObjective objective, TSolution solution);
+
+        /// <summary>
+        /// A delegate for a stop condition.
+        /// </summary>
+        /// <returns></returns>
+        public delegate bool StopConditionWithLevelDelegate<TProblem, TObjective, TSolution>(int iteration, int level,
+            TProblem problem, TObjective objective, TSolution solution);
     }
 }

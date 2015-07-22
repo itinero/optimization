@@ -53,10 +53,11 @@
     <Compile Include="Solutions\TSPTW\ITSPTW.cs" />
     <Compile Include="Solutions\TSPTW\ITSPTWObjective.cs" />
     <Compile Include="Solutions\TSPTW\LocalSearch\Local1TimeWindowShift.cs" />
+    <Compile Include="Solutions\TSPTW\Objectives\MinimumWeightObjective.cs" />
     <Compile Include="Solutions\TSPTW\Random\Random1Shift.cs" />
     <Compile Include="Solutions\TSPTW\Random\RandomSolver.cs" />
-    <Compile Include="Solutions\TSPTW\FeasibleObjective.cs" />
-    <Compile Include="Solutions\TSPTW\TSPTWObjectiveBase.cs" />
+    <Compile Include="Solutions\TSPTW\Objectives\FeasibleObjective.cs" />
+    <Compile Include="Solutions\TSPTW\Objectives\TSPTWObjectiveBase.cs" />
     <Compile Include="Solutions\TSPTW\TSPTWProblem.cs" />
     <Compile Include="Solutions\TSPTW\VNS\VNSConstructionSolver.cs" />
     <Compile Include="Solutions\TSP\BruteForceSolver.cs" />

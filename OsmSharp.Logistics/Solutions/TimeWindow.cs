@@ -60,5 +60,15 @@ namespace OsmSharp.Logistics.Solutions
             }
             return seconds - this.Max;
         }
+
+        /// <summary>
+        /// Returns the fully qualified type name of this instance.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("[{0}, {1}]",
+                this.Min, this.Max);
+        }
     }
 }

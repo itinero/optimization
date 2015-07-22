@@ -19,6 +19,7 @@
 using NUnit.Framework;
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Solutions.TSPTW.LocalSearch;
+using OsmSharp.Logistics.Solutions.TSPTW.Objectives;
 using System.Linq;
 
 namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
@@ -36,6 +37,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
         public void Test1OneShiftViolatedBackward()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
+            var objective = new FeasibleObjective();
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 2);
             problem.Windows[2] = new Logistics.Solutions.TimeWindow()
             {
@@ -49,7 +51,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1TimeWindowShift();
             var delta = 0.0;
-            Assert.IsTrue(localSearch.MoveViolatedBackward(problem, route, out delta)); // shifts 2 after 0.
+            Assert.IsTrue(localSearch.MoveViolatedBackward(problem, objective, route, out delta)); // shifts 2 after 0.
 
             // test result.
             Assert.AreEqual(1, delta);
@@ -59,7 +61,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
             route = new Route(new int[] { 0, 4, 1, 3, 2 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            Assert.IsTrue(localSearch.MoveViolatedBackward(problem, route, out delta)); // shifts 2 after 0
+            Assert.IsTrue(localSearch.MoveViolatedBackward(problem, objective, route, out delta)); // shifts 2 after 0
 
             // test result.
             Assert.AreEqual(5, delta);
@@ -69,7 +71,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
             route = new Route(new int[] { 0, 2, 4, 1, 3 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            Assert.IsFalse(localSearch.MoveViolatedBackward(problem, route, out delta));
+            Assert.IsFalse(localSearch.MoveViolatedBackward(problem, objective, route, out delta));
         }
 
         /// <summary>
@@ -79,6 +81,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
         public void Test1OneShiftNonViolatedForward()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
+            var objective = new FeasibleObjective();
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 2);
             problem.Windows[2] = new Logistics.Solutions.TimeWindow()
             {
@@ -92,7 +95,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1TimeWindowShift();
             var delta = 0.0;
-            Assert.IsTrue(localSearch.MoveNonViolatedForward(problem, route, out delta)); // shifts 1 after 2.
+            Assert.IsTrue(localSearch.MoveNonViolatedForward(problem, objective, route, out delta)); // shifts 1 after 2.
 
             // test result.
             Assert.AreEqual(1, delta);
@@ -102,7 +105,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
             route = new Route(new int[] { 0, 2, 4, 1, 3 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            Assert.IsFalse(localSearch.MoveNonViolatedForward(problem, route, out delta));
+            Assert.IsFalse(localSearch.MoveNonViolatedForward(problem, objective, route, out delta));
         }
 
         /// <summary>
@@ -112,6 +115,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
         public void Test1OneShiftNonViolatedBackward()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
+            var objective = new FeasibleObjective();
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][3] = 1;
             problem.Weights[3][1] = 1;
@@ -127,7 +131,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1TimeWindowShift();
             var delta = 0.0;
-            Assert.IsTrue(localSearch.MoveNonViolatedBackward(problem, route, out delta)); // shifts 3 after 0.
+            Assert.IsTrue(localSearch.MoveNonViolatedBackward(problem, objective, route, out delta)); // shifts 3 after 0.
 
             // test result.
             Assert.AreEqual(7, delta);
@@ -137,7 +141,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
             route = new Route(new int[] { 0, 2, 4, 1, 3 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            Assert.IsFalse(localSearch.MoveNonViolatedBackward(problem, route, out delta));
+            Assert.IsFalse(localSearch.MoveNonViolatedBackward(problem, objective, route, out delta));
         }
 
         /// <summary>
@@ -147,6 +151,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
         public void Test1OneShiftViolatedForward()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
+            var objective = new FeasibleObjective();
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][3] = 1;
             problem.Weights[3][1] = 1;
@@ -167,7 +172,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1TimeWindowShift();
             var delta = 0.0;
-            Assert.IsTrue(localSearch.MoveViolatedForward(problem, route, out delta)); // shifts 1 after 3.
+            Assert.IsTrue(localSearch.MoveViolatedForward(problem, objective, route, out delta)); // shifts 1 after 3.
 
             // test result.
             Assert.AreEqual(25, delta);
@@ -177,7 +182,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
             route = new Route(new int[] { 0, 3, 1, 2, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            Assert.IsFalse(localSearch.MoveViolatedForward(problem, route, out delta));
+            Assert.IsFalse(localSearch.MoveViolatedForward(problem, objective, route, out delta));
         }
     }
 }

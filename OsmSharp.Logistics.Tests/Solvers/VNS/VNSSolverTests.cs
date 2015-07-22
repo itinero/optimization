@@ -88,7 +88,7 @@ namespace OsmSharp.Logistics.Tests.Solvers.VNS
 
             // create solver.
             var solver = new VNSSolver<ProblemMock, ObjectiveMock, SolutionMock>(
-                new GeneratorMock(), new PerturberMock(), new LocalSearchMock(), (i, p, o, s) =>
+                new GeneratorMock(), new PerturberMock(), new LocalSearchMock(), (i, l, p, o, s) =>
             {
                 return s.Value < 100;
             });
