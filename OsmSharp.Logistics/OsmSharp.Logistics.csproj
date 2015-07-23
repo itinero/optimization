@@ -78,6 +78,7 @@
     <Compile Include="Solutions\TSP\MinimumWeightObjective.cs" />
     <Compile Include="Solutions\TSP\TSPProblem.cs" />
     <Compile Include="Solvers\EmptyOperator.cs" />
+    <Compile Include="Solvers\Extensions.cs" />
     <Compile Include="Solvers\GA\GASettings.cs" />
     <Compile Include="Solvers\GA\GASolver.cs" />
     <Compile Include="Solvers\GA\ICrossOverOperator.cs" />

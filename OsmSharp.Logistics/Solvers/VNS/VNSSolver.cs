@@ -101,11 +101,7 @@ namespace OsmSharp.Logistics.Solvers.VNS
 
                 // improve things by using a local search procedure.
                 var localSearchDifference = 0.0;
-                var localSearchStepDifference = 0.0;
-                while (_localSearch.Apply(problem, objective, perturbedSolution, out localSearchStepDifference))
-                { // keep the local search going until no more improvements are found!
-                    localSearchDifference += localSearchStepDifference;
-                }
+                _localSearch.ApplyUntil(problem, objective, perturbedSolution, out localSearchDifference);
 
                 if (localSearchDifference + perturbedDifference > 0)
                 { // there was an improvement, keep new solution as global.
@@ -123,6 +119,46 @@ namespace OsmSharp.Logistics.Solvers.VNS
             }
             fitness = globalBestFitness;
             return globalBest;
+        }
+
+        /// <summary>
+        /// Solves the given problem.
+        /// </summary>
+        /// <returns></returns>
+        public bool Apply(TProblem problem, TObjective objective, TSolution solution, out double delta)
+        {
+            delta = 0;
+            var globalBest = (TSolution)solution.Clone();
+
+            var i = 0;
+            var level = 1;
+            while (!this.IsStopped &&
+                (_stopCondition == null || !_stopCondition.Invoke(i, level, problem, objective, globalBest)))
+            { // keep running until stop condition is true or this solver is stopped.
+                // shake things up a bit, or in other word change neighbourhood.
+                var perturbedSolution = (TSolution)globalBest.Clone();
+                var perturbedDifference = 0.0;
+                _perturber.Apply(problem, objective, perturbedSolution, level, out perturbedDifference);
+
+                // improve things by using a local search procedure.
+                var localSearchDifference = 0.0;
+                _localSearch.ApplyUntil(problem, objective, perturbedSolution, out localSearchDifference);
+
+                if (localSearchDifference + perturbedDifference > 0)
+                { // there was an improvement, keep new solution as global.
+                    delta = delta + perturbedDifference + localSearchDifference;
+                    globalBest = perturbedSolution;
+                    level = 1; // reset level.
+
+                    // report new solution.
+                    this.ReportIntermidiateResult(globalBest);
+                }
+                else
+                {
+                    level = level + 1;
+                }
+            }
+            return delta > 0;
         }
     }
 }
