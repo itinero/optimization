@@ -26,7 +26,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
     /// <summary>
     /// A local 1-Shift search for the TSP.
     /// </summary>
-    /// <remarks>* 1-shift: Remove a customer and relocate it somewhere.</remarks>
+    /// <remarks>* 1-shift: Remove a customer and relocate it somewhere also called reinsertion heuristic.</remarks>
     public class Local1Shift : IOperator<ITSP, ITSPObjective, IRoute>
     {
         /// <summary>
