@@ -81,7 +81,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                     var edge23 = customers[edge2 + 2];
 
                     if (edge2 - edge1 == 2)
-                    { // when diff = 3 
+                    {
                         forward = problem.Weights[edge11][edge12] + problem.Weights[edge12][edge21] +
                             problem.Weights[edge21][edge22] + problem.Weights[edge22][edge23];
                         backward = problem.Weights[edge11][edge22] + problem.Weights[edge22][edge21] +
@@ -98,7 +98,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                         }
                     }
                     else if(edge2 - edge1 == 3)
-                    { // when diff = 4
+                    {
                         forward = problem.Weights[edge11][edge12] + problem.Weights[edge12][edge13] + problem.Weights[edge13][edge21] +
                             problem.Weights[edge21][edge22] + problem.Weights[edge22][edge23];
                         backward = problem.Weights[edge11][edge22] + problem.Weights[edge22][edge13] + problem.Weights[edge13][edge21] +
@@ -107,12 +107,17 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                         if (forward > backward)
                         { // we found an improvement.
                             delta = forward - backward;
+                            route.ReplaceEdgeFrom(edge11, edge22);
+                            route.ReplaceEdgeFrom(edge22, edge13);
+                            route.ReplaceEdgeFrom(edge13, edge21);
+                            route.ReplaceEdgeFrom(edge21, edge12);
+                            route.ReplaceEdgeFrom(edge12, edge23);
 
                             return true;
                         }
                     }
                     else if (edge2 - edge1 > 3)
-                    { // when diff = 4
+                    {
                         betweenForward += problem.Weights[edge20][edge21];
                         betweenBackward += problem.Weights[edge21][edge20];
     
