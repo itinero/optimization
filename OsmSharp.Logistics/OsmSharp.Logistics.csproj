@@ -57,6 +57,7 @@
     <Compile Include="Solutions\TSPTW\ITSPTW.cs" />
     <Compile Include="Solutions\TSPTW\ITSPTWObjective.cs" />
     <Compile Include="Solutions\TSPTW\LocalSearch\Local1TimeWindowShift.cs" />
+    <Compile Include="Solutions\TSPTW\LocalSearch\Local2Opt.cs" />
     <Compile Include="Solutions\TSPTW\Objectives\MinimumWeightObjective.cs" />
     <Compile Include="Solutions\TSPTW\Random\Random1Shift.cs" />
     <Compile Include="Solutions\TSPTW\Random\RandomSolver.cs" />
