@@ -76,6 +76,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                 if(edge1 > 0)
                 {
                     weight11 += problem.Weights[customers[edge1 - 1]][edge11];
+                    if (problem.Windows[edge11].Min > weight11)
+                    { // wait here!
+                        weight11 = problem.Windows[edge11].Min;
+                    }
                 }
 
                 betweenBackward = 0;
@@ -100,11 +104,19 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                         // the ones before and after should be because weight is going down for the customers after.
                         var feasible = true;
                         var currentWeight = weight11 + problem.Weights[edge11][edge21];
+                        if (problem.Windows[edge21].Min > currentWeight)
+                        { // wait here!
+                            currentWeight = problem.Windows[edge21].Min;
+                        }
                         var previous = edge21;
                         for (var i = edge2 - 1; i > edge1; i--)
                         {
                             var current = customers[i];
                             currentWeight += problem.Weights[previous][current];
+                            if (problem.Windows[current].Min > currentWeight)
+                            { // wait here!
+                                currentWeight = problem.Windows[current].Min;
+                            }
                             var window = problem.Windows[current];
                             if(window.Max < currentWeight)
                             {
