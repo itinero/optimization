@@ -142,12 +142,12 @@ namespace OsmSharp.Logistics.Routes
         void InsertAfter(int from, int to);
 
         /// <summary>
-        /// Returns the neigbours of a customer.
+        /// Returns the neigbour of a customer.
         /// </summary>
         /// <param name="customer"></param>
         /// <returns>The neighbours of the given customer.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">When the customer does not exist.</exception>
-        int[] GetNeigbours(int customer);
+        int GetNeigbour(int customer);
 
         /// <summary>
         /// Returns the index of the given customer the first being zero.
@@ -174,15 +174,27 @@ namespace OsmSharp.Logistics.Routes
         IEnumerable<int> Between(int from, int to);
 
         /// <summary>
-        /// Returns an enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a round the pair that contains last->first is also included.
+        /// Returns an enumerator that iterates through the customer in this route starting at the given customer.
         /// </summary>
-        /// <returns>An enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a round the pair that contains last->first is also included.</returns>
+        /// <returns></returns>
+        IEnumerator<int> GetEnumerator(int customer);
+
+        /// <summary>
+        /// Returns an enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a tour the pair that contains last->first is also included.
+        /// </summary>
+        /// <returns>An enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a tour the pair that contains last->first is also included.</returns>
         IEnumerable<Pair> Pairs();
 
         /// <summary>
-        /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a round the tuples that contain last->first are also included.
+        /// Returns an enumerable that enumerates all customer pairs that occur in the route as 1->2 starting from the given customer. If the route is a tour the pair that contains last->first is also included.
         /// </summary>
-        /// <returns>An enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a round the tuples that contain last->first are also included.</returns>
+        /// <returns>An enumerable that enumerates all customer pairs that occur in the route as 1->2 starting from the given customer. If the route is a tour the pair that contains last->first is also included.</returns>
+        IEnumerable<Pair> Pairs(int customer);
+
+        /// <summary>
+        /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a tour the tuples that contain last->first are also included.
+        /// </summary>
+        /// <returns>An enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a tour the tuples that contain last->first are also included.</returns>
         IEnumerable<Triple> Triples();
 
         /// <summary>

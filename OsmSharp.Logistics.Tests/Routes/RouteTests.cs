@@ -546,6 +546,138 @@ namespace OsmSharp.Logistics.Tests.Routes
         }
 
         /// <summary>
+        /// Tests enumeration of a route.
+        /// </summary>
+        [Test]
+        public void TestEnumerateOpen()
+        {
+            var list = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+            var route = new Route(list, null);
+            var enumeratedRoute = new List<int>(route);
+
+            Assert.AreEqual(list.ToArray(), enumeratedRoute);
+
+            var start = 0;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 1;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 2;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 3;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 4;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 5;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 6;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 7;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 8;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 9;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray()); 
+        }
+
+        /// <summary>
+        /// Tests enumeration of a route.
+        /// </summary>
+        [Test]
+        public void TestEnumerateClosed()
+        {
+            var list = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+            var route = new Route(list, 0);
+            var enumeratedRoute = new List<int>(route);
+
+            Assert.AreEqual(list, enumeratedRoute);
+
+            var start = 0;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 1;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 2;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 3;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 4;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 5;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 6;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 7;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 8;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 9;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray()); 
+        }
+
+        /// <summary>
+        /// Tests enumeration of a route.
+        /// </summary>
+        [Test]
+        public void TestEnumerateFixed()
+        {
+            var list = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+            var route = new Route(list, 9);
+            var enumeratedRoute = new List<int>(route);
+
+            Assert.AreEqual(list, enumeratedRoute);
+
+            var start = 0;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 1;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 2;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 3;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 4;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 5;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 6;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 7;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 8;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray());
+            start = 9;
+            enumeratedRoute = route.GetEnumerator(start).ToList();
+            Assert.AreEqual(list.GetRange(start, list.Count - start).ToArray(), enumeratedRoute.ToArray()); 
+        }
+
+        /// <summary>
         /// Tests all enumerations of a route.
         /// </summary>
         [Test]
@@ -646,14 +778,14 @@ namespace OsmSharp.Logistics.Tests.Routes
             var customers = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
             var route = new Route(customers, null);
 
-            int[] neighbours;
+            int neighbour = Constants.NOT_SET;
             for (int customer = 0; customer < count - 1; customer++)
             {
-                neighbours = route.GetNeigbours(customer);
-                Assert.IsTrue(neighbours[0] == customer + 1);
+                neighbour = route.GetNeigbour(customer);
+                Assert.AreEqual(customer + 1, neighbour);
             }
-            neighbours = route.GetNeigbours(count - 1);
-            Assert.IsTrue(neighbours.Length == 0);
+            neighbour = route.GetNeigbour(count - 1);
+            Assert.AreEqual(Constants.NOT_SET, neighbour);
         }
 
         /// <summary>
@@ -666,14 +798,14 @@ namespace OsmSharp.Logistics.Tests.Routes
             var customers = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
             var route = new Route(customers, 0);
 
-            int[] neighbours;
+            var neighbour = Constants.NOT_SET;
             for (int customer = 0; customer < count - 1; customer++)
             {
-                neighbours = route.GetNeigbours(customer);
-                Assert.IsTrue(neighbours[0] == customer + 1);
+                neighbour = route.GetNeigbour(customer);
+                Assert.AreEqual(customer + 1, neighbour);
             }
-            neighbours = route.GetNeigbours(count - 1);
-            Assert.IsTrue(neighbours[0] == 0);
+            neighbour = route.GetNeigbour(count - 1);
+            Assert.AreEqual(0, neighbour);
         }
 
         /// <summary>

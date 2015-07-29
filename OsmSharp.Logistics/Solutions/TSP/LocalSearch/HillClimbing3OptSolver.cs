@@ -155,7 +155,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         public bool Try3OptMoves(ITSP problem, double[][] weights, IRoute route, int v1, out double delta)
         {
             // get v_2.
-            var v2 = route.GetNeigbours(v1)[0];
+            var v2 = route.GetNeigbour(v1);
             if (v2 < 0)
             {
                 delta = 0;
@@ -212,7 +212,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
             int v3, out double delta)
         {
             // get v_4.
-            var v4 = route.GetNeigbours(v3)[0];
+            var v4 = route.GetNeigbour(v3);
             var weightV1V2PlusV3V4 = weightV1V2 + weights[v3][v4];
             var weightV1V4 = weights[v1][v4];
             if (v4 == problem.First && !problem.Last.HasValue)

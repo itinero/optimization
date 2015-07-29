@@ -274,22 +274,21 @@ namespace OsmSharp.Logistics.Routes
         }
 
         /// <summary>
-        /// Returns the neigbour(s) of the given customer.
+        /// Returns the neigbour of the given customer.
         /// </summary>
         /// <param name="customer"></param>
         /// <returns></returns>
-        public int[] GetNeigbours(int customer)
+        public int GetNeigbour(int customer)
         {
-            var neighbour = new int[1];
-            neighbour[0] = _nextArray[customer];
-            if (neighbour[0] < 0)
+            var neighbour = _nextArray[customer];
+            if (neighbour < 0)
             {
                 if (this.First == this.Last)
                 {
-                    neighbour[0] = this.First;
+                    neighbour = this.First;
                     return neighbour;
                 }
-                return new int[0];
+                return Constants.NOT_SET;
             }
             return neighbour;
         }
@@ -328,6 +327,15 @@ namespace OsmSharp.Logistics.Routes
         /// Returns the enumerator.
         /// </summary>
         /// <returns></returns>
+        public IEnumerator<int> GetEnumerator(int customer)
+        {
+            return new Enumerator(_first, customer, _nextArray);
+        }
+
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return new Enumerator(_first, _nextArray);
@@ -336,14 +344,21 @@ namespace OsmSharp.Logistics.Routes
         private class Enumerator : IEnumerator<int>
         {
             private int _first;
-
+            private int _start;
             private int[] _nextArray;
-
             private int _current = -1;
 
             public Enumerator(int first, int[] nextArray)
             {
                 _first = first;
+                _start = first;
+                _nextArray = nextArray;
+            }
+
+            public Enumerator(int first, int start, int[] nextArray)
+            {
+                _first = first;
+                _start = start;
                 _nextArray = nextArray;
             }
 
@@ -376,7 +391,7 @@ namespace OsmSharp.Logistics.Routes
                 }
                 if (_current == -1)
                 {
-                    _current = _first;
+                    _current = _start;
                 }
                 else
                 {
@@ -413,6 +428,16 @@ namespace OsmSharp.Logistics.Routes
         public IEnumerable<Pair> Pairs()
         {
             return new PairEnumerable(this);
+        }
+
+        /// <summary>
+        /// Returns an enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a round the pair that contains last->first is also included.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Pair> Pairs(int customer)
+        {
+            //return new PairEnumerable(this);
+            throw new NotImplementedException();
         }
 
         /// <summary>

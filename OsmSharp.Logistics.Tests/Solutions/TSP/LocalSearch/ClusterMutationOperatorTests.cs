@@ -93,8 +93,8 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
                 var localSearch = new ClusterMutationOperator();
                 localSearch.Apply(problem, new MinimumWeightObjective(), solution, out delta);
 
-                Assert.AreEqual(new int[] { 3 }, solution.GetNeigbours(2));
-                Assert.AreEqual(new int[] { 2 }, solution.GetNeigbours(5));
+                Assert.AreEqual(3, solution.GetNeigbour(2));
+                Assert.AreEqual(2, solution.GetNeigbour(5));
 
                 count--;
             }

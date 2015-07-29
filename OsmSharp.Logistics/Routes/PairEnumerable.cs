@@ -25,26 +25,31 @@ namespace OsmSharp.Logistics.Routes
     /// </summary>
     public class PairEnumerable : IEnumerable<Pair>
     {
-        /// <summary>
-        /// Holds the route being enumerated.
-        /// </summary>
-        private IRoute _route;
+        private readonly IRoute _route;
+        private readonly int _start;
 
         /// <summary>
-        /// Creates a new edge enumerable.
+        /// Creates a new pair enumerable.
         /// </summary>
-        /// <param name="route"></param>
         public PairEnumerable(IRoute route)
         {
             _route = route;
+            _start = _route.First;
+        }
+
+        /// <summary>
+        /// Creates a new pair enumerable starting from the given customer.
+        /// </summary>
+        public PairEnumerable(IRoute route, int start)
+        {
+            _route = route;
+            _start = start;
         }
 
         private class PairEnumerator : IEnumerator<Pair>
         {
             private Pair _current;
-
             private int _first;
-
             private IEnumerator<int> _enumerator;
 
             public PairEnumerator(IEnumerator<int> enumerator, int first)
@@ -90,6 +95,11 @@ namespace OsmSharp.Logistics.Routes
                     {
                         _current.To = _enumerator.Current;
                     }
+                    else if (_first >= 0 && _current.From != _first)
+                    {
+                        _current.To = _first;
+                        return true;
+                    }
                     else
                     {
                         return false;
@@ -102,7 +112,7 @@ namespace OsmSharp.Logistics.Routes
                         _current.From = _current.To;
                         _current.To = _enumerator.Current;
                     }
-                    else if (_first >= 0 && _current.To != _first)
+                    else if (_first >= 0)
                     {
                         _current.From = _current.To;
                         _current.To = _first;
@@ -134,9 +144,9 @@ namespace OsmSharp.Logistics.Routes
         {
             if (_route.First == _route.Last)
             {
-                return new PairEnumerator(_route.GetEnumerator(), _route.First);
+                return new PairEnumerator(_route.GetEnumerator(_start), _route.First);
             }
-            return new PairEnumerator(_route.GetEnumerator(), -1);
+            return new PairEnumerator(_route.GetEnumerator(_start), -1);
         }
 
         /// <summary>

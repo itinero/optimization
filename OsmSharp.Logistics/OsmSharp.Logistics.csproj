@@ -43,6 +43,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Routes\Cycles\AsymmetricAlternatingCycles.cs" />
     <Compile Include="Routes\Cycles\AsymmetricCycles.cs" />
+    <Compile Include="Routes\RouteExtensions.cs" />
     <Compile Include="Solutions\Algorithms\NearestNeighbours.cs" />
     <Compile Include="Solutions\Algorithms\NearestNeighboursAlgorithm.cs" />
     <Compile Include="Solutions\Algorithms\SortedNearestNeighbours.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Solutions\TSP\ITSP.cs" />
     <Compile Include="Solutions\TSP\LocalSearch\Local1Shift.cs" />
     <Compile Include="Solutions\TSP\LocalSearch\HillClimbing3OptSolver.cs" />
+    <Compile Include="Solutions\TSP\LocalSearch\Local2Opt.cs" />
     <Compile Include="Solutions\TSP\Random\Random1Shift.cs" />
     <Compile Include="Solutions\TSP\Random\RandomSolver.cs" />
     <Compile Include="Solutions\TSP\MinimumWeightObjective.cs" />

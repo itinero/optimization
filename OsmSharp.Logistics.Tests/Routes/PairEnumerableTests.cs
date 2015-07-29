@@ -43,6 +43,41 @@ namespace OsmSharp.Logistics.Tests.Routes
             Assert.Contains(new Pair(1, 2), pairs);
             Assert.Contains(new Pair(2, 3), pairs);
             Assert.Contains(new Pair(3, 4), pairs);
+
+            pairEnumerable = new PairEnumerable(route, 0);
+            pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(4, pairs.Count);
+            Assert.Contains(new Pair(0, 1), pairs);
+            Assert.Contains(new Pair(1, 2), pairs);
+            Assert.Contains(new Pair(2, 3), pairs);
+            Assert.Contains(new Pair(3, 4), pairs);
+
+            pairEnumerable = new PairEnumerable(route, 1);
+            pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(3, pairs.Count);
+            Assert.Contains(new Pair(1, 2), pairs);
+            Assert.Contains(new Pair(2, 3), pairs);
+            Assert.Contains(new Pair(3, 4), pairs);
+
+            pairEnumerable = new PairEnumerable(route, 2);
+            pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(2, pairs.Count);
+            Assert.Contains(new Pair(2, 3), pairs);
+            Assert.Contains(new Pair(3, 4), pairs);
+
+            pairEnumerable = new PairEnumerable(route, 3);
+            pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(1, pairs.Count);
+            Assert.Contains(new Pair(3, 4), pairs);
+
+            pairEnumerable = new PairEnumerable(route, 4);
+            pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(0, pairs.Count);
         }
 
         /// <summary>
@@ -60,6 +95,46 @@ namespace OsmSharp.Logistics.Tests.Routes
             Assert.Contains(new Pair(1, 2), pairs);
             Assert.Contains(new Pair(2, 3), pairs);
             Assert.Contains(new Pair(3, 4), pairs);
+            Assert.Contains(new Pair(4, 0), pairs);
+
+            pairEnumerable = new PairEnumerable(route, 0);
+            pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(5, pairs.Count);
+            Assert.Contains(new Pair(0, 1), pairs);
+            Assert.Contains(new Pair(1, 2), pairs);
+            Assert.Contains(new Pair(2, 3), pairs);
+            Assert.Contains(new Pair(3, 4), pairs);
+            Assert.Contains(new Pair(4, 0), pairs);
+
+            pairEnumerable = new PairEnumerable(route, 1);
+            pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(4, pairs.Count);
+            Assert.Contains(new Pair(1, 2), pairs);
+            Assert.Contains(new Pair(2, 3), pairs);
+            Assert.Contains(new Pair(3, 4), pairs);
+            Assert.Contains(new Pair(4, 0), pairs);
+
+            pairEnumerable = new PairEnumerable(route, 2);
+            pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(3, pairs.Count);
+            Assert.Contains(new Pair(2, 3), pairs);
+            Assert.Contains(new Pair(3, 4), pairs);
+            Assert.Contains(new Pair(4, 0), pairs);
+
+            pairEnumerable = new PairEnumerable(route, 3);
+            pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(2, pairs.Count);
+            Assert.Contains(new Pair(3, 4), pairs);
+            Assert.Contains(new Pair(4, 0), pairs);
+
+            pairEnumerable = new PairEnumerable(route, 4);
+            pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(1, pairs.Count);
             Assert.Contains(new Pair(4, 0), pairs);
         }
 
@@ -138,6 +213,25 @@ namespace OsmSharp.Logistics.Tests.Routes
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(0, pairs.Count);
+        }
+
+        /// <summary>
+        /// Tests the pair enumerable on a route that contains only one customer.
+        /// </summary>
+        [Test]
+        public void Test6TwoCustomers()
+        {
+            var route = new Route(new int[] { 0, 1 }, 0);
+            var pairEnumerable = new PairEnumerable(route);
+            var pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(2, pairs.Count);
+
+            route = new Route(new int[] { 0, 1 }, null);
+            pairEnumerable = new PairEnumerable(route);
+            pairs = new List<Pair>(pairEnumerable);
+
+            Assert.AreEqual(1, pairs.Count);
         }
     }
 }
