@@ -63,75 +63,41 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
 
             var betweenForward = 0.0;
             var betweenBackward = 0.0;
-            var forward = 0.0;
-            var backward = 0.0;
+            var existing = 0.0;
+            var potential = 0.0;
             for (var edge1 = 0; edge1 < customers.Count - 3; edge1++)
             { // iterate over all from-edges.
                 var edge11 = customers[edge1];
                 var edge12 = customers[edge1 + 1];
-                var edge13 = customers[edge1 + 2];
 
                 betweenBackward = 0;
                 betweenForward = 0;
-                for (var edge2 = edge1 + 2; edge2 < customers.Count - 2; edge2++)
+                for (var edge2 = edge1 + 2; edge2 < customers.Count - 1; edge2++)
                 { // iterate over all to-edges.
                     var edge20 = customers[edge2 - 1];
                     var edge21 = customers[edge2];
                     var edge22 = customers[edge2 + 1];
-                    var edge23 = customers[edge2 + 2];
 
-                    if (edge2 - edge1 == 2)
-                    {
-                        forward = problem.Weights[edge11][edge12] + problem.Weights[edge12][edge21] +
-                            problem.Weights[edge21][edge22] + problem.Weights[edge22][edge23];
-                        backward = problem.Weights[edge11][edge22] + problem.Weights[edge22][edge21] +
-                            problem.Weights[edge21][edge12] + problem.Weights[edge12][edge23];
+                    betweenForward += problem.Weights[edge20][edge21];
+                    betweenBackward += problem.Weights[edge21][edge20];
 
-                        if (forward > backward)
-                        { // we found an improvement.
-                            delta = forward - backward;
-                            route.ReplaceEdgeFrom(edge11, edge22);
-                            route.ReplaceEdgeFrom(edge22, edge21);
-                            route.ReplaceEdgeFrom(edge21, edge12);
-                            route.ReplaceEdgeFrom(edge12, edge23);
-                            return true;
+                    existing = problem.Weights[edge11][edge12] + betweenForward +
+                        problem.Weights[edge21][edge22];
+                    potential = problem.Weights[edge11][edge21] + betweenBackward +
+                        problem.Weights[edge12][edge22];
+
+                    if (existing > potential)
+                    { // we found an improvement.
+                        delta = existing - potential;
+                        route.ReplaceEdgeFrom(edge11, edge21);
+                        route.ReplaceEdgeFrom(edge12, edge22);
+                        // reverse intermediates.
+                        for (var i = edge1 + 1; i < edge2; i++)
+                        {
+                            route.ReplaceEdgeFrom(customers[i + 1], customers[i]);
                         }
-                    }
-                    else if(edge2 - edge1 == 3)
-                    {
-                        forward = problem.Weights[edge11][edge12] + problem.Weights[edge12][edge13] + problem.Weights[edge13][edge21] +
-                            problem.Weights[edge21][edge22] + problem.Weights[edge22][edge23];
-                        backward = problem.Weights[edge11][edge22] + problem.Weights[edge22][edge13] + problem.Weights[edge13][edge21] +
-                            problem.Weights[edge21][edge12] + problem.Weights[edge12][edge23];
 
-                        if (forward > backward)
-                        { // we found an improvement.
-                            delta = forward - backward;
-                            route.ReplaceEdgeFrom(edge11, edge22);
-                            route.ReplaceEdgeFrom(edge22, edge13);
-                            route.ReplaceEdgeFrom(edge13, edge21);
-                            route.ReplaceEdgeFrom(edge21, edge12);
-                            route.ReplaceEdgeFrom(edge12, edge23);
-
-                            return true;
-                        }
-                    }
-                    else if (edge2 - edge1 > 3)
-                    {
-                        betweenForward += problem.Weights[edge20][edge21];
-                        betweenBackward += problem.Weights[edge21][edge20];
-    
-                        forward = problem.Weights[edge11][edge12] + problem.Weights[edge12][edge13] +
-                            problem.Weights[edge21][edge22] + problem.Weights[edge22][edge23] + betweenForward;
-                        backward = problem.Weights[edge11][edge22] + problem.Weights[edge22][edge13] +
-                            problem.Weights[edge21][edge12] + problem.Weights[edge12][edge23] + betweenBackward;
-
-                        if (forward > backward)
-                        { // we found an improvement.
-                            delta = forward - backward;
-
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
