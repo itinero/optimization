@@ -64,6 +64,7 @@
     <Compile Include="Solutions\TSPTW\Objectives\FeasibleObjective.cs" />
     <Compile Include="Solutions\TSPTW\Objectives\TSPTWObjectiveBase.cs" />
     <Compile Include="Solutions\TSPTW\TSPTWProblem.cs" />
+    <Compile Include="Solutions\TSPTW\VNS\VNDOperator.cs" />
     <Compile Include="Solutions\TSPTW\VNS\VNSConstructionSolver.cs" />
     <Compile Include="Solutions\TSP\BruteForceSolver.cs" />
     <Compile Include="Solutions\TSP\Clustering\AsymmetricClustering.cs" />
@@ -97,8 +98,11 @@
     <Compile Include="Routes\Triple.cs" />
     <Compile Include="Routes\TripleEnumerable.cs" />
     <Compile Include="Solvers\Iterative\IterativeSolver.cs" />
+    <Compile Include="Solvers\OperatorObjectiveWrapper.cs" />
+    <Compile Include="Solvers\OperatorAsPerturber.cs" />
     <Compile Include="Solvers\SolverBase.cs" />
     <Compile Include="Solvers\SolverDelegates.cs" />
+    <Compile Include="Solvers\SolverObjectiveWrapper.cs" />
     <Compile Include="Solvers\VNS\VNSSolver.cs" />
     <None Include="packages.config" />
     <None Include="README.md" />

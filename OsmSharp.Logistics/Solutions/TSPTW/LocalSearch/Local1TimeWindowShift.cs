@@ -29,6 +29,24 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
     /// </summary>
     public class Local1TimeWindowShift : IOperator<ITSPTW, ITSPTWObjective, IRoute>
     {
+        private readonly bool _assumeFeasible;
+
+        /// <summary>
+        /// Creates a new operator.
+        /// </summary>
+        public Local1TimeWindowShift()
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new operator.
+        /// </summary>
+        public Local1TimeWindowShift(bool assumeFeasible)
+        {
+            _assumeFeasible = assumeFeasible;
+        }
+
         /// <summary>
         /// Returns the name of the operator.
         /// </summary>
@@ -57,9 +75,12 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
             // 2: try to move a non-violated customer forward.
             // 3: try to move a non-violated customer backward.
             // 4: try to move a violated customer forward.
-            if(this.MoveViolatedBackward(problem, objective, solution, out delta))
-            { // success already, don't try anything else.
-                return true;
+            if (!_assumeFeasible)
+            {
+                if (this.MoveViolatedBackward(problem, objective, solution, out delta))
+                { // success already, don't try anything else.
+                    return true;
+                }
             }
             if (this.MoveNonViolatedForward(problem, objective, solution, out delta))
             { // success already, don't try anything else.
@@ -69,9 +90,12 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
             { // success already, don't try anything else.
                 return true;
             }
-            if (this.MoveViolatedForward(problem, objective, solution, out delta))
-            { // success already, don't try anything else.
-                return true;
+            if (!_assumeFeasible)
+            {
+                if (this.MoveViolatedForward(problem, objective, solution, out delta))
+                { // success already, don't try anything else.
+                    return true;
+                }
             }
             return false;
         }
@@ -238,6 +262,11 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                             if (window.Max < time)
                             { // ok, unfeasible and customer is not the first 'moveable' customer.
                                 newFitness += time - window.Max;
+                                if(_assumeFeasible)
+                                {
+                                    newFitness = double.MaxValue;
+                                    break;
+                                }
                             }
                             if (window.Min > time)
                             { // wait here!
@@ -338,6 +367,11 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                             if (window.Max < time)
                             { // ok, unfeasible and customer is not the first 'moveable' customer.
                                 newFitness += time - window.Max;
+                                if (_assumeFeasible)
+                                {
+                                    newFitness = double.MaxValue;
+                                    break;
+                                }
                             }
                             if (window.Min > time)
                             { // wait here!
