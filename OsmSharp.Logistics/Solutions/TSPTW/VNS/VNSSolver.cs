@@ -24,18 +24,17 @@ using OsmSharp.Logistics.Solvers.VNS;
 namespace OsmSharp.Logistics.Solutions.TSPTW.VNS
 {
     /// <summary>
-    /// A VND-operator/solver.
+    /// A VNS-solver for the TSP-TW problem.
     /// </summary>
-    public class VNDOperator : VNSSolver<ITSPTW, ITSPTWObjective, IRoute>
+    public class VNSSolver : VNSSolver<ITSPTW, ITSPTWObjective, IRoute>
     {
         /// <summary>
-        /// Creates a new VND-operator/solver.
+        /// Creates a new VNS-solver.
         /// </summary>
-        public VNDOperator()
+        public VNSSolver()
             : base(new OsmSharp.Logistics.Solvers.SolverObjectiveWrapper<ITSPTW, ITSPTWObjective, IRoute>(
-                new VNSConstructionSolver(), new FeasibleObjective(), (p, o, s) => o.Calculate(p, s)), new OperatorAsPerturber<ITSPTW, ITSPTWObjective, IRoute>(
-                new LocalSearch.Local1Shift(true)),
-                    new LocalSearch.Local2Opt(), (i, l, p, o, s) =>
+                new VNSConstructionSolver(), new FeasibleObjective(), (p, o, s) => o.Calculate(p, s)), new Random.Random1Shift(),
+                    new VNDOperator(), (i, l, p, o, s) =>
                     {
                         return l > 1;
                     })

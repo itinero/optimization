@@ -26,10 +26,10 @@ using System.Collections.Generic;
 namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.VNS
 {
     /// <summary>
-    /// Containts tests for the VNS construction solver.
+    /// Containts tests for the VNS solver.
     /// </summary>
     [TestFixture]
-    public class VNSConstructionSolverTests
+    public class VNSSolverTests
     {
         /// <summary>
         /// Tests the solver.
@@ -37,49 +37,37 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.VNS
         [Test]
         public void TestSolutions5ClosedNotFixed()
         {
-            OsmSharp.Logging.Log.Enable();
-            OsmSharp.Logging.Log.RegisterListener(new OsmSharp.WinForms.UI.Logging.DebugTraceListener());
-
             StaticRandomGenerator.Set(4541247);
 
             // create problem.
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 10);
-            problem.Windows[1] = new Logistics.Solutions.TimeWindow()
-            {
-                Min = 5,
-                Max = 15
-            };
+            problem.Weights[0][1] = 2;
+            problem.Weights[1][2] = 2;
+            problem.Weights[2][3] = 2;
+            problem.Weights[3][4] = 2;
+            problem.Weights[4][0] = 2;
             problem.Windows[2] = new Logistics.Solutions.TimeWindow()
             {
-                Min = 15,
-                Max = 25
-            };
-            problem.Windows[3] = new Logistics.Solutions.TimeWindow()
-            {
-                Min = 25,
-                Max = 35
+                Min = 3,
+                Max = 5
             };
             problem.Windows[4] = new Logistics.Solutions.TimeWindow()
             {
-                Min = 35,
-                Max = 45
+                Min = 7,
+                Max = 9
             };
+            var objective = new MinimumWeightObjective();
 
             // create the solver.
-            var solver = new VNSConstructionSolver();
-            solver.IntermidiateResult += (x) =>
-            {
-                var fitness = (new FeasibleObjective()).Calculate(problem, x);
-                fitness = fitness + 0;
-            };
+            var solver = new VNSSolver();
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
                 double fitness;
-                var solution = solver.Solve(problem, new OsmSharp.Logistics.Solutions.TSPTW.Objectives.FeasibleObjective(), out fitness);
+                var solution = solver.Solve(problem, objective, out fitness);
 
                 // test contents.
-                Assert.AreEqual(0, fitness);
+                Assert.AreEqual(10, fitness);
                 var solutionList = new List<int>(solution);
                 Assert.AreEqual(0, solutionList[0]);
                 Assert.IsTrue(solutionList.Remove(0));

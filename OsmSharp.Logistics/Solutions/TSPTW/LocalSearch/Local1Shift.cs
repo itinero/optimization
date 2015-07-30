@@ -27,14 +27,14 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
     /// <summary>
     /// A local search procedure to move around and improve the time window 'violations' in a solution.
     /// </summary>
-    public class Local1TimeWindowShift : IOperator<ITSPTW, ITSPTWObjective, IRoute>
+    public class Local1Shift : IOperator<ITSPTW, ITSPTWObjective, IRoute>
     {
         private readonly bool _assumeFeasible;
 
         /// <summary>
         /// Creates a new operator.
         /// </summary>
-        public Local1TimeWindowShift()
+        public Local1Shift()
         {
 
         }
@@ -42,7 +42,7 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
         /// <summary>
         /// Creates a new operator.
         /// </summary>
-        public Local1TimeWindowShift(bool assumeFeasible)
+        public Local1Shift(bool assumeFeasible)
         {
             _assumeFeasible = assumeFeasible;
         }

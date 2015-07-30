@@ -16,39 +16,17 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Logistics.Solvers;
-
-namespace OsmSharp.Logistics.Tests.Solvers
+namespace OsmSharp.Logistics.Solvers
 {
     /// <summary>
-    /// A mockup of a solution that consists of a single double.
+    /// Abstract representation of a solution.
     /// </summary>
-    class SolutionMock : ISolution
+    public interface ISolution : ICloneable
     {
         /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        public double Value { get; set; }
-
-        /// <summary>
-        /// Clones this solution.
-        /// </summary>
-        /// <returns></returns>
-        public object Clone()
-        {
-            return new SolutionMock()
-            {
-                Value = this.Value
-            };
-        }
-
-        /// <summary>
-        /// Copies the solution from the given solution to this one.
+        /// Copies the given solution into this solution.
         /// </summary>
         /// <param name="solution"></param>
-        public void CopyFrom(ISolution solution)
-        {
-            this.Value = (solution as SolutionMock).Value;
-        }
+        void CopyFrom(ISolution solution);
     }
 }

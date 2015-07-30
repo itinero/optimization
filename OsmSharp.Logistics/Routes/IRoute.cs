@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Logistics.Solvers;
 using System.Collections.Generic;
 
 namespace OsmSharp.Logistics.Routes
@@ -23,7 +24,7 @@ namespace OsmSharp.Logistics.Routes
     /// <summary>
     /// Abstract representation of a route or a sequence of customers.
     /// </summary>
-    public interface IRoute : IEnumerable<int>, ICloneable
+    public interface IRoute : IEnumerable<int>, ISolution
     {
         /// <summary>
         /// Returns the amount of customers in the route.

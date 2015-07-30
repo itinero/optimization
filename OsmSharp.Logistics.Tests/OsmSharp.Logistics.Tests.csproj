@@ -90,8 +90,10 @@
     <Compile Include="Solutions\TSPTW\LocalSearch\Local1ShiftTimeWindowTests.cs" />
     <Compile Include="Solutions\TSPTW\LocalSearch\Local2OptTests.cs" />
     <Compile Include="Solutions\TSPTW\Objectives\FeasibleObjectiveTests.cs" />
+    <Compile Include="Solutions\TSPTW\Random\Random1ShiftTests.cs" />
     <Compile Include="Solutions\TSPTW\TSPTWHelper.cs" />
     <Compile Include="Solutions\TSPTW\VNS\VNDOperatorTests.cs" />
+    <Compile Include="Solutions\TSPTW\VNS\VNSSolverTests.cs" />
     <Compile Include="Solutions\TSPTW\VNS\VNSConstructionSolverTests.cs" />
     <Compile Include="Solutions\TSP\BruteForceSolverTests.cs" />
     <Compile Include="Solutions\TSP\Clustering\AsymmetricClusteringSolverTests.cs" />

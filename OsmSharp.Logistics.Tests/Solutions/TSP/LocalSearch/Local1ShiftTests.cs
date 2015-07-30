@@ -80,7 +80,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
 
             // test result.
-            Assert.AreEqual(-27, delta);
+            Assert.AreEqual(27, delta);
             Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, route.ToArray());
         }
 
@@ -134,7 +134,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.LocalSearch
             localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
 
             // test result.
-            Assert.AreEqual(-36, delta);
+            Assert.AreEqual(36, delta);
             Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, route.ToArray());
         }
     }

@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+
 namespace OsmSharp.Logistics.Solvers
 {
     /// <summary>
@@ -25,15 +27,17 @@ namespace OsmSharp.Logistics.Solvers
     {
         private readonly ISolver<TProblem, TObjective, TSolution> _solver;
         private readonly TObjective _objective;
+        private readonly Func<TProblem, TObjective, TSolution, double> _calculateFitness;
 
         /// <summary>
         /// Creates a new solver objective wrapper.
         /// </summary>
-        public SolverObjectiveWrapper(ISolver<TProblem, TObjective, TSolution> solver, TObjective objective)
+        public SolverObjectiveWrapper(ISolver<TProblem, TObjective, TSolution> solver, TObjective objective, Func<TProblem, TObjective, TSolution, double> calculateFitness)
         {
             _solver = solver;
             _solver.IntermidiateResult += _solver_IntermidiateResult;
             _objective = objective;
+            _calculateFitness = calculateFitness;
         }
 
         /// <summary>
@@ -59,7 +63,9 @@ namespace OsmSharp.Logistics.Solvers
         /// <returns></returns>
         public TSolution Solve(TProblem problem, TObjective objective, out double fitness)
         {
-            return _solver.Solve(problem, _objective, out fitness);
+            var solution = _solver.Solve(problem, _objective, out fitness);
+            fitness = _calculateFitness(problem, objective, solution);
+            return solution;
         }
 
         /// <summary>

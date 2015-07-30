@@ -75,19 +75,23 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.Objectives
                 { // keep track of time.
                     weight += problem.Weights[previous][current];
                 }
-                var window = problem.Windows[current];
-                if (window.Max < (weight + wait))
-                { // ok, unfeasible.
-                    infeasible += (weight + wait) - window.Max;
-                }
-                if (window.Min > (weight + wait))
-                { // wait here!
-                    wait += (window.Min - (weight + wait));
+                if (solution.Last != solution.First)
+                {
+                    var window = problem.Windows[current];
+                    if (window.Max < (weight + wait))
+                    { // ok, unfeasible.
+                        infeasible += (weight + wait) - window.Max;
+                    }
+                    if (window.Min > (weight + wait))
+                    { // wait here!
+                        wait += (window.Min - (weight + wait));
+                    }
                 }
             }
             // TODO:there is need to seperate the violations, waiting time and weights.
             //      expand the logistics library to allow for pareto-optimal or other 
             //      more advanced weight comparisons.
+            //      => this may not be needed anymore for the TSP-TW but for other problems it may be useful.
             return weight + infeasible * 100 + wait / 100;
         }
 

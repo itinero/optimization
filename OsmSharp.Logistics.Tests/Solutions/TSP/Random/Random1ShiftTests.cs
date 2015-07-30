@@ -56,22 +56,22 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
 
             // create a problem.
             var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
+            problem.Weights[0][1] = 1;
+            problem.Weights[1][2] = 1;
+            problem.Weights[2][3] = 1;
+            problem.Weights[3][4] = 1;
+            var objective = new MinimumWeightObjective();
 
             // execute random shifts.
             for(int i = 0; i < 1000; i++)
             {
                 // create solution.
                 var solution = new Route(new int[] { 0, 1, 2, 3, 4 });
-                var fitnessBefore = 0.0;
-                foreach (var pair in solution.Pairs())
-                {
-                    fitnessBefore = fitnessBefore +
-                        problem.Weights[pair.From][pair.To];
-                }
+                var fitnessBefore = objective.Calculate(problem, solution);
 
                 // shift one customer.
                 double difference;
-                perturber.Apply(problem, new MinimumWeightObjective(), solution, out difference);
+                perturber.Apply(problem, objective, solution, out difference);
 
                 // check if valid solution.
                 var solutionList = new List<int>(solution);
@@ -87,12 +87,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Random
                 Assert.AreEqual(problem.First, solution.First);
 
                 // calculate expected difference.
-                var fitnessAfter = 0.0;
-                foreach(var pair in solution.Pairs())
-                {
-                    fitnessAfter = fitnessAfter +
-                        problem.Weights[pair.From][pair.To];
-                }
+                var fitnessAfter = objective.Calculate(problem, solution);
 
                 Assert.AreEqual(fitnessAfter - fitnessBefore, difference, 0.0000001);
             }

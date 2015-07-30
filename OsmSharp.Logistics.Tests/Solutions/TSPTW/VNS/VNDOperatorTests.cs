@@ -74,7 +74,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.VNS
                 var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
 
                 // test contents.
-                Assert.AreEqual(0, fitness);
+                Assert.AreEqual(50, fitness);
                 var solutionList = new List<int>(solution);
                 Assert.AreEqual(0, solutionList[0]);
                 Assert.IsTrue(solutionList.Remove(0));
@@ -85,6 +85,5 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.VNS
                 Assert.AreEqual(0, solutionList.Count);
             }
         }
-
     }
 }

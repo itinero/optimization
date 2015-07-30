@@ -29,8 +29,8 @@ namespace OsmSharp.Logistics.Routes
     public class Route : IRoute
     {
         private int[] _nextArray;
-        private readonly int _first;
-        private readonly int? _last;
+        private int _first;
+        private int? _last;
 
         /// <summary>
         /// Creates a new route based on the given array.
@@ -310,6 +310,22 @@ namespace OsmSharp.Logistics.Routes
         public object Clone()
         {
             return new Route(_first, _nextArray.Clone() as int[], _last);
+        }
+
+        /// <summary>
+        /// Copies the given solution into this solution.
+        /// </summary>
+        /// <param name="solution"></param>
+        public void CopyFrom(Solvers.ISolution solution)
+        {
+            var copy = (solution as Route);
+            if(copy != null)
+            {
+                _first = copy._first;
+                _internalLast = copy._internalLast;
+                _last = copy._last;
+                _nextArray = copy._nextArray.Clone() as int[];
+            }
         }
 
         #region Enumerators
@@ -707,6 +723,7 @@ namespace OsmSharp.Logistics.Routes
             _nextArray[_first] = Constants.END;
             _internalLast = _first;
         }
+
         /// <summary>
         /// An enumerable to enumerate customers between two given customers.
         /// </summary>

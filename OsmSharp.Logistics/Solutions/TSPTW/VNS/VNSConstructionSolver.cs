@@ -50,8 +50,8 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.VNS
         /// Creates a new VNS construction solver.
         /// </summary>
         public VNSConstructionSolver(int maxIterations, int levelMax)
-            : base(new VNSSolver<ITSPTW, ITSPTWObjective, IRoute>(new RandomSolver(), new Random1Shift(),
-                new LocalSearch.Local1TimeWindowShift(), (i, l, p, o, r) =>
+            : base(new VNSSolver<ITSPTW, ITSPTWObjective, IRoute>(new RandomSolver(), new TSPPerturberWrapper(new TSP.Random.Random1Shift()),
+                new LocalSearch.Local1Shift(), (i, l, p, o, r) =>
             {
                 if (l > levelMax)
                 {

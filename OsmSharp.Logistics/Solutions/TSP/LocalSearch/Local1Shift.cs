@@ -113,7 +113,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
                 }
 
                 var newFitness = objective.Calculate(problem, originalRoute);
-                delta = newFitness - originalFitness;
+                delta = originalFitness - newFitness;
             }
             return success;
         }

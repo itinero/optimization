@@ -21,8 +21,8 @@ namespace OsmSharp.Logistics.Solvers.VNS
     /// <summary>
     /// A Variable Neighbourhood Search (VNS) solver.
     /// </summary>
-    public class VNSSolver<TProblem, TObjective, TSolution> : SolverBase<TProblem, TObjective, TSolution>
-        where TSolution : ICloneable
+    public class VNSSolver<TProblem, TObjective, TSolution> : SolverBase<TProblem, TObjective, TSolution>, IOperator<TProblem, TObjective, TSolution>
+        where TSolution : ISolution
     {
         private readonly SolverDelegates.StopConditionWithLevelDelegate<TProblem, TObjective, TSolution> _stopCondition;
         private readonly ISolver<TProblem, TObjective, TSolution> _generator;
@@ -66,6 +66,15 @@ namespace OsmSharp.Logistics.Solvers.VNS
         {
             get { return string.Format("VNS_[{0}_{1}_{2}]", 
                 _generator.Name, _perturber.Name, _localSearch.Name); }
+        }
+
+        /// <summary>
+        /// Returns true if the given objective is supported.
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool Supports(TObjective objective)
+        {
+            return true;
         }
 
         /// <summary>
@@ -158,7 +167,13 @@ namespace OsmSharp.Logistics.Solvers.VNS
                     level = level + 1;
                 }
             }
-            return delta > 0;
+
+            if (delta > 0)
+            {
+                solution.CopyFrom(globalBest);
+                return true;
+            }
+            return false;
         }
     }
 }
