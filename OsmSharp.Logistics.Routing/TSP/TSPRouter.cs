@@ -24,6 +24,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Routing.Vehicles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -90,112 +91,76 @@ namespace OsmSharp.Logistics.Routing.TSP
         }
 
         private OsmSharp.Logistics.Routes.IRoute _route = null;
-        private RouterPoint[] _resolvedPoints;
-        private List<int> _errors = new List<int>();
+        private WeightMatrixAlgorithm _weightMatrixAlgorithm;
 
         /// <summary>
         /// Executes the actual run of the algorithm.
         /// </summary>
         protected override void DoRun()
         {
-            // resolve all locations.
-            _resolvedPoints = _router.Resolve(_vehicle, _locations);
-
-            // add id's to each resolved point.
-            for (var idx = 0; idx < _resolvedPoints.Length; idx++)
-            {
-                if (_resolvedPoints[idx] != null)
-                { // location resolved just fine.
-                    if (_resolvedPoints[idx].Tags == null)
-                    {
-                        _resolvedPoints[idx].Tags = new List<KeyValuePair<string, string>>();
-                    }
-                    _resolvedPoints[idx].Tags.Add(new KeyValuePair<string, string>("point_id", idx.ToInvariantString()));
-                }
-                else
-                { // location could not be resolved.
-                    _errors.Add(idx);
-                }
+            // calculate weight matrix.
+            _weightMatrixAlgorithm = new WeightMatrixAlgorithm(_router, _vehicle, _locations);
+            _weightMatrixAlgorithm.Run();
+            if(!_weightMatrixAlgorithm.HasSucceeded)
+            { // algorithm has not succeeded.
+                this.ErrorMessage = string.Format("Could not calculate weight matrix: {0}",
+                    _weightMatrixAlgorithm.ErrorMessage);
+                return;
             }
 
-            // filter out all points that failed to resolve.
-            var nonNullResolved = new List<RouterPoint>();
-            var nonNullOffset = new List<int>();
-            for (var idx = 0; idx < _resolvedPoints.Length; idx++)
-            {
-                if (_resolvedPoints[idx] != null)
-                {
-                    nonNullResolved.Add(_resolvedPoints[idx]);
-                    nonNullOffset.Add(nonNullOffset.Count - idx);
-                }
+            string error;
+            if (_weightMatrixAlgorithm.Errors.TryGetValue(_first, out error))
+            { // if the first location could not be resolved everything fails.
+                this.ErrorMessage = string.Format("Could resolve first location: {0}",
+                    error);
+                return;
             }
-
-            // calculate weights.
-            var nonNullResolvedArray = nonNullResolved.ToArray();
-            var nonNullInvalids = new HashSet<int>();
-            var nonNullWeights = _router.CalculateManyToManyWeight(_vehicle, nonNullResolvedArray, nonNullResolvedArray, nonNullInvalids);
 
             // solve.
             var first = _first;
             if(_last.HasValue)
             { // the last customer was set.
-                _route = _solver.Solve(new TSPProblem(first, _last.Value, nonNullWeights), new MinimumWeightObjective());
+                if (_weightMatrixAlgorithm.Errors.TryGetValue(_last.Value, out error))
+                { // if the last location is set and it could not be resolved everything fails.
+                    this.ErrorMessage = string.Format("Could resolve last location: {0}",
+                        error);
+                    return;
+                }
+
+                _route = _solver.Solve(new TSPProblem(
+                    _weightMatrixAlgorithm.IndexOf(first), _weightMatrixAlgorithm.IndexOf(_last.Value), _weightMatrixAlgorithm.Weights), 
+                        new MinimumWeightObjective());
             }
             else
             { // the last customer was not set.
-                _route = _solver.Solve(new TSPProblem(first, nonNullWeights), new MinimumWeightObjective());
+                _route = _solver.Solve(new TSPProblem(
+                    _weightMatrixAlgorithm.IndexOf(first), _weightMatrixAlgorithm.Weights), 
+                        new MinimumWeightObjective());
+            }
+
+            // convert route to a route with the original location indices.
+            if(_route.Last.HasValue)
+            {
+                _route = new OsmSharp.Logistics.Routes.Route(_route.Select(x => _weightMatrixAlgorithm.LocationIndexOf(x)),
+                    _weightMatrixAlgorithm.LocationIndexOf(
+                        _route.Last.Value));
+            }
+            else
+            {
+                _route = new OsmSharp.Logistics.Routes.Route(_route.Select(x => _weightMatrixAlgorithm.LocationIndexOf(x)));
             }
 
             this.HasSucceeded = true;
         }
 
         /// <summary>
-        /// Builds a route along all the given points.
+        /// Returns the errors indexed per location idx.
         /// </summary>
-        /// <param name="vehicle"></param>
-        /// <param name="resolved"></param>
-        /// <param name="coordinates"></param>
-        /// <returns></returns>
-        private Route BuildRoute(Vehicle vehicle, RouterPoint[] resolved, GeoCoordinate[] coordinates)
-        {
-            var routes = new Route[resolved.Length - 1];
-            for (int idx = 1; idx < resolved.Length; idx++)
-            {
-                if (resolved[idx - 1] == null || resolved[idx] == null)
-                { // failed to resolve point(s), replace with a dummy route.
-                    routes[idx - 1] = null;
-                }
-                else
-                { // both points are resolved, calculate route.
-                    var localRoute = _router.Calculate(vehicle, resolved[idx - 1], resolved[idx]);
-                    if (localRoute != null)
-                    { // route was found.
-                        routes[idx - 1] = localRoute;
-                    }
-                    else
-                    { // failed to calculate route, replace with a dummy route.
-                        routes[idx - 1] = null;
-                    }
-                }
-            }
-
-            // concatenate the routes.
-            var route = routes[0];
-            for (int idx = 1; idx < routes.Length; idx++)
-            {
-                route = Route.Concatenate(route, routes[idx]);
-            }
-            return route;
-        }
-
-        /// <summary>
-        /// Returns the list of location's indexes that could not be routed.
-        /// </summary>
-        public List<int> Errors
+        public Dictionary<int, string> Errors
         {
             get
             {
-                return _errors;
+                return _weightMatrixAlgorithm.Errors;
             }
         }
 
@@ -218,60 +183,36 @@ namespace OsmSharp.Logistics.Routing.TSP
         {
             this.CheckHasRunAndHasSucceeded();
 
-            // sort resolved and coordinates.
-            var solution = _route.ToArray();
-            var size = _first == _last ? solution.Length + 1 : solution.Length;
-            var sortedResolved = new RouterPoint[size];
-            var sortedCoordinates = new GeoCoordinate[size];
-            for (var idx = 0; idx < solution.Length; idx++)
+            Route route = null;
+            foreach(var pair in _route.Pairs())
             {
-                sortedResolved[idx] = _resolvedPoints[solution[idx]];
-                sortedCoordinates[idx] = _locations[solution[idx]];
+                var localRoute = _router.Calculate(_vehicle, _weightMatrixAlgorithm.RouterPoints[pair.From],
+                    _weightMatrixAlgorithm.RouterPoints[pair.To]);
+                if(route == null)
+                {
+                    route = localRoute;
+                }
+                else
+                {
+                    route = Route.Concatenate(route, localRoute);
+                }
             }
-
-            // make round if needed.
-            if (_first == _last)
-            {
-                sortedResolved[size - 1] = sortedResolved[0];
-                sortedCoordinates[size - 1] = sortedCoordinates[0];
-            }
-
-            // build the route.
-            return this.BuildRoute(_vehicle, sortedResolved, sortedCoordinates);
+            return route;
         }
 
         /// <summary>
         /// Builds the result route in segments divided by routes between customers.
         /// </summary>
         /// <returns></returns>
-        public Route[] BuildRoutes()
+        public List<Route> BuildRoutes()
         {
             this.CheckHasRunAndHasSucceeded();
 
-            // sort resolved and coordinates.
-            var solution = _route.ToArray();
-            var size = _first == _last ? solution.Length + 1 : solution.Length;
-            var sortedResolved = new RouterPoint[size];
-            var sortedCoordinates = new GeoCoordinate[size];
-            for (var idx = 0; idx < solution.Length; idx++)
+            var routes = new List<Route>();
+            foreach (var pair in _route.Pairs())
             {
-                sortedResolved[idx] = _resolvedPoints[solution[idx]];
-                sortedCoordinates[idx] = _locations[solution[idx]];
-            }
-
-            // make round if needed.
-            if (_first == _last)
-            {
-                sortedResolved[size - 1] = sortedResolved[0];
-                sortedCoordinates[size - 1] = sortedCoordinates[0];
-            }
-
-            // build the route.
-            var routes = new Route[sortedResolved.Length - 1];
-            for (var i = 0; i < sortedResolved.Length - 1; i++)
-            {
-                routes[i] = this.BuildRoute(_vehicle, new RouterPoint[] { sortedResolved[i], sortedResolved[i + 1] },
-                    new GeoCoordinate[] { sortedCoordinates[i], sortedCoordinates[i + 1] });
+                routes.Add(_router.Calculate(_vehicle, _weightMatrixAlgorithm.RouterPoints[pair.From],
+                    _weightMatrixAlgorithm.RouterPoints[pair.To]));
             }
             return routes;
         }

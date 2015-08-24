@@ -86,6 +86,7 @@
     <Compile Include="Routes\TripleEnumerableTests.cs" />
     <Compile Include="Routing\RouterMock.cs" />
     <Compile Include="Routing\TSP\TSPRouterTests.cs" />
+    <Compile Include="Routing\WeightMatrixAlgorithmTests.cs" />
     <Compile Include="Solutions\Algorithms\NNearestNeighboursAlgorithmTests.cs" />
     <Compile Include="Solutions\TSPTW\LocalSearch\Local1ShiftTimeWindowTests.cs" />
     <Compile Include="Solutions\TSPTW\LocalSearch\Local2OptTests.cs" />

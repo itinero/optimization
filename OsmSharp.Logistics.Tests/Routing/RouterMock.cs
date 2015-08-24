@@ -27,6 +27,17 @@ namespace OsmSharp.Logistics.Tests.Routing
     class RouterMock : ITypedRouter
     {
         private long _resolvedId = 0;
+        private HashSet<int> _invalidSet = new HashSet<int>();
+
+        public RouterMock()
+        {
+
+        }
+
+        public RouterMock(HashSet<int> invalidSet)
+        {
+            _invalidSet = invalidSet;
+        }
 
         public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, 
             float max = 3.40282e+038f, bool geometryOnly = false)
@@ -67,6 +78,12 @@ namespace OsmSharp.Logistics.Tests.Routing
                     weights[s][t] = sources[s].Location.DistanceReal(targets[t].Location).Value;
                 }
             }
+
+            foreach(var invalid in _invalidSet)
+            {
+                invalidSet.Add(invalid);
+            }
+
             return weights;
         }
 
@@ -147,6 +164,13 @@ namespace OsmSharp.Logistics.Tests.Routing
 
         public RouterPoint Resolve(Vehicle vehicle, float delta, Math.Geo.GeoCoordinate coordinate)
         {
+            if(coordinate.Latitude < -90 ||
+                coordinate.Latitude > 90 ||
+                coordinate.Longitude < -180 ||
+                coordinate.Longitude > 180)
+            {
+                return null;
+            }
             _resolvedId++;
             return new RouterPoint(_resolvedId, vehicle, coordinate);
         }

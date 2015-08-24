@@ -35,12 +35,21 @@ namespace OsmSharp.Logistics.Routing
         }
 
         /// <summary>
-        /// Returns true if this instance has run and it was succesfull.
+        /// Returns true if this instance has run and it was succesful.
         /// </summary>
         public bool HasSucceeded
         {
             get;
             protected set;
+        }
+
+        /// <summary>
+        /// Returns an error message when the algorithm was not successful.
+        /// </summary>
+        public string ErrorMessage 
+        { 
+            get; 
+            protected set; 
         }
 
         /// <summary>

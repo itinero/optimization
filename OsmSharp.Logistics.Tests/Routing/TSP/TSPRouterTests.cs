@@ -63,7 +63,7 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
             Assert.AreEqual(0, route.Segments[0].Latitude);
             Assert.AreEqual(0, route.Segments[0].Longitude);
             var routes = tspRouter.BuildRoutes();
-            Assert.AreEqual(2, routes.Length);
+            Assert.AreEqual(2, routes.Count);
             Assert.AreEqual(0, routes[0].Segments[0].Latitude);
             Assert.AreEqual(0, routes[0].Segments[0].Longitude);
             Assert.AreEqual(1, routes[0].Segments[1].Latitude);
