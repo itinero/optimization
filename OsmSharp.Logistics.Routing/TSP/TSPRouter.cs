@@ -91,6 +91,7 @@ namespace OsmSharp.Logistics.Routing.TSP
         }
 
         private OsmSharp.Logistics.Routes.IRoute _route = null;
+        private OsmSharp.Logistics.Routes.IRoute _originalRoute = null;
         private WeightMatrixAlgorithm _weightMatrixAlgorithm;
 
         /// <summary>
@@ -127,27 +128,27 @@ namespace OsmSharp.Logistics.Routing.TSP
                     return;
                 }
 
-                _route = _solver.Solve(new TSPProblem(
+                _originalRoute = _solver.Solve(new TSPProblem(
                     _weightMatrixAlgorithm.IndexOf(first), _weightMatrixAlgorithm.IndexOf(_last.Value), _weightMatrixAlgorithm.Weights), 
                         new MinimumWeightObjective());
             }
             else
             { // the last customer was not set.
-                _route = _solver.Solve(new TSPProblem(
+                _originalRoute = _solver.Solve(new TSPProblem(
                     _weightMatrixAlgorithm.IndexOf(first), _weightMatrixAlgorithm.Weights), 
                         new MinimumWeightObjective());
             }
 
             // convert route to a route with the original location indices.
-            if(_route.Last.HasValue)
+            if (_originalRoute.Last.HasValue)
             {
-                _route = new OsmSharp.Logistics.Routes.Route(_route.Select(x => _weightMatrixAlgorithm.LocationIndexOf(x)),
+                _route = new OsmSharp.Logistics.Routes.Route(_originalRoute.Select(x => _weightMatrixAlgorithm.LocationIndexOf(x)),
                     _weightMatrixAlgorithm.LocationIndexOf(
-                        _route.Last.Value));
+                        _originalRoute.Last.Value));
             }
             else
             {
-                _route = new OsmSharp.Logistics.Routes.Route(_route.Select(x => _weightMatrixAlgorithm.LocationIndexOf(x)));
+                _route = new OsmSharp.Logistics.Routes.Route(_originalRoute.Select(x => _weightMatrixAlgorithm.LocationIndexOf(x)));
             }
 
             this.HasSucceeded = true;
@@ -184,7 +185,7 @@ namespace OsmSharp.Logistics.Routing.TSP
             this.CheckHasRunAndHasSucceeded();
 
             Route route = null;
-            foreach(var pair in _route.Pairs())
+            foreach (var pair in _originalRoute.Pairs())
             {
                 var localRoute = _router.Calculate(_vehicle, _weightMatrixAlgorithm.RouterPoints[pair.From],
                     _weightMatrixAlgorithm.RouterPoints[pair.To]);
@@ -209,7 +210,7 @@ namespace OsmSharp.Logistics.Routing.TSP
             this.CheckHasRunAndHasSucceeded();
 
             var routes = new List<Route>();
-            foreach (var pair in _route.Pairs())
+            foreach (var pair in _originalRoute.Pairs())
             {
                 routes.Add(_router.Calculate(_vehicle, _weightMatrixAlgorithm.RouterPoints[pair.From],
                     _weightMatrixAlgorithm.RouterPoints[pair.To]));
