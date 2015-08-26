@@ -20,7 +20,7 @@ using System;
 
 namespace OsmSharp.Logistics
 {
- /// <summary>
+    /// <summary>
     /// Abstract representation of an algorithm.
     /// </summary>
     public abstract class Algorithm
