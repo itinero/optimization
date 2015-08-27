@@ -109,7 +109,7 @@ namespace OsmSharp.Logistics.Routing.TSP
                 return;
             }
 
-            string error;
+            LocationError error;
             if (_weightMatrixAlgorithm.Errors.TryGetValue(_first, out error))
             { // if the first location could not be resolved everything fails.
                 this.ErrorMessage = string.Format("Could resolve first location: {0}",
@@ -157,7 +157,7 @@ namespace OsmSharp.Logistics.Routing.TSP
         /// <summary>
         /// Returns the errors indexed per location idx.
         /// </summary>
-        public Dictionary<int, string> Errors
+        public Dictionary<int, LocationError> Errors
         {
             get
             {

@@ -44,7 +44,7 @@ namespace OsmSharp.Logistics.Routing
             _locations = locations;
         }
 
-        private Dictionary<int, string> _errors; // all errors per original location idx.
+        private Dictionary<int, LocationError> _errors; // all errors per original location idx.
         private List<int> _resolvedPointsIndices; // the original location per resolved point index.
         private List<RouterPoint> _resolvedPoints; // only the valid resolved points.
         private double[][] _weights; // the weights between all valid resolved points.
@@ -54,7 +54,7 @@ namespace OsmSharp.Logistics.Routing
         /// </summary>
         protected override void DoRun()
         {
-            _errors = new Dictionary<int,string>(_locations.Length);
+            _errors = new Dictionary<int, LocationError>(_locations.Length);
             _resolvedPoints = new List<RouterPoint>(_locations.Length);
             _resolvedPointsIndices = new List<int>(_locations.Length);
 
@@ -66,7 +66,11 @@ namespace OsmSharp.Logistics.Routing
             {
                 if(resolvedPoints[i] == null)
                 { // could not be resolved!
-                    _errors[i] = "Location could not be linked to the road network.";
+                    _errors[i] = new LocationError()
+                    {
+                        Code = LocationErrorCode.NotResolved,
+                        Message = "Location could not be linked to the road network."
+                    };
                 }
                 else
                 { // resolve is ok.
@@ -85,7 +89,11 @@ namespace OsmSharp.Logistics.Routing
             { // shrink lists and add errors.
                 foreach(var invalid in nonNullInvalids)
                 {
-                    _errors[_resolvedPointsIndices[invalid]] = "Location could not routed to or from.";
+                    _errors[_resolvedPointsIndices[invalid]] = new LocationError()
+                    {
+                        Code = LocationErrorCode.NotRoutable,
+                        Message = "Location could not routed to or from."
+                    };
                 }
 
                 _resolvedPoints = _resolvedPoints.ShrinkAndCopyList(nonNullInvalids);
@@ -148,7 +156,7 @@ namespace OsmSharp.Logistics.Routing
         /// <summary>
         /// Returns the errors indexed per location idx.
         /// </summary>
-        public Dictionary<int, string> Errors
+        public Dictionary<int, LocationError> Errors
         {
             get
             {
@@ -157,5 +165,40 @@ namespace OsmSharp.Logistics.Routing
                 return _errors;
             }
         }
+    }
+
+    /// <summary>
+    /// A represention of an error that can occur for a location.
+    /// </summary>
+    public class LocationError
+    {
+        /// <summary>
+        /// Gets or sets the error-code.
+        /// </summary>
+        public LocationErrorCode Code { get; set; }
+
+        /// <summary>
+        /// Gets or sets the message.
+        /// </summary>
+        public string Message { get; set; }
+    }
+
+    /// <summary>
+    /// The types of errors that can occur for a location.
+    /// </summary>
+    public enum LocationErrorCode
+    {
+        /// <summary>
+        /// What happened?
+        /// </summary>
+        Unknown,
+        /// <summary>
+        /// Cannot find a suitable road nearby.
+        /// </summary>
+        NotResolved,
+        /// <summary>
+        /// Cannot find a route to this location.
+        /// </summary>
+        NotRoutable
     }
 }
