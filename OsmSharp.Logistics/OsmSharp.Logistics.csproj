@@ -42,6 +42,7 @@
     <Compile Include="Algorithm.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IAlgorithm.cs" />
     <Compile Include="Routes\Cycles\AsymmetricAlternatingCycles.cs" />
     <Compile Include="Routes\Cycles\AsymmetricCycles.cs" />
     <Compile Include="Routes\RouteExtensions.cs" />

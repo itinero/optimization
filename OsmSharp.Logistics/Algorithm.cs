@@ -23,7 +23,7 @@ namespace OsmSharp.Logistics
     /// <summary>
     /// Abstract representation of an algorithm.
     /// </summary>
-    public abstract class Algorithm
+    public abstract class Algorithm : OsmSharp.Logistics.IAlgorithm
     {
         /// <summary>
         /// Returns true if this instance has run already.

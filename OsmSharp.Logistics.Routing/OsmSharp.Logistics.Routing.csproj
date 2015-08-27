@@ -46,6 +46,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoutingAlgorithmBase.cs" />
+    <Compile Include="TSP\ITSPRouter.cs" />
     <Compile Include="TSP\TSPRouter.cs" />
     <Compile Include="WeightMatrixAlgorithm.cs" />
   </ItemGroup>

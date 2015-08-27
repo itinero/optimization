@@ -33,7 +33,7 @@ namespace OsmSharp.Logistics.Routing.TSP
     /// <summary>
     /// A router that calculates and solves the TSP-route along a set of given points.
     /// </summary>
-    public class TSPRouter : RoutingAlgorithmBase
+    public class TSPRouter : RoutingAlgorithmBase, OsmSharp.Logistics.Routing.TSP.ITSPRouter
     {
         private readonly ISolver<ITSP, ITSPObjective, OsmSharp.Logistics.Routes.IRoute> _solver;
         private readonly ITypedRouter _router;
