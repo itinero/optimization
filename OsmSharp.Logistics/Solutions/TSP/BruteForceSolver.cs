@@ -55,6 +55,20 @@ namespace OsmSharp.Logistics.Solutions.TSP
                 }
             }
 
+            if (solution.Count < 2)
+            { // a tiny problem.
+                // build route.
+                var withFirst = new List<int>(solution);
+                withFirst.Insert(0, problem.First);
+                if (problem.Last.HasValue && problem.First != problem.Last)
+                { // the special case of a fixed last customer.
+                    withFirst.Add(problem.Last.Value);
+                }
+                var route = new Route(withFirst, problem.Last);
+                fitness = objective.Calculate(problem, route);
+                return route;
+            }
+
             // keep on looping until all the permutations 
             // have been considered.
             var enumerator = new PermutationEnumerable<int>(

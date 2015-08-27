@@ -41,6 +41,40 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         }
 
         /// <summary>
+        /// Tests the solver on a very small problem.
+        /// </summary>
+        [Test]
+        public void TestSolver1()
+        {
+            // create a problem with only one customer.
+            var problem = TSPHelper.CreateTSP(0, 0, 1, 10);
+
+            // create the solver.
+            var solver = new BruteForceSolver();
+            var solution = solver.Solve(problem, new MinimumWeightObjective());
+
+            // verify solution.
+            Assert.AreEqual(new int[] { 0 }, solution.ToArray());
+        }
+
+        /// <summary>
+        /// Tests the solver on a very small problem.
+        /// </summary>
+        [Test]
+        public void TestSolver2()
+        {
+            // create a problem with only one customer.
+            var problem = TSPHelper.CreateTSP(0, 1, 2, 10);
+
+            // create the solver.
+            var solver = new BruteForceSolver();
+            var solution = solver.Solve(problem, new MinimumWeightObjective());
+
+            // verify solution.
+            Assert.AreEqual(new int[] { 0, 1 }, solution.ToArray());
+        }
+
+        /// <summary>
         /// Tests the solver.
         /// </summary>
         [Test]

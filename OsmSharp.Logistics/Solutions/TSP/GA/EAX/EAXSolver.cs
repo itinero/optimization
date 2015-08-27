@@ -56,6 +56,12 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.EAX
         /// <returns></returns>
         public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
         {
+            if(problem.Weights.Length < 5)
+            { // use brute-force solver when problem is very small.
+                var bruteForceSolver = new BruteForceSolver();
+                return bruteForceSolver.Solve(problem, objective, out fitness);
+            }
+
             if (problem.Last == null)
             { // the problem is 'open', we need to convert the problem and then solution.
                 OsmSharp.Logging.Log.TraceEvent("EAXSolver.Solve", Logging.TraceEventType.Warning,

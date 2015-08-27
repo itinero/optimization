@@ -32,7 +32,47 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
     public class EAXSolverTests
     {
         /// <summary>
-        /// Tests the solver on an 'open' solution but with a fixed end.
+        /// Tests the solver with only 2 customers.
+        /// </summary>
+        [Test]
+        public void TestSolution2()
+        {
+            StaticRandomGenerator.Set(4541247);
+
+            // create problem.
+            var problem = TSPHelper.CreateTSP(0, 1, 2, 10);
+            problem.Weights[0][1] = 1;
+            problem.Weights[1][0] = 1;
+
+            // create the solver.
+            var solver = new EAXSolver(new GASettings()
+            {
+                CrossOverPercentage = 10,
+                ElitismPercentage = 1,
+                PopulationSize = 100,
+                MaxGenerations = 100000,
+                MutationPercentage = 0,
+                StagnationCount = 100
+            });
+
+            for (int i = 0; i < 10; i++)
+            {
+                // generate solution.
+                double fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+
+                // test contents.
+                Assert.AreEqual(1, fitness);
+                var solutionList = new List<int>(solution);
+                Assert.AreEqual(0, solutionList[0]);
+                Assert.IsTrue(solutionList.Remove(0));
+                Assert.IsTrue(solutionList.Remove(1));
+                Assert.AreEqual(0, solutionList.Count);
+            }
+        }
+
+        /// <summary>
+        /// Tests the solver with a non-fixed ending.
         /// </summary>
         [Test]
         public void TestSolutions5NotClosedNotFixed()
