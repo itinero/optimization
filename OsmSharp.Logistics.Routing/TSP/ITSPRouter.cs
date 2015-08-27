@@ -24,7 +24,7 @@ namespace OsmSharp.Logistics.Routing.TSP
     /// <summary>
     /// Abstract representation of a TSP-router.
     /// </summary>
-    interface ITSPRouter : IAlgorithm
+    public interface ITSPRouter : IAlgorithm
     {
         /// <summary>
         /// Builds the resulting route.
