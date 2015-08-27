@@ -14,6 +14,10 @@
     <summary>A module for solving logistical routing problems based on OsmSharp.</summary>
     <copyright>Ben Abelshausen</copyright>
     <tags>osm, openstreetmap, routing</tags>
+    <dependencies>
+      <dependency id="OsmSharp.Core" version="0.0.0.0" />
+      <dependency id="OsmSharp.Routing" version="0.0.0.0" />
+    </dependencies>
   </metadata>
   <files>
     <file src="Output\OsmSharp.Logistics.dll" target="lib\net45\OsmSharp.Logistics.dll" />
