@@ -34,7 +34,7 @@ namespace OsmSharp.Logistics.Routing.TSPTW
     /// <summary>
     /// A router that calculates and solves the TSPTW-route along a set of given points.
     /// </summary>
-    public class TSPTWRouter : RoutingAlgorithmBase
+    public class TSPTWRouter : RoutingAlgorithmBase, OsmSharp.Logistics.Routing.TSPTW.ITSPTWRouter
     {
         private readonly ISolver<ITSPTW, ITSPTWObjective, OsmSharp.Logistics.Routes.IRoute> _solver;
         private readonly ITypedRouter _router;
