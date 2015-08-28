@@ -124,7 +124,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                 if (window.Max < time && position > 1)
                 { // ok, unfeasible and customer is not the first 'moveable' customer.
                     fitness += time - window.Max;
-                    invalids.Add(new Tuple<int, int>(enumerator.Current, position));
+                    if (enumerator.Current != problem.Last)
+                    { // when the last customer is fixed, don't try to relocate.
+                        invalids.Add(new Tuple<int, int>(enumerator.Current, position));
+                    }
                 }
                 if (window.Min > time)
                 { // wait here!
@@ -224,7 +227,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                 }
                 else if (position > 0 && position < problem.Weights.Length - 1)
                 { // window is valid and customer is not the first 'moveable' customer.
-                    valids.Add(new Tuple<int, int>(enumerator.Current, position));
+                    if (enumerator.Current != problem.Last)
+                    { // when the last customer is fixed, don't try to relocate.
+                        valids.Add(new Tuple<int, int>(enumerator.Current, position));
+                    }
                 }
                 if (window.Min > time)
                 { // wait here!
@@ -244,6 +250,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                 {
                     var before = solution.GetCustomerAt(newPosition);
 
+                    if(before == problem.Last)
+                    { // cannot move a customer after a fixed last customer.
+                        continue;
+                    }
                     // calculate new total min diff.
                     double newFitness = 0.0;
                     previous = Constants.NOT_SET;
@@ -329,7 +339,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                 }
                 else if (position > 1)
                 { // window is valid and customer is not the first 'moveable' customer.
-                    valids.Add(new Tuple<int, int>(enumerator.Current, position));
+                    if (enumerator.Current != problem.Last)
+                    { // when the last customer is fixed, don't try to relocate.
+                        valids.Add(new Tuple<int, int>(enumerator.Current, position));
+                    }
                 }
                 if (window.Min > time)
                 { // wait here!
@@ -431,7 +444,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                 if (window.Max < time && position > 0 && position < problem.Weights.Length - 1)
                 { // ok, unfeasible and customer is not the first 'moveable' customer.
                     fitness += time - window.Max;
-                    invalids.Add(new Tuple<int, int>(enumerator.Current, position));
+                    if (enumerator.Current != problem.Last)
+                    { // when the last customer is fixed, don't try to relocate.
+                        invalids.Add(new Tuple<int, int>(enumerator.Current, position));
+                    }
                 }
                 if (window.Min > time)
                 { // wait here!
@@ -450,6 +466,10 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.LocalSearch
                 for (var newPosition = invalid.Item2 + 1; newPosition < problem.Weights.Length; newPosition++)
                 {
                     var before = solution.GetCustomerAt(newPosition);
+                    if (before == problem.Last)
+                    { // cannot move a customer after a fixed last customer.
+                        continue;
+                    }
 
                     // calculate new total min diff.
                     double newFitness = 0.0;

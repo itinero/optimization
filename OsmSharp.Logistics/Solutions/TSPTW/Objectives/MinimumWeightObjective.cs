@@ -68,8 +68,8 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.Objectives
                 }
                 previous = current;
             }
-            if(solution.Last.HasValue)
-            { // route has a last customer.
+            if(solution.Last.HasValue && solution.First == solution.Last)
+            { // also move from last->first
                 var current = solution.Last.Value;
                 if (previous != Constants.NOT_SET)
                 { // keep track of time.

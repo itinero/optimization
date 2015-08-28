@@ -35,7 +35,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.VNS
         /// Tests the solver.
         /// </summary>
         [Test]
-        public void TestSolutions5ClosedNotFixed()
+        public void TestSolution5ClosedNotFixed()
         {
             StaticRandomGenerator.Set(4541247);
 
@@ -68,6 +68,49 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.VNS
 
                 // test contents.
                 Assert.AreEqual(10, fitness);
+                var solutionList = new List<int>(solution);
+                Assert.AreEqual(0, solutionList[0]);
+                Assert.IsTrue(solutionList.Remove(0));
+                Assert.IsTrue(solutionList.Remove(1));
+                Assert.IsTrue(solutionList.Remove(2));
+                Assert.IsTrue(solutionList.Remove(3));
+                Assert.IsTrue(solutionList.Remove(4));
+                Assert.AreEqual(0, solutionList.Count);
+            }
+        }
+
+        /// <summary>
+        /// Tests the solver.
+        /// </summary>
+        [Test]
+        public void TestSolution5ClosedFixed()
+        {
+            StaticRandomGenerator.Set(4541247);
+
+            // create problem.
+            var problem = TSPTWHelper.CreateTSP(0, 4, 5, 10);
+            problem.Weights[0][1] = 2;
+            problem.Weights[1][2] = 2;
+            problem.Weights[2][3] = 2;
+            problem.Weights[3][4] = 2;
+            problem.Weights[4][0] = 2;
+            problem.Windows[4] = new Logistics.Solutions.TimeWindow()
+            {
+                Min = 7,
+                Max = 9
+            };
+            var objective = new MinimumWeightObjective();
+
+            // create the solver.
+            var solver = new VNSSolver();
+            for (int i = 0; i < 10; i++)
+            {
+                // generate solution.
+                double fitness;
+                var solution = solver.Solve(problem, objective, out fitness);
+
+                // test contents.
+                Assert.AreEqual(8, fitness);
                 var solutionList = new List<int>(solution);
                 Assert.AreEqual(0, solutionList[0]);
                 Assert.IsTrue(solutionList.Remove(0));

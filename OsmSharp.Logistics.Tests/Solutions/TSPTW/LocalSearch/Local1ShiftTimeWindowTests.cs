@@ -20,6 +20,8 @@ using NUnit.Framework;
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Solutions.TSPTW.LocalSearch;
 using OsmSharp.Logistics.Solutions.TSPTW.Objectives;
+using OsmSharp.Logistics.Tests.Solutions.TSP;
+using OsmSharp.Math.Random;
 using System.Linq;
 
 namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
@@ -34,7 +36,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
         /// Tests an infeasible route where a violated customer can be moved backwards.
         /// </summary>
         [Test]
-        public void Test1OneShiftViolatedBackward()
+        public void TestOneShiftViolatedBackward()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
             var objective = new FeasibleObjective();
@@ -78,7 +80,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
         /// Tests an infeasible route where a non-violated customer can be moved forward.
         /// </summary>
         [Test]
-        public void Test1OneShiftNonViolatedForward()
+        public void TestOneShiftNonViolatedForward()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
             var objective = new FeasibleObjective();
@@ -112,7 +114,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
         /// Tests an infeasible route where a non-violated customer can be moved backward.
         /// </summary>
         [Test]
-        public void Test1OneShiftNonViolatedBackward()
+        public void TestOneShiftNonViolatedBackward()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
             var objective = new FeasibleObjective();
@@ -148,7 +150,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
         /// Tests an infeasible route where a violated customer can be moved forward.
         /// </summary>
         [Test]
-        public void Test1OneShiftViolatedForward()
+        public void TestOneShiftViolatedForward()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
             var objective = new FeasibleObjective();
@@ -183,6 +185,76 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.LocalSearch
 
             // apply the 1-shift local search, it should find the customer to replocate.
             Assert.IsFalse(localSearch.MoveViolatedForward(problem, objective, route, out delta));
+        }
+
+        /// <summary>
+        /// Tests the local1shift on an infeasible route where the last violated customer cannot be moved.
+        /// </summary>
+        [Test]
+        public void TestFixedViolatedUnmovableCustomerValidForward()
+        {
+            StaticRandomGenerator.Set(4541247);
+
+            // create the problem and make sure 0->1->2->3->4 is the solution.
+            var objective = new FeasibleObjective();
+            var problem = TSPTWHelper.CreateTSP(0, 4, 5, 10);
+            problem.Weights[0][1] = 2;
+            problem.Weights[1][2] = 2;
+            problem.Weights[2][3] = 2;
+            problem.Weights[3][4] = 2;
+            problem.Weights[4][0] = 2;
+            problem.Windows[4] = new Logistics.Solutions.TimeWindow()
+            {
+                Min = 7,
+                Max = 9
+            };
+
+            // create a route with one shift.
+            var route = new Route(new int[] { 0, 1, 3, 2, 4 }, 0);
+
+            // apply the 1-shift local search, it should find the customer to replocate.
+            var localSearch = new Local1Shift();
+            var delta = 0.0;
+            Assert.IsTrue(localSearch.Apply(problem, objective, route, out delta)); // shifts 3 after 2
+
+            // test result.
+            Assert.AreEqual(23, delta);
+            Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, route.ToArray());
+        }
+
+        /// <summary>
+        /// Tests the local1shift on an infeasible route where the last violated customer cannot be moved.
+        /// </summary>
+        [Test]
+        public void TestFixedViolatedUnmovableCustomerValidBackward()
+        {
+            StaticRandomGenerator.Set(4541247);
+
+            // create the problem and make sure 0->1->2->3->4 is the solution.
+            var objective = new FeasibleObjective();
+            var problem = TSPTWHelper.CreateTSP(0, 4, 5, 10);
+            problem.Weights[0][1] = 2;
+            problem.Weights[1][2] = 2;
+            problem.Weights[2][3] = 2;
+            problem.Weights[3][4] = 2;
+            problem.Weights[4][0] = 2;
+            problem.Windows[4] = new Logistics.Solutions.TimeWindow()
+            {
+                Min = 7,
+                Max = 9
+            };
+
+            // create a route with one shift.
+            var route = new Route(new int[] { 0, 1, 3, 2, 4 }, 0);
+
+            // apply the 1-shift local search, it should find the customer to replocate.
+            var localSearch = new Local1Shift();
+            var delta = 0.0;
+            Assert.IsTrue(localSearch.MoveNonViolatedBackward(problem, objective, route, out delta)); // shifts 2 after 1
+
+            // test result.
+            Assert.AreEqual(23, delta);
+            Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, route.ToArray());
         }
     }
 }
