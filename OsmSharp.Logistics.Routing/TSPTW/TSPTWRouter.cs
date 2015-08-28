@@ -16,10 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Logistics.Solutions.TSP;
-using OsmSharp.Logistics.Solutions.TSP.GA.EAX;
+using OsmSharp.Logistics.Solutions;
+using OsmSharp.Logistics.Solutions.TSPTW;
+using OsmSharp.Logistics.Solutions.TSPTW.Objectives;
+using OsmSharp.Logistics.Solutions.TSPTW.VNS;
 using OsmSharp.Logistics.Solvers;
-using OsmSharp.Logistics.Solvers.GA;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Routers;
@@ -28,33 +29,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OsmSharp.Logistics.Routing.TSP
+namespace OsmSharp.Logistics.Routing.TSPTW
 {
     /// <summary>
     /// A router that calculates and solves the TSP-route along a set of given points.
     /// </summary>
     public class TSPRouter : RoutingAlgorithmBase, OsmSharp.Logistics.Routing.TSP.ITSPRouter
     {
-        private readonly ISolver<ITSP, ITSPObjective, OsmSharp.Logistics.Routes.IRoute> _solver;
+        private readonly ISolver<ITSPTW, ITSPTWObjective, OsmSharp.Logistics.Routes.IRoute> _solver;
         private readonly ITypedRouter _router;
         private readonly Vehicle _vehicle;
         private readonly GeoCoordinate[] _locations;
+        private readonly TimeWindow[] _windows;
         private readonly int _first;
         private readonly int? _last;
 
         /// <summary>
         /// Creates a new router with default solver and settings.
         /// </summary>
-        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first)
-            : this(router, vehicle, locations, first, null, new EAXSolver(new GASettings()
-            {
-                CrossOverPercentage = 10,
-                ElitismPercentage = 1,
-                PopulationSize = 100,
-                MaxGenerations = 100000,
-                MutationPercentage = 0,
-                StagnationCount = 100
-            }))
+        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, TimeWindow[] windows, 
+            int first)
+            : this(router, vehicle, locations, windows, first, null, new VNSSolver())
         {
 
         }
@@ -62,16 +57,9 @@ namespace OsmSharp.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with default solver and settings.
         /// </summary>
-        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first, int last)
-            : this(router, vehicle, locations, first, last, new EAXSolver(new GASettings()
-            {
-                CrossOverPercentage = 10,
-                ElitismPercentage = 1,
-                PopulationSize = 100,
-                MaxGenerations = 100000,
-                MutationPercentage = 0,
-                StagnationCount = 100
-            }))
+        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, TimeWindow[] windows, 
+            int first, int last)
+            : this(router, vehicle, locations, windows, first, last, new VNSSolver())
         {
 
         }
@@ -79,9 +67,9 @@ namespace OsmSharp.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first, int? last, 
-            ISolver<ITSP, ITSPObjective, OsmSharp.Logistics.Routes.IRoute> solver)
-            : this(router, vehicle, locations, first, last, solver, new WeightMatrixAlgorithm(router, vehicle, locations))
+        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, TimeWindow[] windows,
+            int first, int? last, ISolver<ITSPTW, ITSPTWObjective, OsmSharp.Logistics.Routes.IRoute> solver)
+            : this(router, vehicle, locations, windows, first, last, solver, new WeightMatrixAlgorithm(router, vehicle, locations))
         {
 
         }
@@ -89,12 +77,14 @@ namespace OsmSharp.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first, int? last, 
-            ISolver<ITSP, ITSPObjective, OsmSharp.Logistics.Routes.IRoute> solver, IWeightMatrixAlgorithm weightMatrixAlgorithm)
+        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, TimeWindow[] windows, 
+            int first, int? last, ISolver<ITSPTW, ITSPTWObjective, OsmSharp.Logistics.Routes.IRoute> solver,
+            IWeightMatrixAlgorithm weightMatrixAlgorithm)
         {
             _router = router;
             _vehicle = vehicle;
             _locations = locations;
+            _windows = windows;
             _solver = solver;
             _first = first;
             _last = last;
@@ -112,7 +102,7 @@ namespace OsmSharp.Logistics.Routing.TSP
         {
             // calculate weight matrix.
             _weightMatrixAlgorithm.Run();
-            if(!_weightMatrixAlgorithm.HasSucceeded)
+            if (!_weightMatrixAlgorithm.HasSucceeded)
             { // algorithm has not succeeded.
                 this.ErrorMessage = string.Format("Could not calculate weight matrix: {0}",
                     _weightMatrixAlgorithm.ErrorMessage);
@@ -127,9 +117,16 @@ namespace OsmSharp.Logistics.Routing.TSP
                 return;
             }
 
+            // build/sort windows according to weight matrix successes/failiures.
+            var goodWindows = new TimeWindow[_weightMatrixAlgorithm.RouterPoints.Count];
+            for (var i = 0; i < goodWindows.Length; i++)
+            {
+                goodWindows[i] = _windows[_weightMatrixAlgorithm.LocationIndexOf(i)];
+            }
+
             // solve.
             var first = _first;
-            if(_last.HasValue)
+            if (_last.HasValue)
             { // the last customer was set.
                 if (_weightMatrixAlgorithm.Errors.TryGetValue(_last.Value, out error))
                 { // if the last location is set and it could not be resolved everything fails.
@@ -138,14 +135,18 @@ namespace OsmSharp.Logistics.Routing.TSP
                     return;
                 }
 
-                _originalRoute = _solver.Solve(new TSPProblem(
-                    _weightMatrixAlgorithm.IndexOf(first), _weightMatrixAlgorithm.IndexOf(_last.Value), _weightMatrixAlgorithm.Weights), 
+                _originalRoute = _solver.Solve(new TSPTWProblem(
+                    _weightMatrixAlgorithm.IndexOf(first), 
+                    _weightMatrixAlgorithm.IndexOf(_last.Value), 
+                    _weightMatrixAlgorithm.Weights,
+                    _windows),
                         new MinimumWeightObjective());
             }
             else
             { // the last customer was not set.
-                _originalRoute = _solver.Solve(new TSPProblem(
-                    _weightMatrixAlgorithm.IndexOf(first), _weightMatrixAlgorithm.Weights), 
+                _originalRoute = _solver.Solve(new TSPTWProblem(
+                    _weightMatrixAlgorithm.IndexOf(first), _weightMatrixAlgorithm.Weights,
+                    _windows),
                         new MinimumWeightObjective());
             }
 
@@ -199,7 +200,7 @@ namespace OsmSharp.Logistics.Routing.TSP
             {
                 var localRoute = _router.Calculate(_vehicle, _weightMatrixAlgorithm.RouterPoints[pair.From],
                     _weightMatrixAlgorithm.RouterPoints[pair.To]);
-                if(route == null)
+                if (route == null)
                 {
                     route = localRoute;
                 }

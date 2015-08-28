@@ -28,7 +28,7 @@ namespace OsmSharp.Logistics.Routing
     /// <summary>
     /// An algorithm to calculate a weight-matrix for a set of locations.
     /// </summary>
-    public class WeightMatrixAlgorithm : Algorithm
+    public class WeightMatrixAlgorithm : Algorithm, OsmSharp.Logistics.Routing.IWeightMatrixAlgorithm
     {
         private readonly ITypedRouter _router;
         private readonly Vehicle _vehicle;
@@ -132,7 +132,6 @@ namespace OsmSharp.Logistics.Routing
         /// <summary>
         /// Returns the index of the location in the resolved points list.
         /// </summary>
-        /// <param name="locationIdx"></param>
         /// <returns></returns>
         public int IndexOf(int locationIdx)
         {
@@ -144,7 +143,6 @@ namespace OsmSharp.Logistics.Routing
         /// <summary>
         /// Returns the index of the router point in the original locations array.
         /// </summary>
-        /// <param name="routerPointIdx"></param>
         /// <returns></returns>
         public int LocationIndexOf(int routerPointIdx)
         {

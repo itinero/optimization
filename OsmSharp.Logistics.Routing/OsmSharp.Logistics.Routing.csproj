@@ -44,8 +44,10 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="IWeightMatrixAlgorithm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoutingAlgorithmBase.cs" />
+    <Compile Include="TSPTW\TSPTWRouter.cs" />
     <Compile Include="TSP\ITSPRouter.cs" />
     <Compile Include="TSP\TSPRouter.cs" />
     <Compile Include="WeightMatrixAlgorithm.cs" />
