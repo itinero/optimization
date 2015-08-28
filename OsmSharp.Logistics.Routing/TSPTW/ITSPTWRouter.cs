@@ -25,7 +25,7 @@ namespace OsmSharp.Logistics.Routing.TSPTW
     /// <summary>
     /// Abstract representation of a router that calculates and solves the TSPTW-route along a set of given points.
     /// </summary>
-    interface ITSPTWRouter : IAlgorithm
+    public interface ITSPTWRouter : IAlgorithm
     {
         /// <summary>
         /// Builds the resulting route.
