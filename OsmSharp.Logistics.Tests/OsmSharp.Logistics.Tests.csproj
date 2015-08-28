@@ -85,7 +85,9 @@
     <Compile Include="Routes\RouteTests.cs" />
     <Compile Include="Routes\TripleEnumerableTests.cs" />
     <Compile Include="Routing\RouterMock.cs" />
+    <Compile Include="Routing\TSPTW\TSPTWSolverMock.cs" />
     <Compile Include="Routing\TSP\TSPRouterTests.cs" />
+    <Compile Include="Routing\TSPTW\TSPTWRouterTests.cs" />
     <Compile Include="Routing\WeightMatrixAlgorithmMock.cs" />
     <Compile Include="Routing\WeightMatrixAlgorithmTests.cs" />
     <Compile Include="Solutions\Algorithms\NNearestNeighboursAlgorithmTests.cs" />
@@ -110,7 +112,7 @@
     <Compile Include="Solutions\TSP\Random\RandomSolverTests.cs" />
     <Compile Include="Solutions\TSP\TSPHelper.cs" />
     <Compile Include="Solutions\TSP\TSPProblemTests.cs" />
-    <Compile Include="Solutions\TSP\TSPSolverMock.cs" />
+    <Compile Include="Routing\TSP\TSPSolverMock.cs" />
     <Compile Include="Solvers\GA\CrossOverMock.cs" />
     <Compile Include="Solvers\GA\GASolverTests.cs" />
     <Compile Include="Solvers\GA\SelectionMock.cs" />

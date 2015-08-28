@@ -20,7 +20,7 @@ using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Solutions.TSP;
 using OsmSharp.Logistics.Solvers;
 
-namespace OsmSharp.Logistics.Tests.Solutions.TSP
+namespace OsmSharp.Logistics.Tests.Routing.TSP
 {
     /// <summary>
     /// A mock-solver that has a pre-determined order.

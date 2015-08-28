@@ -18,23 +18,25 @@
 
 using NUnit.Framework;
 using OsmSharp.Logistics.Routes;
-using OsmSharp.Logistics.Routing.TSP;
+using OsmSharp.Logistics.Routing.TSPTW;
+using OsmSharp.Logistics.Tests.Solutions.TSPTW;
 using OsmSharp.Math.Random;
 using OsmSharp.Routing.Vehicles;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using OsmSharp.Logistics.Solutions;
 
-namespace OsmSharp.Logistics.Tests.Routing.TSP
+namespace OsmSharp.Logistics.Tests.Routing.TSPTW
 {
     /// <summary>
-    /// Contains tests for the TSP-router.
+    /// Contains tests for the TSPTW-router.
     /// </summary>
     [TestFixture]
-    public class TSPRouterTests
+    public class TSPTWRouterTests
     {
         /// <summary>
-        /// Tests the TSP-router for the case when the matrix calculations fail.
+        /// Tests the TSPTW-router for the case when the matrix calculations fail.
         /// </summary>
         [Test]
         public void TestMatrixCalculationNotSucceeded()
@@ -46,11 +48,15 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
 
             // build router.
             var router = new RouterMock();
-            var tspSolver = new TSPSolverMock(new Route(new int[] { 0, 1 }), 10);
-            var tspRouter = new TSPRouter(router, Vehicle.Car,
+            var tspSolver = new TSPTWSolverMock(new Route(new int[] { 0, 1 }), 10);
+            var tspRouter = new TSPTWRouter(router, Vehicle.Car,
                 new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
-                    new Math.Geo.GeoCoordinate(1, 1) }, 0, 0, tspSolver, weightMatrixAlgorithm);
+                    new Math.Geo.GeoCoordinate(1, 1) },
+                new TimeWindow[] { 
+                    TimeWindow.Default,
+                    TimeWindow.Default
+                    }, 0, 0, tspSolver, weightMatrixAlgorithm);
             // run.
             tspRouter.Run();
 
@@ -59,17 +65,17 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
         }
 
         /// <summary>
-        /// Tests the TSP-router for the case when the matrix calculations for the first location.
+        /// Tests the TSPTW-router for the case when the matrix calculations for the first location.
         /// </summary>
         [Test]
         public void TestMatrixCalculationNotSucceededForFirst()
         {
-            var errors = new Dictionary<int,Logistics.Routing.LocationError>();
+            var errors = new Dictionary<int, Logistics.Routing.LocationError>();
             errors.Add(0, new Logistics.Routing.LocationError()
-                {
-                    Code = Logistics.Routing.LocationErrorCode.Unknown,
-                    Message = "What happened?"
-                });
+            {
+                Code = Logistics.Routing.LocationErrorCode.Unknown,
+                Message = "What happened?"
+            });
             var weightMatrixAlgorithm = new WeightMatrixAlgorithmMock()
             {
                 HasSucceeded = true,
@@ -78,11 +84,15 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
 
             // build router.
             var router = new RouterMock();
-            var tspSolver = new TSPSolverMock(new Route(new int[] { 0, 1 }), 10);
-            var tspRouter = new TSPRouter(router, Vehicle.Car,
+            var tspSolver = new TSPTWSolverMock(new Route(new int[] { 0, 1 }), 10);
+            var tspRouter = new TSPTWRouter(router, Vehicle.Car,
                 new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
-                    new Math.Geo.GeoCoordinate(1, 1) }, 0, 0, tspSolver, weightMatrixAlgorithm);
+                    new Math.Geo.GeoCoordinate(1, 1) },
+                new TimeWindow[] { 
+                    TimeWindow.Default,
+                    TimeWindow.Default
+                    }, 0, 0, tspSolver, weightMatrixAlgorithm);
             // run.
             tspRouter.Run();
 
@@ -91,7 +101,7 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
         }
 
         /// <summary>
-        /// Tests the TSP-router for the case when the matrix calculations for the last location.
+        /// Tests the TSPTW-router for the case when the matrix calculations for the last location.
         /// </summary>
         [Test]
         public void TestMatrixCalculationNotSucceededForLast()
@@ -104,20 +114,25 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
             });
             var weightMatrixAlgorithm = new WeightMatrixAlgorithmMock(
                 new Tuple<int, int>[] {
-                    new Tuple<int, int>(0, 0)
+                    new Tuple<int, int>(1, 0)
                 })
             {
                 HasSucceeded = true,
                 Errors = errors,
+                RouterPoints = new List<OsmSharp.Routing.RouterPoint>(new OsmSharp.Routing.RouterPoint[1])
             };
 
             // build router.
             var router = new RouterMock();
-            var tspSolver = new TSPSolverMock(new Route(new int[] { 0, 1 }), 10);
-            var tspRouter = new TSPRouter(router, Vehicle.Car,
+            var tspSolver = new TSPTWSolverMock(new Route(new int[] { 0, 1 }), 10);
+            var tspRouter = new TSPTWRouter(router, Vehicle.Car,
                 new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
-                    new Math.Geo.GeoCoordinate(1, 1) }, 0, 1, tspSolver, weightMatrixAlgorithm);
+                    new Math.Geo.GeoCoordinate(1, 1) },
+                new TimeWindow[] { 
+                    TimeWindow.Default,
+                    TimeWindow.Default
+                    }, 0, 1, tspSolver, weightMatrixAlgorithm);
             // run.
             tspRouter.Run();
 
@@ -126,7 +141,7 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
         }
 
         /// <summary>
-        /// Tests a simple TSP.
+        /// Tests a simple TSPTW.
         /// </summary>
         [Test]
         public void TestTwoPointsClosed()
@@ -135,11 +150,15 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
 
             // build test case.
             var router = new RouterMock();
-            var tspSolver = new TSPSolverMock(new Route(new int[] { 0, 1 }), 10);
-            var tspRouter = new TSPRouter(router, Vehicle.Car,
+            var tspSolver = new TSPTWSolverMock(new Route(new int[] { 0, 1 }), 10);
+            var tspRouter = new TSPTWRouter(router, Vehicle.Car,
                 new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
-                    new Math.Geo.GeoCoordinate(1, 1) }, 0, 0, tspSolver);
+                    new Math.Geo.GeoCoordinate(1, 1) },
+                new TimeWindow[] { 
+                    TimeWindow.Default,
+                    TimeWindow.Default
+                    }, 0, 0, tspSolver);
 
             // run.
             tspRouter.Run();
@@ -171,7 +190,7 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
         }
 
         /// <summary>
-        /// Tests a simple TSP.
+        /// Tests a simple TSPTW.
         /// </summary>
         [Test]
         public void TestTwoPointsOpen()
@@ -180,11 +199,15 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
 
             // build test case.
             var router = new RouterMock();
-            var tspSolver = new TSPSolverMock(new Route(new int[] { 0, 1 }, null), 10);
-            var tspRouter = new TSPRouter(router, Vehicle.Car,
+            var tspSolver = new TSPTWSolverMock(new Route(new int[] { 0, 1 }, null), 10);
+            var tspRouter = new TSPTWRouter(router, Vehicle.Car,
                 new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
-                    new Math.Geo.GeoCoordinate(1, 1) }, 0, null, tspSolver);
+                    new Math.Geo.GeoCoordinate(1, 1) },
+                new TimeWindow[] { 
+                    TimeWindow.Default,
+                    TimeWindow.Default
+                    }, 0, null, tspSolver);
 
             // run.
             tspRouter.Run();
@@ -210,7 +233,7 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
         }
 
         /// <summary>
-        /// Tests a simple TSP.
+        /// Tests a simple TSPTW.
         /// </summary>
         [Test]
         public void TestTwoPointsFixed()
@@ -219,11 +242,15 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
 
             // build test case.
             var router = new RouterMock();
-            var tspSolver = new TSPSolverMock(new Route(new int[] { 0, 1 }, 1), 10);
-            var tspRouter = new TSPRouter(router, Vehicle.Car,
+            var tspSolver = new TSPTWSolverMock(new Route(new int[] { 0, 1 }, 1), 10);
+            var tspRouter = new TSPTWRouter(router, Vehicle.Car,
                 new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
-                    new Math.Geo.GeoCoordinate(1, 1) }, 0, 1, tspSolver);
+                    new Math.Geo.GeoCoordinate(1, 1) },
+                new TimeWindow[] { 
+                    TimeWindow.Default,
+                    TimeWindow.Default
+                    }, 0, 1, tspSolver);
 
             // run.
             tspRouter.Run();

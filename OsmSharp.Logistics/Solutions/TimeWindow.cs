@@ -62,6 +62,21 @@ namespace OsmSharp.Logistics.Solutions
         }
 
         /// <summary>
+        /// Returns a default timewindow with unlimited arrival/departure times.
+        /// </summary>
+        public static TimeWindow Default
+        {
+            get
+            {
+                return new TimeWindow()
+                {
+                    Max = double.MaxValue,
+                    Min = double.MinValue
+                };
+            }
+        }
+
+        /// <summary>
         /// Returns the fully qualified type name of this instance.
         /// </summary>
         /// <returns></returns>
