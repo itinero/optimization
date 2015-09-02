@@ -40,11 +40,6 @@ namespace OsmSharp.Logistics.Routing.TSPTW
         List<Route> BuildRoutes();
 
         /// <summary>
-        /// Returns the errors indexed per location idx.
-        /// </summary>
-        Dictionary<int, OsmSharp.Logistics.Routing.LocationError> Errors { get; }
-
-        /// <summary>
         /// Gets the raw route representing the order of the locations.
         /// </summary>
         OsmSharp.Logistics.Routes.IRoute RawRoute { get; }

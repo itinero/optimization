@@ -160,7 +160,6 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
             Assert.IsNotNull(tspRouter);
             Assert.IsTrue(tspRouter.HasRun);
             Assert.IsTrue(tspRouter.HasSucceeded);
-            Assert.AreEqual(0, tspRouter.Errors.Count);
             var route = tspRouter.BuildRoute();
             Assert.AreEqual(3, route.Segments.Length);
             Assert.AreEqual(0, route.Segments[0].Latitude);
@@ -205,7 +204,6 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
             Assert.IsNotNull(tspRouter);
             Assert.IsTrue(tspRouter.HasRun);
             Assert.IsTrue(tspRouter.HasSucceeded);
-            Assert.AreEqual(0, tspRouter.Errors.Count);
             var route = tspRouter.BuildRoute();
             Assert.AreEqual(2, route.Segments.Length);
             Assert.AreEqual(0, route.Segments[0].Latitude);
@@ -244,7 +242,6 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
             Assert.IsNotNull(tspRouter);
             Assert.IsTrue(tspRouter.HasRun);
             Assert.IsTrue(tspRouter.HasSucceeded);
-            Assert.AreEqual(0, tspRouter.Errors.Count);
             var route = tspRouter.BuildRoute();
             Assert.AreEqual(2, route.Segments.Length);
             Assert.AreEqual(0, route.Segments[0].Latitude);

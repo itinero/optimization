@@ -168,17 +168,6 @@ namespace OsmSharp.Logistics.Routing.TSP
         }
 
         /// <summary>
-        /// Returns the errors indexed per location idx.
-        /// </summary>
-        public Dictionary<int, LocationError> Errors
-        {
-            get
-            {
-                return _weightMatrixAlgorithm.Errors;
-            }
-        }
-
-        /// <summary>
         /// Gets the raw route representing the order of the locations.
         /// </summary>
         public OsmSharp.Logistics.Routes.IRoute RawRoute
