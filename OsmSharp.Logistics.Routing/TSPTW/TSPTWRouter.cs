@@ -101,7 +101,10 @@ namespace OsmSharp.Logistics.Routing.TSPTW
         protected override void DoRun()
         {
             // calculate weight matrix.
-            _weightMatrixAlgorithm.Run();
+            if (!_weightMatrixAlgorithm.HasRun)
+            { // only run if it has not been run yet.
+                _weightMatrixAlgorithm.Run();
+            }
             if (!_weightMatrixAlgorithm.HasSucceeded)
             { // algorithm has not succeeded.
                 this.ErrorMessage = string.Format("Could not calculate weight matrix: {0}",
