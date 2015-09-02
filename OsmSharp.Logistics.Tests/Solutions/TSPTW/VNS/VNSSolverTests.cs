@@ -32,6 +32,35 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW.VNS
     public class VNSSolverTests
     {
         /// <summary>
+        /// Tests the solver on a problem with only 1 customer.
+        /// </summary>
+        [Test]
+        public void TestSolution1()
+        {
+            StaticRandomGenerator.Set(4541247);
+
+            // create problem.
+            var problem = TSPTWHelper.CreateTSP(0, 0, 1, 0);
+            var objective = new MinimumWeightObjective();
+
+            // create the solver.
+            var solver = new VNSSolver();
+            for (int i = 0; i < 10; i++)
+            {
+                // generate solution.
+                double fitness;
+                var solution = solver.Solve(problem, objective, out fitness);
+
+                // test contents.
+                Assert.AreEqual(0, fitness);
+                var solutionList = new List<int>(solution);
+                Assert.AreEqual(0, solutionList[0]);
+                Assert.IsTrue(solutionList.Remove(0));
+                Assert.AreEqual(0, solutionList.Count);
+            }
+        }
+
+        /// <summary>
         /// Tests the solver.
         /// </summary>
         [Test]

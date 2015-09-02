@@ -32,6 +32,43 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.GA.EAX
     public class EAXSolverTests
     {
         /// <summary>
+        /// Tests the solver with only 1 customer.
+        /// </summary>
+        [Test]
+        public void TestSolution1()
+        {
+            StaticRandomGenerator.Set(4541247);
+
+            // create problem.
+            var problem = TSPHelper.CreateTSP(0, 0, 1, 0);
+
+            // create the solver.
+            var solver = new EAXSolver(new GASettings()
+            {
+                CrossOverPercentage = 10,
+                ElitismPercentage = 1,
+                PopulationSize = 100,
+                MaxGenerations = 100000,
+                MutationPercentage = 0,
+                StagnationCount = 100
+            });
+
+            for (int i = 0; i < 10; i++)
+            {
+                // generate solution.
+                double fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+
+                // test contents.
+                Assert.AreEqual(0, fitness);
+                var solutionList = new List<int>(solution);
+                Assert.AreEqual(0, solutionList[0]);
+                Assert.IsTrue(solutionList.Remove(0));
+                Assert.AreEqual(0, solutionList.Count);
+            }
+        }
+
+        /// <summary>
         /// Tests the solver with only 2 customers.
         /// </summary>
         [Test]

@@ -61,6 +61,12 @@ namespace OsmSharp.Logistics.Solutions.TSPTW.Random
         /// <returns></returns>
         public bool Apply(ITSPTW problem, ITSPTWObjective objective, IRoute solution, int level, out double difference)
         {
+            if(problem.Weights.Length == 1)
+            { // there is only one customer, cannot shift randomly.
+                difference = 0;
+                return false;
+            }
+
             difference = 0;
             var rand = OsmSharp.Math.Random.StaticRandomGenerator.Get();
             while (level > 0)
