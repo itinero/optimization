@@ -109,6 +109,7 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
             {
                 HasSucceeded = true,
                 Errors = errors,
+                Weights = new double[][] { new double[] { 0 }}
             };
 
             // build router.
@@ -123,6 +124,18 @@ namespace OsmSharp.Logistics.Tests.Routing.TSP
 
             Assert.AreEqual(false, tspRouter.HasSucceeded);
             Assert.IsNotNull(tspRouter.ErrorMessage);
+
+            // build router.
+            tspSolver = new TSPSolverMock(new Route(new int[] { 0 }), 0);
+            tspRouter = new TSPRouter(router, Vehicle.Car,
+                new Math.Geo.GeoCoordinate[] { 
+                    new Math.Geo.GeoCoordinate(0, 0),
+                    new Math.Geo.GeoCoordinate(1, 1) }, 0, 0, tspSolver, weightMatrixAlgorithm);
+            // run.
+            tspRouter.Run();
+
+            Assert.AreEqual(true, tspRouter.HasSucceeded);
+            Assert.IsNull(tspRouter.ErrorMessage);
         }
 
         /// <summary>
