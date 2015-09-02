@@ -79,6 +79,24 @@ namespace OsmSharp.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
+        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first, int? last,
+            IWeightMatrixAlgorithm weightMatrixAlgorithm)
+            : this(router, vehicle, locations, first, last, new EAXSolver(new GASettings()
+            {
+                CrossOverPercentage = 10,
+                ElitismPercentage = 1,
+                PopulationSize = 100,
+                MaxGenerations = 100000,
+                MutationPercentage = 0,
+                StagnationCount = 100
+            }), weightMatrixAlgorithm)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new router with a given solver.
+        /// </summary>
         public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first, int? last, 
             ISolver<ITSP, ITSPObjective, OsmSharp.Logistics.Routes.IRoute> solver)
             : this(router, vehicle, locations, first, last, solver, new WeightMatrixAlgorithm(router, vehicle, locations))
