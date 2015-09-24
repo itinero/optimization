@@ -64,7 +64,7 @@ namespace OsmSharp.Logistics.Routing
             // remove all points that could not be resolved.
             for(var i = 0; i < resolvedPoints.Length; i++)
             {
-                if(resolvedPoints[i] == null)
+                if (resolvedPoints[i] == null)
                 { // could not be resolved!
                     _errors[i] = new LocationError()
                     {
@@ -74,6 +74,12 @@ namespace OsmSharp.Logistics.Routing
                 }
                 else
                 { // resolve is ok.
+                    if (resolvedPoints[i].Tags == null)
+                    {
+                        resolvedPoints[i].Tags = new List<KeyValuePair<string, string>>();
+                    }
+                    resolvedPoints[i].Tags.Add(new KeyValuePair<string, string>("index", i.ToInvariantString()));
+
                     _resolvedPointsIndices.Add(i);
                     _resolvedPoints.Add(resolvedPoints[i]);
                 }
