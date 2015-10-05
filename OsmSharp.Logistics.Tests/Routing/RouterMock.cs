@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Routers;
@@ -28,6 +29,7 @@ namespace OsmSharp.Logistics.Tests.Routing
     {
         private long _resolvedId = 0;
         private HashSet<int> _invalidSet = new HashSet<int>();
+        private TagsCollectionBase _matchingTags;
 
         public RouterMock()
         {
@@ -37,6 +39,11 @@ namespace OsmSharp.Logistics.Tests.Routing
         public RouterMock(HashSet<int> invalidSet)
         {
             _invalidSet = invalidSet;
+        }
+
+        public RouterMock(TagsCollectionBase matchingTags)
+        {
+            _matchingTags = matchingTags;
         }
 
         public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, 
@@ -159,7 +166,11 @@ namespace OsmSharp.Logistics.Tests.Routing
 
         public RouterPoint Resolve(Vehicle vehicle, Math.Geo.GeoCoordinate coordinate, IEdgeMatcher matcher, Collections.Tags.TagsCollectionBase matchingTags)
         {
-            throw new System.NotImplementedException();
+            if (matcher.MatchWithEdge(vehicle, null, _matchingTags))
+            {
+                return this.Resolve(vehicle, 0, coordinate);
+            }
+            return null;
         }
 
         public RouterPoint Resolve(Vehicle vehicle, float delta, Math.Geo.GeoCoordinate coordinate)
@@ -177,7 +188,7 @@ namespace OsmSharp.Logistics.Tests.Routing
 
         public RouterPoint Resolve(Vehicle vehicle, Math.Geo.GeoCoordinate coordinate, bool verticesOnly)
         {
-            throw new System.NotImplementedException();
+            return this.Resolve(vehicle, 0, coordinate);
         }
 
         public Math.Geo.GeoCoordinate Search(Vehicle vehicle, float delta, Math.Geo.GeoCoordinate coordinate)

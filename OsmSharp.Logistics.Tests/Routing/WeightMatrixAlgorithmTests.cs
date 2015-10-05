@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using OsmSharp.Collections.Tags;
 using OsmSharp.Logistics.Routing;
 using OsmSharp.Math.Random;
 using OsmSharp.Routing.Vehicles;
@@ -170,6 +171,70 @@ namespace OsmSharp.Logistics.Tests.Routing
             Assert.AreEqual(1, matrixAlgorithm.RouterPoints.Count);
             Assert.AreEqual(0, matrixAlgorithm.IndexOf(1));
             Assert.AreEqual(1, matrixAlgorithm.LocationIndexOf(0));
+        }
+
+        /// <summary>
+        /// Tests a simple two-point matrix with edge-matcher.
+        /// </summary>
+        [Test]
+        public void Test1TwoPointsWithMatching()
+        {
+            StaticRandomGenerator.Set(4541247);
+
+            // build test case.
+            var router = new RouterMock(new TagsCollection(new Tag("highway", "residential")));
+            var locations = new Math.Geo.GeoCoordinate[] { 
+                    new Math.Geo.GeoCoordinate(0, 0),
+                    new Math.Geo.GeoCoordinate(1, 1) };
+            var matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car, locations, (tags) =>
+            {
+                if(tags != null)
+                {
+                    return tags.ContainsKeyValue("highway", "residential");
+                }
+                return false;
+            });
+
+            // run.
+            matrixAlgorithm.Run();
+
+            Assert.IsNotNull(matrixAlgorithm);
+            Assert.IsTrue(matrixAlgorithm.HasRun);
+            Assert.IsTrue(matrixAlgorithm.HasSucceeded);
+            Assert.AreEqual(0, matrixAlgorithm.Errors.Count);
+            var matrix = matrixAlgorithm.Weights;
+            Assert.IsNotNull(matrix);
+            Assert.AreEqual(0, matrix[0][0]);
+            Assert.AreEqual(locations[0].DistanceReal(locations[1]).Value, matrix[0][1]);
+            Assert.AreEqual(locations[1].DistanceReal(locations[0]).Value, matrix[1][0]);
+            Assert.AreEqual(0, matrix[1][1]);
+            Assert.AreEqual(2, matrixAlgorithm.RouterPoints.Count);
+            Assert.AreEqual(0, matrixAlgorithm.IndexOf(0));
+            Assert.AreEqual(1, matrixAlgorithm.IndexOf(1));
+
+            // build test case.
+            router = new RouterMock(new TagsCollection(new Tag("highway", "primary")));
+            locations = new Math.Geo.GeoCoordinate[] { 
+                    new Math.Geo.GeoCoordinate(0, 0),
+                    new Math.Geo.GeoCoordinate(1, 1) };
+            matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car, locations, (tags) =>
+            {
+                if (tags != null)
+                {
+                    return tags.ContainsKeyValue("highway", "residential");
+                }
+                return false;
+            });
+
+            // run.
+            matrixAlgorithm.Run();
+
+            Assert.IsNotNull(matrixAlgorithm);
+            Assert.IsTrue(matrixAlgorithm.HasRun);
+            Assert.IsTrue(matrixAlgorithm.HasSucceeded);
+            Assert.AreEqual(2, matrixAlgorithm.Errors.Count);
+            Assert.AreEqual(LocationErrorCode.NotResolved, matrixAlgorithm.Errors[0].Code);
+            Assert.AreEqual(LocationErrorCode.NotResolved, matrixAlgorithm.Errors[1].Code);
         }
     }
 }

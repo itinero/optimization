@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Routers;
@@ -28,20 +29,32 @@ namespace OsmSharp.Logistics.Routing
     /// <summary>
     /// An algorithm to calculate a weight-matrix for a set of locations.
     /// </summary>
-    public class WeightMatrixAlgorithm : Algorithm, OsmSharp.Logistics.Routing.IWeightMatrixAlgorithm
+    public class WeightMatrixAlgorithm : Algorithm, OsmSharp.Logistics.Routing.IWeightMatrixAlgorithm, IEdgeMatcher
     {
         private readonly ITypedRouter _router;
         private readonly Vehicle _vehicle;
         private readonly GeoCoordinate[] _locations;
+        private readonly Func<TagsCollectionBase, bool> _matchEdge;
 
         /// <summary>
         /// Creates a new weight-matrix algorithm.
         /// </summary>
         public WeightMatrixAlgorithm(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations)
+            : this(router, vehicle, locations, null)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new weight-matrix algorithm.
+        /// </summary>
+        public WeightMatrixAlgorithm(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations,
+            Func<TagsCollectionBase, bool> matchEdge)
         {
             _router = router;
             _vehicle = vehicle;
             _locations = locations;
+            _matchEdge = matchEdge;
         }
 
         private Dictionary<int, LocationError> _errors; // all errors per original location idx.
@@ -59,7 +72,19 @@ namespace OsmSharp.Logistics.Routing
             _resolvedPointsIndices = new List<int>(_locations.Length);
 
             // resolve all locations.
-            var resolvedPoints = _router.Resolve(_vehicle, _locations);
+            var resolvedPoints = new RouterPoint[_locations.Length];
+            for(var i = 0; i < _locations.Length; i++)
+            {
+                if(_matchEdge != null)
+                { // use an edge-matcher.
+                    resolvedPoints[i] = _router.Resolve(_vehicle, _locations[i], this,
+                        new TagsCollection(new Tag(string.Empty, string.Empty)));
+                }
+                else
+                { // don't use an edge-matcher.
+                    resolvedPoints[i] = _router.Resolve(_vehicle, _locations[i], false);
+                }
+            }
 
             // remove all points that could not be resolved.
             for(var i = 0; i < resolvedPoints.Length; i++)
@@ -168,6 +193,15 @@ namespace OsmSharp.Logistics.Routing
 
                 return _errors;
             }
+        }
+
+        /// <summary>
+        /// Matches an edge.
+        /// </summary>
+        /// <returns></returns>
+        bool IEdgeMatcher.MatchWithEdge(Vehicle vehicle, TagsCollectionBase pointTags, TagsCollectionBase edgeTags)
+        {
+            return _matchEdge(edgeTags);
         }
     }
 
