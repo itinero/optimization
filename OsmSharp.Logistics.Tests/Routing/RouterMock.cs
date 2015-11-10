@@ -19,13 +19,12 @@
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Routers;
-using OsmSharp.Routing.Vehicles;
+using OsmSharp.Routing.Osm.Vehicles;
 using System.Collections.Generic;
 
 namespace OsmSharp.Logistics.Tests.Routing
 {
-    class RouterMock : ITypedRouter
+    class RouterMock : IRouter
     {
         private long _resolvedId = 0;
         private HashSet<int> _invalidSet = new HashSet<int>();
@@ -46,164 +45,75 @@ namespace OsmSharp.Logistics.Tests.Routing
             _matchingTags = matchingTags;
         }
 
-        public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, 
-            float max = 3.40282e+038f, bool geometryOnly = false)
-        {
-            var route = new Route();
-            route.Segments = new RouteSegment[2];
-            route.Segments[0] = new RouteSegment()
-            {
-                Latitude = (float)source.Location.Latitude,
-                Longitude = (float)source.Location.Longitude,
-                Type = RouteSegmentType.Start,
-                Vehicle = vehicle.UniqueName
-            };
-            route.Segments[1] = new RouteSegment()
-            {
-                Latitude = (float)target.Location.Latitude,
-                Longitude = (float)target.Location.Longitude,
-                Type = RouteSegmentType.Stop,
-                Vehicle = vehicle.UniqueName
-            };
-            route.Vehicle = vehicle.UniqueName;
-            return route;
-        }
-
-        public Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, float max = 3.40282e+038f, bool geometryOnly = false)
+        public Result<Route[][]> TryCalculate(OsmSharp.Routing.Profiles.Profile profile, RouterPoint[] sources, RouterPoint[] targets, ISet<int> invalidSources, ISet<int> invalidTargets)
         {
             throw new System.NotImplementedException();
         }
 
-        public double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, HashSet<int> invalidSet)
+        public Result<Route> TryCalculate(OsmSharp.Routing.Profiles.Profile profile, RouterPoint source, RouterPoint target)
         {
-            var weights = new double[sources.Length][];
-            for(var s = 0; s < sources.Length; s++)
+            var route = new Route();
+            route.Segments = new List<RouteSegment>(2);
+            route.Segments.Add(new RouteSegment()
             {
-                weights[s] = new double[targets.Length];
+                Latitude = (float)source.Latitude,
+                Longitude = (float)source.Longitude,
+                Profile = profile.Name
+            });
+            route.Segments.Add(new RouteSegment()
+            {
+                Latitude = (float)target.Latitude,
+                Longitude = (float)target.Longitude,
+                Profile = profile.Name
+            });
+            return new Result<Route>(route);
+        }
+
+        public Result<float[][]> TryCalculateWeight(OsmSharp.Routing.Profiles.Profile profile, 
+            RouterPoint[] sources, RouterPoint[] targets, ISet<int> invalidSources, ISet<int> invalidTargets)
+        {
+            var weights = new float[sources.Length][];
+            for (var s = 0; s < sources.Length; s++)
+            {
+                weights[s] = new float[targets.Length];
                 for (var t = 0; t < sources.Length; t++)
                 {
-                    weights[s][t] = sources[s].Location.DistanceReal(targets[t].Location).Value;
+                    weights[s][t] = (float)(new GeoCoordinate(sources[s].Latitude, 
+                        sources[s].Longitude)).DistanceReal(
+                            (new GeoCoordinate(targets[t].Latitude, 
+                                targets[t].Longitude))).Value;
                 }
             }
 
-            foreach(var invalid in _invalidSet)
+            foreach (var invalid in _invalidSet)
             {
-                invalidSet.Add(invalid);
+                invalidSources.Add(invalid);
+                invalidTargets.Add(invalid);
             }
 
-            return weights;
+            return new Result<float[][]>(weights);
         }
 
-        public Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = 3.40282e+038f, bool geometryOnly = false)
+        public Result<float> TryCalculateWeight(OsmSharp.Routing.Profiles.Profile profile, RouterPoint source, RouterPoint target)
         {
             throw new System.NotImplementedException();
         }
 
-        public double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, HashSet<int> invalidSet)
+        public Result<bool> TryCheckConnectivity(OsmSharp.Routing.Profiles.Profile profile, RouterPoint point, float radiusInMeters)
         {
             throw new System.NotImplementedException();
         }
 
-        public System.Collections.Generic.HashSet<Math.Geo.GeoCoordinate> CalculateRange(Vehicle vehicle, RouterPoint orgine, float weight)
+        public Result<RouterPoint> TryResolve(OsmSharp.Routing.Profiles.Profile[] profiles, 
+            float latitude, float longitude, System.Func<OsmSharp.Routing.Network.RoutingEdge, bool> isBetter)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = 3.40282e+038f, bool geometryOnly = false)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public double CalculateWeight(Vehicle vehicle, RouterPoint source, RouterPoint target)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool[] CheckConnectivity(Vehicle vehicle, RouterPoint[] point, float weight)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool CheckConnectivity(Vehicle vehicle, RouterPoint point, float weight)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool IsCalculateRangeSupported
-        {
-            get { throw new System.NotImplementedException(); }
-        }
-
-        public RouterPoint[] Resolve(Vehicle vehicle, float delta, Math.Geo.GeoCoordinate[] coordinates, IEdgeMatcher matcher, Collections.Tags.TagsCollectionBase[] matchingTags)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public RouterPoint[] Resolve(Vehicle vehicle, Math.Geo.GeoCoordinate[] coordinates, IEdgeMatcher matcher, Collections.Tags.TagsCollectionBase[] matchingTags)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public RouterPoint[] Resolve(Vehicle vehicle, float delta, Math.Geo.GeoCoordinate[] coordinate)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinates)
-        {
-            var result = new RouterPoint[coordinates.Length];
-            for (var idx = 0; idx < coordinates.Length; idx++)
-            {
-                result[idx] = this.Resolve(vehicle, 0, coordinates[idx]);
-            }
-            return result;
-        }
-
-        public RouterPoint Resolve(Vehicle vehicle, float delta, Math.Geo.GeoCoordinate coordinate, IEdgeMatcher matcher, Collections.Tags.TagsCollectionBase matchingTags)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public RouterPoint Resolve(Vehicle vehicle, Math.Geo.GeoCoordinate coordinate, IEdgeMatcher matcher, Collections.Tags.TagsCollectionBase matchingTags)
-        {
-            if (matcher.MatchWithEdge(vehicle, null, _matchingTags))
-            {
-                return this.Resolve(vehicle, 0, coordinate);
-            }
-            return null;
-        }
-
-        public RouterPoint Resolve(Vehicle vehicle, float delta, Math.Geo.GeoCoordinate coordinate)
-        {
-            if(coordinate.Latitude < -90 ||
-                coordinate.Latitude > 90 ||
-                coordinate.Longitude < -180 ||
-                coordinate.Longitude > 180)
+            if (latitude < -90 || latitude > 90 ||
+                longitude < -180 || longitude > 180)
             {
                 return null;
             }
             _resolvedId++;
-            return new RouterPoint(_resolvedId, vehicle, coordinate);
-        }
-
-        public RouterPoint Resolve(Vehicle vehicle, Math.Geo.GeoCoordinate coordinate, bool verticesOnly)
-        {
-            return this.Resolve(vehicle, 0, coordinate);
-        }
-
-        public Math.Geo.GeoCoordinate Search(Vehicle vehicle, float delta, Math.Geo.GeoCoordinate coordinate)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Math.Geo.GeoCoordinate Search(Vehicle vehicle, Math.Geo.GeoCoordinate coordinate)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool SupportsVehicle(Vehicle vehicle)
-        {
-            throw new System.NotImplementedException();
+            return new Result<RouterPoint>(new RouterPoint(latitude, longitude, 0, 0));
         }
     }
 }

@@ -22,8 +22,8 @@ using OsmSharp.Logistics.Solvers;
 using OsmSharp.Logistics.Solvers.GA;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Routers;
-using OsmSharp.Routing.Vehicles;
+using OsmSharp.Routing.Algorithms;
+using OsmSharp.Routing.Profiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,8 +36,8 @@ namespace OsmSharp.Logistics.Routing.TSP
     public class TSPRouter : RoutingAlgorithmBase, OsmSharp.Logistics.Routing.TSP.ITSPRouter
     {
         private readonly ISolver<ITSP, ITSPObjective, OsmSharp.Logistics.Routes.IRoute> _solver;
-        private readonly ITypedRouter _router;
-        private readonly Vehicle _vehicle;
+        private readonly IRouter _router;
+        private readonly Profile _profile;
         private readonly GeoCoordinate[] _locations;
         private readonly int _first;
         private readonly int? _last;
@@ -45,8 +45,8 @@ namespace OsmSharp.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with default solver and settings.
         /// </summary>
-        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first)
-            : this(router, vehicle, locations, first, null, new EAXSolver(new GASettings()
+        public TSPRouter(IRouter router, Profile profile, GeoCoordinate[] locations, int first)
+            : this(router, profile, locations, first, null, new EAXSolver(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -62,8 +62,8 @@ namespace OsmSharp.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with default solver and settings.
         /// </summary>
-        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first, int last)
-            : this(router, vehicle, locations, first, last, new EAXSolver(new GASettings()
+        public TSPRouter(IRouter router, Profile profile, GeoCoordinate[] locations, int first, int last)
+            : this(router, profile, locations, first, last, new EAXSolver(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -79,9 +79,9 @@ namespace OsmSharp.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first, int? last,
+        public TSPRouter(IRouter router, Profile profile, GeoCoordinate[] locations, int first, int? last,
             IWeightMatrixAlgorithm weightMatrixAlgorithm)
-            : this(router, vehicle, locations, first, last, new EAXSolver(new GASettings()
+            : this(router, profile, locations, first, last, new EAXSolver(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -97,9 +97,9 @@ namespace OsmSharp.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first, int? last, 
+        public TSPRouter(IRouter router, Profile profile, GeoCoordinate[] locations, int first, int? last, 
             ISolver<ITSP, ITSPObjective, OsmSharp.Logistics.Routes.IRoute> solver)
-            : this(router, vehicle, locations, first, last, solver, new WeightMatrixAlgorithm(router, vehicle, locations))
+            : this(router, profile, locations, first, last, solver, new WeightMatrixAlgorithm(router, profile, locations))
         {
 
         }
@@ -107,11 +107,11 @@ namespace OsmSharp.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, int first, int? last, 
+        public TSPRouter(IRouter router, Profile profile, GeoCoordinate[] locations, int first, int? last, 
             ISolver<ITSP, ITSPObjective, OsmSharp.Logistics.Routes.IRoute> solver, IWeightMatrixAlgorithm weightMatrixAlgorithm)
         {
             _router = router;
-            _vehicle = vehicle;
+            _profile = profile;
             _locations = locations;
             _solver = solver;
             _first = first;
@@ -207,7 +207,7 @@ namespace OsmSharp.Logistics.Routing.TSP
             Route route = null;
             foreach (var pair in _originalRoute.Pairs())
             {
-                var localRoute = _router.Calculate(_vehicle, _weightMatrixAlgorithm.RouterPoints[pair.From],
+                var localRoute = _router.Calculate(_profile, _weightMatrixAlgorithm.RouterPoints[pair.From],
                     _weightMatrixAlgorithm.RouterPoints[pair.To]);
                 if(route == null)
                 {
@@ -215,7 +215,7 @@ namespace OsmSharp.Logistics.Routing.TSP
                 }
                 else
                 {
-                    route = Route.Concatenate(route, localRoute);
+                    route = route.Concatenate(localRoute);
                 }
             }
             return route;
@@ -232,7 +232,7 @@ namespace OsmSharp.Logistics.Routing.TSP
             var routes = new List<Route>();
             foreach (var pair in _originalRoute.Pairs())
             {
-                routes.Add(_router.Calculate(_vehicle, _weightMatrixAlgorithm.RouterPoints[pair.From],
+                routes.Add(_router.Calculate(_profile, _weightMatrixAlgorithm.RouterPoints[pair.From],
                     _weightMatrixAlgorithm.RouterPoints[pair.To]));
             }
             return routes;

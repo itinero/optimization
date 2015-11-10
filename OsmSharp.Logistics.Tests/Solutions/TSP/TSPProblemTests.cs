@@ -33,9 +33,9 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         [Test]
         public void Test()
         {
-            var weights = new double[2][];
-            weights[0] = new double[] { 0, 1 };
-            weights[1] = new double[] { 1, 0 };
+            var weights = new float[2][];
+            weights[0] = new float[] { 0, 1 };
+            weights[1] = new float[] { 1, 0 };
             var first = 0;
             var last = 1;
 
@@ -64,11 +64,11 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         [Test]
         public void TestToClosed()
         {
-            var weights = new double[][] { 
-                new double[] { 0, 1, 2, 3 },
-                new double[] { 4, 0, 5, 6 },
-                new double[] { 7, 8, 0, 9 },
-                new double[] { 10, 11, 12, 0 }
+            var weights = new float[][] { 
+                new float[] { 0, 1, 2, 3 },
+                new float[] { 4, 0, 5, 6 },
+                new float[] { 7, 8, 0, 9 },
+                new float[] { 10, 11, 12, 0 }
             };
 
             // create a regular 'closed' problem with last->first and first==last.
@@ -94,11 +94,11 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
             Assert.AreEqual(12, closedProblem.Weights[3][2]);
             Assert.AreEqual(0, closedProblem.Weights[3][3]);
 
-            weights = new double[][] { 
-                new double[] { 0, 1, 2, 3 },
-                new double[] { 4, 0, 5, 6 },
-                new double[] { 7, 8, 0, 9 },
-                new double[] { 10, 11, 12, 0 }
+            weights = new float[][] { 
+                new float[] { 0, 1, 2, 3 },
+                new float[] { 4, 0, 5, 6 },
+                new float[] { 7, 8, 0, 9 },
+                new float[] { 10, 11, 12, 0 }
             };
 
             // create a regular 'open' problem with last not set and no link between last->first.
@@ -124,11 +124,11 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
             Assert.AreEqual(12, closedProblem.Weights[3][2]);
             Assert.AreEqual(0, closedProblem.Weights[3][3]);
 
-            weights = new double[][] { 
-                new double[] { 0, 1, 2, 3 },
-                new double[] { 4, 0, 5, 6 },
-                new double[] { 7, 8, 0, 9 },
-                new double[] { 10, 11, 12, 0 }
+            weights = new float[][] { 
+                new float[] { 0, 1, 2, 3 },
+                new float[] { 4, 0, 5, 6 },
+                new float[] { 7, 8, 0, 9 },
+                new float[] { 10, 11, 12, 0 }
             };
 
             // create a regular 'open' problem with last fixed and no link between last->first.
@@ -149,7 +149,6 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
             Assert.AreEqual(11, closedProblem.Weights[2][0]); // this has to be old 3->1
             Assert.AreEqual(12, closedProblem.Weights[2][1]); // this has to be old 3->2.
             Assert.AreEqual(0, closedProblem.Weights[2][2]);
-
         }
     }
 }

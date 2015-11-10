@@ -23,8 +23,8 @@ using OsmSharp.Logistics.Solutions.TSPTW.VNS;
 using OsmSharp.Logistics.Solvers;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Routers;
-using OsmSharp.Routing.Vehicles;
+using OsmSharp.Routing.Algorithms;
+using OsmSharp.Routing.Profiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,8 +37,8 @@ namespace OsmSharp.Logistics.Routing.TSPTW
     public class TSPTWRouter : RoutingAlgorithmBase, OsmSharp.Logistics.Routing.TSPTW.ITSPTWRouter
     {
         private readonly ISolver<ITSPTW, ITSPTWObjective, OsmSharp.Logistics.Routes.IRoute> _solver;
-        private readonly ITypedRouter _router;
-        private readonly Vehicle _vehicle;
+        private readonly IRouter _router;
+        private readonly Profile _profile;
         private readonly GeoCoordinate[] _locations;
         private readonly TimeWindow[] _windows;
         private readonly int _first;
@@ -47,9 +47,9 @@ namespace OsmSharp.Logistics.Routing.TSPTW
         /// <summary>
         /// Creates a new router with default solver and settings.
         /// </summary>
-        public TSPTWRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, TimeWindow[] windows, 
+        public TSPTWRouter(IRouter router, Profile profile, GeoCoordinate[] locations, TimeWindow[] windows, 
             int first)
-            : this(router, vehicle, locations, windows, first, null, new VNSSolver())
+            : this(router, profile, locations, windows, first, null, new VNSSolver())
         {
 
         }
@@ -57,9 +57,9 @@ namespace OsmSharp.Logistics.Routing.TSPTW
         /// <summary>
         /// Creates a new router with default solver and settings.
         /// </summary>
-        public TSPTWRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, TimeWindow[] windows, 
+        public TSPTWRouter(IRouter router, Profile profile, GeoCoordinate[] locations, TimeWindow[] windows, 
             int first, int last)
-            : this(router, vehicle, locations, windows, first, last, new VNSSolver())
+            : this(router, profile, locations, windows, first, last, new VNSSolver())
         {
 
         }
@@ -67,9 +67,9 @@ namespace OsmSharp.Logistics.Routing.TSPTW
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPTWRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, TimeWindow[] windows,
+        public TSPTWRouter(IRouter router, Profile profile, GeoCoordinate[] locations, TimeWindow[] windows,
             int first, int? last, ISolver<ITSPTW, ITSPTWObjective, OsmSharp.Logistics.Routes.IRoute> solver)
-            : this(router, vehicle, locations, windows, first, last, solver, new WeightMatrixAlgorithm(router, vehicle, locations))
+            : this(router, profile, locations, windows, first, last, solver, new WeightMatrixAlgorithm(router, profile, locations))
         {
 
         }
@@ -77,9 +77,9 @@ namespace OsmSharp.Logistics.Routing.TSPTW
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPTWRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, TimeWindow[] windows,
+        public TSPTWRouter(IRouter router, Profile profile, GeoCoordinate[] locations, TimeWindow[] windows,
             int first, int? last, IWeightMatrixAlgorithm weightMatrixAlgorithm)
-            : this(router, vehicle, locations, windows, first, last, new VNSSolver(), weightMatrixAlgorithm)
+            : this(router, profile, locations, windows, first, last, new VNSSolver(), weightMatrixAlgorithm)
         {
 
         }
@@ -87,12 +87,12 @@ namespace OsmSharp.Logistics.Routing.TSPTW
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPTWRouter(ITypedRouter router, Vehicle vehicle, GeoCoordinate[] locations, TimeWindow[] windows, 
+        public TSPTWRouter(IRouter router, Profile profile, GeoCoordinate[] locations, TimeWindow[] windows, 
             int first, int? last, ISolver<ITSPTW, ITSPTWObjective, OsmSharp.Logistics.Routes.IRoute> solver,
             IWeightMatrixAlgorithm weightMatrixAlgorithm)
         {
             _router = router;
-            _vehicle = vehicle;
+            _profile = profile;
             _locations = locations;
             _windows = windows;
             _solver = solver;
@@ -200,7 +200,7 @@ namespace OsmSharp.Logistics.Routing.TSPTW
             Route route = null;
             foreach (var pair in _originalRoute.Pairs())
             {
-                var localRoute = _router.Calculate(_vehicle, _weightMatrixAlgorithm.RouterPoints[pair.From],
+                var localRoute = _router.Calculate(_profile, _weightMatrixAlgorithm.RouterPoints[pair.From],
                     _weightMatrixAlgorithm.RouterPoints[pair.To]);
                 if (route == null)
                 {
@@ -208,7 +208,7 @@ namespace OsmSharp.Logistics.Routing.TSPTW
                 }
                 else
                 {
-                    route = Route.Concatenate(route, localRoute);
+                    route = route.Concatenate(localRoute);
                 }
             }
             return route;
@@ -225,7 +225,7 @@ namespace OsmSharp.Logistics.Routing.TSPTW
             var routes = new List<Route>();
             foreach (var pair in _originalRoute.Pairs())
             {
-                routes.Add(_router.Calculate(_vehicle, _weightMatrixAlgorithm.RouterPoints[pair.From],
+                routes.Add(_router.Calculate(_profile, _weightMatrixAlgorithm.RouterPoints[pair.From],
                     _weightMatrixAlgorithm.RouterPoints[pair.To]));
             }
             return routes;

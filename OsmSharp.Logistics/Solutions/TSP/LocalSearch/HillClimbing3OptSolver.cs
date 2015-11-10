@@ -152,7 +152,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// Tries all 3Opt Moves for the neighbourhood of v1.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(ITSP problem, double[][] weights, IRoute route, int v1, out double delta)
+        public bool Try3OptMoves(ITSP problem, float[][] weights, IRoute route, int v1, out double delta)
         {
             // get v_2.
             var v2 = route.GetNeigbour(v1);
@@ -207,7 +207,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(ITSP problem, double[][] weights, IRoute route,
+        public bool Try3OptMoves(ITSP problem, float[][] weights, IRoute route,
             int v1, int v2, double weightV1V2,
             int v3, out double delta)
         {
@@ -227,8 +227,8 @@ namespace OsmSharp.Logistics.Solutions.TSP.LocalSearch
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(ITSP problem, double[][] weights, IRoute route,
-            int v1, int v2, int v3, double[] weightsV3, int v4, double weightV1V2PlusV3V4, double weightV1V4, out double delta)
+        public bool Try3OptMoves(ITSP problem, float[][] weights, IRoute route,
+            int v1, int v2, int v3, float[] weightsV3, int v4, double weightV1V2PlusV3V4, double weightV1V4, out double delta)
         {
             var betweenV4V1Enumerator = route.Between(v4, v1).GetEnumerator();
             if (betweenV4V1Enumerator.MoveNext())

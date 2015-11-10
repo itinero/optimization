@@ -33,11 +33,11 @@ namespace OsmSharp.Logistics.Tests.Solutions.Algorithms
         [Test]
         public void Test1Matrix4()
         {
-            var matrix = new double[][] { 
-                new double[] { 0, 1, 2, 3 },
-                new double[] { 3, 0, 1, 2 },
-                new double[] { 2, 3, 0, 1 },
-                new double[] { 1, 2, 3, 0 }};
+            var matrix = new float[][] { 
+                new float[] { 0, 1, 2, 3 },
+                new float[] { 3, 0, 1, 2 },
+                new float[] { 2, 3, 0, 1 },
+                new float[] { 1, 2, 3, 0 }};
 
             var nearest = NearestNeighboursAlgorithm.Forward(matrix, 1, 0);
             Assert.IsNotNull(nearest);
@@ -82,11 +82,11 @@ namespace OsmSharp.Logistics.Tests.Solutions.Algorithms
         [Test]
         public void Test2Matrix4()
         {
-            var matrix = new double[][] { 
-                new double[] { 0, 1, 2, 3 },
-                new double[] { 3, 0, 1, 2 },
-                new double[] { 2, 3, 0, 1 },
-                new double[] { 1, 2, 3, 0 }};
+            var matrix = new float[][] { 
+                new float[] { 0, 1, 2, 3 },
+                new float[] { 3, 0, 1, 2 },
+                new float[] { 2, 3, 0, 1 },
+                new float[] { 1, 2, 3, 0 }};
 
             var nearest = NearestNeighboursAlgorithm.Forward(matrix, 2, 0);
             Assert.IsNotNull(nearest);

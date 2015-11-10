@@ -26,6 +26,6 @@ namespace OsmSharp.Logistics.Solutions
         /// <summary>
         /// Gets the weights.
         /// </summary>
-        double[][] Weights { get; }
+        float[][] Weights { get; }
     }
 }

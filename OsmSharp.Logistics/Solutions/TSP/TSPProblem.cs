@@ -30,7 +30,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// <summary>
         /// Creates a new TSP 'open' TSP with only a start customer.
         /// </summary>
-        public TSPProblem(int first, double[][] weights)
+        public TSPProblem(int first, float[][] weights)
         {
             this.First = first;
             this.Last = null;
@@ -45,7 +45,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// <summary>
         /// Creates a new TSP, 'closed' when first equals last.
         /// </summary>
-        public TSPProblem(int first, int last, double[][] weights)
+        public TSPProblem(int first, int last, float[][] weights)
         {
             this.First = first;
             this.Last = last;
@@ -83,7 +83,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
         /// <summary>
         /// Gets the weights.
         /// </summary>
-        public double[][] Weights
+        public float[][] Weights
         {
             get;
             protected set;
@@ -222,7 +222,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
             }
             else if(this.First != this.Last)
             { // 'open' problem but with fixed weights.
-                var weights = new double[this.Weights.Length - 1][];
+                var weights = new float[this.Weights.Length - 1][];
                 for (var x = 0; x < this.Weights.Length; x++)
                 {
                     if (x == this.Last)
@@ -235,7 +235,7 @@ namespace OsmSharp.Logistics.Solutions.TSP
                         xNew = xNew - 1;
                     }
 
-                    weights[xNew] = new double[this.Weights[x].Length - 1];
+                    weights[xNew] = new float[this.Weights[x].Length - 1];
 
                     for (var y = 0; y < this.Weights[x].Length; y++)
                     {

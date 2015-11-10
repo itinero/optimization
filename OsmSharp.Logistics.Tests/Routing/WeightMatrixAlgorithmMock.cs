@@ -20,6 +20,7 @@ using OsmSharp.Logistics.Routing;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using OsmSharp.Routing.Algorithms;
 
 namespace OsmSharp.Logistics.Tests.Routing
 {
@@ -62,7 +63,7 @@ namespace OsmSharp.Logistics.Tests.Routing
             set;
         }
 
-        public double[][] Weights
+        public float[][] Weights
         {
             get;
             set;

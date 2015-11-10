@@ -35,10 +35,10 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Clustering
         {
             // build a default matrix.
             var defaultWeight = 60;
-            var weights = new double[4][];
+            var weights = new float[4][];
             for(var x = 0; x < weights.Length; x++)
             {
-                weights[x] = new double[weights.Length];
+                weights[x] = new float[weights.Length];
                 for(var y = 0; y < weights[x].Length; y++)
                 {
                     weights[x][y] = defaultWeight;
@@ -83,10 +83,10 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Clustering
         {
             // build a default matrix.
             var defaultWeight = 60;
-            var weights = new double[4][];
+            var weights = new float[4][];
             for (var x = 0; x < weights.Length; x++)
             {
-                weights[x] = new double[weights.Length];
+                weights[x] = new float[weights.Length];
                 for (var y = 0; y < weights[x].Length; y++)
                 {
                     weights[x][y] = defaultWeight;
@@ -131,10 +131,10 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP.Clustering
             // build a default matrix.
             var defaultWeight = 60;
             var size = 10;
-            var weights = new double[size][];
+            var weights = new float[size][];
             for (var x = 0; x < weights.Length; x++)
             {
-                weights[x] = new double[weights.Length];
+                weights[x] = new float[weights.Length];
                 for (var y = 0; y < weights[x].Length; y++)
                 {
                     weights[x][y] = defaultWeight;

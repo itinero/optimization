@@ -27,14 +27,14 @@ namespace OsmSharp.Logistics.Solutions.Algorithms
     /// </summary>
     public class NearestNeighboursAlgorithm : Algorithm
     {
-        private readonly double[][] _weights;
+        private readonly float[][] _weights;
         private readonly int _n;
         private readonly int _customer;
 
         /// <summary>
         /// Creates an instance of the nearest neighbour algorithm.
         /// </summary>
-        public NearestNeighboursAlgorithm(double[][] weights, int n, int customer)
+        public NearestNeighboursAlgorithm(float[][] weights, int n, int customer)
         {
             _weights = weights;
             _n = n;
@@ -62,7 +62,7 @@ namespace OsmSharp.Logistics.Solutions.Algorithms
         /// Calculates then n-nearest neighbours in a forward-direction only.
         /// </summary>
         /// <returns></returns>
-        public static INearestNeighbours Forward(double[][] weights, int n, int customer)
+        public static INearestNeighbours Forward(float[][] weights, int n, int customer)
         {
             var neighbours = new SortedDictionary<double, List<int>>();
             for (var current = 0; current < weights.Length; current++)
@@ -106,7 +106,7 @@ namespace OsmSharp.Logistics.Solutions.Algorithms
         /// Calculates then n-nearest neighbours in a backward-direction only.
         /// </summary>
         /// <returns></returns>
-        public static INearestNeighbours Backward(double[][] weights, int n, int customer)
+        public static INearestNeighbours Backward(float[][] weights, int n, int customer)
         {
             var neighbours = new SortedDictionary<double, List<int>>();
             for (var current = 0; current < weights.Length; current++)
@@ -150,7 +150,7 @@ namespace OsmSharp.Logistics.Solutions.Algorithms
         /// Calculates then nearest neighbours using a weight smaller than or equal to a maximum in a forward-direction only.
         /// </summary>
         /// <returns></returns>
-        public static ISortedNearestNeighbours Forward(double[][] weights, double max, int customer)
+        public static ISortedNearestNeighbours Forward(float[][] weights, double max, int customer)
         {
             var neighbours = new SortedDictionary<double, List<int>>();
             var maxFound = 0.0;
@@ -192,7 +192,7 @@ namespace OsmSharp.Logistics.Solutions.Algorithms
         /// Calculates then nearest neighbours using a weight smaller than or equal to a maximum in a backward-direction only.
         /// </summary>
         /// <returns></returns>
-        public static ISortedNearestNeighbours Backward(double[][] weights, double max, int customer)
+        public static ISortedNearestNeighbours Backward(float[][] weights, double max, int customer)
         {
             var neighbours = new SortedDictionary<double, List<int>>();
             var maxFound = 0.0;

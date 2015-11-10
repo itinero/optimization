@@ -27,14 +27,14 @@ namespace OsmSharp.Logistics.Solutions.TSP.Clustering
     /// </summary>
     public class AsymmetricClustering : Algorithm
     {
-        private readonly double _e = .1; // epsilon in seconds (diff beneath this value is considered equal).
-        private readonly double _threshold = 10; // a threshold in seconds.
-        private readonly double[][] _weights;
+        private readonly float _e = .1f; // epsilon in seconds (diff beneath this value is considered equal).
+        private readonly float _threshold = 10; // a threshold in seconds.
+        private readonly float[][] _weights;
 
         /// <summary>
         /// Creates a new instance of this algorithm.
         /// </summary>
-        public AsymmetricClustering(double[][] weights)
+        public AsymmetricClustering(float[][] weights)
         {
             _weights = weights;
         }
@@ -42,7 +42,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.Clustering
         /// <summary>
         /// Creates a new instance of this algorithm.
         /// </summary>
-        public AsymmetricClustering(double[][] weights, double threshold)
+        public AsymmetricClustering(float[][] weights, float threshold)
         {
             _threshold = threshold;
             _weights = weights;
@@ -51,7 +51,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.Clustering
         /// <summary>
         /// Creates a new instance of this algorithm.
         /// </summary>
-        public AsymmetricClustering(double[][] weights, double threshold, double e)
+        public AsymmetricClustering(float[][] weights, float threshold, float e)
         {
             _threshold = threshold;
             _e = e;
@@ -59,7 +59,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.Clustering
         }
 
         private List<List<int>> _clusters;
-        private double[][] _clusteredWeights;
+        private float[][] _clusteredWeights;
 
         /// <summary>
         /// Get the resulting clusters.
@@ -75,7 +75,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.Clustering
         /// <summary>
         /// Clustered weights.
         /// </summary>
-        public double[][] Weights
+        public float[][] Weights
         {
             get
             {
@@ -90,11 +90,11 @@ namespace OsmSharp.Logistics.Solutions.TSP.Clustering
         {
             // build initial cluster and clone weights.
             _clusters = new List<List<int>>();
-            var weights = new double[_weights.Length][];
+            var weights = new float[_weights.Length][];
             for (var i = 0; i < _weights.Length; i++)
             {
                 _clusters.Add(new List<int>(new int[] { i }));
-                weights[i] = _weights[i].Clone() as double[];
+                weights[i] = _weights[i].Clone() as float[];
             }
 
             // merge customers until no longer possible.
@@ -166,10 +166,10 @@ namespace OsmSharp.Logistics.Solutions.TSP.Clustering
             }
 
             // resize things to fit only cluster-values.
-            _clusteredWeights = new double[_clusters.Count][];
+            _clusteredWeights = new float[_clusters.Count][];
             for(var x = 0; x < _clusters.Count; x++)
             {
-                _clusteredWeights[x] = new double[_clusters.Count];
+                _clusteredWeights[x] = new float[_clusters.Count];
                 for(var y = 0; y < _clusters.Count; y++)
                 {
                     _clusteredWeights[x][y] = weights[x][y];

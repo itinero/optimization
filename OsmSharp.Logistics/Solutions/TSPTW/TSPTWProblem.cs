@@ -29,7 +29,7 @@ namespace OsmSharp.Logistics.Solutions.TSPTW
         /// <summary>
         /// Creates a new TSP 'open' TSP with only a start customer.
         /// </summary>
-        public TSPTWProblem(int first, double[][] weights, TimeWindow[] windows)
+        public TSPTWProblem(int first, float[][] weights, TimeWindow[] windows)
             : base(first, weights)
         {
             this.Windows = windows;
@@ -38,7 +38,7 @@ namespace OsmSharp.Logistics.Solutions.TSPTW
         /// <summary>
         /// Creates a new TSP, 'closed' when first equals last.
         /// </summary>
-        public TSPTWProblem(int first, int last, double[][] weights, TimeWindow[] windows)
+        public TSPTWProblem(int first, int last, float[][] weights, TimeWindow[] windows)
             : base(first, last, weights)
         {
             this.Windows = windows;
@@ -75,7 +75,7 @@ namespace OsmSharp.Logistics.Solutions.TSPTW
             }
             else if (this.First != this.Last)
             { // 'open' problem but with fixed weights.
-                var weights = new double[this.Weights.Length - 1][];
+                var weights = new float[this.Weights.Length - 1][];
                 for (var x = 0; x < this.Weights.Length; x++)
                 {
                     if (x == this.Last)
@@ -88,7 +88,7 @@ namespace OsmSharp.Logistics.Solutions.TSPTW
                         xNew = xNew - 1;
                     }
 
-                    weights[xNew] = new double[this.Weights[x].Length - 1];
+                    weights[xNew] = new float[this.Weights[x].Length - 1];
 
                     for (var y = 0; y < this.Weights[x].Length; y++)
                     {

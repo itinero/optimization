@@ -30,12 +30,12 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW
         /// <summary>
         /// Creates a new TSPTW.
         /// </summary>
-        public static ITSPTW CreateTSP(int first, int size, double defaultWeight)
+        public static ITSPTW CreateTSP(int first, int size, float defaultWeight)
         {
-            var weights = new double[size][];
+            var weights = new float[size][];
             for (int x = 0; x < size; x++)
             {
-                weights[x] = new double[size];
+                weights[x] = new float[size];
                 for (int y = 0; y < size; y++)
                 {
                     weights[x][y] = defaultWeight;
@@ -53,12 +53,12 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static ITSPTW CreateTSP(int first, int last, int size, double defaultWeight)
+        public static ITSPTW CreateTSP(int first, int last, int size, float defaultWeight)
         {
-            var weights = new double[size][];
+            var weights = new float[size][];
             for (int x = 0; x < size; x++)
             {
-                weights[x] = new double[size];
+                weights[x] = new float[size];
                 for (int y = 0; y < size; y++)
                 {
                     weights[x][y] = defaultWeight;
@@ -77,7 +77,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static ITSPTW CreateTSP(int first, double[][] weights)
+        public static ITSPTW CreateTSP(int first, float[][] weights)
         {
             var windows = new TimeWindow[weights.Length];
             for (int i = 0; i < windows.Length; i++)
@@ -92,10 +92,10 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSPTW
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static ITSPTW CreateTSP(int first, int last, double[][] weights)
+        public static ITSPTW CreateTSP(int first, int last, float[][] weights)
         {
             var windows = new TimeWindow[weights.Length];
-            for (int i = 0; i < windows.Length; i++)
+            for (var i = 0; i < windows.Length; i++)
             {
                 windows[i].Min = int.MinValue;
                 windows[i].Max = int.MaxValue;

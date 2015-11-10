@@ -29,12 +29,12 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static ITSP CreateTSP(int first, int size, double defaultWeight)
+        public static ITSP CreateTSP(int first, int size, float defaultWeight)
         {
-            var weights = new double[size][];
+            var weights = new float[size][];
             for (int x = 0; x < size; x++)
             {
-                weights[x] = new double[size];
+                weights[x] = new float[size];
                 for (int y = 0; y < size; y++)
                 {
                     weights[x][y] = defaultWeight;
@@ -50,12 +50,12 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static ITSP CreateTSP(int first, int last, int size, double defaultWeight)
+        public static ITSP CreateTSP(int first, int last, int size, float defaultWeight)
         {
-            var weights = new double[size][];
+            var weights = new float[size][];
             for (int x = 0; x < size; x++)
             {
-                weights[x] = new double[size];
+                weights[x] = new float[size];
                 for (int y = 0; y < size; y++)
                 {
                     weights[x][y] = defaultWeight;
@@ -68,7 +68,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static ITSP CreateTSP(int first, double[][] weights)
+        public static ITSP CreateTSP(int first, float[][] weights)
         {
             return new TSPProblem(first, weights);
         }
@@ -77,7 +77,7 @@ namespace OsmSharp.Logistics.Tests.Solutions.TSP
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static ITSP CreateTSP(int first, int last, double[][] weights)
+        public static ITSP CreateTSP(int first, int last, float[][] weights)
         {
             return new TSPProblem(first, last, weights);
         }

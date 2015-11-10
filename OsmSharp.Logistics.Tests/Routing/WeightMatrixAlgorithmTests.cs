@@ -18,9 +18,9 @@
 
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Logistics.Routing;
 using OsmSharp.Math.Random;
-using OsmSharp.Routing.Vehicles;
+using OsmSharp.Routing.Algorithms;
+using OsmSharp.Routing.Osm.Vehicles;
 using System.Collections.Generic;
 
 namespace OsmSharp.Logistics.Tests.Routing
@@ -44,7 +44,7 @@ namespace OsmSharp.Logistics.Tests.Routing
             var locations = new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
                     new Math.Geo.GeoCoordinate(1, 1) };
-            var matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car, locations);
+            var matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car.Fastest(), locations);
 
             // run.
             matrixAlgorithm.Run();
@@ -77,7 +77,7 @@ namespace OsmSharp.Logistics.Tests.Routing
             var locations = new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
                     new Math.Geo.GeoCoordinate(180, 1) };
-            var matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car, locations);
+            var matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car.Fastest(), locations);
 
             // run.
             matrixAlgorithm.Run();
@@ -98,7 +98,7 @@ namespace OsmSharp.Logistics.Tests.Routing
             locations = new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(180, 0),
                     new Math.Geo.GeoCoordinate(1, 1) };
-            matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car, locations);
+            matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car.Fastest(), locations);
 
             // run.
             matrixAlgorithm.Run();
@@ -131,7 +131,7 @@ namespace OsmSharp.Logistics.Tests.Routing
             var locations = new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
                     new Math.Geo.GeoCoordinate(1, 1) };
-            var matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car, locations);
+            var matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car.Fastest(), locations);
 
             // run.
             matrixAlgorithm.Run();
@@ -155,7 +155,7 @@ namespace OsmSharp.Logistics.Tests.Routing
             locations = new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
                     new Math.Geo.GeoCoordinate(1, 1) };
-            matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car, locations);
+            matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car.Fastest(), locations);
 
             // run.
             matrixAlgorithm.Run();
@@ -186,14 +186,16 @@ namespace OsmSharp.Logistics.Tests.Routing
             var locations = new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
                     new Math.Geo.GeoCoordinate(1, 1) };
-            var matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car, locations, (tags) =>
-            {
-                if(tags != null)
-                {
-                    return tags.ContainsKeyValue("highway", "residential");
-                }
-                return false;
-            });
+            var matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car.Fastest(), locations, 
+                (tags, i) =>
+                    {
+                        //if(tags != null)
+                        //{
+                        //    return tags.ContainsKeyValue("highway", "residential");
+                        //}
+                        //return false;
+                        return true;
+                    });
 
             // run.
             matrixAlgorithm.Run();
@@ -217,14 +219,16 @@ namespace OsmSharp.Logistics.Tests.Routing
             locations = new Math.Geo.GeoCoordinate[] { 
                     new Math.Geo.GeoCoordinate(0, 0),
                     new Math.Geo.GeoCoordinate(1, 1) };
-            matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car, locations, (tags) =>
-            {
-                if (tags != null)
-                {
-                    return tags.ContainsKeyValue("highway", "residential");
-                }
-                return false;
-            });
+            matrixAlgorithm = new WeightMatrixAlgorithm(router, Vehicle.Car.Fastest(), locations, 
+                (edge, i) =>
+                    {
+                        //if (tags != null)
+                        //{
+                        //    return tags.ContainsKeyValue("highway", "residential");
+                        //}
+                        //return false;
+                        return true;
+                    });
 
             // run.
             matrixAlgorithm.Run();
