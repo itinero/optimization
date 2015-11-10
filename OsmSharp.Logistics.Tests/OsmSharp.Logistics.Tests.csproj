@@ -40,24 +40,24 @@
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp, Version=0.0.0.47, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.0.0.0.47-beta\lib\net45\OsmSharp.dll</HintPath>
+    <Reference Include="OsmSharp, Version=0.0.0.48, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.0.0.0.48-beta\lib\net45\OsmSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.Osm, Version=0.0.0.47, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.0.0.0.47-beta\lib\net45\OsmSharp.Osm.dll</HintPath>
+    <Reference Include="OsmSharp.Osm, Version=0.0.0.48, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.0.0.0.48-beta\lib\net45\OsmSharp.Osm.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.Routing, Version=0.0.0.9999, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.Routing, Version=0.0.1.22, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\routing\Output\OsmSharp.Routing.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.UI, Version=0.0.0.1068, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.UI.0.0.0.1068-beta\lib\net45\OsmSharp.UI.dll</HintPath>
+    <Reference Include="OsmSharp.UI, Version=0.0.0.1081, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.UI.0.0.0.1081-beta\lib\net45\OsmSharp.UI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.WinForms.UI, Version=0.0.0.1068, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.UI.0.0.0.1068-beta\lib\net45\OsmSharp.WinForms.UI.dll</HintPath>
+    <Reference Include="OsmSharp.WinForms.UI, Version=0.0.0.1081, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.UI.0.0.0.1081-beta\lib\net45\OsmSharp.WinForms.UI.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
@@ -93,7 +93,6 @@
     <Compile Include="Routing\TSP\TSPRouterTests.cs" />
     <Compile Include="Routing\TSPTW\TSPTWRouterTests.cs" />
     <Compile Include="Routing\WeightMatrixAlgorithmMock.cs" />
-    <Compile Include="Routing\WeightMatrixAlgorithmTests.cs" />
     <Compile Include="Solutions\Algorithms\NNearestNeighboursAlgorithmTests.cs" />
     <Compile Include="Solutions\TSPTW\LocalSearch\Local1ShiftTimeWindowTests.cs" />
     <Compile Include="Solutions\TSPTW\LocalSearch\Local2OptTests.cs" />
