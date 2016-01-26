@@ -35,8 +35,11 @@ namespace OsmSharp.Logistics.Tests.Solvers.GA
         public void Test1()
         {
             // set a randomizer to control the result of the tournament selector.
-            StaticRandomGenerator.Set(new NotSoRandomGenerator(
-                new double[] { 0.6, 0.2, 0.8 }, new int[] { 0, 2, 3 }));
+            Extensions.GetGetNewRandom = () =>
+            {
+                return new NotSoRandomGenerator(
+                    new double[] { 0.6, 0.2, 0.8 }, new int[] { 0, 2, 3 });
+            };
 
             // create population and selector.
             var population = new Individual<int>[] { 

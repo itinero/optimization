@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Random;
 using System;
 using System.Collections.Generic;
 
@@ -24,12 +25,11 @@ namespace OsmSharp.Logistics.Solvers.GA
     /// <summary>
     /// A selector selecting individials using a tournament base selection.
     /// </summary>
-    /// <typeparam name="TProblem"></typeparam>
-    /// <typeparam name="TSolution"></typeparam>
     public class TournamentSelectionOperator<TProblem, TSolution> : ISelectionOperator<TProblem, TSolution>
     {
         private double _tournamentSize;
         private double _tournamentProbability;
+        private readonly IRandomGenerator _random = OsmSharp.Logistics.Extensions.GetNewRandom();
 
         /// <summary>
         /// Creates a new tournament base selector.
@@ -43,14 +43,14 @@ namespace OsmSharp.Logistics.Solvers.GA
         /// <summary>
         /// Creates a new tournament base selector.
         /// </summary>
-        /// <param name="tournamentSize"></param>
-        /// <param name="tournamentProbability"></param>
         public TournamentSelectionOperator(
             double tournamentSize,
             double tournamentProbability)
         {
             _tournamentSize = tournamentSize;
             _tournamentProbability = tournamentProbability;
+
+            _random = OsmSharp.Logistics.Extensions.GetNewRandom();
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace OsmSharp.Logistics.Solvers.GA
 
             while (tempPop.Count < tournamentSizeInt)
             { // keep looping until enough individuals are selected or until no more are available.
-                var idx = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(population.Length);
+                var idx = _random.Generate(population.Length);
                 if (exclude == null || !exclude.Contains(idx))
                 { // do not tournament excluded solutions.
                     tempPop.Add(new Tuple<int, Individual<TSolution>>(idx, population[idx]));
@@ -88,7 +88,7 @@ namespace OsmSharp.Logistics.Solvers.GA
             // choose a candidate.
             for (var idx = 0; idx < tempPop.Count; idx++)
             { // choose a candidate.
-                if (OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(1.0) < _tournamentProbability)
+                if (_random.Generate(1.0) < _tournamentProbability)
                 { // candidate choosen!
                     return tempPop[idx].Item1;
                 }

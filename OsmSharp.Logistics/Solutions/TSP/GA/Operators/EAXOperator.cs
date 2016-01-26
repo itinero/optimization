@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -19,6 +19,7 @@
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Routes.Cycles;
 using OsmSharp.Logistics.Solvers.GA;
+using OsmSharp.Math.Random;
 using System;
 using System.Collections.Generic;
 
@@ -32,6 +33,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
         private readonly int _maxOffspring;
         private readonly EdgeAssemblyCrossoverSelectionStrategyEnum _strategy;
         private readonly bool _nn;
+        private readonly IRandomGenerator _random;
 
         /// <summary>
         /// Creates a new EAX crossover.
@@ -52,6 +54,8 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
             _maxOffspring = maxOffspring;
             _strategy = strategy;
             _nn = nn;
+
+            _random = OsmSharp.Logistics.Extensions.GetNewRandom();
         }
 
         /// <summary>
@@ -105,7 +109,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
             {
                 foreach (int cycle in cycles)
                 {
-                    if (OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(1.0) > 0.25)
+                    if (_random.Generate(1.0) > 0.25)
                     {
                         starts.Add(cycle);
                     }
@@ -116,7 +120,7 @@ namespace OsmSharp.Logistics.Solutions.TSP.GA.Operators
             {
                 if (cycles.Count > 0)
                 {
-                    int idx = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(cycles.Count);
+                    int idx = _random.Generate(cycles.Count);
                     starts.Add(cycles[idx]);
                     cycles.RemoveAt(idx);
                 }

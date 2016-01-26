@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,6 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Random;
+using System;
+
 namespace OsmSharp.Logistics
 {
     /// <summary>
@@ -23,6 +26,25 @@ namespace OsmSharp.Logistics
     /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Gets a new random generator.
+        /// </summary>
+        public static IRandomGenerator GetNewRandom()
+        {
+            if(Extensions.GetGetNewRandom != null)
+            {
+                return GetGetNewRandom();
+            }
+            return new RandomGenerator();
+        }
 
+        /// <summary>
+        /// Holds a custom random genetor getter.
+        /// </summary>
+        public static Func<IRandomGenerator> GetGetNewRandom
+        {
+            get;
+            set;
+        }
     }
 }

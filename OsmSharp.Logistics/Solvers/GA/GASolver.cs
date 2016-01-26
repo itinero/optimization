@@ -31,6 +31,7 @@ namespace OsmSharp.Logistics.Solvers.GA
         private readonly ISelectionOperator<TProblem, TSolution> _selection;
         private readonly IOperator<TProblem, TObjective, TSolution> _mutation;
         private readonly GASettings _settings;
+        private readonly Random _random;
 
         /// <summary>
         /// Creates a new GA solver.
@@ -55,6 +56,8 @@ namespace OsmSharp.Logistics.Solvers.GA
             _mutation = mutation;
             _selection = selection;
             _settings = settings;
+
+            _random = new Random();
         }
 
         /// <summary>
@@ -128,8 +131,8 @@ namespace OsmSharp.Logistics.Solvers.GA
                 for (int i = elitism; i < population.Length; i++)
                 {
                     // take two random parents.
-                    var individual1 = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(crossOver);
-                    var individual2 = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(crossOver - 1);
+                    var individual1 = _random.Next(crossOver);
+                    var individual2 = _random.Next(crossOver - 1);
                     if (individual1 <= individual2)
                     { // make sure they are different.
                         individual2++;
@@ -149,7 +152,7 @@ namespace OsmSharp.Logistics.Solvers.GA
                 // mutate part of the population.
                 for (int i = elitism; i < population.Length; i++)
                 {
-                    if (OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(100) <= _settings.MutationPercentage)
+                    if (_random.Next(100) <= _settings.MutationPercentage)
                     { // ok, mutate this individual.
                         var mutatedDelta = 0.0;
                         if (_mutation.Apply(problem, objective, population[i].Solution, out mutatedDelta))

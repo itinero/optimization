@@ -18,6 +18,7 @@
 
 using OsmSharp.Logistics.Routes;
 using OsmSharp.Logistics.Solvers;
+using OsmSharp.Math.Random;
 using System;
 
 namespace OsmSharp.Logistics.Solutions.TSP.Random
@@ -28,6 +29,8 @@ namespace OsmSharp.Logistics.Solutions.TSP.Random
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere.</remarks>
     public class Random1Shift : IPerturber<ITSP, ITSPObjective, IRoute>
     {
+        private readonly IRandomGenerator _random = OsmSharp.Logistics.Extensions.GetNewRandom();
+
         /// <summary>
         /// Returns the name of the operator.
         /// </summary>
@@ -61,12 +64,11 @@ namespace OsmSharp.Logistics.Solutions.TSP.Random
         public bool Apply(ITSP problem, ITSPObjective objective, IRoute route, int level, out double difference)
         {
             difference = 0;
-            var rand = OsmSharp.Math.Random.StaticRandomGenerator.Get();
             while (level > 0)
             {
                 // remove random customer after another random customer.
-                var customer = rand.Generate(problem.Weights.Length);
-                var insert = rand.Generate(problem.Weights.Length - 1);
+                var customer = _random.Generate(problem.Weights.Length);
+                var insert = _random.Generate(problem.Weights.Length - 1);
                 if (insert >= customer)
                 { // customer is the same of after.
                     insert++;
