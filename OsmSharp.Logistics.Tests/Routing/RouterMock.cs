@@ -19,8 +19,10 @@
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Osm.Vehicles;
 using System.Collections.Generic;
+using OsmSharp.Routing.Network;
+using OsmSharp.Routing.Profiles;
+using System;
 
 namespace OsmSharp.Logistics.Tests.Routing
 {
@@ -103,9 +105,13 @@ namespace OsmSharp.Logistics.Tests.Routing
         {
             throw new System.NotImplementedException();
         }
+        
+        public bool SupportsAll(params Profile[] profiles)
+        {
+            throw new NotImplementedException();
+        }
 
-        public Result<RouterPoint> TryResolve(OsmSharp.Routing.Profiles.Profile[] profiles, 
-            float latitude, float longitude, System.Func<OsmSharp.Routing.Network.RoutingEdge, bool> isBetter)
+        public Result<RouterPoint> TryResolve(Profile[] profiles, float latitude, float longitude, Func<RoutingEdge, bool> isBetter, float searchDistanceInMeter = 50)
         {
             if (latitude < -90 || latitude > 90 ||
                 longitude < -180 || longitude > 180)
