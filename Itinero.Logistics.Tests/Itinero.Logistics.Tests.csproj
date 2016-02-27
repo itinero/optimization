@@ -7,8 +7,8 @@
     <ProjectGuid>{6A3AE5FD-7D94-45D5-BD18-D5F54531CE54}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OsmSharp.Logistics.Tests</RootNamespace>
-    <AssemblyName>OsmSharp.Logistics.Tests</AssemblyName>
+    <RootNamespace>Itinero.Logistics.Tests</RootNamespace>
+    <AssemblyName>Itinero.Logistics.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\OsmSharp.Logistics.Tests.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Itinero.Logistics.Tests.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,7 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\OsmSharp.Logistics.Tests.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Itinero.Logistics.Tests.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Itinero, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">

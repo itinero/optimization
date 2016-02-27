@@ -8,8 +8,8 @@
     <ProjectGuid>{6D3C631D-4A2A-4D56-B1E2-95EC3BCBD3D0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OsmSharp.Logistics.Routing</RootNamespace>
-    <AssemblyName>OsmSharp.Logistics.Routing</AssemblyName>
+    <RootNamespace>Itinero.Logistics.Routing</RootNamespace>
+    <AssemblyName>Itinero.Logistics.Routing</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -24,7 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\OsmSharp.Logistics.Routing.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Itinero.Logistics.Routing.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,7 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\OsmSharp.Logistics.Routing.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Itinero.Logistics.Routing.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
