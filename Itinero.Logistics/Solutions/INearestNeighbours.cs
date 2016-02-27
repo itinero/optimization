@@ -1,5 +1,5 @@
 ﻿// Itinero - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,7 +16,29 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
+using System.Collections.Generic;
 
-[assembly: AssemblyVersion("0.0.1.9999")] // semantic versioning Major.Minor.Patch.Build (9999 will be updated by CI server)
-[assembly: AssemblyInformationalVersion("Local Build Version")] // do not change this; build server replace this automatically.
+namespace Itinero.Logistics.Solutions
+{
+    /// <summary>
+    /// Abstract representation of nearest neighbours.
+    /// </summary>
+    public interface INearestNeighbours : IEnumerable<int>
+    {   
+        /// <summary>
+        /// Gets the # of nearest neighbours.
+        /// </summary>
+        int N { get; }
+
+        /// <summary>
+        /// Gets the maximum weight.
+        /// </summary>
+        double Max { get; }
+
+        /// <summary>
+        /// Determines whether this collection contains the specified element.
+        /// </summary>
+        /// <returns></returns>
+        bool Contains(int customer);
+    }
+}

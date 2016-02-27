@@ -1,5 +1,5 @@
 ﻿// Itinero - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,7 +16,32 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
-
-[assembly: AssemblyVersion("0.0.1.9999")] // semantic versioning Major.Minor.Patch.Build (9999 will be updated by CI server)
-[assembly: AssemblyInformationalVersion("Local Build Version")] // do not change this; build server replace this automatically.
+namespace Itinero.Logistics.Logging
+{
+    /// <summary>
+    /// Represents different types of trace events.
+    /// </summary>
+    public enum TraceEventType
+    {
+        /// <summary>
+        /// Critical.
+        /// </summary>
+        Critical,
+        /// <summary>
+        /// Error.
+        /// </summary>
+        Error,
+        /// <summary>
+        /// Warning.
+        /// </summary>
+        Warning,
+        /// <summary>
+        /// Verbose.
+        /// </summary>
+        Verbose,
+        /// <summary>
+        /// Information.
+        /// </summary>
+        Information
+    }
+}

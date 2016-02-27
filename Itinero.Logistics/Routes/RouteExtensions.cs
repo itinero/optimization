@@ -1,5 +1,5 @@
 ﻿// Itinero - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,7 +16,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
+using System.Collections.Generic;
 
-[assembly: AssemblyVersion("0.0.1.9999")] // semantic versioning Major.Minor.Patch.Build (9999 will be updated by CI server)
-[assembly: AssemblyInformationalVersion("Local Build Version")] // do not change this; build server replace this automatically.
+namespace Itinero.Logistics.Routes
+{
+    /// <summary>
+    /// Contains route extensions.
+    /// </summary>
+    public static class RouteExtensions
+    {
+        /// <summary>
+        /// Puts the elements of the enumerator (back) in a list.
+        /// </summary>
+        /// <returns></returns>
+        public static List<T> ToList<T>(this IEnumerator<T> enumerator)
+        {
+            var list = new List<T>();
+            while(enumerator.MoveNext())
+            {
+                list.Add(enumerator.Current);
+            }
+            return list;
+        }
+    }
+}

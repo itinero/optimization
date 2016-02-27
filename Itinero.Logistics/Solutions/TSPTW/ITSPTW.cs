@@ -1,5 +1,5 @@
 ﻿// Itinero - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,7 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
+using Itinero.Logistics.Solutions.TSP;
 
-[assembly: AssemblyVersion("0.0.1.9999")] // semantic versioning Major.Minor.Patch.Build (9999 will be updated by CI server)
-[assembly: AssemblyInformationalVersion("Local Build Version")] // do not change this; build server replace this automatically.
+namespace Itinero.Logistics.Solutions.TSPTW
+{
+    /// <summary>
+    /// Interface representing a generic TSP-problem with time windows.
+    /// </summary>
+    public interface ITSPTW : ITimeWindows, ITSP
+    {
+
+    }
+}

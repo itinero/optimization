@@ -1,5 +1,5 @@
 ﻿// Itinero - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,7 +16,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
+namespace Itinero.Logistics.Solvers.GA
+{
+    /// <summary>
+    /// Abstract representation of a crossover operation.
+    /// </summary>
+    public interface ICrossOverOperator<TProblem, TObjective, TSolution>
+    {
+        /// <summary>
+        /// Returns the name of the operator.
+        /// </summary>
+        string Name
+        {
+            get;
+        }
 
-[assembly: AssemblyVersion("0.0.1.9999")] // semantic versioning Major.Minor.Patch.Build (9999 will be updated by CI server)
-[assembly: AssemblyInformationalVersion("Local Build Version")] // do not change this; build server replace this automatically.
+        /// <summary>
+        /// Applies this operator using the given solutions and produces a new solution.
+        /// </summary>
+        /// <returns></returns>
+        TSolution Apply(TProblem problem, TObjective objective, TSolution solution1, TSolution solution2, out double fitness);
+    }
+}

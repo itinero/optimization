@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6A3AE5FD-7D94-45D5-BD18-D5F54531CE54}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OsmSharp.Logistics.Tests</RootNamespace>
+    <AssemblyName>OsmSharp.Logistics.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Output\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\Output\OsmSharp.Logistics.Tests.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Output\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\Output\OsmSharp.Logistics.Tests.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Itinero, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.0.6.1-rc1\lib\net45\Itinero.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.0.5813.39031, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Reminiscence, Version=1.0.2.41, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Reminiscence.1.0.2-rc1-0041\lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\Reminiscence.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Zlib.Portable, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zlib.Portable.1.11.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ExtraAssert.cs" />
+    <Compile Include="NotSoRandomGenerator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Routes\PairEnumerableTests.cs" />
+    <Compile Include="Routes\PermutationEnumerableTests.cs" />
+    <Compile Include="Routes\RouteTests.cs" />
+    <Compile Include="Routes\TripleEnumerableTests.cs" />
+    <Compile Include="Routing\RouterMock.cs" />
+    <Compile Include="Routing\TSPTW\TSPTWSolverMock.cs" />
+    <Compile Include="Routing\TSP\TSPRouterTests.cs" />
+    <Compile Include="Routing\TSPTW\TSPTWRouterTests.cs" />
+    <Compile Include="Routing\WeightMatrixAlgorithmMock.cs" />
+    <Compile Include="Solutions\Algorithms\NNearestNeighboursAlgorithmTests.cs" />
+    <Compile Include="Solutions\TSPTW\LocalSearch\Local1ShiftTimeWindowTests.cs" />
+    <Compile Include="Solutions\TSPTW\LocalSearch\Local2OptTests.cs" />
+    <Compile Include="Solutions\TSPTW\Objectives\FeasibleObjectiveTests.cs" />
+    <Compile Include="Solutions\TSPTW\Random\Random1ShiftTests.cs" />
+    <Compile Include="Solutions\TSPTW\TSPTWHelper.cs" />
+    <Compile Include="Solutions\TSPTW\VNS\VNDOperatorTests.cs" />
+    <Compile Include="Solutions\TSPTW\VNS\VNSSolverTests.cs" />
+    <Compile Include="Solutions\TSPTW\VNS\VNSConstructionSolverTests.cs" />
+    <Compile Include="Solutions\TSP\BruteForceSolverTests.cs" />
+    <Compile Include="Solutions\TSP\Clustering\AsymmetricClusteringSolverTests.cs" />
+    <Compile Include="Solutions\TSP\Clustering\AsymmetricClusteringTests.cs" />
+    <Compile Include="Solutions\TSP\GA\EAX\EAXSolverTests.cs" />
+    <Compile Include="Solutions\TSP\GA\Operators\EAXOperatorTests.cs" />
+    <Compile Include="Solutions\TSP\LocalSearch\ClusterMutationOperatorTests.cs" />
+    <Compile Include="Solutions\TSP\LocalSearch\HillClimbing3OptSolver.cs" />
+    <Compile Include="Solutions\TSP\LocalSearch\Local1ShiftTests.cs" />
+    <Compile Include="Solutions\TSP\LocalSearch\Local2OptTest.cs" />
+    <Compile Include="Solutions\TSP\Random\Random1ShiftTests.cs" />
+    <Compile Include="Solutions\TSP\Random\RandomSolverTests.cs" />
+    <Compile Include="Solutions\TSP\TSPHelper.cs" />
+    <Compile Include="Solutions\TSP\TSPProblemTests.cs" />
+    <Compile Include="Routing\TSP\TSPSolverMock.cs" />
+    <Compile Include="Solvers\GA\CrossOverMock.cs" />
+    <Compile Include="Solvers\GA\GASolverTests.cs" />
+    <Compile Include="Solvers\GA\SelectionMock.cs" />
+    <Compile Include="Solvers\GA\TournamentSelectionOperatorTests.cs" />
+    <Compile Include="Solvers\Iterative\IterativeSolverTest.cs" />
+    <Compile Include="Solvers\LocalSearchMock.cs" />
+    <Compile Include="Solvers\ObjectiveMock.cs" />
+    <Compile Include="Solvers\PerturberMock.cs" />
+    <Compile Include="Solvers\GeneratorMock.cs" />
+    <Compile Include="Solvers\ProblemMock.cs" />
+    <Compile Include="Solvers\SolutionMock.cs" />
+    <Compile Include="Solvers\VNS\VNSSolverTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="data\test_network.osm" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Itinero.Logistics.Routing\Itinero.Logistics.Routing.csproj">
+      <Project>{6d3c631d-4a2a-4d56-b1e2-95ec3bcbd3d0}</Project>
+      <Name>Itinero.Logistics.Routing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Itinero.Logistics\Itinero.Logistics.csproj">
+      <Project>{8f2d411d-8f8e-43ef-bd20-5700806c22de}</Project>
+      <Name>Itinero.Logistics</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

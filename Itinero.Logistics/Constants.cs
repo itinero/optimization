@@ -1,5 +1,5 @@
 ﻿// Itinero - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,7 +16,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
+namespace Itinero.Logistics
+{
+    /// <summary>
+    /// Contains constants.
+    /// </summary>
+    public static class Constants
+    {
+        /// <summary>
+        /// Holds the default not-set value for a customer entry.
+        /// </summary>
+        public const int NOT_SET = -1;
 
-[assembly: AssemblyVersion("0.0.1.9999")] // semantic versioning Major.Minor.Patch.Build (9999 will be updated by CI server)
-[assembly: AssemblyInformationalVersion("Local Build Version")] // do not change this; build server replace this automatically.
+        /// <summary>
+        /// Holds the default value indicating the end of a route.
+        /// </summary>
+        public const int END = -2;
+    }
+}
