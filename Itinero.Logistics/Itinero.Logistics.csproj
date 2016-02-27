@@ -114,20 +114,9 @@
     <Compile Include="Solvers\SolverDelegates.cs" />
     <Compile Include="Solvers\SolverObjectiveWrapper.cs" />
     <Compile Include="Solvers\VNS\VNSSolver.cs" />
-    <None Include="packages.config" />
     <None Include="README.md" />
     <Compile Include="Routes\IRoute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Itinero, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.0.6.1-rc1\lib\portable-net40+sl4+win8+wp7\Itinero.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Zlib.Portable, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Zlib.Portable.1.11.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
