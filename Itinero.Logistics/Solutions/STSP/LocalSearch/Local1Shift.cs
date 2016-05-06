@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,31 +16,46 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-namespace Itinero.Logistics.Solvers
+using Itinero.Logistics.Routes;
+using Itinero.Logistics.Solvers;
+
+namespace Itinero.Logistics.Solutions.STSP.LocalSearch
 {
     /// <summary>
-    /// Represents a heuristic/solver operator that is applied to a single instance and may lead to better/worse solution.
+    /// A local 1-Shift search for the STSP using the TSP local 1-Shift implementation.
     /// </summary>
-    public interface IOperator<TProblem, TObjective, TSolution>
+    /// <remarks>* 1-shift: Remove a customer and relocate it somewhere also called reinsertion heuristic.</remarks>
+    public class Local1Shift : IOperator<ISTSP, ISTSPObjective, IRoute>
     {
+        private readonly TSP.LocalSearch.Local1Shift _local1shift = new TSP.LocalSearch.Local1Shift();
+
         /// <summary>
         /// Returns the name of the operator.
         /// </summary>
-        string Name
+        public string Name
         {
-            get;
+            get
+            {
+                return _local1shift.Name;
+            }
         }
 
         /// <summary>
         /// Returns true if the given object is supported.
         /// </summary>
         /// <returns></returns>
-        bool Supports(TObjective objective);
+        public bool Apply(ISTSP problem, ISTSPObjective objective, IRoute solution, out double delta)
+        {
+            return _local1shift.Apply(problem.ToTSP(), objective.ToTSPObjective(), solution, out delta);
+        }
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        bool Apply(TProblem problem, TObjective objective, TSolution solution, out double delta);
+        public bool Supports(ISTSPObjective objective)
+        {
+            return _local1shift.Supports(objective.ToTSPObjective());
+        }
     }
 }

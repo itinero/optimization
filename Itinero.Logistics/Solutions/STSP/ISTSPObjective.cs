@@ -40,6 +40,16 @@ namespace Itinero.Logistics.Solutions.STSP
         double Calculate(ISTSP problem, IRoute solution);
 
         /// <summary>
+        /// Calculates only the weight of a STSP solution without taking into account the customer count.
+        /// </summary>
+        double CalculateWeight(ISTSP problem, IRoute solution);
+
+        /// <summary>
+        /// Calculates the fitness when the weight is already known.
+        /// </summary>
+        double Calculate(ISTSP problem, IRoute solution, double weight);
+
+        /// <summary>
         /// Executes the shift-after and returns the difference between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>

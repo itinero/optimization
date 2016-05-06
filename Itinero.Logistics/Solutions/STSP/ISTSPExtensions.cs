@@ -75,7 +75,7 @@ namespace Itinero.Logistics.Solutions.STSP
             }
             else
             {
-                return new Logistics.Routes.Route(new int[] { problem.First });
+                return new Logistics.Routes.Route(new int[] { problem.First }, null);
             }
         }
     }

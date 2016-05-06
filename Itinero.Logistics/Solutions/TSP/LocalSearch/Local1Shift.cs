@@ -18,8 +18,6 @@
 
 using Itinero.Logistics.Routes;
 using Itinero.Logistics.Solvers;
-using System;
-using System.Collections.Generic;
 
 namespace Itinero.Logistics.Solutions.TSP.LocalSearch
 {

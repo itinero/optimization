@@ -54,7 +54,7 @@ namespace Itinero.Logistics.Solutions.STSP
 
             public double Calculate(ITSP problem, IRoute solution)
             {
-                return _o.Calculate(problem.ToSTSP(), solution);
+                return _o.CalculateWeight(problem.ToSTSP(), solution);
             }
 
             public double IfShiftAfter(ITSP problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)

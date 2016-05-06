@@ -41,6 +41,25 @@ namespace Itinero.Logistics.Solutions.STSP
         /// </summary>
         public double Calculate(ISTSP problem, Routes.IRoute solution)
         {
+            var weight = this.CalculateWeight(problem, solution);
+            return this.Calculate(problem, solution, weight);
+        }
+
+        /// <summary>
+        /// Calculates the fitness of a given solution based on the given problem definitions.
+        /// </summary>
+        public double Calculate(ISTSP problem, Routes.IRoute solution, double weight)
+        {
+            var nonUsed = problem.Weights.Length - solution.Count;
+            weight *= nonUsed;
+            return weight;
+        }
+
+        /// <summary>
+        /// Calculates the fitness of a given solution based on the given problem definitions.
+        /// </summary>
+        public double CalculateWeight(ISTSP problem, Routes.IRoute solution)
+        {
             var fitness = 0.0;
             foreach (var pair in solution.Pairs())
             {

@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using Itinero.Logistics.Routes;
 
 namespace Itinero.Logistics.Collections
 {
@@ -92,6 +93,18 @@ namespace Itinero.Logistics.Collections
             }
             var e = _data[RandomGeneratorExtensions.GetRandom().Generate(_data.Count)];
             return e;
+        }
+
+        /// <summary>
+        /// Removes all elements in the given enumerable.
+        /// </summary>
+        public void RemoveAll(IEnumerable<T> enumerable)
+        {
+            foreach(var e in enumerable)
+            {
+                this.Remove(e);
+            }
+            _data = new List<T>(_index.Keys);
         }
 
         /// <summary>

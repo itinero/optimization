@@ -65,9 +65,13 @@
     <Compile Include="Solutions\STSP\ISTSPObjective.cs" />
     <Compile Include="Solutions\STSP\ISTSPObjectiveExtensions.cs" />
     <Compile Include="Solutions\STSP\ISTSPExtensions.cs" />
+    <Compile Include="Solutions\STSP\LocalSearch\Local1Shift.cs" />
     <Compile Include="Solutions\STSP\MinimumWeightObjective.cs" />
+    <Compile Include="Solutions\STSP\Random\RandomExchange.cs" />
     <Compile Include="Solutions\STSP\Random\RandomSolver.cs" />
     <Compile Include="Solutions\STSP\STSPProblem.cs" />
+    <Compile Include="Solutions\STSP\VNS\TSPPerturberWrapper.cs" />
+    <Compile Include="Solutions\STSP\VNS\VNSConstructionSolver.cs" />
     <Compile Include="Solutions\TimeWindow.cs" />
     <Compile Include="Solutions\TSPTW\Extensions.cs" />
     <Compile Include="Solutions\TSPTW\ITSPTW.cs" />

@@ -19,6 +19,7 @@
 using Itinero.Logistics.Algorithms;
 using Itinero.Logistics.Solutions.STSP;
 using Itinero.Logistics.Solutions.STSP.Random;
+using Itinero.Logistics.Solutions.STSP.VNS;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,10 +27,10 @@ using System.Linq;
 namespace Itinero.Logistics.Tests.Solutions.STSP.Random
 {
     /// <summary>
-    /// Contains tests for the random STSP solver.
+    /// Contains tests for VNS construction STSP solver.
     /// </summary>
     [TestFixture]
-    public class RandomSolverTests
+    public class VNSConstructionSolverTests
     {
         /// <summary>
         /// Tests the solver name.
@@ -53,9 +54,19 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
 
             // create problem.
             var problem = TSP.TSPHelper.CreateTSP(0, 10, 10).ToSTSP(60);
+            problem.Weights[0][1] = 1;
+            problem.Weights[1][2] = 1;
+            problem.Weights[2][3] = 1;
+            problem.Weights[3][4] = 1;
+            problem.Weights[4][5] = 1;
+            problem.Weights[5][6] = 1;
+            problem.Weights[6][7] = 1;
+            problem.Weights[7][8] = 1;
+            problem.Weights[8][9] = 1;
+            problem.Weights[9][0] = 1;
 
             // create the solver.
-            var solver = new RandomSolver();
+            var solver = new VNSConstructionSolver();
             var objective = new MinimumWeightObjective();
 
             for (var i = 0; i < 100; i++)
@@ -65,7 +76,7 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
                 var solution = solver.Solve(problem, objective, out fitness);
 
                 // test contents.
-                Assert.IsTrue(fitness < problem.Max * (problem.Weights.Length - solution.Count));
+                Assert.IsTrue(fitness <= problem.Max * (problem.Weights.Length - solution.Count));
                 Assert.AreEqual(problem.First, solution.First);
                 Assert.AreEqual(null, solution.Last);
             }
@@ -81,9 +92,19 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
 
             // create problem.
             var problem = TSP.TSPHelper.CreateTSP(0, 0, 10, 10).ToSTSP(60);
+            problem.Weights[0][1] = 1;
+            problem.Weights[1][2] = 1;
+            problem.Weights[2][3] = 1;
+            problem.Weights[3][4] = 1;
+            problem.Weights[4][5] = 1;
+            problem.Weights[5][6] = 1;
+            problem.Weights[6][7] = 1;
+            problem.Weights[7][8] = 1;
+            problem.Weights[8][9] = 1;
+            problem.Weights[9][0] = 1;
 
             // create the solver.
-            var solver = new RandomSolver();
+            var solver = new VNSConstructionSolver();
 
             for (int i = 0; i < 100; i++)
             {
@@ -92,7 +113,7 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
                 var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
 
                 // test contents.
-                Assert.IsTrue(fitness < problem.Max * (problem.Weights.Length - solution.Count));
+                Assert.IsTrue(fitness <= problem.Max * (problem.Weights.Length - solution.Count));
                 Assert.AreEqual(problem.First, solution.First);
                 Assert.AreEqual(problem.First, solution.Last);
             }
@@ -108,6 +129,16 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
 
             //create problem.
             var problem = TSP.TSPHelper.CreateTSP(0, 9, 10, 10).ToSTSP(60);
+            problem.Weights[0][1] = 1;
+            problem.Weights[1][2] = 1;
+            problem.Weights[2][3] = 1;
+            problem.Weights[3][4] = 1;
+            problem.Weights[4][5] = 1;
+            problem.Weights[5][6] = 1;
+            problem.Weights[6][7] = 1;
+            problem.Weights[7][8] = 1;
+            problem.Weights[8][9] = 1;
+            problem.Weights[9][0] = 1;
 
             //create the solver.
             var solver = new RandomSolver();
@@ -119,7 +150,7 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
                 var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
 
                 // test contents.
-                Assert.IsTrue(fitness < problem.Max * (problem.Weights.Length - solution.Count));
+                Assert.IsTrue(fitness <= problem.Max * (problem.Weights.Length - solution.Count));
                 Assert.AreEqual(problem.First, solution.First);
                 Assert.AreEqual(problem.Last, solution.Last);
             }

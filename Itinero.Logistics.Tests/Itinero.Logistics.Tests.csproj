@@ -74,7 +74,9 @@
     <Compile Include="Routing\TSPTW\TSPTWRouterTests.cs" />
     <Compile Include="Routing\WeightMatrixAlgorithmMock.cs" />
     <Compile Include="Solutions\Algorithms\NNearestNeighboursAlgorithmTests.cs" />
+    <Compile Include="Solutions\STSP\Random\RandomExchangeTests.cs" />
     <Compile Include="Solutions\STSP\Random\RandomSolverTests.cs" />
+    <Compile Include="Solutions\STSP\VNS\VNSConstructionSolverTests.cs" />
     <Compile Include="Solutions\TSPTW\LocalSearch\Local1ShiftTimeWindowTests.cs" />
     <Compile Include="Solutions\TSPTW\LocalSearch\Local2OptTests.cs" />
     <Compile Include="Solutions\TSPTW\Objectives\FeasibleObjectiveTests.cs" />
