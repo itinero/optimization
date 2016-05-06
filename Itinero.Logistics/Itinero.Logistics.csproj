@@ -42,6 +42,7 @@
     <Compile Include="Algorithm.cs" />
     <Compile Include="Algorithms\IRandomGenerator.cs" />
     <Compile Include="Algorithms\RandomGenerator.cs" />
+    <Compile Include="Collections\RandomSet.cs" />
     <Compile Include="Collections\SortedDictionary.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Routes\Cycles\AsymmetricAlternatingCycles.cs" />
     <Compile Include="Routes\Cycles\AsymmetricCycles.cs" />
     <Compile Include="Routes\RouteExtensions.cs" />
+    <Compile Include="Solutions\Algorithms\CheapestInsertion.cs" />
     <Compile Include="Solutions\Algorithms\NearestNeighbours.cs" />
     <Compile Include="Solutions\Algorithms\NearestNeighboursAlgorithm.cs" />
     <Compile Include="Solutions\Algorithms\SortedNearestNeighbours.cs" />
@@ -60,6 +62,12 @@
     <Compile Include="Solutions\ISortedNearestNeighbours.cs" />
     <Compile Include="Solutions\ITimeWindows.cs" />
     <Compile Include="Solutions\STSP\ISTSP.cs" />
+    <Compile Include="Solutions\STSP\ISTSPObjective.cs" />
+    <Compile Include="Solutions\STSP\ISTSPObjectiveExtensions.cs" />
+    <Compile Include="Solutions\STSP\ISTSPExtensions.cs" />
+    <Compile Include="Solutions\STSP\MinimumWeightObjective.cs" />
+    <Compile Include="Solutions\STSP\Random\RandomSolver.cs" />
+    <Compile Include="Solutions\STSP\STSPProblem.cs" />
     <Compile Include="Solutions\TimeWindow.cs" />
     <Compile Include="Solutions\TSPTW\Extensions.cs" />
     <Compile Include="Solutions\TSPTW\ITSPTW.cs" />

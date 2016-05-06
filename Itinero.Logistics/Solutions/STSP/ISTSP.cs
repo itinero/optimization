@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -21,8 +21,57 @@ namespace Itinero.Logistics.Solutions.STSP
     /// <summary>
     /// Interface representing a generic (Selective TSP) STSP-problem.
     /// </summary>
-    public interface ISTSP
+    public interface ISTSP : IMatrixWeights
     {
+        /// <summary>
+        /// Gets the maximum weight of a tour.
+        /// </summary>
+        float Max { get; }
 
+        /// <summary>
+        /// Clones this problem.
+        /// </summary>
+        /// <returns></returns>
+        object Clone();
+
+        /// <summary>
+        /// Gets the first customer.
+        /// </summary>
+        int First { get; }
+
+        /// <summary>
+        /// Gets the last customer if the problem is closed.
+        /// </summary>
+        int? Last { get; }
+
+        /// <summary>
+        /// Returns the backward n-nearest neighbours.
+        /// </summary>
+        /// <returns></returns>
+        INearestNeighbours GetNNearestNeighboursForward(int n, int customer);
+
+        /// <summary>
+        /// Returns the forward n-nearest neighbours.
+        /// </summary>
+        /// <returns></returns>
+        INearestNeighbours GetNNearestNeighboursBackward(int n, int customer);
+
+        /// <summary>
+        /// Returns the forward nearest neighbours based on weight.
+        /// </summary>
+        /// <returns>Customers are sorted based on their weight.</returns>
+        ISortedNearestNeighbours GetNearestNeighboursForward(double weight, int customer);
+
+        /// <summary>
+        /// Returns the backward nearest neighbours based on weight.
+        /// </summary>
+        /// <returns>Customers are sorted based on their weight.</returns>
+        ISortedNearestNeighbours GetNearestNeighboursBackward(double weight, int customer);
+
+        /// <summary>
+        /// Returns an equivalent closed version.
+        /// </summary>
+        /// <returns></returns>
+        ISTSP ToClosed();
     }
 }

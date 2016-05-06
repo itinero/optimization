@@ -38,5 +38,14 @@ namespace Itinero.Logistics.Routes
             }
             return list;
         }
+
+        /// <summary>
+        /// Returns true if the given route is closed.
+        /// </summary>
+        public static bool IsClosed(this IRoute route)
+        {
+            return route.Last.HasValue &&
+                route.Last.Value == route.First;
+        }
     }
 }
