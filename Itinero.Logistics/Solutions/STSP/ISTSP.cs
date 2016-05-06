@@ -16,26 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-namespace Itinero.Logistics.Algorithms
+namespace Itinero.Logistics.Solutions.STSP
 {
     /// <summary>
-    /// A representation of generic random generator functions
+    /// Interface representing a generic (Selective TSP) STSP-problem.
     /// </summary>
-    public interface IRandomGenerator
+    public interface ISTSP
     {
-        /// <summary>
-        /// Generates a random integer
-        /// </summary>
-        int Generate(int max);
 
-        /// <summary>
-        /// Generates a random double
-        /// </summary>
-        double Generate(double max);
-
-        /// <summary>
-        /// Sets the seed of the static generator.
-        /// </summary>
-        void Generate(byte[] buffer);
     }
 }

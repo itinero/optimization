@@ -59,6 +59,7 @@
     <Compile Include="Solutions\IMatrixWeights.cs" />
     <Compile Include="Solutions\ISortedNearestNeighbours.cs" />
     <Compile Include="Solutions\ITimeWindows.cs" />
+    <Compile Include="Solutions\STSP\ISTSP.cs" />
     <Compile Include="Solutions\TimeWindow.cs" />
     <Compile Include="Solutions\TSPTW\Extensions.cs" />
     <Compile Include="Solutions\TSPTW\ITSPTW.cs" />
