@@ -1,5 +1,5 @@
 ﻿// Itinero - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -18,5 +18,5 @@
 
 using System.Reflection;
 
-[assembly: AssemblyVersion("0.0.1")]
-[assembly: AssemblyInformationalVersion("0.0.1-alpha")]
+[assembly: AssemblyVersion("0.0.2")]
+[assembly: AssemblyInformationalVersion("0.0.2-alpha")]

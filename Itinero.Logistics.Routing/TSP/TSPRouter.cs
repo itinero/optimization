@@ -223,6 +223,23 @@ namespace Itinero.Logistics.Routing.TSP
         /// Builds the result route in segments divided by routes between customers.
         /// </summary>
         /// <returns></returns>
+        public List<Result<Route>> TryBuildRoutes()
+        {
+            this.CheckHasRunAndHasSucceeded();
+
+            var routes = new List<Result<Route>>();
+            foreach (var pair in _originalRoute.Pairs())
+            {
+                routes.Add(_router.TryCalculate(_profile, _weightMatrixAlgorithm.RouterPoints[pair.From],
+                    _weightMatrixAlgorithm.RouterPoints[pair.To]));
+            }
+            return routes;
+        }
+
+        /// <summary>
+        /// Builds the result route in segments divided by routes between customers.
+        /// </summary>
+        /// <returns></returns>
         public List<Route> BuildRoutes()
         {
             this.CheckHasRunAndHasSucceeded();
@@ -230,8 +247,17 @@ namespace Itinero.Logistics.Routing.TSP
             var routes = new List<Route>();
             foreach (var pair in _originalRoute.Pairs())
             {
-                routes.Add(_router.Calculate(_profile, _weightMatrixAlgorithm.RouterPoints[pair.From],
-                    _weightMatrixAlgorithm.RouterPoints[pair.To]));
+                var from = _weightMatrixAlgorithm.RouterPoints[pair.From];
+                var to = _weightMatrixAlgorithm.RouterPoints[pair.To];
+
+                var result = _router.TryCalculate(_profile, from, to);
+                if (result.IsError)
+                {
+                    throw new Itinero.Exceptions.RouteNotFoundException(
+                        string.Format("Part of the TSP-route was not found: {0}[{1}] -> {2}[{3}] - {4}.",
+                            pair.From, from, pair.To, to, result.ErrorMessage));
+                }
+                routes.Add(result.Value);
             }
             return routes;
         }
