@@ -17,11 +17,11 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using Itinero.Network;
 using Itinero.Profiles;
 using System;
 using Itinero.Attributes;
 using Itinero.LocalGeo;
+using Itinero.Data.Network;
 
 namespace Itinero.Logistics.Tests.Routing
 {

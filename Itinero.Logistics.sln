@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itinero.Logistics.Routing",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itinero.Logistics.Tests", "Itinero.Logistics.Tests\Itinero.Logistics.Tests.csproj", "{6A3AE5FD-7D94-45D5-BD18-D5F54531CE54}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itinero.Logistics.Tests.Functional", "Itinero.Logistics.Tests.Functional\Itinero.Logistics.Tests.Functional.csproj", "{B0849939-1915-4D30-86C8-A867BA43BEB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{6A3AE5FD-7D94-45D5-BD18-D5F54531CE54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A3AE5FD-7D94-45D5-BD18-D5F54531CE54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A3AE5FD-7D94-45D5-BD18-D5F54531CE54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0849939-1915-4D30-86C8-A867BA43BEB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0849939-1915-4D30-86C8-A867BA43BEB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0849939-1915-4D30-86C8-A867BA43BEB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0849939-1915-4D30-86C8-A867BA43BEB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

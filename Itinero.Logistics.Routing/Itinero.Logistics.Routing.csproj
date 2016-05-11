@@ -44,16 +44,22 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Loops\AttractiveVertexSearch.cs" />
+    <Compile Include="Loops\LoopGenerator.cs" />
+    <Compile Include="Loops\RouterExtensions.cs" />
+    <Compile Include="Loops\VertexScoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoutingAlgorithmBase.cs" />
+    <Compile Include="STSP\ISTSPRouter.cs" />
+    <Compile Include="STSP\STSPRouter.cs" />
     <Compile Include="TSPTW\ITSPTWRouter.cs" />
     <Compile Include="TSPTW\TSPTWRouter.cs" />
     <Compile Include="TSP\ITSPRouter.cs" />
     <Compile Include="TSP\TSPRouter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Itinero, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.0.6.1-rc1\lib\portable-net40+sl4+win8+wp7\Itinero.dll</HintPath>
+    <Reference Include="Itinero, Version=0.8.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.0.8.6-rc1\lib\portable-net40+sl4+win8+wp7\Itinero.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
