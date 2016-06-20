@@ -22,10 +22,11 @@ using System;
 using Itinero.Attributes;
 using Itinero.LocalGeo;
 using Itinero.Data.Network;
+using Itinero.Algorithms.Weights;
 
 namespace Itinero.Logistics.Tests.Routing
 {
-    class RouterMock : IRouter
+    class RouterMock : RouterBase
     {
         private long _resolvedId = 0;
         private HashSet<int> _invalidSet = new HashSet<int>();
@@ -46,12 +47,20 @@ namespace Itinero.Logistics.Tests.Routing
             _matchingTags = matchingTags;
         }
 
-        public Result<Route[][]> TryCalculate(Itinero.Profiles.Profile profile, RouterPoint[] sources, RouterPoint[] targets, ISet<int> invalidSources, ISet<int> invalidTargets)
+        public override RouterDb Db
+        {
+            get
+            {
+                return new RouterDb();
+            }
+        }
+
+        public override Result<Route[][]> TryCalculate(Itinero.Profiles.Profile profile, RouterPoint[] sources, RouterPoint[] targets, ISet<int> invalidSources, ISet<int> invalidTargets)
         {
             throw new System.NotImplementedException();
         }
 
-        public Result<Route> TryCalculate(Itinero.Profiles.Profile profile, RouterPoint source, RouterPoint target)
+        public override Result<Route> TryCalculate(Itinero.Profiles.Profile profile, RouterPoint source, RouterPoint target)
         {
             var route = new Route();
             route.Shape = new Coordinate[]
@@ -75,18 +84,18 @@ namespace Itinero.Logistics.Tests.Routing
             return new Result<Route>(route);
         }
 
-        public Result<float[][]> TryCalculateWeight(Itinero.Profiles.Profile profile, 
+        public override Result<T[][]> TryCalculateWeight<T>(Itinero.Profiles.Profile profile, WeightHandler<T> weightHandler,
             RouterPoint[] sources, RouterPoint[] targets, ISet<int> invalidSources, ISet<int> invalidTargets)
         {
-            var weights = new float[sources.Length][];
+            var weights = new T[sources.Length][];
             for (var s = 0; s < sources.Length; s++)
             {
-                weights[s] = new float[targets.Length];
+                weights[s] = new T[targets.Length];
                 for (var t = 0; t < sources.Length; t++)
                 {
-                    weights[s][t] = Coordinate.DistanceEstimateInMeter(
+                    weights[s][t] = weightHandler.Calculate(0, Coordinate.DistanceEstimateInMeter(
                         new Coordinate(sources[s].Latitude, sources[s].Longitude),
-                        new Coordinate(targets[t].Latitude, targets[t].Longitude));
+                        new Coordinate(targets[t].Latitude, targets[t].Longitude)));
                 }
             }
 
@@ -96,25 +105,20 @@ namespace Itinero.Logistics.Tests.Routing
                 invalidTargets.Add(invalid);
             }
 
-            return new Result<float[][]>(weights);
+            return new Result<T[][]>(weights);
         }
 
-        public Result<float> TryCalculateWeight(Itinero.Profiles.Profile profile, RouterPoint source, RouterPoint target)
+        public override Result<T> TryCalculateWeight<T>(Itinero.Profiles.Profile profile, WeightHandler<T> weightHandler, RouterPoint source, RouterPoint target)
         {
             throw new System.NotImplementedException();
         }
 
-        public Result<bool> TryCheckConnectivity(Itinero.Profiles.Profile profile, RouterPoint point, float radiusInMeters)
+        public override Result<bool> TryCheckConnectivity(Itinero.Profiles.Profile profile, RouterPoint point, float radiusInMeters)
         {
             throw new System.NotImplementedException();
-        }
-        
-        public bool SupportsAll(params Profile[] profiles)
-        {
-            throw new NotImplementedException();
-        }
+        }        
 
-        public Result<RouterPoint> TryResolve(Profile[] profiles, float latitude, float longitude, Func<RoutingEdge, bool> isBetter, float searchDistanceInMeter = 50)
+        public override Result<RouterPoint> TryResolve(Profile[] profiles, float latitude, float longitude, Func<RoutingEdge, bool> isBetter, float searchDistanceInMeter = 50)
         {
             if (latitude < -90 || latitude > 90 ||
                 longitude < -180 || longitude > 180)

@@ -27,7 +27,7 @@ namespace Itinero.Logistics.Tests.Routing
     /// <summary>
     /// A mock of the weight matrix algorithm.
     /// </summary>
-    class WeightMatrixAlgorithmMock : IWeightMatrixAlgorithm
+    class WeightMatrixAlgorithmMock : IWeightMatrixAlgorithm<float>
     {
         private readonly List<Tuple<int, int>> _locationsAndRouterPoints;
 

@@ -34,7 +34,7 @@ namespace Itinero.Logistics.Routing.TSP
     public class TSPRouter : RoutingAlgorithmBase, Itinero.Logistics.Routing.TSP.ITSPRouter
     {
         private readonly ISolver<ITSP, ITSPObjective, Itinero.Logistics.Routes.IRoute> _solver;
-        private readonly IRouter _router;
+        private readonly RouterBase _router;
         private readonly Profile _profile;
         private readonly Coordinate[] _locations;
         private readonly int _first;
@@ -43,7 +43,7 @@ namespace Itinero.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with default solver and settings.
         /// </summary>
-        public TSPRouter(IRouter router, Profile profile, Coordinate[] locations, int first)
+        public TSPRouter(RouterBase router, Profile profile, Coordinate[] locations, int first)
             : this(router, profile, locations, first, null, new EAXSolver(new GASettings()
             {
                 CrossOverPercentage = 10,
@@ -60,7 +60,7 @@ namespace Itinero.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with default solver and settings.
         /// </summary>
-        public TSPRouter(IRouter router, Profile profile, Coordinate[] locations, int first, int last)
+        public TSPRouter(RouterBase router, Profile profile, Coordinate[] locations, int first, int last)
             : this(router, profile, locations, first, last, new EAXSolver(new GASettings()
             {
                 CrossOverPercentage = 10,
@@ -77,8 +77,8 @@ namespace Itinero.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPRouter(IRouter router, Profile profile, Coordinate[] locations, int first, int? last,
-            IWeightMatrixAlgorithm weightMatrixAlgorithm)
+        public TSPRouter(RouterBase router, Profile profile, Coordinate[] locations, int first, int? last,
+            IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
             : this(router, profile, locations, first, last, new EAXSolver(new GASettings()
             {
                 CrossOverPercentage = 10,
@@ -95,7 +95,7 @@ namespace Itinero.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPRouter(IRouter router, Profile profile, Coordinate[] locations, int first, int? last, 
+        public TSPRouter(RouterBase router, Profile profile, Coordinate[] locations, int first, int? last, 
             ISolver<ITSP, ITSPObjective, Itinero.Logistics.Routes.IRoute> solver)
             : this(router, profile, locations, first, last, solver, new WeightMatrixAlgorithm(router, profile, locations))
         {
@@ -105,8 +105,8 @@ namespace Itinero.Logistics.Routing.TSP
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPRouter(IRouter router, Profile profile, Coordinate[] locations, int first, int? last, 
-            ISolver<ITSP, ITSPObjective, Itinero.Logistics.Routes.IRoute> solver, IWeightMatrixAlgorithm weightMatrixAlgorithm)
+        public TSPRouter(RouterBase router, Profile profile, Coordinate[] locations, int first, int? last, 
+            ISolver<ITSP, ITSPObjective, Itinero.Logistics.Routes.IRoute> solver, IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
         {
             _router = router;
             _profile = profile;
@@ -119,7 +119,7 @@ namespace Itinero.Logistics.Routing.TSP
 
         private Itinero.Logistics.Routes.IRoute _route = null;
         private Itinero.Logistics.Routes.IRoute _originalRoute = null;
-        private IWeightMatrixAlgorithm _weightMatrixAlgorithm;
+        private IWeightMatrixAlgorithm<float> _weightMatrixAlgorithm;
 
         /// <summary>
         /// Executes the actual run of the algorithm.

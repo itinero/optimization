@@ -35,7 +35,7 @@ namespace Itinero.Logistics.Routing.TSPTW
     public class TSPTWRouter : RoutingAlgorithmBase, Itinero.Logistics.Routing.TSPTW.ITSPTWRouter
     {
         private readonly ISolver<ITSPTW, ITSPTWObjective, Itinero.Logistics.Routes.IRoute> _solver;
-        private readonly IRouter _router;
+        private readonly RouterBase _router;
         private readonly Profile _profile;
         private readonly Coordinate[] _locations;
         private readonly TimeWindow[] _windows;
@@ -45,7 +45,7 @@ namespace Itinero.Logistics.Routing.TSPTW
         /// <summary>
         /// Creates a new router with default solver and settings.
         /// </summary>
-        public TSPTWRouter(IRouter router, Profile profile, Coordinate[] locations, TimeWindow[] windows, 
+        public TSPTWRouter(RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, 
             int first)
             : this(router, profile, locations, windows, first, null, new VNSSolver())
         {
@@ -55,7 +55,7 @@ namespace Itinero.Logistics.Routing.TSPTW
         /// <summary>
         /// Creates a new router with default solver and settings.
         /// </summary>
-        public TSPTWRouter(IRouter router, Profile profile, Coordinate[] locations, TimeWindow[] windows, 
+        public TSPTWRouter(RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, 
             int first, int last)
             : this(router, profile, locations, windows, first, last, new VNSSolver())
         {
@@ -65,7 +65,7 @@ namespace Itinero.Logistics.Routing.TSPTW
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPTWRouter(IRouter router, Profile profile, Coordinate[] locations, TimeWindow[] windows,
+        public TSPTWRouter(RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows,
             int first, int? last, ISolver<ITSPTW, ITSPTWObjective, Itinero.Logistics.Routes.IRoute> solver)
             : this(router, profile, locations, windows, first, last, solver, new WeightMatrixAlgorithm(router, profile, locations))
         {
@@ -75,8 +75,8 @@ namespace Itinero.Logistics.Routing.TSPTW
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPTWRouter(IRouter router, Profile profile, Coordinate[] locations, TimeWindow[] windows,
-            int first, int? last, IWeightMatrixAlgorithm weightMatrixAlgorithm)
+        public TSPTWRouter(RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows,
+            int first, int? last, IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
             : this(router, profile, locations, windows, first, last, new VNSSolver(), weightMatrixAlgorithm)
         {
 
@@ -85,9 +85,9 @@ namespace Itinero.Logistics.Routing.TSPTW
         /// <summary>
         /// Creates a new router with a given solver.
         /// </summary>
-        public TSPTWRouter(IRouter router, Profile profile, Coordinate[] locations, TimeWindow[] windows, 
+        public TSPTWRouter(RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, 
             int first, int? last, ISolver<ITSPTW, ITSPTWObjective, Itinero.Logistics.Routes.IRoute> solver,
-            IWeightMatrixAlgorithm weightMatrixAlgorithm)
+            IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
         {
             _router = router;
             _profile = profile;
@@ -101,7 +101,7 @@ namespace Itinero.Logistics.Routing.TSPTW
 
         private Itinero.Logistics.Routes.IRoute _route = null;
         private Itinero.Logistics.Routes.IRoute _originalRoute = null;
-        private IWeightMatrixAlgorithm _weightMatrixAlgorithm;
+        private IWeightMatrixAlgorithm<float> _weightMatrixAlgorithm;
 
         /// <summary>
         /// Executes the actual run of the algorithm.
