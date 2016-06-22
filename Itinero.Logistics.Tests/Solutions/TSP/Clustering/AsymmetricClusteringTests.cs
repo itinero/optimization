@@ -18,6 +18,8 @@
 
 using NUnit.Framework;
 using Itinero.Logistics.Solutions.TSP.Clustering;
+using Itinero.Logistics.Weights;
+using Itinero.Logistics.Solutions.TSP;
 
 namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
 {
@@ -51,7 +53,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             weights[3][2] = 3;
 
             // execute the clustering and merge 2 and 3.
-            var clustering = new AsymmetricClustering(weights);
+            var clustering = new AsymmetricClustering<float>(new DefaultWeightHandler(), weights);
             clustering.Run();
 
             // check result.
@@ -103,7 +105,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             weights[3][1] = 6;
 
             // execute the clustering and merge 2 and 3.
-            var clustering = new AsymmetricClustering(weights);
+            var clustering = new AsymmetricClustering<float>(new DefaultWeightHandler(), weights);
             clustering.Run();
 
             // check result.
@@ -168,7 +170,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             weights[5][1] = 4;
 
             // execute the clustering and merge 2 and 3.
-            var clustering = new AsymmetricClustering(weights);
+            var clustering = new AsymmetricClustering<float>(new DefaultWeightHandler(), weights);
             clustering.Run();
 
             // check result.

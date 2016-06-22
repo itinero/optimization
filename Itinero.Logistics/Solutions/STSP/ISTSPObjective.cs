@@ -17,13 +17,15 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Logistics.Routes;
+using Itinero.Logistics.Weights;
 
 namespace Itinero.Logistics.Solutions.STSP
 {
     /// <summary>
     /// Abstract representation of a basic STSP-objective.
     /// </summary>
-    public interface ISTSPObjective
+    public interface ISTSPObjective<T>
+        where T : struct
     {
         /// <summary>
         /// Returns the name of this objective.
@@ -37,28 +39,28 @@ namespace Itinero.Logistics.Solutions.STSP
         /// Calculates the fitness of a STSP solution.
         /// </summary>
         /// <returns></returns>
-        double Calculate(ISTSP problem, IRoute solution);
+        float Calculate(ISTSP<T> problem, IRoute solution);
 
         /// <summary>
         /// Calculates only the weight of a STSP solution without taking into account the customer count.
         /// </summary>
-        double CalculateWeight(ISTSP problem, IRoute solution);
+        float CalculateWeight(ISTSP<T> problem, IRoute solution);
 
         /// <summary>
         /// Calculates the fitness when the weight is already known.
         /// </summary>
-        double Calculate(ISTSP problem, IRoute solution, double weight);
+        float Calculate(ISTSP<T> problem, IRoute solution, float weight);
 
         /// <summary>
         /// Executes the shift-after and returns the difference between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>
-        bool ShiftAfter(ISTSP problem, IRoute route, int customer, int before, out double difference);
+        bool ShiftAfter(ISTSP<T> problem, IRoute route, int customer, int before, out float difference);
 
         /// <summary>
         /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
         /// </summary>
         /// <returns></returns>
-        double IfShiftAfter(ISTSP problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter);
+        float IfShiftAfter(ISTSP<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter);
     }
 }

@@ -21,6 +21,7 @@ using Itinero.Logistics.Solutions.TSP;
 using Itinero.Logistics.Solutions.TSP.LocalSearch;
 using System.Linq;
 using Itinero.Logistics.Algorithms;
+using Itinero.Logistics.Weights;
 
 namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
 {
@@ -39,7 +40,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
             RandomGeneratorExtensions.GetGetNewRandom = () => new RandomGenerator(4541247);
 
             // create problem.
-            var objective = new MinimumWeightObjective();
+            var objective = new MinimumWeightObjective<float>();
             var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
@@ -48,7 +49,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
             problem.Weights[4][0] = 1;
 
             // solve problem.
-            var solver = new HillClimbing3OptSolver();
+            var solver = new HillClimbing3OptSolver<float>();
             var solution = solver.Solve(problem, objective);
 
             // check result.

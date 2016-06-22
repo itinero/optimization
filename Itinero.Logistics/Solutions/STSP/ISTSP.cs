@@ -21,12 +21,13 @@ namespace Itinero.Logistics.Solutions.STSP
     /// <summary>
     /// Interface representing a generic (Selective TSP) STSP-problem.
     /// </summary>
-    public interface ISTSP : IMatrixWeights
+    public interface ISTSP<T> : IMatrixWeights<T>
+        where T : struct
     {
         /// <summary>
         /// Gets the maximum weight of a tour.
         /// </summary>
-        float Max { get; }
+        T Max { get; }
 
         /// <summary>
         /// Clones this problem.
@@ -48,30 +49,30 @@ namespace Itinero.Logistics.Solutions.STSP
         /// Returns the backward n-nearest neighbours.
         /// </summary>
         /// <returns></returns>
-        INearestNeighbours GetNNearestNeighboursForward(int n, int customer);
+        INearestNeighbours<T> GetNNearestNeighboursForward(int n, int customer);
 
         /// <summary>
         /// Returns the forward n-nearest neighbours.
         /// </summary>
         /// <returns></returns>
-        INearestNeighbours GetNNearestNeighboursBackward(int n, int customer);
+        INearestNeighbours<T> GetNNearestNeighboursBackward(int n, int customer);
 
         /// <summary>
         /// Returns the forward nearest neighbours based on weight.
         /// </summary>
         /// <returns>Customers are sorted based on their weight.</returns>
-        ISortedNearestNeighbours GetNearestNeighboursForward(double weight, int customer);
+        ISortedNearestNeighbours<T> GetNearestNeighboursForward(T weight, int customer);
 
         /// <summary>
         /// Returns the backward nearest neighbours based on weight.
         /// </summary>
         /// <returns>Customers are sorted based on their weight.</returns>
-        ISortedNearestNeighbours GetNearestNeighboursBackward(double weight, int customer);
+        ISortedNearestNeighbours<T> GetNearestNeighboursBackward(T weight, int customer);
 
         /// <summary>
         /// Returns an equivalent closed version.
         /// </summary>
         /// <returns></returns>
-        ISTSP ToClosed();
+        ISTSP<T> ToClosed();
     }
 }

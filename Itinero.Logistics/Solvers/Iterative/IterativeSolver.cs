@@ -21,7 +21,8 @@ namespace Itinero.Logistics.Solvers.Iterative
     /// <summary>
     /// A solver that let's another solver try n-times and keeps the best obtained solution.
     /// </summary>
-    public class IterativeSolver<TProblem, TObjective, TSolution> : SolverBase<TProblem, TObjective, TSolution>
+    public class IterativeSolver<TWeight, TProblem, TObjective, TSolution> : SolverBase<TWeight, TProblem, TObjective, TSolution>
+        where TWeight : struct
     {
         /// <summary>
         /// The number of times to try.
@@ -31,7 +32,7 @@ namespace Itinero.Logistics.Solvers.Iterative
         /// <summary>
         /// The solver to try.
         /// </summary>
-        private ISolver<TProblem, TObjective, TSolution> _solver;
+        private ISolver<TWeight, TProblem, TObjective, TSolution> _solver;
 
         /// <summary>
         /// Holds the stop condition.
@@ -43,7 +44,7 @@ namespace Itinero.Logistics.Solvers.Iterative
         /// </summary>
         /// <param name="solver"></param>
         /// <param name="n"></param>
-        public IterativeSolver(ISolver<TProblem, TObjective, TSolution> solver, int n)
+        public IterativeSolver(ISolver<TWeight, TProblem, TObjective, TSolution> solver, int n)
         {
             _solver = solver;
             _n = n;
@@ -55,7 +56,7 @@ namespace Itinero.Logistics.Solvers.Iterative
         /// <param name="solver"></param>
         /// <param name="n"></param>
         /// <param name="stopCondition"></param>
-        public IterativeSolver(ISolver<TProblem, TObjective, TSolution> solver, int n, 
+        public IterativeSolver(ISolver<TWeight, TProblem, TObjective, TSolution> solver, int n, 
             SolverDelegates.StopConditionDelegate<TProblem, TObjective, TSolution> stopCondition)
         {
             _solver = solver;
@@ -78,15 +79,15 @@ namespace Itinero.Logistics.Solvers.Iterative
         /// <param name="objective">The objective to reach.</param>
         /// <param name="fitness">The fitness of the solution found.</param>
         /// <returns></returns>
-        public override TSolution Solve(TProblem problem, TObjective objective, out double fitness)
+        public override TSolution Solve(TProblem problem, TObjective objective, out float fitness)
         {
             var i = 0;
-            TSolution best = default(TSolution);
-            fitness = double.MaxValue;
+            var best = default(TSolution);
+            fitness = float.MaxValue;
             while (i < _n && !this.IsStopped &&
                 (_stopCondition == null || best == null || !_stopCondition.Invoke(i, problem, objective, best)))
             {
-                var nextFitness = double.MaxValue;
+                var nextFitness = float.MaxValue;
                 var nextRoute = _solver.Solve(problem, objective, out nextFitness);
                 if (nextFitness < fitness)
                 { // yep, found a better solution!

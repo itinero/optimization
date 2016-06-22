@@ -43,9 +43,9 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.Operators
             var solution2 = new Logistics.Routes.Route(new int[] { 0, 1, 3, 2, 4 }, 4);
 
             // execute crossover.
-            var crossover = new EAXOperator();
-            double fitness;
-            var result = crossover.Apply(problem, new MinimumWeightObjective(), solution1, solution2, out fitness);
+            var crossover = new EAXOperator<float>();
+            float fitness;
+            var result = crossover.Apply(problem, new MinimumWeightObjective<float>(), solution1, solution2, out fitness);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Count);
@@ -65,9 +65,9 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.Operators
             var solution2 = new Logistics.Routes.Route(new int[] { 0, 1, 3, 2, 4 }, 0);
 
             // execute crossover.
-            var crossover = new EAXOperator();
-            double fitness;
-            var result = crossover.Apply(problem, new MinimumWeightObjective(), solution1, solution2, out fitness);
+            var crossover = new EAXOperator<float>();
+            float fitness;
+            var result = crossover.Apply(problem, new MinimumWeightObjective<float>(), solution1, solution2, out fitness);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Count);
@@ -87,9 +87,9 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.Operators
             var solution2 = new Logistics.Routes.Route(new int[] { 0, 1, 3, 2, 4 }, null);
 
             // execute crossover.
-            var crossover = new EAXOperator();
-            double fitness;
-            var result = crossover.Apply(problem, new MinimumWeightObjective(), solution1, solution2, out fitness);
+            var crossover = new EAXOperator<float>();
+            float fitness;
+            var result = crossover.Apply(problem, new MinimumWeightObjective<float>(), solution1, solution2, out fitness);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(5, result.Count);

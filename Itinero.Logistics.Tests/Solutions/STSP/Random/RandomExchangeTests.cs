@@ -18,6 +18,7 @@
 
 using Itinero.Logistics.Solutions.STSP;
 using Itinero.Logistics.Solutions.STSP.Random;
+using Itinero.Logistics.Weights;
 using NUnit.Framework;
 using System.Linq;
 
@@ -40,9 +41,9 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
             var route = new Logistics.Routes.Route(new int[] { 0, 2, 3, 1, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var op = new RandomExchange();
-            var delta = 0.0;
-            var r = op.Apply(problem, new MinimumWeightObjective(), route, out delta);
+            var op = new RandomExchange<float>();
+            var delta = 0.0f;
+            var r = op.Apply(problem, new MinimumWeightObjective<float>(new DefaultWeightHandler()), route, out delta);
 
             // test result.
             if (r)

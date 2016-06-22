@@ -23,6 +23,7 @@ using Itinero.Logistics.Solutions.TSPTW;
 using Itinero.Logistics.Solutions.TSPTW.Objectives;
 using Itinero.Logistics.Solutions.TSPTW.VNS;
 using Itinero.Logistics.Solvers;
+using Itinero.Logistics.Weights;
 using Itinero.Profiles;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Itinero.Logistics.Routing.TSPTW
     /// </summary>
     public class TSPTWRouter : RoutingAlgorithmBase, Itinero.Logistics.Routing.TSPTW.ITSPTWRouter
     {
-        private readonly ISolver<ITSPTW, ITSPTWObjective, Itinero.Logistics.Routes.IRoute> _solver;
+        private readonly ISolver<float, ITSPTW<float>, ITSPTWObjective<float>, Itinero.Logistics.Routes.IRoute> _solver;
         private readonly RouterBase _router;
         private readonly Profile _profile;
         private readonly Coordinate[] _locations;
@@ -47,7 +48,7 @@ namespace Itinero.Logistics.Routing.TSPTW
         /// </summary>
         public TSPTWRouter(RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, 
             int first)
-            : this(router, profile, locations, windows, first, null, new VNSSolver())
+            : this(router, profile, locations, windows, first, null, new VNSSolver<float>())
         {
 
         }
@@ -57,7 +58,7 @@ namespace Itinero.Logistics.Routing.TSPTW
         /// </summary>
         public TSPTWRouter(RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, 
             int first, int last)
-            : this(router, profile, locations, windows, first, last, new VNSSolver())
+            : this(router, profile, locations, windows, first, last, new VNSSolver<float>())
         {
 
         }
@@ -66,7 +67,7 @@ namespace Itinero.Logistics.Routing.TSPTW
         /// Creates a new router with a given solver.
         /// </summary>
         public TSPTWRouter(RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows,
-            int first, int? last, ISolver<ITSPTW, ITSPTWObjective, Itinero.Logistics.Routes.IRoute> solver)
+            int first, int? last, ISolver<float, ITSPTW<float>, ITSPTWObjective<float>, Itinero.Logistics.Routes.IRoute> solver)
             : this(router, profile, locations, windows, first, last, solver, new WeightMatrixAlgorithm(router, profile, locations))
         {
 
@@ -77,7 +78,7 @@ namespace Itinero.Logistics.Routing.TSPTW
         /// </summary>
         public TSPTWRouter(RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows,
             int first, int? last, IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
-            : this(router, profile, locations, windows, first, last, new VNSSolver(), weightMatrixAlgorithm)
+            : this(router, profile, locations, windows, first, last, new VNSSolver<float>(), weightMatrixAlgorithm)
         {
 
         }
@@ -86,7 +87,7 @@ namespace Itinero.Logistics.Routing.TSPTW
         /// Creates a new router with a given solver.
         /// </summary>
         public TSPTWRouter(RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, 
-            int first, int? last, ISolver<ITSPTW, ITSPTWObjective, Itinero.Logistics.Routes.IRoute> solver,
+            int first, int? last, ISolver<float, ITSPTW<float>, ITSPTWObjective<float>, Itinero.Logistics.Routes.IRoute> solver,
             IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
         {
             _router = router;
@@ -146,19 +147,21 @@ namespace Itinero.Logistics.Routing.TSPTW
                     return;
                 }
 
-                _originalRoute = _solver.Solve(new TSPTWProblem(
+                _originalRoute = _solver.Solve(new TSPTWProblem<float>(
+                    new DefaultWeightHandler(),
                     _weightMatrixAlgorithm.IndexOf(first), 
                     _weightMatrixAlgorithm.IndexOf(_last.Value), 
                     _weightMatrixAlgorithm.Weights,
                     _windows),
-                        new MinimumWeightObjective());
+                        new MinimumWeightObjective<float>());
             }
             else
             { // the last customer was not set.
-                _originalRoute = _solver.Solve(new TSPTWProblem(
+                _originalRoute = _solver.Solve(new TSPTWProblem<float>(
+                    new DefaultWeightHandler(),
                     _weightMatrixAlgorithm.IndexOf(first), _weightMatrixAlgorithm.Weights,
                     _windows),
-                        new MinimumWeightObjective());
+                        new MinimumWeightObjective<float>());
             }
 
             // convert route to a route with the original location indices.

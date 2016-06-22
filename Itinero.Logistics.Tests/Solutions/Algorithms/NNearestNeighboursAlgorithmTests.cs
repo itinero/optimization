@@ -18,6 +18,7 @@
 
 using NUnit.Framework;
 using Itinero.Logistics.Solutions.Algorithms;
+using Itinero.Logistics.Weights;
 
 namespace Itinero.Logistics.Tests.Solutions.Algorithms
 {
@@ -39,7 +40,7 @@ namespace Itinero.Logistics.Tests.Solutions.Algorithms
                 new float[] { 2, 3, 0, 1 },
                 new float[] { 1, 2, 3, 0 }};
 
-            var nearest = NearestNeighboursAlgorithm.Forward(matrix, 1, 0);
+            var nearest = NearestNeighboursAlgorithm<float>.Forward(new DefaultWeightHandler(), matrix, 1, 0);
             Assert.IsNotNull(nearest);
             Assert.AreEqual(1, nearest.N);
             Assert.AreEqual(1, nearest.Max);
@@ -48,7 +49,7 @@ namespace Itinero.Logistics.Tests.Solutions.Algorithms
             Assert.IsFalse(nearest.Contains(2));
             Assert.IsFalse(nearest.Contains(3));
 
-            nearest = NearestNeighboursAlgorithm.Forward(matrix, 1, 1);
+            nearest = NearestNeighboursAlgorithm<float>.Forward(new DefaultWeightHandler(), matrix, 1, 1);
             Assert.IsNotNull(nearest);
             Assert.AreEqual(1, nearest.N);
             Assert.AreEqual(1, nearest.Max);
@@ -57,7 +58,7 @@ namespace Itinero.Logistics.Tests.Solutions.Algorithms
             Assert.IsFalse(nearest.Contains(1));
             Assert.IsFalse(nearest.Contains(3));
 
-            nearest = NearestNeighboursAlgorithm.Forward(matrix, 1, 2);
+            nearest = NearestNeighboursAlgorithm<float>.Forward(new DefaultWeightHandler(), matrix, 1, 2);
             Assert.IsNotNull(nearest);
             Assert.AreEqual(1, nearest.N);
             Assert.AreEqual(1, nearest.Max);
@@ -66,7 +67,7 @@ namespace Itinero.Logistics.Tests.Solutions.Algorithms
             Assert.IsFalse(nearest.Contains(2));
             Assert.IsFalse(nearest.Contains(1));
 
-            nearest = NearestNeighboursAlgorithm.Forward(matrix, 1, 3);
+            nearest = NearestNeighboursAlgorithm<float>.Forward(new DefaultWeightHandler(), matrix, 1, 3);
             Assert.IsNotNull(nearest);
             Assert.AreEqual(1, nearest.N);
             Assert.AreEqual(1, nearest.Max);
@@ -88,7 +89,7 @@ namespace Itinero.Logistics.Tests.Solutions.Algorithms
                 new float[] { 2, 3, 0, 1 },
                 new float[] { 1, 2, 3, 0 }};
 
-            var nearest = NearestNeighboursAlgorithm.Forward(matrix, 2, 0);
+            var nearest = NearestNeighboursAlgorithm<float>.Forward(new DefaultWeightHandler(), matrix, 2, 0);
             Assert.IsNotNull(nearest);
             Assert.AreEqual(2, nearest.N);
             Assert.AreEqual(2, nearest.Max);
@@ -97,7 +98,7 @@ namespace Itinero.Logistics.Tests.Solutions.Algorithms
             Assert.IsFalse(nearest.Contains(0));
             Assert.IsFalse(nearest.Contains(3));
 
-            nearest = NearestNeighboursAlgorithm.Forward(matrix, 2, 1);
+            nearest = NearestNeighboursAlgorithm<float>.Forward(new DefaultWeightHandler(), matrix, 2, 1);
             Assert.IsNotNull(nearest);
             Assert.AreEqual(2, nearest.N);
             Assert.AreEqual(2, nearest.Max);
@@ -106,7 +107,7 @@ namespace Itinero.Logistics.Tests.Solutions.Algorithms
             Assert.IsFalse(nearest.Contains(1));
             Assert.IsFalse(nearest.Contains(0));
 
-            nearest = NearestNeighboursAlgorithm.Forward(matrix, 2, 2);
+            nearest = NearestNeighboursAlgorithm<float>.Forward(new DefaultWeightHandler(), matrix, 2, 2);
             Assert.IsNotNull(nearest);
             Assert.AreEqual(2, nearest.N);
             Assert.AreEqual(2, nearest.Max);
@@ -115,7 +116,7 @@ namespace Itinero.Logistics.Tests.Solutions.Algorithms
             Assert.IsFalse(nearest.Contains(2));
             Assert.IsFalse(nearest.Contains(1));
 
-            nearest = NearestNeighboursAlgorithm.Forward(matrix, 2, 3);
+            nearest = NearestNeighboursAlgorithm<float>.Forward(new DefaultWeightHandler(), matrix, 2, 3);
             Assert.IsNotNull(nearest);
             Assert.AreEqual(2, nearest.N);
             Assert.AreEqual(2, nearest.Max);

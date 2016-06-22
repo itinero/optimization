@@ -21,14 +21,15 @@ namespace Itinero.Logistics.Solvers
     /// <summary>
     /// Wraps an operator and uses it as a perturber, ignoring the level-parameter.
     /// </summary>
-    public class OperatorAsPerturber<TProblem, TObjective, TSolution> : IPerturber<TProblem, TObjective, TSolution>
+    public class OperatorAsPerturber<TWeight, TProblem, TObjective, TSolution> : IPerturber<TWeight, TProblem, TObjective, TSolution>
+        where TWeight : struct
     {
-        private readonly IOperator<TProblem, TObjective, TSolution> _operator;
+        private readonly IOperator<TWeight, TProblem, TObjective, TSolution> _operator;
 
         /// <summary>
         /// Creates a new operator-as-perturber.
         /// </summary>
-        public OperatorAsPerturber(IOperator<TProblem, TObjective, TSolution> oper)
+        public OperatorAsPerturber(IOperator<TWeight, TProblem, TObjective, TSolution> oper)
         {
             _operator = oper;
         }
@@ -58,7 +59,7 @@ namespace Itinero.Logistics.Solvers
         /// <param name="solution">The solution.</param>
         /// <param name="delta">The difference in fitness, when > 0 there was an improvement and a reduction in fitness.</param>
         /// <returns></returns>
-        public bool Apply(TProblem problem, TObjective objective, TSolution solution, out double delta)
+        public bool Apply(TProblem problem, TObjective objective, TSolution solution, out float delta)
         {
             return _operator.Apply(problem, objective, solution, out delta);
         }
@@ -72,7 +73,7 @@ namespace Itinero.Logistics.Solvers
         /// <param name="level">The level.</param>
         /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        public bool Apply(TProblem problem, TObjective objective, TSolution solution, int level, out double delta)
+        public bool Apply(TProblem problem, TObjective objective, TSolution solution, int level, out float delta)
         {
             return this.Apply(problem, objective, solution, out delta);
         } 

@@ -48,9 +48,9 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 2, 3, 1, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local1Shift();
-            var delta = 0.0;
-            localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
+            var localSearch = new Local1Shift<float>();
+            var delta = 0.0f;
+            localSearch.Apply(problem, new MinimumWeightObjective<float>(), route, out delta);
 
             // test result.
             Assert.AreEqual(-27, delta);
@@ -75,9 +75,9 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 2, 3, 1, 4 }, null);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local1Shift();
-            var delta = 0.0;
-            localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
+            var localSearch = new Local1Shift<float>();
+            var delta = 0.0f;
+            localSearch.Apply(problem, new MinimumWeightObjective<float>(), route, out delta);
 
             // test result.
             Assert.AreEqual(27, delta);
@@ -102,9 +102,9 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 2, 4, 1, 3 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local1Shift();
-            var delta = 0.0;
-            localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
+            var localSearch = new Local1Shift<float>();
+            var delta = 0.0f;
+            localSearch.Apply(problem, new MinimumWeightObjective<float>(), route, out delta);
 
             // test result.
             Assert.AreEqual(-45, delta);
@@ -129,9 +129,9 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 2, 4, 1, 3 }, null);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local1Shift();
-            var delta = 0.0;
-            localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
+            var localSearch = new Local1Shift<float>();
+            var delta = 0.0f;
+            localSearch.Apply(problem, new MinimumWeightObjective<float>(), route, out delta);
 
             // test result.
             Assert.AreEqual(36, delta);

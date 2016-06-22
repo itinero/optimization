@@ -40,7 +40,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
             RandomGeneratorExtensions.GetGetNewRandom = () => new RandomGenerator(4541247);
 
             // create problem.
-            var objective = new MinimumWeightObjective();
+            var objective = new MinimumWeightObjective<float>();
             var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][1] = 0;
             problem.Weights[1][2] = 0;
@@ -50,16 +50,16 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
 
             // mutate a couple of times.
             int count = 10;
-            double delta;
+            float delta;
             while(count > 0)
             {
                 // create random solution problem.
-                var solver = new RandomSolver();
+                var solver = new RandomSolver<float>();
                 var solution = solver.Solve(problem, objective);
 
                 // apply local search.
-                var localSearch = new ClusterMutationOperator();
-                localSearch.Apply(problem, new MinimumWeightObjective(), solution, out delta);
+                var localSearch = new ClusterMutationOperator<float>();
+                localSearch.Apply(problem, new MinimumWeightObjective<float>(), solution, out delta);
 
                 Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, solution.ToArray());
 
@@ -82,16 +82,16 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
 
             // mutate a couple of times.
             int count = 10;
-            double delta;
+            float delta;
             while (count > 0)
             {
                 // create random solution problem.
-                var solver = new RandomSolver();
-                var solution = solver.Solve(problem, new MinimumWeightObjective());
+                var solver = new RandomSolver<float>();
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>());
 
                 // apply local search.
-                var localSearch = new ClusterMutationOperator();
-                localSearch.Apply(problem, new MinimumWeightObjective(), solution, out delta);
+                var localSearch = new ClusterMutationOperator<float>();
+                localSearch.Apply(problem, new MinimumWeightObjective<float>(), solution, out delta);
 
                 Assert.AreEqual(3, solution.GetNeigbour(2));
                 Assert.AreEqual(2, solution.GetNeigbour(5));

@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -23,7 +23,8 @@ namespace Itinero.Logistics.Solutions.Algorithms
     /// <summary>
     /// An enumerable containing n-nearest neighbours and some extra information like maximum weight and n.
     /// </summary>
-    public class NearestNeighbours : HashSet<int>, INearestNeighbours
+    public class NearestNeighbours<T> : HashSet<int>, INearestNeighbours<T>
+        where T : struct
     {
         /// <summary>
         /// Creates a new nearest neighbours enumerable.
@@ -47,7 +48,7 @@ namespace Itinero.Logistics.Solutions.Algorithms
         /// <summary>
         /// Gets the maximum weight of the furthest customer.
         /// </summary>
-        public double Max
+        public T Max
         {
             get;
             set;

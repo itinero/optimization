@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -26,10 +26,11 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
     /// <summary>
     /// An operator that uses best-effort to transform the route into a route that contains no edge a->b while an edge a->c with weight 0 exists.
     /// </summary>
-    public class ClusterMutationOperator : IOperator<ITSP, ITSPObjective, IRoute>
+    public class ClusterMutationOperator<T> : IOperator<T, ITSP<T>, ITSPObjective<T>, IRoute>
+        where T : struct
     {
         private Dictionary<int, int> _shouldFollow;
-        private ITSP _problem;
+        private ITSP<T> _problem;
 
         /// <summary>
         /// Returns the name of the operator.
@@ -44,18 +45,18 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// </summary>
         /// <param name="objective"></param>
         /// <returns></returns>
-        public bool Supports(ITSPObjective objective)
+        public bool Supports(ITSPObjective<T> objective)
         {
-            return objective.Name == MinimumWeightObjective.MinimumWeightObjectiveName;
+            return objective.Name == MinimumWeightObjective<T>.MinimumWeightObjectiveName;
         }
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSP problem, ITSPObjective objective, IRoute solution, out double delta)
+        public bool Apply(ITSP<T> problem, ITSPObjective<T> objective, IRoute solution, out float delta)
         {
-            if (objective.Name != MinimumWeightObjective.MinimumWeightObjectiveName) 
+            if (objective.Name != MinimumWeightObjective<T>.MinimumWeightObjectiveName) 
             { // check, because assumptions are made in this operator about the objective.
                 throw new ArgumentOutOfRangeException(string.Format("{0} cannot handle objective {1}.", this.Name, 
                     objective.Name));
@@ -69,7 +70,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
                 {
                     for(int y = 0; y < problem.Weights[x].Length; y++)
                     {
-                        if(x != y && problem.Weights[x][y] == 0)
+                        if(x != y && problem.WeightHandler.GetTime(problem.Weights[x][y]) == 0)
                         {
                             _shouldFollow[x] = y;
                         }
@@ -77,13 +78,13 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
                 }
             }
 
-            delta = 0.0;
+            delta = 0.0f;
             var weights = problem.Weights;
             foreach(var pair in _shouldFollow)
             {
                 var insert = pair.Key;
                 var customer = pair.Value;
-                double localDelta;
+                float localDelta;
                 objective.ShiftAfter(problem, solution, customer, insert, out localDelta);
                 delta = delta + localDelta;
 

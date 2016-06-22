@@ -28,7 +28,7 @@ namespace Itinero.Logistics.Tests.Solvers
         /// <summary>
         /// Gets or sets the value.
         /// </summary>
-        public double Value { get; set; }
+        public float Value { get; set; }
 
         /// <summary>
         /// Clones this solution.

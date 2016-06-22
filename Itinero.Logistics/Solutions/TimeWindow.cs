@@ -26,19 +26,19 @@ namespace Itinero.Logistics.Solutions
         /// <summary>
         /// The minimum time in seconds.
         /// </summary>
-        public double Min { get; set; }
+        public float Min { get; set; }
 
         /// <summary>
         /// The maximum time in seconds.
         /// </summary>
-        public double Max { get; set; }
+        public float Max { get; set; }
 
         /// <summary>
         /// Returns true if this window is valid at the given seconds.
         /// </summary>
         /// <param name="seconds">The time.</param>
         /// <returns></returns>
-        public bool IsValidAt(double seconds)
+        public bool IsValidAt(float seconds)
         {
             return this.Min <= seconds && this.Max >= seconds;
         }
@@ -48,7 +48,7 @@ namespace Itinero.Logistics.Solutions
         /// </summary>
         /// <param name="seconds">The time.</param>
         /// <returns></returns>
-        public double MinDiff(double seconds)
+        public float MinDiff(float seconds)
         {
             if(this.Min <= seconds && this.Max >= seconds)
             { // the time is within the window, no difference.
@@ -70,8 +70,8 @@ namespace Itinero.Logistics.Solutions
             {
                 return new TimeWindow()
                 {
-                    Max = double.MaxValue,
-                    Min = double.MinValue
+                    Max = float.MaxValue,
+                    Min = float.MinValue
                 };
             }
         }

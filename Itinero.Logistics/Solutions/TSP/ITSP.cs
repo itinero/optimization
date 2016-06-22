@@ -23,7 +23,8 @@ namespace Itinero.Logistics.Solutions.TSP
     /// <summary>
     /// Abstract representation of a TSP.
     /// </summary>
-    public interface ITSP : IMatrixWeights
+    public interface ITSP<T> : IMatrixWeights<T>
+        where T : struct
     {
         /// <summary>
         /// Clones this problem.
@@ -45,30 +46,30 @@ namespace Itinero.Logistics.Solutions.TSP
         /// Returns the backward n-nearest neighbours.
         /// </summary>
         /// <returns></returns>
-        INearestNeighbours GetNNearestNeighboursForward(int n, int customer);
+        INearestNeighbours<T> GetNNearestNeighboursForward(int n, int customer);
 
         /// <summary>
         /// Returns the forward n-nearest neighbours.
         /// </summary>
         /// <returns></returns>
-        INearestNeighbours GetNNearestNeighboursBackward(int n, int customer);
+        INearestNeighbours<T> GetNNearestNeighboursBackward(int n, int customer);
 
         /// <summary>
         /// Returns the forward nearest neighbours based on weight.
         /// </summary>
         /// <returns>Customers are sorted based on their weight.</returns>
-        ISortedNearestNeighbours GetNearestNeighboursForward(double weight, int customer);
+        ISortedNearestNeighbours<T> GetNearestNeighboursForward(T weight, int customer);
 
         /// <summary>
         /// Returns the backward nearest neighbours based on weight.
         /// </summary>
         /// <returns>Customers are sorted based on their weight.</returns>
-        ISortedNearestNeighbours GetNearestNeighboursBackward(double weight, int customer);
+        ISortedNearestNeighbours<T> GetNearestNeighboursBackward(T weight, int customer);
 
         /// <summary>
         /// Returns an equivalent closed version.
         /// </summary>
         /// <returns></returns>
-        ITSP ToClosed();
+        ITSP<T> ToClosed();
     }
 }

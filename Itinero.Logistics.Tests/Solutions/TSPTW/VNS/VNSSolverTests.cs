@@ -44,14 +44,14 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.VNS
 
             // create problem.
             var problem = TSPTWHelper.CreateTSP(0, 0, 1, 0);
-            var objective = new MinimumWeightObjective();
+            var objective = new MinimumWeightObjective<float>();
 
             // create the solver.
-            var solver = new VNSSolver();
+            var solver = new VNSSolver<float>();
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
+                float fitness;
                 var solution = solver.Solve(problem, objective, out fitness);
 
                 // test contents.
@@ -91,14 +91,14 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.VNS
                 Min = 7,
                 Max = 9
             };
-            var objective = new MinimumWeightObjective();
+            var objective = new MinimumWeightObjective<float>();
 
             // create the solver.
-            var solver = new VNSSolver();
+            var solver = new VNSSolver<float>();
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
+                float fitness;
                 var solution = solver.Solve(problem, objective, out fitness);
 
                 // test contents.
@@ -137,14 +137,14 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.VNS
                 Min = 7,
                 Max = 9
             };
-            var objective = new MinimumWeightObjective();
+            var objective = new MinimumWeightObjective<float>();
 
             // create the solver.
-            var solver = new VNSSolver();
+            var solver = new VNSSolver<float>();
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
+                float fitness;
                 var solution = solver.Solve(problem, objective, out fitness);
 
                 // test contents.

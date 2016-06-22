@@ -37,7 +37,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.Objectives
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 10);
 
             // calculate objective function.
-            var objective = new FeasibleObjective();
+            var objective = new FeasibleObjective<float>();
             Assert.AreEqual(0, objective.Calculate(problem, new Logistics.Routes.Route(new int[] { 0, 1, 2, 3, 4})));
         }
 
@@ -71,7 +71,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.Objectives
             };
 
             // calculate objective function.
-            var objective = new FeasibleObjective();
+            var objective = new FeasibleObjective<float>();
             Assert.AreEqual(0, objective.Calculate(problem, new Logistics.Routes.Route(new int[] { 0, 1, 2, 3, 4 })));
         }
 
@@ -105,7 +105,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.Objectives
             };
 
             // calculate objective function.
-            var objective = new FeasibleObjective();
+            var objective = new FeasibleObjective<float>();
             Assert.AreEqual(1, objective.Calculate(problem, new Logistics.Routes.Route(new int[] { 0, 1, 2, 3, 4 })));
         }
 
@@ -139,7 +139,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.Objectives
             };
 
             // calculate objective function.
-            var objective = new FeasibleObjective();
+            var objective = new FeasibleObjective<float>();
             Assert.AreEqual(0, objective.Calculate(problem, new Logistics.Routes.Route(new int[] { 0, 1, 2, 3, 4 })));
         }
     }

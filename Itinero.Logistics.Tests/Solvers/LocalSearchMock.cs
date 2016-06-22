@@ -23,7 +23,7 @@ namespace Itinero.Logistics.Tests.Solvers
     /// <summary>
     /// A mockup of a local search procedure for a very simple problem, reduce a number to zero.
     /// </summary>
-    class LocalSearchMock : IOperator<ProblemMock, ObjectiveMock, SolutionMock>
+    class LocalSearchMock : IOperator<float, ProblemMock, ObjectiveMock, SolutionMock>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -46,13 +46,13 @@ namespace Itinero.Logistics.Tests.Solvers
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ProblemMock problem, ObjectiveMock objective, SolutionMock solution, out double delta)
+        public bool Apply(ProblemMock problem, ObjectiveMock objective, SolutionMock solution, out float delta)
         {
             var fitnessBefore = solution.Value;
             var reduction = Algorithms.RandomGeneratorExtensions.GetRandom().Generate(problem.Max / 50);
             if (reduction < problem.Max / 1000)
             { // mock the operator failing to find better solution.
-                delta = double.MaxValue;
+                delta = float.MaxValue;
                 return false;
             }
             if(reduction > fitnessBefore)

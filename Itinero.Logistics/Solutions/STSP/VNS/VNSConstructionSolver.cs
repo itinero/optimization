@@ -26,7 +26,8 @@ namespace Itinero.Logistics.Solutions.STSP.VNS
     /// <summary>
     /// Implements a VNS-strategy to construct feasible solution for the STSP from random tours.
     /// </summary>
-    public class VNSConstructionSolver : IterativeSolver<ISTSP, ISTSPObjective, IRoute>
+    public class VNSConstructionSolver<T> : IterativeSolver<T, ISTSP<T>, ISTSPObjective<T>, IRoute>
+        where T : struct
     {
         /// <summary>
         /// Creates a new VNS construction solver.
@@ -50,8 +51,8 @@ namespace Itinero.Logistics.Solutions.STSP.VNS
         /// Creates a new VNS construction solver.
         /// </summary>
         public VNSConstructionSolver(int maxIterations, int levelMax)
-            : base(new VNSSolver<ISTSP, ISTSPObjective, IRoute>(new RandomSolver(), new RandomExchange(),
-                new LocalSearch.Local1Shift(), (i, l, p, o, r) =>
+            : base(new VNSSolver<T, ISTSP<T>, ISTSPObjective<T>, IRoute>(new RandomSolver<T>(), new RandomExchange<T>(),
+                new LocalSearch.Local1Shift<T>(), (i, l, p, o, r) =>
                 {
                     if (l > levelMax)
                     {

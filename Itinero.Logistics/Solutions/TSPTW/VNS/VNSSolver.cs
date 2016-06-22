@@ -26,15 +26,16 @@ namespace Itinero.Logistics.Solutions.TSPTW.VNS
     /// <summary>
     /// A VNS-solver for the TSP-TW problem.
     /// </summary>
-    public class VNSSolver : VNSSolver<ITSPTW, ITSPTWObjective, IRoute>
+    public class VNSSolver<T> : VNSSolver<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>
+        where T : struct
     {
         /// <summary>
         /// Creates a new VNS-solver.
         /// </summary>
         public VNSSolver()
-            : base(new Itinero.Logistics.Solvers.SolverObjectiveWrapper<ITSPTW, ITSPTWObjective, IRoute>(
-                new VNSConstructionSolver(), new FeasibleObjective(), (p, o, s) => o.Calculate(p, s)), new Random.Random1Shift(),
-                    new VNDOperator(), (i, l, p, o, s) =>
+            : base(new Itinero.Logistics.Solvers.SolverObjectiveWrapper<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>(
+                new VNSConstructionSolver<T>(), new FeasibleObjective<T>(), (p, o, s) => o.Calculate(p, s)), new Random.Random1Shift<T>(),
+                    new VNDOperator<T>(), (i, l, p, o, s) =>
                     {
                         return l > 1;
                     })

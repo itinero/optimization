@@ -23,7 +23,8 @@ namespace Itinero.Logistics.Solutions.TSPTW
     /// <summary>
     /// Interface representing a generic TSP-problem with time windows.
     /// </summary>
-    public interface ITSPTW : ITimeWindows, ITSP
+    public interface ITSPTW<T> : ITimeWindows, ITSP<T>
+        where T : struct
     {
 
     }

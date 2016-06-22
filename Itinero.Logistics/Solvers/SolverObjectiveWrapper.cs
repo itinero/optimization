@@ -23,16 +23,16 @@ namespace Itinero.Logistics.Solvers
     /// <summary>
     /// A wrapper for a solver, replacing the objective with another objective on each call.
     /// </summary>
-    public class SolverObjectiveWrapper<TProblem, TObjective, TSolution> : ISolver<TProblem, TObjective, TSolution>
+    public class SolverObjectiveWrapper<TWeight, TProblem, TObjective, TSolution> : ISolver<TWeight, TProblem, TObjective, TSolution>
     {
-        private readonly ISolver<TProblem, TObjective, TSolution> _solver;
+        private readonly ISolver<TWeight, TProblem, TObjective, TSolution> _solver;
         private readonly TObjective _objective;
-        private readonly Func<TProblem, TObjective, TSolution, double> _calculateFitness;
+        private readonly Func<TProblem, TObjective, TSolution, float> _calculateFitness;
 
         /// <summary>
         /// Creates a new solver objective wrapper.
         /// </summary>
-        public SolverObjectiveWrapper(ISolver<TProblem, TObjective, TSolution> solver, TObjective objective, Func<TProblem, TObjective, TSolution, double> calculateFitness)
+        public SolverObjectiveWrapper(ISolver<TWeight, TProblem, TObjective, TSolution> solver, TObjective objective, Func<TProblem, TObjective, TSolution, float> calculateFitness)
         {
             _solver = solver;
             _solver.IntermidiateResult += _solver_IntermidiateResult;
@@ -61,7 +61,7 @@ namespace Itinero.Logistics.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public TSolution Solve(TProblem problem, TObjective objective, out double fitness)
+        public TSolution Solve(TProblem problem, TObjective objective, out float fitness)
         {
             var solution = _solver.Solve(problem, _objective, out fitness);
             fitness = _calculateFitness(problem, objective, solution);

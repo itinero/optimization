@@ -21,7 +21,8 @@ namespace Itinero.Logistics.Solvers
     /// <summary>
     /// An empty operator that does nothing.
     /// </summary>
-    public class EmptyOperator<TProblem, TObjective, TSolution> : IOperator<TProblem, TObjective, TSolution>
+    public class EmptyOperator<TWeight, TProblem, TObjective, TSolution> : IOperator<TWeight, TProblem, TObjective, TSolution>
+        where TWeight : struct
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -44,7 +45,7 @@ namespace Itinero.Logistics.Solvers
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(TProblem problem, TObjective objective, TSolution solution, out double delta)
+        public bool Apply(TProblem problem, TObjective objective, TSolution solution, out float delta)
         {
             delta = 0;
             return false;

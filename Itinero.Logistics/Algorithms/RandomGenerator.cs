@@ -55,9 +55,9 @@ namespace Itinero.Logistics.Algorithms
         /// <summary>
         /// Generates a random double
         /// </summary>
-        public double Generate(double max)
+        public float Generate(float max)
         {
-            return _rand.NextDouble() * max;
+            return (float)(_rand.NextDouble() * max);
         }
 
         /// <summary>

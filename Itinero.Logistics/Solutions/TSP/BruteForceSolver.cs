@@ -25,7 +25,8 @@ namespace Itinero.Logistics.Solutions.TSP
     /// <summary>
     /// Implements a brute force solver by checking all possible combinations.
     /// </summary>
-    public class BruteForceSolver : SolverBase<ITSP, ITSPObjective, IRoute>
+    public class BruteForceSolver<T> : SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute>
+        where T : struct
     {
         /// <summary>
         /// Returns a new for this solver.
@@ -42,7 +43,7 @@ namespace Itinero.Logistics.Solutions.TSP
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
+        public override IRoute Solve(ITSP<T> problem, ITSPObjective<T> objective, out float fitness)
         {
             // initialize.
             var solution = new List<int>();
@@ -74,7 +75,7 @@ namespace Itinero.Logistics.Solutions.TSP
             var enumerator = new PermutationEnumerable<int>(
                 solution.ToArray());
             IRoute bestSolution = null;
-            var bestFitness = double.MaxValue;
+            var bestFitness = float.MaxValue;
             foreach (var permutation in enumerator)
             {
                 // build route from permutation.

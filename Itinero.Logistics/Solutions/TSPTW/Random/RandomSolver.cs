@@ -1,20 +1,35 @@
-﻿using Itinero.Logistics.Routes;
+﻿// Itinero.Logistics - Route optimization for .NET
+// Copyright (C) 2016 Abelshausen Ben
+// 
+// This file is part of Itinero.
+// 
+// Itinero is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// Itinero is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Itinero. If not, see <http://www.gnu.org/licenses/>.
+
+using Itinero.Logistics.Routes;
 using Itinero.Logistics.Solvers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Itinero.Logistics.Solutions.TSPTW.Random
 {
-    class RandomSolver : TSP.Random.RandomSolver, ISolver<ITSPTW, ITSPTWObjective, IRoute>
+    class RandomSolver<T> : TSP.Random.RandomSolver<T>, ISolver<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>
+        where T : struct
     {
-        public IRoute Solve(ITSPTW problem, ITSPTWObjective objective)
+        public IRoute Solve(ITSPTW<T> problem, ITSPTWObjective<T>  objective)
         {
             return base.Solve(problem, objective);
         }
 
-        public IRoute Solve(ITSPTW problem, ITSPTWObjective objective, out double fitness)
+        public IRoute Solve(ITSPTW<T> problem, ITSPTWObjective<T>  objective, out float fitness)
         {
             return base.Solve(problem, objective, out fitness);
         }

@@ -28,7 +28,8 @@ namespace Itinero.Logistics.Solutions.Algorithms
         /// <summary>
         /// Inserts the given customer at the best location.
         /// </summary>
-        public static void InsertCheapest(this IRoute route, IMatrixWeights weights, int customer)
+        public static void InsertCheapest<T>(this IRoute route, IMatrixWeights<T> weights, int customer)
+            where T : struct
         {
             Pair bestLocation;
             if (route.CalculateCheapest(weights, customer, out bestLocation) < float.MaxValue)
@@ -40,14 +41,16 @@ namespace Itinero.Logistics.Solutions.Algorithms
         /// <summary>
         /// Calculates the best position to insert a given customer.
         /// </summary>
-        public static float CalculateCheapest(this IRoute route, IMatrixWeights weights, int customer, out Pair location)
+        public static float CalculateCheapest<T>(this IRoute route, IMatrixWeights<T> weights, int customer, out Pair location)
+            where T : struct
         {
             var bestCost = float.MaxValue;
             location = new Pair(int.MaxValue, int.MaxValue);
             foreach (var pair in route.Pairs())
             {
-                var cost = weights.Weights[pair.From][customer] +
-                    weights.Weights[customer][pair.To] - weights.Weights[pair.From][pair.To];
+                var cost = weights.WeightHandler.GetTime(weights.Weights[pair.From][customer]) +
+                    weights.WeightHandler.GetTime(weights.Weights[customer][pair.To]) -
+                    weights.WeightHandler.GetTime(weights.Weights[pair.From][pair.To]);
                 if (cost < bestCost)
                 {
                     bestCost = cost;

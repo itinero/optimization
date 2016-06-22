@@ -18,6 +18,7 @@
 
 using NUnit.Framework;
 using Itinero.Logistics.Solutions.TSP;
+using Itinero.Logistics.Weights;
 
 namespace Itinero.Logistics.Tests.Solutions.TSP
 {
@@ -40,19 +41,19 @@ namespace Itinero.Logistics.Tests.Solutions.TSP
             var last = 1;
 
             // create an open problem.
-            var problem = new TSPProblem(first, weights);
+            var problem = new TSPProblem<float>(new DefaultWeightHandler(), first, weights);
             Assert.AreEqual(first, problem.First);
             Assert.IsNull(problem.Last);
             Assert.AreEqual(weights, problem.Weights);
 
             // create a closed problem.
-            problem = new TSPProblem(first, first, weights);
+            problem = new TSPProblem<float>(new DefaultWeightHandler(), first, first, weights);
             Assert.AreEqual(first, problem.First);
             Assert.AreEqual(first, problem.Last);
             Assert.AreEqual(weights, problem.Weights);
 
             // create a fixed problem.
-            problem = new TSPProblem(first, last, weights);
+            problem = new TSPProblem<float>(new DefaultWeightHandler(), first, last, weights);
             Assert.AreEqual(first, problem.First);
             Assert.AreEqual(last, problem.Last);
             Assert.AreEqual(weights, problem.Weights);
@@ -72,7 +73,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP
             };
 
             // create a regular 'closed' problem with last->first and first==last.
-            var problem = new TSPProblem(0, 0, weights);
+            var problem = new TSPProblem<float>(new DefaultWeightHandler(), 0, 0, weights);
             var closedProblem = problem.ToClosed();
             Assert.AreEqual(0, closedProblem.First);
             Assert.IsTrue(closedProblem.Last.HasValue);
@@ -102,7 +103,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP
             };
 
             // create a regular 'open' problem with last not set and no link between last->first.
-            problem = new TSPProblem(0, weights);
+            problem = new TSPProblem<float>(new DefaultWeightHandler(), 0, weights);
             closedProblem = problem.ToClosed();
             Assert.AreEqual(0, closedProblem.First);
             Assert.IsTrue(closedProblem.Last.HasValue);
@@ -132,7 +133,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP
             };
 
             // create a regular 'open' problem with last fixed and no link between last->first.
-            problem = new TSPProblem(0, 1, weights);
+            problem = new TSPProblem<float>(new DefaultWeightHandler(), 0, 1, weights);
             closedProblem = problem.ToClosed();
             Assert.AreEqual(0, closedProblem.First);
             Assert.IsTrue(closedProblem.Last.HasValue);

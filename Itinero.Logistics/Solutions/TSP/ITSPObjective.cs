@@ -23,7 +23,8 @@ namespace Itinero.Logistics.Solutions.TSP
     /// <summary>
     /// Abstract representation of a basic TSP-objective.
     /// </summary>
-    public interface ITSPObjective
+    public interface ITSPObjective<T>
+        where T : struct
     {
         /// <summary>
         /// Returns the name of this objective.
@@ -37,18 +38,18 @@ namespace Itinero.Logistics.Solutions.TSP
         /// Calculates the fitness of a TSP solution.
         /// </summary>
         /// <returns></returns>
-        double Calculate(ITSP problem, IRoute solution);
+        float Calculate(ITSP<T> problem, IRoute solution);
 
         /// <summary>
         /// Executes the shift-after and returns the difference between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>
-        bool ShiftAfter(ITSP problem, IRoute route, int customer, int before, out double difference);
+        bool ShiftAfter(ITSP<T> problem, IRoute route, int customer, int before, out float difference);
 
         /// <summary>
         /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
         /// </summary>
         /// <returns></returns>
-        double IfShiftAfter(ITSP problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter);
+        float IfShiftAfter(ITSP<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter);
     }
 }

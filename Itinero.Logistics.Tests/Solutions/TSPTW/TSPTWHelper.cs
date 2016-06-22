@@ -19,6 +19,7 @@
 using Itinero.Logistics.Solutions;
 using Itinero.Logistics.Solutions.Algorithms;
 using Itinero.Logistics.Solutions.TSPTW;
+using Itinero.Logistics.Weights;
 
 namespace Itinero.Logistics.Tests.Solutions.TSPTW
 {
@@ -30,7 +31,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW
         /// <summary>
         /// Creates a new TSPTW.
         /// </summary>
-        public static ITSPTW CreateTSP(int first, int size, float defaultWeight)
+        public static ITSPTW<float> CreateTSP(int first, int size, float defaultWeight)
         {
             var weights = new float[size][];
             for (int x = 0; x < size; x++)
@@ -47,13 +48,13 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW
                 windows[i].Min = int.MinValue;
                 windows[i].Max = int.MaxValue;
             }
-            return new TSPTWProblem(0, weights, windows);
+            return new TSPTWProblem<float>(new DefaultWeightHandler(), 0, weights, windows);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static ITSPTW CreateTSP(int first, int last, int size, float defaultWeight)
+        public static ITSPTW<float> CreateTSP(int first, int last, int size, float defaultWeight)
         {
             var weights = new float[size][];
             for (int x = 0; x < size; x++)
@@ -70,14 +71,14 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW
                 windows[i].Min = int.MinValue;
                 windows[i].Max = int.MaxValue;
             }
-            return new TSPTWProblem(first, last, weights, windows);
+            return new TSPTWProblem<float>(new DefaultWeightHandler(), first, last, weights, windows);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static ITSPTW CreateTSP(int first, float[][] weights)
+        public static ITSPTW<float> CreateTSP(int first, float[][] weights)
         {
             var windows = new TimeWindow[weights.Length];
             for (int i = 0; i < windows.Length; i++)
@@ -85,14 +86,14 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW
                 windows[i].Min = int.MinValue;
                 windows[i].Max = int.MaxValue;
             }
-            return new TSPTWProblem(first, weights, windows);
+            return new TSPTWProblem<float>(new DefaultWeightHandler(), first, weights, windows);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static ITSPTW CreateTSP(int first, int last, float[][] weights)
+        public static ITSPTW<float> CreateTSP(int first, int last, float[][] weights)
         {
             var windows = new TimeWindow[weights.Length];
             for (var i = 0; i < windows.Length; i++)
@@ -100,7 +101,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW
                 windows[i].Min = int.MinValue;
                 windows[i].Max = int.MaxValue;
             }
-            return new TSPTWProblem(first, last, weights, windows);
+            return new TSPTWProblem<float>(new DefaultWeightHandler(), first, last, weights, windows);
         }
     }
 }

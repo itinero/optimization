@@ -24,21 +24,22 @@ namespace Itinero.Logistics.Solvers.GA
     /// <summary>
     /// A Genetic Algorithm (GA) solver.
     /// </summary>
-    public class GASolver<TProblem, TObjective, TSolution> : SolverBase<TProblem, TObjective, TSolution>
+    public class GASolver<TWeight, TProblem, TObjective, TSolution> : SolverBase<TWeight, TProblem, TObjective, TSolution>
+        where TWeight : struct
     {
-        private readonly ISolver<TProblem, TObjective, TSolution> _generator;
-        private readonly ICrossOverOperator<TProblem, TObjective, TSolution> _crossOver;
+        private readonly ISolver<TWeight, TProblem, TObjective, TSolution> _generator;
+        private readonly ICrossOverOperator<TWeight, TProblem, TObjective, TSolution> _crossOver;
         private readonly ISelectionOperator<TProblem, TSolution> _selection;
-        private readonly IOperator<TProblem, TObjective, TSolution> _mutation;
+        private readonly IOperator<TWeight, TProblem, TObjective, TSolution> _mutation;
         private readonly GASettings _settings;
         private readonly Random _random;
 
         /// <summary>
         /// Creates a new GA solver.
         /// </summary>
-        public GASolver(TObjective objective, ISolver<TProblem, TObjective, TSolution> generator,
-            ICrossOverOperator<TProblem, TObjective, TSolution> crossOver, ISelectionOperator<TProblem, TSolution> selection,
-            IOperator<TProblem, TObjective, TSolution> mutation)
+        public GASolver(TObjective objective, ISolver<TWeight, TProblem, TObjective, TSolution> generator,
+            ICrossOverOperator<TWeight, TProblem, TObjective, TSolution> crossOver, ISelectionOperator<TProblem, TSolution> selection,
+            IOperator<TWeight, TProblem, TObjective, TSolution> mutation)
             : this(objective, generator, crossOver, selection, mutation, GASettings.Default)
         {
 
@@ -47,9 +48,9 @@ namespace Itinero.Logistics.Solvers.GA
         /// <summary>
         /// Creates a new GA solver.
         /// </summary>
-        public GASolver(TObjective objective, ISolver<TProblem, TObjective, TSolution> generator,
-            ICrossOverOperator<TProblem, TObjective, TSolution> crossOver, ISelectionOperator<TProblem, TSolution> selection,
-            IOperator<TProblem, TObjective, TSolution> mutation, GASettings settings)
+        public GASolver(TObjective objective, ISolver<TWeight, TProblem, TObjective, TSolution> generator,
+            ICrossOverOperator<TWeight, TProblem, TObjective, TSolution> crossOver, ISelectionOperator<TProblem, TSolution> selection,
+            IOperator<TWeight, TProblem, TObjective, TSolution> mutation, GASettings settings)
         {
             _generator = generator;
             _crossOver = crossOver;
@@ -76,7 +77,7 @@ namespace Itinero.Logistics.Solvers.GA
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override TSolution Solve(TProblem problem, TObjective objective, out double fitness)
+        public override TSolution Solve(TProblem problem, TObjective objective, out float fitness)
         {
             var population = new Individual<TSolution>[_settings.PopulationSize];
 
@@ -84,7 +85,7 @@ namespace Itinero.Logistics.Solvers.GA
             var solutionCount = 0;
             while (solutionCount < _settings.PopulationSize)
             {
-                double localFitness;
+                float localFitness;
                 var solution = _generator.Solve(problem, objective, out localFitness);
                 population[solutionCount] = new Individual<TSolution>()
                 {
@@ -139,7 +140,7 @@ namespace Itinero.Logistics.Solvers.GA
                     }
 
                     // create offspring.
-                    var offspringFitness = 0.0;
+                    var offspringFitness = 0.0f;
                     var offspring = _crossOver.Apply(problem, objective, population[individual1].Solution,
                         population[individual2].Solution, out offspringFitness);
                     population[i] = new Individual<TSolution>()
@@ -154,7 +155,7 @@ namespace Itinero.Logistics.Solvers.GA
                 {
                     if (_random.Next(100) <= _settings.MutationPercentage)
                     { // ok, mutate this individual.
-                        var mutatedDelta = 0.0;
+                        var mutatedDelta = 0.0f;
                         if (_mutation.Apply(problem, objective, population[i].Solution, out mutatedDelta))
                         { // mutation succeeded.
                             population[i].Fitness = population[i].Fitness - mutatedDelta;

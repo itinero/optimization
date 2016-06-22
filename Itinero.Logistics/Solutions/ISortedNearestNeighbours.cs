@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -21,7 +21,8 @@ namespace Itinero.Logistics.Solutions
     /// <summary>
     /// Abstract representation of nearest neighbours in a sorted collection.
     /// </summary>
-    public interface ISortedNearestNeighbours : INearestNeighbours
+    public interface ISortedNearestNeighbours<T> : INearestNeighbours<T>
+        where T : struct
     {
         /// <summary>
         /// Gets the customer at the given index.

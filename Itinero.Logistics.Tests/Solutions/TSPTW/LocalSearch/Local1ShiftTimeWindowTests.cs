@@ -39,7 +39,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
         public void TestOneShiftViolatedBackward()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var objective = new FeasibleObjective();
+            var objective = new FeasibleObjective<float>();
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 2);
             problem.Windows[2] = new Logistics.Solutions.TimeWindow()
             {
@@ -51,8 +51,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 1, 2, 3, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local1Shift();
-            var delta = 0.0;
+            var localSearch = new Local1Shift<float>();
+            var delta = 0.0f;
             Assert.IsTrue(localSearch.MoveViolatedBackward(problem, objective, route, out delta)); // shifts 2 after 0.
 
             // test result.
@@ -83,7 +83,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
         public void TestOneShiftNonViolatedForward()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var objective = new FeasibleObjective();
+            var objective = new FeasibleObjective<float>();
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 2);
             problem.Windows[2] = new Logistics.Solutions.TimeWindow()
             {
@@ -95,8 +95,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 1, 2, 3, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local1Shift();
-            var delta = 0.0;
+            var localSearch = new Local1Shift<float>();
+            var delta = 0.0f;
             Assert.IsTrue(localSearch.MoveNonViolatedForward(problem, objective, route, out delta)); // shifts 1 after 2.
 
             // test result.
@@ -117,7 +117,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
         public void TestOneShiftNonViolatedBackward()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var objective = new FeasibleObjective();
+            var objective = new FeasibleObjective<float>();
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][3] = 1;
             problem.Weights[3][1] = 1;
@@ -131,8 +131,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 1, 2, 3, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local1Shift();
-            var delta = 0.0;
+            var localSearch = new Local1Shift<float>();
+            var delta = 0.0f;
             Assert.IsTrue(localSearch.MoveNonViolatedBackward(problem, objective, route, out delta)); // shifts 3 after 0.
 
             // test result.
@@ -153,7 +153,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
         public void TestOneShiftViolatedForward()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var objective = new FeasibleObjective();
+            var objective = new FeasibleObjective<float>();
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][3] = 1;
             problem.Weights[3][1] = 1;
@@ -172,8 +172,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 1, 3, 2, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local1Shift();
-            var delta = 0.0;
+            var localSearch = new Local1Shift<float>();
+            var delta = 0.0f;
             Assert.IsTrue(localSearch.MoveViolatedForward(problem, objective, route, out delta)); // shifts 1 after 3.
 
             // test result.
@@ -199,7 +199,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
             };
 
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var objective = new FeasibleObjective();
+            var objective = new FeasibleObjective<float>();
             var problem = TSPTWHelper.CreateTSP(0, 4, 5, 10);
             problem.Weights[0][1] = 2;
             problem.Weights[1][2] = 2;
@@ -216,8 +216,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 1, 3, 2, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local1Shift();
-            var delta = 0.0;
+            var localSearch = new Local1Shift<float>();
+            var delta = 0.0f;
             Assert.IsTrue(localSearch.Apply(problem, objective, route, out delta)); // shifts 3 after 2
 
             // test result.
@@ -237,7 +237,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
             };
 
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var objective = new FeasibleObjective();
+            var objective = new FeasibleObjective<float>();
             var problem = TSPTWHelper.CreateTSP(0, 4, 5, 10);
             problem.Weights[0][1] = 2;
             problem.Weights[1][2] = 2;
@@ -254,8 +254,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 1, 3, 2, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local1Shift();
-            var delta = 0.0;
+            var localSearch = new Local1Shift<float>();
+            var delta = 0.0f;
             Assert.IsTrue(localSearch.MoveNonViolatedBackward(problem, objective, route, out delta)); // shifts 2 after 1
 
             // test result.

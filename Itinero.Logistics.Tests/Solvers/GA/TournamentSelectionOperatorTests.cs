@@ -39,7 +39,7 @@ namespace Itinero.Logistics.Tests.Solvers.GA
             RandomGeneratorExtensions.GetGetNewRandom = () =>
             {
                 return new NotSoRandomGenerator(
-                    new double[] { 0.6, 0.2, 0.8 }, new int[] { 0, 2, 3 });
+                    new float[] { 0.6f, 0.2f, 0.8f }, new int[] { 0, 2, 3 });
             };
 
             // create population and selector.

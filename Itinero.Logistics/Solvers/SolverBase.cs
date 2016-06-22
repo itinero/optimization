@@ -21,7 +21,7 @@ namespace Itinero.Logistics.Solvers
     /// <summary>
     /// A base implementation for a solver.
     /// </summary>
-    public abstract class SolverBase<TProblem, TObjective, TSolution> : ISolver<TProblem, TObjective, TSolution>
+    public abstract class SolverBase<TWeight, TProblem, TObjective, TSolution> : ISolver<TWeight, TProblem, TObjective, TSolution>
     {
         /// <summary>
         /// Holds the stopped-flag.
@@ -42,7 +42,7 @@ namespace Itinero.Logistics.Solvers
         /// <returns></returns>
         public TSolution Solve(TProblem problem, TObjective objective)
         {
-            double fitness;
+            float fitness;
             return this.Solve(problem, objective, out fitness);
         }
 
@@ -50,7 +50,7 @@ namespace Itinero.Logistics.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public abstract TSolution Solve(TProblem problem, TObjective objective, out double fitness);
+        public abstract TSolution Solve(TProblem problem, TObjective objective, out float fitness);
 
         /// <summary>
         /// Returns true if this solver was stopped.

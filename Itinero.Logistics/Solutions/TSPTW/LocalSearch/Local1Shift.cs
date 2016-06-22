@@ -27,7 +27,8 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
     /// <summary>
     /// A local search procedure to move around and improve the time window 'violations' in a solution.
     /// </summary>
-    public class Local1Shift : IOperator<ITSPTW, ITSPTWObjective, IRoute>
+    public class Local1Shift<T> : IOperator<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>
+        where T : struct
     {
         private readonly bool _assumeFeasible;
 
@@ -59,16 +60,16 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
         /// Returns true if the given objective is supported.
         /// </summary>
         /// <returns></returns>
-        public bool Supports(ITSPTWObjective objective)
+        public bool Supports(ITSPTWObjective<T> objective)
         {
-            return objective.Name == FeasibleObjective.FeasibleObjectiveName;
+            return objective.Name == FeasibleObjective<T>.FeasibleObjectiveName;
         }
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSPTW problem, ITSPTWObjective objective, IRoute solution, out double delta)
+        public bool Apply(ITSPTW<T> problem, ITSPTWObjective<T> objective, IRoute solution, out float delta)
         {
             // STRATEGY: 
             // 1: try to move a violated customer backwards.
@@ -104,12 +105,12 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool MoveViolatedBackward(ITSPTW problem, ITSPTWObjective objective, IRoute solution, out double delta)
+        public bool MoveViolatedBackward(ITSPTW<T> problem, ITSPTWObjective<T> objective, IRoute solution, out float delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();
-            double time = 0;
-            double fitness = 0;
+            var time = 0.0f;
+            var fitness = 0.0f;
             var position = 0;
             var invalids = new List<Tuple<int, int>>(); // al list of customer-position pairs.
             var previous = Constants.NOT_SET;
@@ -118,7 +119,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                 var current = enumerator.Current;
                 if (previous != Constants.NOT_SET)
                 { // keep track of time.
-                    time += problem.Weights[previous][current];
+                    time += problem.WeightHandler.GetTime(problem.Weights[previous][current]);
                 }
                 var window = problem.Windows[enumerator.Current];
                 if (window.Max < time && position > 1)
@@ -148,7 +149,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                     var before = solution.GetCustomerAt(newPosition - 1);
 
                     // calculate new total min diff.
-                    double newFitness = 0.0;
+                    var newFitness = 0.0f;
                     previous = Constants.NOT_SET;
                     time = 0;
                     enumerator = solution.GetEnumerator();
@@ -159,7 +160,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                         { // ignore invalid, add it after 'before'.
                             if (previous != Constants.NOT_SET)
                             { // keep track if time.
-                                time += problem.Weights[previous][current];
+                                time += problem.WeightHandler.GetTime(problem.Weights[previous][current]);
                             }
                             var window = problem.Windows[enumerator.Current];
                             if (window.Max < time)
@@ -173,7 +174,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                             previous = current;
                             if (current == before)
                             { // also add the before->invalid.
-                                time += problem.Weights[current][invalid.Item1];
+                                time += problem.WeightHandler.GetTime(problem.Weights[current][invalid.Item1]);
                                 window = problem.Windows[invalid.Item1];
                                 if (window.Max < time)
                                 { // ok, unfeasible and customer is not the first 'moveable' customer.
@@ -204,12 +205,12 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool MoveNonViolatedForward(ITSPTW problem, ITSPTWObjective objective, IRoute solution, out double delta)
+        public bool MoveNonViolatedForward(ITSPTW<T> problem, ITSPTWObjective<T>  objective, IRoute solution, out float delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();
-            double time = 0;
-            double fitness = 0;
+            var time = 0f;
+            var fitness = 0f;
             var position = 0;
             var valids = new List<Tuple<int, int>>(); // al list of customer-position pairs.
             var previous = Constants.NOT_SET;
@@ -218,7 +219,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                 var current = enumerator.Current;
                 if (previous != Constants.NOT_SET)
                 { // keep track of time.
-                    time += problem.Weights[previous][current];
+                    time += problem.WeightHandler.GetTime(problem.Weights[previous][current]);
                 }
                 var window = problem.Windows[enumerator.Current];
                 if (window.Max < time)
@@ -255,7 +256,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                         continue;
                     }
                     // calculate new total min diff.
-                    double newFitness = 0.0;
+                    var newFitness = 0.0f;
                     previous = Constants.NOT_SET;
                     time = 0;
                     enumerator = solution.GetEnumerator();
@@ -266,7 +267,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                         { // ignore invalid, add it after 'before'.
                             if (previous != Constants.NOT_SET)
                             { // keep track if time.
-                                time += problem.Weights[previous][current];
+                                time += problem.WeightHandler.GetTime(problem.Weights[previous][current]);
                             }
                             var window = problem.Windows[enumerator.Current];
                             if (window.Max < time)
@@ -274,7 +275,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                                 newFitness += time - window.Max;
                                 if(_assumeFeasible)
                                 {
-                                    newFitness = double.MaxValue;
+                                    newFitness = float.MaxValue;
                                     break;
                                 }
                             }
@@ -285,7 +286,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                             previous = current;
                             if (current == before)
                             { // also add the before->invalid.
-                                time += problem.Weights[current][valid.Item1];
+                                time += problem.WeightHandler.GetTime(problem.Weights[current][valid.Item1]);
                                 window = problem.Windows[valid.Item1];
                                 if (window.Max < time)
                                 { // ok, unfeasible and customer is not the first 'moveable' customer.
@@ -316,12 +317,12 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool MoveNonViolatedBackward(ITSPTW problem, ITSPTWObjective objective, IRoute solution, out double delta)
+        public bool MoveNonViolatedBackward(ITSPTW<T> problem, ITSPTWObjective<T> objective, IRoute solution, out float delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();
-            double time = 0;
-            double fitness = 0;
+            var time = 0f;
+            var fitness = 0f;
             var position = 0;
             var valids = new List<Tuple<int, int>>(); // al list of customer-position pairs.
             var previous = Constants.NOT_SET;
@@ -330,7 +331,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                 var current = enumerator.Current;
                 if (previous != Constants.NOT_SET)
                 { // keep track of time.
-                    time += problem.Weights[previous][current];
+                    time += problem.WeightHandler.GetTime(problem.Weights[previous][current]);
                 }
                 var window = problem.Windows[enumerator.Current];
                 if (window.Max < time)
@@ -363,7 +364,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                     var before = solution.GetCustomerAt(newPosition - 1);
 
                     // calculate new total min diff.
-                    double newFitness = 0.0;
+                    var newFitness = 0.0f;
                     previous = Constants.NOT_SET;
                     time = 0;
                     enumerator = solution.GetEnumerator();
@@ -374,7 +375,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                         { // ignore invalid, add it after 'before'.
                             if (previous != Constants.NOT_SET)
                             { // keep track if time.
-                                time += problem.Weights[previous][current];
+                                time += problem.WeightHandler.GetTime(problem.Weights[previous][current]);
                             }
                             var window = problem.Windows[enumerator.Current];
                             if (window.Max < time)
@@ -382,7 +383,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                                 newFitness += time - window.Max;
                                 if (_assumeFeasible)
                                 {
-                                    newFitness = double.MaxValue;
+                                    newFitness = float.MaxValue;
                                     break;
                                 }
                             }
@@ -393,7 +394,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                             previous = current;
                             if (current == before)
                             { // also add the before->invalid.
-                                time += problem.Weights[current][valid.Item1];
+                                time += problem.WeightHandler.GetTime(problem.Weights[current][valid.Item1]);
                                 window = problem.Windows[valid.Item1];
                                 if (window.Max < time)
                                 { // ok, unfeasible and customer is not the first 'moveable' customer.
@@ -424,12 +425,12 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool MoveViolatedForward(ITSPTW problem, ITSPTWObjective objective, IRoute solution, out double delta)
+        public bool MoveViolatedForward(ITSPTW<T> problem, ITSPTWObjective<T>  objective, IRoute solution, out float delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();
-            double time = 0;
-            double fitness = 0;
+            var time = 0f;
+            var fitness = 0f;
             var position = 0;
             var invalids = new List<Tuple<int, int>>(); // al list of customer-position pairs.
             var previous = Constants.NOT_SET;
@@ -438,7 +439,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                 var current = enumerator.Current;
                 if (previous != Constants.NOT_SET)
                 { // keep track of time.
-                    time += problem.Weights[previous][current];
+                    time += problem.WeightHandler.GetTime(problem.Weights[previous][current]);
                 }
                 var window = problem.Windows[enumerator.Current];
                 if (window.Max < time && position > 0 && position < problem.Weights.Length - 1)
@@ -472,7 +473,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                     }
 
                     // calculate new total min diff.
-                    double newFitness = 0.0;
+                    var newFitness = 0.0f;
                     previous = Constants.NOT_SET;
                     time = 0;
                     enumerator = solution.GetEnumerator();
@@ -483,7 +484,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                         { // ignore invalid, add it after 'before'.
                             if (previous != Constants.NOT_SET)
                             { // keep track if time.
-                                time += problem.Weights[previous][current];
+                                time += problem.WeightHandler.GetTime(problem.Weights[previous][current]);
                             }
                             var window = problem.Windows[enumerator.Current];
                             if (window.Max < time)
@@ -497,7 +498,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
                             previous = current;
                             if (current == before)
                             { // also add the before->invalid.
-                                time += problem.Weights[current][invalid.Item1];
+                                time += problem.WeightHandler.GetTime(problem.Weights[current][invalid.Item1]);
                                 window = problem.Windows[invalid.Item1];
                                 if (window.Max < time)
                                 { // ok, unfeasible and customer is not the first 'moveable' customer.

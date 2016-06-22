@@ -37,7 +37,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
         public void Test1MovePossible()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var objective = new MinimumWeightObjective();
+            var objective = new MinimumWeightObjective<float>();
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
@@ -49,8 +49,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
 
             var route = new Logistics.Routes.Route(new int[] { 0, 3, 2, 1, 4 }, 0);
 
-            var localSearch = new Local2Opt();
-            var delta = 0.0;
+            var localSearch = new Local2Opt<float>();
+            var delta = 0.0f;
             Assert.IsTrue(localSearch.Apply(problem, objective, route, out delta));
 
             // test result.
@@ -65,7 +65,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
         public void Test1MoveImpossible()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var objective = new MinimumWeightObjective();
+            var objective = new MinimumWeightObjective<float>();
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[0][3] = 2;
@@ -88,8 +88,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.LocalSearch
 
             var route = new Logistics.Routes.Route(new int[] { 0, 3, 2, 1, 4 }, 0);
 
-            var localSearch = new Local2Opt();
-            var delta = 0.0;
+            var localSearch = new Local2Opt<float>();
+            var delta = 0.0f;
             Assert.IsFalse(localSearch.Apply(problem, objective, route, out delta)); 
         }
     }

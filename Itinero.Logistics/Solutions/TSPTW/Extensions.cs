@@ -28,13 +28,11 @@ namespace Itinero.Logistics.Solutions.TSPTW
         /// <summary>
         /// Calculates the total minimum diff.
         /// </summary>
-        /// <param name="route"></param>
-        /// <param name="problem"></param>
-        /// <returns></returns>
-        public static double TotalMinDiff(this IRoute route, ITSPTW problem)
+        public static float TotalMinDiff<T>(this IRoute route, ITSPTW<T> problem)
+            where T : struct
         {
-            var total = 0.0;
-            var seconds = 0.0;
+            var total = 0f;
+            var seconds = 0f;
             var previous = Constants.NOT_SET;
             var enumerator = route.GetEnumerator();
             while(enumerator.MoveNext())
@@ -42,7 +40,7 @@ namespace Itinero.Logistics.Solutions.TSPTW
                 var current = enumerator.Current;
                 if(previous != Constants.NOT_SET)
                 { // keep track of time.
-                    seconds += problem.Weights[previous][current];
+                    seconds += problem.WeightHandler.GetTime(problem.Weights[previous][current]);
                 }
                 total += problem.Windows[current].MinDiff(seconds);
                 previous = current;

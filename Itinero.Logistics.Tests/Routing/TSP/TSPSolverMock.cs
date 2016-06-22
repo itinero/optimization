@@ -25,15 +25,15 @@ namespace Itinero.Logistics.Tests.Routing.TSP
     /// <summary>
     /// A mock-solver that has a pre-determined order.
     /// </summary>
-    public class TSPSolverMock : SolverBase<ITSP, ITSPObjective, IRoute>
+    public class TSPSolverMock : SolverBase<float, ITSP<float>, ITSPObjective<float>, IRoute>
     {
         private readonly IRoute _route;
-        private readonly double _fitness;
+        private readonly float _fitness;
 
         /// <summary>
         /// Creates a new mock-solver.
         /// </summary>
-        public TSPSolverMock(IRoute route, double fitness)
+        public TSPSolverMock(IRoute route, float fitness)
         {
             _route = route;
             _fitness = fitness;
@@ -51,7 +51,7 @@ namespace Itinero.Logistics.Tests.Routing.TSP
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
+        public override IRoute Solve(ITSP<float> problem, ITSPObjective<float> objective, out float fitness)
         {
             fitness = _fitness;
             return _route;

@@ -26,17 +26,18 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
     /// <summary>
     /// A solver that uses the clustering algorithm to pre-process the weights and post-processes the route afterwards.
     /// </summary>
-    public class AsymmetricClusteringSolver : SolverBase<ITSP, ITSPObjective, IRoute>
+    public class AsymmetricClusteringSolver<T> : SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute>
+        where T : struct
     {
-        private readonly SolverBase<ITSP, ITSPObjective, IRoute> _solver;
-        private readonly Func<ITSP, AsymmetricClustering> _createClustering;
-        private readonly IOperator<ITSP, ITSPObjective, IRoute> _localSearch;
+        private readonly SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute> _solver;
+        private readonly Func<ITSP<T>, AsymmetricClustering<T>> _createClustering;
+        private readonly IOperator<T, ITSP<T>, ITSPObjective<T>, IRoute> _localSearch;
 
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public AsymmetricClusteringSolver(SolverBase<ITSP, ITSPObjective, IRoute> solver)
-            : this(solver, (p) => new AsymmetricClustering(p.Weights))
+        public AsymmetricClusteringSolver(SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute> solver)
+            : this(solver, (p) => new AsymmetricClustering<T>(p.WeightHandler, p.Weights))
         {
 
         }
@@ -44,9 +45,9 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public AsymmetricClusteringSolver(SolverBase<ITSP, ITSPObjective, IRoute> solver, 
-            Func<ITSP, AsymmetricClustering> createClustering)
-            : this(solver, new LocalSearch.Local1Shift(), createClustering)
+        public AsymmetricClusteringSolver(SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute> solver, 
+            Func<ITSP<T>, AsymmetricClustering<T>> createClustering)
+            : this(solver, new LocalSearch.Local1Shift<T>(), createClustering)
         {
 
         }
@@ -54,8 +55,8 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public AsymmetricClusteringSolver(SolverBase<ITSP, ITSPObjective, IRoute> solver, 
-            IOperator<ITSP, ITSPObjective, IRoute> localSearch, Func<ITSP, AsymmetricClustering> createClustering)
+        public AsymmetricClusteringSolver(SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute> solver, 
+            IOperator<T, ITSP<T>, ITSPObjective<T>, IRoute> localSearch, Func<ITSP<T>, AsymmetricClustering<T>> createClustering)
         {
             _solver = solver;
             _createClustering = createClustering;
@@ -74,14 +75,14 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
+        public override IRoute Solve(ITSP<T> problem, ITSPObjective<T> objective, out float fitness)
         {
             // do the clustering.
             var clustering =_createClustering(problem);
             clustering.Run();
 
             // define the new problem.
-            TSPProblem clusteredProblem;
+            TSPProblem<T> clusteredProblem;
             if (problem.Last.HasValue)
             { // convert the problem, also convert last->clustered last and first->clustered first.
                 var clusteredLast = -1;
@@ -98,7 +99,7 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
                         clusteredFirst = i;
                     }
                 }
-                clusteredProblem = new TSPProblem(clusteredFirst, clusteredLast, clustering.Weights);
+                clusteredProblem = new TSPProblem<T>(problem.WeightHandler, clusteredFirst, clusteredLast, clustering.Weights);
             }
             else
             { // convert the problem, also convert first->clustered first.
@@ -111,7 +112,7 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
                         clusteredFirst = i;
                     }
                 }
-                clusteredProblem = new TSPProblem(clusteredFirst, clustering.Weights);
+                clusteredProblem = new TSPProblem<T>(problem.WeightHandler, clusteredFirst, clustering.Weights);
             }
 
             // execute the solver.
@@ -140,7 +141,7 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
             }
 
             // execute a local search to optimize the clusters.
-            double delta;
+            float delta;
             while (_localSearch.Apply(problem, objective, unclusteredRoute, out delta)) { }
 
             // calculate fitness.

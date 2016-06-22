@@ -24,6 +24,7 @@ using Itinero.Logistics.Solutions.TSP.GA.EAX;
 using Itinero.Logistics.Solvers.GA;
 using System.Collections.Generic;
 using Itinero.Logistics.Algorithms;
+using Itinero.Logistics.Weights;
 
 namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
 {
@@ -86,7 +87,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             weights[8][9] = 10;
 
             // execute the clustering and merge 2 and 3.
-            var clustering = new AsymmetricClusteringSolver(new EAXSolver(new GASettings()
+            var clustering = new AsymmetricClusteringSolver<float>(new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -95,8 +96,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
                 MutationPercentage = 0,
                 StagnationCount = 100
             }));
-            double fitness;
-            var route = clustering.Solve(TSPHelper.CreateTSP(0, weights), new MinimumWeightObjective(), out fitness);
+            float fitness;
+            var route = clustering.Solve(TSPHelper.CreateTSP(0, weights), new MinimumWeightObjective<float>(), out fitness);
 
             // verify route.
             Assert.AreEqual(54, fitness);
@@ -123,7 +124,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             problem.Weights[4][0] = 1;
 
             // create the solver.
-            var solver = new AsymmetricClusteringSolver(new EAXSolver(new GASettings()
+            var solver = new AsymmetricClusteringSolver<float>(new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -136,8 +137,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(4, fitness);
@@ -172,7 +173,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             problem.Weights[4][0] = 1;
 
             // create the solver.
-            var solver = new AsymmetricClusteringSolver(new EAXSolver(new GASettings()
+            var solver = new AsymmetricClusteringSolver<float>(new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -185,8 +186,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(4, fitness);
@@ -221,7 +222,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             problem.Weights[4][0] = 1;
 
             // create the solver.
-            var solver = new AsymmetricClusteringSolver(new EAXSolver(new GASettings()
+            var solver = new AsymmetricClusteringSolver<float>(new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -234,8 +235,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(5, fitness);
@@ -270,7 +271,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             problem.Weights[4][0] = 1;
 
             // create the solver.
-            var solver = new AsymmetricClusteringSolver(new EAXSolver(new GASettings()
+            var solver = new AsymmetricClusteringSolver<float>(new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -283,8 +284,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(4, fitness);
@@ -333,7 +334,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             var problem = TSPHelper.CreateTSP(0, 16, weights);
 
             // create the solver.
-            var solver = new AsymmetricClusteringSolver(new EAXSolver(new GASettings()
+            var solver = new AsymmetricClusteringSolver<float>(new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 5,
@@ -341,13 +342,13 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
                 MaxGenerations = 100000,
                 MutationPercentage = 0,
                 StagnationCount = 200
-            }), (p) => new AsymmetricClustering(p.Weights, 1)); // use a lower threshold, this problem is not based on time.
+            }), (p) => new AsymmetricClustering<float>(p.WeightHandler, p.Weights, 1)); // use a lower threshold, this problem is not based on time.
 
             for (var i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(0, solution.First);
@@ -410,7 +411,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             var problem = TSPHelper.CreateTSP(0, 0, weights);
 
             // create the solver.
-            var solver = new AsymmetricClusteringSolver(new EAXSolver(new GASettings()
+            var solver = new AsymmetricClusteringSolver<float>(new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -418,13 +419,13 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
                 MaxGenerations = 100000,
                 MutationPercentage = 0,
                 StagnationCount = 100
-            }), (p) => new AsymmetricClustering(p.Weights, 1)); // use a lower threshold, this problem is not based on time.
+            }), (p) => new AsymmetricClustering<float>(p.WeightHandler, p.Weights, 1)); // use a lower threshold, this problem is not based on time.
 
             for (var i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(39, fitness);
@@ -485,7 +486,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
             var problem = TSPHelper.CreateTSP(0, weights);
 
             // create the solver.
-            var solver = new AsymmetricClusteringSolver(new EAXSolver(new GASettings()
+            var solver = new AsymmetricClusteringSolver<float>(new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -493,13 +494,13 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Clustering
                 MaxGenerations = 100000,
                 MutationPercentage = 0,
                 StagnationCount = 100
-            }), (p) => new AsymmetricClustering(p.Weights, 1)); // use a lower threshold, this problem is not based on time.
+            }), (p) => new AsymmetricClustering<float>(p.WeightHandler, p.Weights, 1)); // use a lower threshold, this problem is not based on time.
 
             for (var i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.IsTrue(fitness <= 39);

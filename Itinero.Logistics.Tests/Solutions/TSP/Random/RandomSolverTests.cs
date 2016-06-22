@@ -38,7 +38,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Random
         public void TestName()
         {
             // create the solver.
-            var solver = new RandomSolver();
+            var solver = new RandomSolver<float>();
 
             Assert.AreEqual("RAN", solver.Name);
         }
@@ -55,13 +55,13 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Random
             var problem = TSPHelper.CreateTSP(0, 5, 10);
 
             // create the solver.
-            var solver = new RandomSolver();
-            var objective = new MinimumWeightObjective();
+            var solver = new RandomSolver<float>();
+            var objective = new MinimumWeightObjective<float>();
 
             for (var i = 0; i < 100; i++)
             {
                 // generate solution.
-                double fitness;
+                float fitness;
                 var solution = solver.Solve(problem, objective, out fitness);
 
                 // test contents.
@@ -92,13 +92,13 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Random
             var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
 
             // create the solver.
-            var solver = new RandomSolver();
+            var solver = new RandomSolver<float>();
 
             for (int i = 0; i < 100; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(50, fitness);
@@ -127,13 +127,13 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Random
             var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
 
             // create the solver.
-            var solver = new RandomSolver();
+            var solver = new RandomSolver<float>();
 
             for (int i = 0; i < 100; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(40, fitness);

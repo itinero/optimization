@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -17,6 +17,7 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Collections;
+using Itinero.Logistics.Weights;
 using System;
 using System.Collections.Generic;
 
@@ -25,23 +26,26 @@ namespace Itinero.Logistics.Solutions.Algorithms
     /// <summary>
     /// Contains n-nearest neighbour algorithm.
     /// </summary>
-    public class NearestNeighboursAlgorithm : Algorithm
+    public class NearestNeighboursAlgorithm<T> : Algorithm
+        where T : struct
     {
-        private readonly float[][] _weights;
+        private readonly T[][] _weights;
         private readonly int _n;
         private readonly int _customer;
+        private readonly WeightHandler<T> _weightHandler;
 
         /// <summary>
         /// Creates an instance of the nearest neighbour algorithm.
         /// </summary>
-        public NearestNeighboursAlgorithm(float[][] weights, int n, int customer)
+        public NearestNeighboursAlgorithm(WeightHandler<T> weightHandler, T[][] weights, int n, int customer)
         {
+            _weightHandler = weightHandler;
             _weights = weights;
             _n = n;
             _customer = customer;
         }
 
-        private INearestNeighbours _nn;
+        private INearestNeighbours<T> _nn;
 
         /// <summary>
         /// Executes the actual run of the algorithm.
@@ -50,7 +54,7 @@ namespace Itinero.Logistics.Solutions.Algorithms
         {
             if(_n > 0)
             { // do the n-nearest neighbours, forward.
-                _nn = NearestNeighboursAlgorithm.Forward(_weights, _n, _customer);
+                _nn = NearestNeighboursAlgorithm<T>.Forward(_weightHandler, _weights, _n, _customer);
             }
             else
             { // not supported.
@@ -62,9 +66,9 @@ namespace Itinero.Logistics.Solutions.Algorithms
         /// Calculates then n-nearest neighbours in a forward-direction only.
         /// </summary>
         /// <returns></returns>
-        public static INearestNeighbours Forward(float[][] weights, int n, int customer)
+        public static INearestNeighbours<T> Forward(WeightHandler<T> weightHandler, T[][] weights, int n, int customer)
         {
-            var neighbours = new SortedDictionary<double, List<int>>();
+            var neighbours = new SortedDictionary<T, List<int>>(weightHandler);
             for (var current = 0; current < weights.Length; current++)
             {
                 if (current != customer)
@@ -80,14 +84,14 @@ namespace Itinero.Logistics.Solutions.Algorithms
                 }
             }
 
-            var result = new NearestNeighbours(n);
+            var result = new NearestNeighbours<T>(n);
             foreach (var pair in neighbours)
             {
                 foreach (var current in pair.Value)
                 {
                     if (result.Count < n)
                     {
-                        if (result.Max < pair.Key)
+                        if (weightHandler.IsSmallerThan(result.Max, pair.Key))
                         {
                             result.Max = pair.Key;
                         }
@@ -106,9 +110,9 @@ namespace Itinero.Logistics.Solutions.Algorithms
         /// Calculates then n-nearest neighbours in a backward-direction only.
         /// </summary>
         /// <returns></returns>
-        public static INearestNeighbours Backward(float[][] weights, int n, int customer)
+        public static INearestNeighbours<T> Backward(WeightHandler<T> weightHandler, T[][] weights, int n, int customer)
         {
-            var neighbours = new SortedDictionary<double, List<int>>();
+            var neighbours = new SortedDictionary<T, List<int>>(weightHandler);
             for (var current = 0; current < weights.Length; current++)
             {
                 if (current != customer)
@@ -124,14 +128,14 @@ namespace Itinero.Logistics.Solutions.Algorithms
                 }
             }
 
-            var result = new NearestNeighbours(n);
+            var result = new NearestNeighbours<T>(n);
             foreach (var pair in neighbours)
             {
                 foreach (var current in pair.Value)
                 {
                     if (result.Count < n)
                     {
-                        if (result.Max < pair.Key)
+                        if (weightHandler.IsSmallerThan(result.Max, pair.Key))
                         {
                             result.Max = pair.Key;
                         }
@@ -150,16 +154,16 @@ namespace Itinero.Logistics.Solutions.Algorithms
         /// Calculates then nearest neighbours using a weight smaller than or equal to a maximum in a forward-direction only.
         /// </summary>
         /// <returns></returns>
-        public static ISortedNearestNeighbours Forward(float[][] weights, double max, int customer)
+        public static ISortedNearestNeighbours<T> Forward(WeightHandler<T> weightHandler, T[][] weights, T max, int customer)
         {
-            var neighbours = new SortedDictionary<double, List<int>>();
-            var maxFound = 0.0;
+            var neighbours = new SortedDictionary<T, List<int>>(weightHandler);
+            var maxFound = weightHandler.Zero;
             for (var current = 0; current < weights.Length; current++)
             {
                 if (current != customer)
                 {
                     var weight = weights[customer][current];
-                    if (weight <= max)
+                    if (weightHandler.IsSmallerThanOrEqual(weight, max))
                     {
                         List<int> customers = null;
                         if (!neighbours.TryGetValue(weight, out customers))
@@ -169,7 +173,7 @@ namespace Itinero.Logistics.Solutions.Algorithms
                         }
                         customers.Add(current);
 
-                        if(maxFound < weight)
+                        if(weightHandler.IsSmallerThan(maxFound, weight))
                         {
                             maxFound = weight;
                         }
@@ -177,7 +181,7 @@ namespace Itinero.Logistics.Solutions.Algorithms
                 }
             }
 
-            var result = new SortedNearestNeighbours(maxFound);
+            var result = new SortedNearestNeighbours<T>(maxFound);
             foreach (var pair in neighbours)
             {
                 foreach (var current in pair.Value)
@@ -192,16 +196,16 @@ namespace Itinero.Logistics.Solutions.Algorithms
         /// Calculates then nearest neighbours using a weight smaller than or equal to a maximum in a backward-direction only.
         /// </summary>
         /// <returns></returns>
-        public static ISortedNearestNeighbours Backward(float[][] weights, double max, int customer)
+        public static ISortedNearestNeighbours<T> Backward(WeightHandler<T> weightHandler, T[][] weights, T max, int customer)
         {
-            var neighbours = new SortedDictionary<double, List<int>>();
-            var maxFound = 0.0;
+            var neighbours = new SortedDictionary<T, List<int>>(weightHandler);
+            var maxFound = weightHandler.Zero;
             for (var current = 0; current < weights.Length; current++)
             {
                 if (current != customer)
                 {
                     var weight = weights[current][customer];
-                    if (weight <= max)
+                    if (weightHandler.IsSmallerThanOrEqual(weight, max))
                     {
                         List<int> customers = null;
                         if (!neighbours.TryGetValue(weight, out customers))
@@ -211,7 +215,7 @@ namespace Itinero.Logistics.Solutions.Algorithms
                         }
                         customers.Add(current);
 
-                        if (maxFound < weight)
+                        if (weightHandler.IsSmallerThan(maxFound, weight))
                         {
                             maxFound = weight;
                         }
@@ -219,7 +223,7 @@ namespace Itinero.Logistics.Solutions.Algorithms
                 }
             }
 
-            var result = new SortedNearestNeighbours(maxFound);
+            var result = new SortedNearestNeighbours<T>(maxFound);
             foreach (var pair in neighbours)
             {
                 foreach (var current in pair.Value)

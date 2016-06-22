@@ -26,7 +26,8 @@ namespace Itinero.Logistics.Solutions.STSP.Random
     /// <summary>
     /// Just generates random feasible solutions.
     /// </summary>
-    public class RandomSolver : SolverBase<ISTSP, ISTSPObjective, IRoute>
+    public class RandomSolver<T> : SolverBase<T, ISTSP<T>, ISTSPObjective<T>, IRoute>
+        where T : struct
     {
         private const int MAX_SECOND_ATTEMPTS = 10000;
 
@@ -42,13 +43,13 @@ namespace Itinero.Logistics.Solutions.STSP.Random
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ISTSP problem, ISTSPObjective objective, out double fitness)
+        public override IRoute Solve(ISTSP<T> problem, ISTSPObjective<T> objective, out float fitness)
         {
             // create initial empty solution
             var route = problem.EmptyRoute();
 
             fitness = objective.Calculate(problem, route);
-            if (fitness > problem.Max)
+            if (fitness > problem.WeightHandler.GetTime(problem.Max))
             { // no solution possible.
                 Itinero.Logistics.Logging.Logger.Log("RandomSolver", Logging.TraceEventType.Error, "Problem is unfeasible.");
                 return null;
@@ -72,9 +73,9 @@ namespace Itinero.Logistics.Solutions.STSP.Random
                 while (true)
                 {
                     var c = pool.GetRandom();
-                    var cost = problem.Weights[route.First][c] +
-                        problem.Weights[c][route.First];
-                    if (cost < problem.Max)
+                    var cost = problem.WeightHandler.GetTime(problem.Weights[route.First][c]) +
+                        problem.WeightHandler.GetTime(problem.Weights[c][route.First]);
+                    if (cost < problem.WeightHandler.GetTime(problem.Max))
                     {
                         route.InsertAfter(route.First, c);
                         pool.Remove(c);
@@ -95,11 +96,11 @@ namespace Itinero.Logistics.Solutions.STSP.Random
                 var c = pool.RemoveRandom();
                 Pair location;
                 var cost = route.CalculateCheapest(problem, c, out location);
-                if (cost != float.MaxValue &&
-                    cost + fitness < problem.Max)
+                if (cost < float.MaxValue &&
+                    cost + fitness < problem.WeightHandler.GetTime(problem.Max))
                 {
                     route.InsertAfter(location.From, c);
-                    fitness += cost;
+                    fitness = fitness + cost;
                 }
             }
 

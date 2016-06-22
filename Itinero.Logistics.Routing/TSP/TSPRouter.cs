@@ -22,6 +22,7 @@ using Itinero.Logistics.Solutions.TSP;
 using Itinero.Logistics.Solutions.TSP.GA.EAX;
 using Itinero.Logistics.Solvers;
 using Itinero.Logistics.Solvers.GA;
+using Itinero.Logistics.Weights;
 using Itinero.Profiles;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace Itinero.Logistics.Routing.TSP
     /// </summary>
     public class TSPRouter : RoutingAlgorithmBase, Itinero.Logistics.Routing.TSP.ITSPRouter
     {
-        private readonly ISolver<ITSP, ITSPObjective, Itinero.Logistics.Routes.IRoute> _solver;
+        private readonly ISolver<float, ITSP<float>, ITSPObjective<float>, Itinero.Logistics.Routes.IRoute> _solver;
         private readonly RouterBase _router;
         private readonly Profile _profile;
         private readonly Coordinate[] _locations;
@@ -44,7 +45,7 @@ namespace Itinero.Logistics.Routing.TSP
         /// Creates a new router with default solver and settings.
         /// </summary>
         public TSPRouter(RouterBase router, Profile profile, Coordinate[] locations, int first)
-            : this(router, profile, locations, first, null, new EAXSolver(new GASettings()
+            : this(router, profile, locations, first, null, new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -61,7 +62,7 @@ namespace Itinero.Logistics.Routing.TSP
         /// Creates a new router with default solver and settings.
         /// </summary>
         public TSPRouter(RouterBase router, Profile profile, Coordinate[] locations, int first, int last)
-            : this(router, profile, locations, first, last, new EAXSolver(new GASettings()
+            : this(router, profile, locations, first, last, new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -79,7 +80,7 @@ namespace Itinero.Logistics.Routing.TSP
         /// </summary>
         public TSPRouter(RouterBase router, Profile profile, Coordinate[] locations, int first, int? last,
             IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
-            : this(router, profile, locations, first, last, new EAXSolver(new GASettings()
+            : this(router, profile, locations, first, last, new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -96,7 +97,7 @@ namespace Itinero.Logistics.Routing.TSP
         /// Creates a new router with a given solver.
         /// </summary>
         public TSPRouter(RouterBase router, Profile profile, Coordinate[] locations, int first, int? last, 
-            ISolver<ITSP, ITSPObjective, Itinero.Logistics.Routes.IRoute> solver)
+            ISolver<float, ITSP<float>, ITSPObjective<float>, Itinero.Logistics.Routes.IRoute> solver)
             : this(router, profile, locations, first, last, solver, new WeightMatrixAlgorithm(router, profile, locations))
         {
 
@@ -106,7 +107,7 @@ namespace Itinero.Logistics.Routing.TSP
         /// Creates a new router with a given solver.
         /// </summary>
         public TSPRouter(RouterBase router, Profile profile, Coordinate[] locations, int first, int? last, 
-            ISolver<ITSP, ITSPObjective, Itinero.Logistics.Routes.IRoute> solver, IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
+            ISolver<float, ITSP<float>, ITSPObjective<float>, Itinero.Logistics.Routes.IRoute> solver, IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
         {
             _router = router;
             _profile = profile;
@@ -157,15 +158,17 @@ namespace Itinero.Logistics.Routing.TSP
                     return;
                 }
 
-                _originalRoute = _solver.Solve(new TSPProblem(
+                _originalRoute = _solver.Solve(new TSPProblem<float>(
+                    new DefaultWeightHandler(),
                     _weightMatrixAlgorithm.IndexOf(first), _weightMatrixAlgorithm.IndexOf(_last.Value), _weightMatrixAlgorithm.Weights), 
-                        new MinimumWeightObjective());
+                        new MinimumWeightObjective<float>());
             }
             else
             { // the last customer was not set.
-                _originalRoute = _solver.Solve(new TSPProblem(
+                _originalRoute = _solver.Solve(new TSPProblem<float>(
+                    new DefaultWeightHandler(),
                     _weightMatrixAlgorithm.IndexOf(first), _weightMatrixAlgorithm.Weights), 
-                        new MinimumWeightObjective());
+                        new MinimumWeightObjective<float>());
             }
 
             // convert route to a route with the original location indices.

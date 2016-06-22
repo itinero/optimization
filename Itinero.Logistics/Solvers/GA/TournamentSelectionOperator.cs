@@ -88,7 +88,7 @@ namespace Itinero.Logistics.Solvers.GA
             // choose a candidate.
             for (var idx = 0; idx < tempPop.Count; idx++)
             { // choose a candidate.
-                if (_random.Generate(1.0) < _tournamentProbability)
+                if (_random.Generate(1.0f) < _tournamentProbability)
                 { // candidate choosen!
                     return tempPop[idx].Item1;
                 }

@@ -29,41 +29,53 @@ namespace Itinero.Logistics.Solutions.STSP
         /// <summary>
         /// Converts to an equivalent TSP.
         /// </summary>
-        public static ITSP ToTSP(this ISTSP itsp)
+        public static ITSP<T> ToTSP<T>(this ISTSP<T> itsp)
+            where T : struct
         {
-            var weights = new double[itsp.Weights.Length][];
+            var weights = new T[itsp.Weights.Length][];
             for (var i = 0; i < itsp.Weights.Length; i++)
             {
-                weights[i] = itsp.Weights[i].Clone() as double[];
+                weights[i] = itsp.Weights[i].Clone() as T[];
             }
             if (itsp.Last.HasValue)
             {
-                return new TSPProblem(itsp.First, itsp.Last.Value, itsp.Weights);
+                return new TSPProblem<T>(itsp.WeightHandler, itsp.First, itsp.Last.Value, weights);
             }
-            return new TSPProblem(itsp.First, itsp.Weights);
+            return new TSPProblem<T>(itsp.WeightHandler, itsp.First, weights);
         }
 
         /// <summary>
         /// Converts to an STSP.
         /// </summary>
-        public static ISTSP ToSTSP(this ITSP tsp, float max = float.MaxValue)
+        public static ISTSP<T> ToSTSP<T>(this ITSP<T> tsp)
+            where T : struct
         {
-            var weights = new double[tsp.Weights.Length][];
+            return tsp.ToSTSP(tsp.WeightHandler.Infinity);
+        }
+
+        /// <summary>
+        /// Converts to an STSP.
+        /// </summary>
+        public static ISTSP<T> ToSTSP<T>(this ITSP<T> tsp, T max)
+            where T : struct
+        {
+            var weights = new T[tsp.Weights.Length][];
             for (var i = 0; i < tsp.Weights.Length; i++)
             {
-                weights[i] = tsp.Weights[i].Clone() as double[];
+                weights[i] = tsp.Weights[i].Clone() as T[];
             }
             if (tsp.Last.HasValue)
             {
-                return new STSPProblem(tsp.First, tsp.Last.Value, tsp.Weights, max);
+                return new STSPProblem<T>(tsp.WeightHandler, tsp.First, tsp.Last.Value, weights, max);
             }
-            return new STSPProblem(tsp.First, tsp.Weights, max);
+            return new STSPProblem<T>(tsp.WeightHandler, tsp.First, weights, max);
         }
 
         /// <summary>
         /// Generates an emtpy route.
         /// </summary>
-        public static Route EmptyRoute(this ISTSP problem)
+        public static Route EmptyRoute<T>(this ISTSP<T> problem)
+            where T : struct
         {
             if (problem.Last.HasValue)
             {

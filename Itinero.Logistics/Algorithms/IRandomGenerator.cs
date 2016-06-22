@@ -29,9 +29,9 @@ namespace Itinero.Logistics.Algorithms
         int Generate(int max);
 
         /// <summary>
-        /// Generates a random double
+        /// Generates a random float
         /// </summary>
-        double Generate(double max);
+        float Generate(float max);
 
         /// <summary>
         /// Sets the seed of the static generator.

@@ -19,6 +19,7 @@
 using System;
 using Itinero.Logistics.Routes;
 using Itinero.Logistics.Solutions.TSP;
+using Itinero.Logistics.Weights;
 
 namespace Itinero.Logistics.Solutions.STSP
 {
@@ -30,16 +31,18 @@ namespace Itinero.Logistics.Solutions.STSP
         /// <summary>
         /// Converts the ISTSPObjective to an equivalent TSPObjective.
         /// </summary>
-        public static ITSPObjective ToTSPObjective(this ISTSPObjective istspObjective)
+        public static ITSPObjective<T> ToTSPObjective<T>(this ISTSPObjective<T> istspObjective)
+            where T : struct
         {
-            return new STSPObjectiveAsTSPObjective(istspObjective);
+            return new STSPObjectiveAsTSPObjective<T>(istspObjective);
         }
         
-        private class STSPObjectiveAsTSPObjective : ITSPObjective
+        private class STSPObjectiveAsTSPObjective<T> : ITSPObjective<T>
+            where T : struct
         {
-            private readonly ISTSPObjective _o;
+            private readonly ISTSPObjective<T> _o;
 
-            public STSPObjectiveAsTSPObjective(ISTSPObjective o)
+            public STSPObjectiveAsTSPObjective(ISTSPObjective<T> o)
             {
                 _o = o;
             }
@@ -52,17 +55,17 @@ namespace Itinero.Logistics.Solutions.STSP
                 }
             }
 
-            public double Calculate(ITSP problem, IRoute solution)
+            public float Calculate(ITSP<T> problem, IRoute solution)
             {
                 return _o.CalculateWeight(problem.ToSTSP(), solution);
             }
 
-            public double IfShiftAfter(ITSP problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
+            public float IfShiftAfter(ITSP<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
             {
                 return _o.IfShiftAfter(problem.ToSTSP(), route, customer, before, oldBefore, oldAfter, newAfter);
             }
 
-            public bool ShiftAfter(ITSP problem, IRoute route, int customer, int before, out double difference)
+            public bool ShiftAfter(ITSP<T> problem, IRoute route, int customer, int before, out float difference)
             {
                 return _o.ShiftAfter(problem.ToSTSP(), route, customer, before, out difference);
             }

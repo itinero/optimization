@@ -26,9 +26,10 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
     /// <summary>
     /// A 3-opt solver.
     /// </summary>
-    public class HillClimbing3OptSolver : SolverBase<ITSP, ITSPObjective, IRoute>, IOperator<ITSP, ITSPObjective, IRoute>
+    public class HillClimbing3OptSolver<T> : SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute>, IOperator<T, ITSP<T>, ITSPObjective<T>, IRoute>
+        where T : struct
     {
-        private readonly ISolver<ITSP, ITSPObjective, IRoute> _generator;
+        private readonly ISolver<T, ITSP<T>, ITSPObjective<T>, IRoute> _generator;
         private readonly bool _nearestNeighbours = false;
         private readonly bool _dontLook = false;
         private readonly double _epsilon = 0.001f;
@@ -38,7 +39,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Creates a new solver.
         /// </summary>
         public HillClimbing3OptSolver()
-            : this(new RandomSolver(), true, true)
+            : this(new RandomSolver<T>(), true, true)
         {
 
         }
@@ -46,7 +47,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public HillClimbing3OptSolver(ISolver<ITSP, ITSPObjective, IRoute> generator, bool nearestNeighbours, bool dontLook)
+        public HillClimbing3OptSolver(ISolver<T, ITSP<T>, ITSPObjective<T>, IRoute> generator, bool nearestNeighbours, bool dontLook)
         {
             _generator = generator;
             _dontLook = dontLook;
@@ -80,16 +81,16 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Returns true if the given objective is supported.
         /// </summary>
         /// <returns></returns>
-        public bool Supports(ITSPObjective objective)
+        public bool Supports(ITSPObjective<T> objective)
         {
-            return objective.Name == MinimumWeightObjective.MinimumWeightObjectiveName;
+            return objective.Name == MinimumWeightObjective<T>.MinimumWeightObjectiveName;
         }
 
         /// <summary>
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
+        public override IRoute Solve(ITSP<T> problem, ITSPObjective<T> objective, out float fitness)
         {
             if (!problem.Last.HasValue) { throw new ArgumentException("OPT3 cannot be used on open TSP-problems."); }
 
@@ -100,7 +101,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
             fitness = objective.Calculate(problem, route);
 
             // improve the existing solution.
-            double difference;
+            float difference;
             if(this.Apply(problem, objective, route, out difference))
             { // improvement!
                 fitness = fitness + difference;
@@ -113,7 +114,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSP problem, ITSPObjective objective, IRoute solution, out double delta)
+        public bool Apply(ITSP<T> problem, ITSPObjective<T> objective, IRoute solution, out float delta)
         {
             if (!problem.Last.HasValue) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
             if (solution.First != solution.Last) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
@@ -129,7 +130,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
             while (improvement)
             {
                 improvement = false;
-                var moveDelta = 0.0;
+                var moveDelta = 0.0f;
                 foreach (int v1 in solution)
                 {
                     if (!this.Check(problem, v1))
@@ -152,7 +153,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Tries all 3Opt Moves for the neighbourhood of v1.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(ITSP problem, float[][] weights, IRoute route, int v1, out double delta)
+        public bool Try3OptMoves(ITSP<T> problem, T[][] weights, IRoute route, int v1, out float delta)
         {
             // get v_2.
             var v2 = route.GetNeigbour(v1);
@@ -163,13 +164,13 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
             }
 
             var betweenV2V1 = route.Between(v2, v1);
-            var weightV1V2 = weights[v1][v2];
+            var weightV1V2 = problem.WeightHandler.GetTime(weights[v1][v2]);
             if (v2 == problem.First && !problem.Last.HasValue)
             { // set to zero if not closed.
                 weightV1V2 = 0;
             }
             int v3 = -1;
-            INearestNeighbours neighbours = null;
+            INearestNeighbours<T> neighbours = null;
             if (_nearestNeighbours)
             {
                 neighbours = problem.GetNNearestNeighboursForward(10, v1);
@@ -182,8 +183,8 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
                     if (!_nearestNeighbours ||
                         neighbours.Contains(v4))
                     {
-                        var weightV1V4 = weights[v1][v4];
-                        var weightV3V4 = weights[v3][v4];
+                        var weightV1V4 = problem.WeightHandler.GetTime(weights[v1][v4]);
+                        var weightV3V4 = problem.WeightHandler.GetTime(weights[v3][v4]);
                         if (v4 == problem.First && !problem.Last.HasValue)
                         { // set to zero if not closed.
                             weightV1V4 = 0;
@@ -207,14 +208,14 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(ITSP problem, float[][] weights, IRoute route,
-            int v1, int v2, double weightV1V2,
-            int v3, out double delta)
+        public bool Try3OptMoves(ITSP<T> problem, T[][] weights, IRoute route,
+            int v1, int v2, float weightV1V2,
+            int v3, out float delta)
         {
             // get v_4.
             var v4 = route.GetNeigbour(v3);
-            var weightV1V2PlusV3V4 = weightV1V2 + weights[v3][v4];
-            var weightV1V4 = weights[v1][v4];
+            var weightV1V2PlusV3V4 = weightV1V2 + problem.WeightHandler.GetTime(weights[v3][v4]);
+            var weightV1V4 = problem.WeightHandler.GetTime(weights[v1][v4]);
             if (v4 == problem.First && !problem.Last.HasValue)
             { // set to zero if not closed.
                 weightV1V4 = 0;
@@ -227,8 +228,8 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(ITSP problem, float[][] weights, IRoute route,
-            int v1, int v2, int v3, float[] weightsV3, int v4, double weightV1V2PlusV3V4, double weightV1V4, out double delta)
+        public bool Try3OptMoves(ITSP<T> problem, T[][] weights, IRoute route,
+            int v1, int v2, int v3, T[] weightsV3, int v4, float weightV1V2PlusV3V4, float weightV1V4, out float delta)
         {
             var betweenV4V1Enumerator = route.Between(v4, v1).GetEnumerator();
             if (betweenV4V1Enumerator.MoveNext())
@@ -239,9 +240,9 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
                     while (betweenV4V1Enumerator.MoveNext())
                     {
                         var v6 = betweenV4V1Enumerator.Current;
-                        var weightV3V6 = weightsV3[v6];
-                        var weightV5V2 = weights[v5][v2];
-                        var weightV5V6 = weights[v5][v6];
+                        var weightV3V6 = problem.WeightHandler.GetTime(weightsV3[v6]);
+                        var weightV5V2 = problem.WeightHandler.GetTime(weights[v5][v2]);
+                        var weightV5V6 = problem.WeightHandler.GetTime(weights[v5][v6]);
                         if (v6 == problem.First && !problem.Last.HasValue)
                         { // set to zero if not closed.
                             weightV3V6 = 0;
@@ -285,7 +286,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
 
         #region Don't Look
 
-        private bool Check(ITSP problem, int customer)
+        private bool Check(ITSP<T> problem, int customer)
         {
             if (_dontLook)
             {
@@ -294,7 +295,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
             return false;
         }
 
-        private void Set(ITSP problem, int customer, bool value)
+        private void Set(ITSP<T> problem, int customer, bool value)
         {
             if (_dontLook)
             {

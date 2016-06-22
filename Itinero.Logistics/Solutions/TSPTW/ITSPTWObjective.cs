@@ -23,24 +23,25 @@ namespace Itinero.Logistics.Solutions.TSPTW
     /// <summary>
     /// Abstract representation of a basic TSPTW-objective.
     /// </summary>
-    public interface ITSPTWObjective : Itinero.Logistics.Solutions.TSP.ITSPObjective
+    public interface ITSPTWObjective<T> : Itinero.Logistics.Solutions.TSP.ITSPObjective<T>
+        where T : struct
     {
         /// <summary>
         /// Calculates the fitness of a TSP solution.
         /// </summary>
         /// <returns></returns>
-        double Calculate(ITSPTW problem, IRoute solution);
+        float Calculate(ITSPTW<T> problem, IRoute solution);
 
         /// <summary>
         /// Executes the shift-after and returns the difference between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>
-        bool ShiftAfter(ITSPTW problem, IRoute route, int customer, int before, out double difference);
+        bool ShiftAfter(ITSPTW<T> problem, IRoute route, int customer, int before, out float difference);
 
         /// <summary>
         /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
         /// </summary>
         /// <returns></returns>
-        double IfShiftAfter(ITSPTW problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter);
+        float IfShiftAfter(ITSPTW<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter);
     }
 }

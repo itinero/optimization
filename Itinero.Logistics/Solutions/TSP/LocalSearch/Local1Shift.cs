@@ -25,7 +25,8 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
     /// A local 1-Shift search for the TSP.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere also called reinsertion heuristic.</remarks>
-    public class Local1Shift : IOperator<ITSP, ITSPObjective, IRoute>
+    public class Local1Shift<T> : IOperator<T, ITSP<T>, ITSPObjective<T>, IRoute>
+        where T : struct
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -39,20 +40,20 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Returns true if the given objective is supported.
         /// </summary>
         /// <returns></returns>
-        public bool Supports(ITSPObjective objective)
+        public bool Supports(ITSPObjective<T> objective)
         {
-            return objective.Name == MinimumWeightObjective.MinimumWeightObjectiveName;
+            return objective.Name == MinimumWeightObjective<T>.MinimumWeightObjectiveName;
         }
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSP problem, ITSPObjective objective, IRoute route, out double delta)
+        public bool Apply(ITSP<T> problem, ITSPObjective<T> objective, IRoute route, out float delta)
         {
             var originalRoute = route;
             var originalProblem = problem;
-            var originalFitness = 0.0;
+            var originalFitness = 0.0f;
             if (!problem.Last.HasValue)
             { // the problem is 'open', convert to a closed equivalent.
                 originalFitness = objective.Calculate(problem, route);
@@ -63,10 +64,10 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
             delta = 0;
             var success = false;
 
-            var bestDelta = 0.0;
+            var bestDelta = 0.0f;
             do
             {
-                bestDelta = 0.0;
+                bestDelta = 0.0f;
 
                 // search the entire route for a customer that can be moved to improve it.
                 var bestTriple = new Triple();

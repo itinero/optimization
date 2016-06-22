@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -21,7 +21,7 @@ namespace Itinero.Logistics.Solvers
     /// <summary>
     /// Abstract representation of a solver.
     /// </summary>
-    public interface ISolver<TProblem, TObjective, TSolution>
+    public interface ISolver<TWeight, TProblem, TObjective, TSolution>
     {
         /// <summary>
         /// Returns the name of this solver.
@@ -41,7 +41,7 @@ namespace Itinero.Logistics.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        TSolution Solve(TProblem problem, TObjective objective, out double fitness);
+        TSolution Solve(TProblem problem, TObjective objective, out float fitness);
 
         /// <summary>
         /// Stops the executing of the solving process.

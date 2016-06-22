@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,16 +16,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Weights;
+
 namespace Itinero.Logistics.Solutions
 {
     /// <summary>
     /// An abstract representation of a problem containing weights in the form of a matrix.
     /// </summary>
-    public interface IMatrixWeights
+    public interface IMatrixWeights<T>
+        where T : struct
     {
+        /// <summary>
+        /// Gets the weight handler.
+        /// </summary>
+        WeightHandler<T> WeightHandler
+        {
+            get;
+        }
+
         /// <summary>
         /// Gets the weights.
         /// </summary>
-        float[][] Weights { get; }
+        T[][] Weights { get; }
     }
 }

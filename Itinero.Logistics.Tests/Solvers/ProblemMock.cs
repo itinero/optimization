@@ -26,6 +26,6 @@ namespace Itinero.Logistics.Tests.Solvers
         /// <summary>
         /// The maximum value of a value that should be reduced to zero.
         /// </summary>
-        public double Max { get; set; }
+        public float Max { get; set; }
     }
 }

@@ -26,7 +26,8 @@ namespace Itinero.Logistics.Solutions.TSP.Random
     /// <summary>
     /// Just generates random solutions.
     /// </summary>
-    public class RandomSolver : SolverBase<ITSP, ITSPObjective, IRoute>
+    public class RandomSolver<T> : SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute>
+        where T : struct
     {
         /// <summary>
         /// Returns the name of this solver.
@@ -40,7 +41,7 @@ namespace Itinero.Logistics.Solutions.TSP.Random
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
+        public override IRoute Solve(ITSP<T> problem, ITSPObjective<T> objective, out float fitness)
         {
             // generate random solution.
             var customers = new List<int>();

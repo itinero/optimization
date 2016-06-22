@@ -41,11 +41,11 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.Random
             RandomGeneratorExtensions.GetGetNewRandom = () => new RandomGenerator(4541247);
 
             // create the perturber.
-            var perturber = new Random1Shift();
+            var perturber = new Random1Shift<float>();
 
             // create a problem.
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 10);
-            var objective = new MinimumWeightObjective();
+            var objective = new MinimumWeightObjective<float>();
 
             // execute random shifts.
             for (int i = 0; i < 1000; i++)
@@ -55,7 +55,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.Random
                 var fitnessBefore = objective.Calculate(problem, solution);
 
                 // shift one customer.
-                double difference;
+                float difference;
                 perturber.Apply(problem, objective, solution, out difference);
 
                 // check if valid solution.
@@ -88,7 +88,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.Random
             RandomGeneratorExtensions.GetGetNewRandom = () => new RandomGenerator(4541247);
 
             // create the perturber.
-            var perturber = new Random1Shift();
+            var perturber = new Random1Shift<float>();
 
             // create a problem where any move would violate windows.
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 2);
@@ -117,7 +117,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.Random
                 Min = 8,
                 Max = 9
             };
-            var objective = new MinimumWeightObjective();
+            var objective = new MinimumWeightObjective<float>();
 
             // execute random shifts.
             for (int i = 0; i < 1000; i++)
@@ -127,7 +127,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.Random
                 var fitnessBefore = objective.Calculate(problem, solution);
 
                 // shift one customer.
-                double difference;
+                float difference;
                 perturber.Apply(problem, objective, solution, out difference);
 
                 // check if valid solution.
@@ -160,7 +160,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.Random
             RandomGeneratorExtensions.GetGetNewRandom = () => new RandomGenerator(4541247);
 
             // create the perturber.
-            var perturber = new Random1Shift();
+            var perturber = new Random1Shift<float>();
 
             // create a problem where any move would violate windows.
             var problem = TSPTWHelper.CreateTSP(0, 0, 5, 2);
@@ -174,7 +174,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.Random
                 Min = 6,
                 Max = 7
             };
-            var objective = new MinimumWeightObjective();
+            var objective = new MinimumWeightObjective<float>();
 
             // execute random shifts.
             for (int i = 0; i < 1000; i++)
@@ -184,7 +184,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.Random
                 var fitnessBefore = objective.Calculate(problem, solution);
 
                 // shift one customer.
-                double difference;
+                float difference;
                 perturber.Apply(problem, objective, solution, out difference);
 
                 // check if valid solution.

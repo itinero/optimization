@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Weights;
 using Itinero.Profiles;
 using System.Collections.Generic;
 
@@ -73,9 +74,9 @@ namespace Itinero.Logistics.Routing.STSP
             _all.Insert(0, _source);
             var weights = _router.CalculateWeight(_profile, _all.ToArray(), null);
 
-            var solver = new Itinero.Logistics.Solutions.STSP.VNS.VNSConstructionSolver(2, 2);
-            var problem = new Itinero.Logistics.Solutions.STSP.STSPProblem(0, 0, weights, _max);
-            _route = solver.Solve(problem, new Solutions.STSP.MinimumWeightObjective());
+            var solver = new Itinero.Logistics.Solutions.STSP.VNS.VNSConstructionSolver<float>(2, 2);
+            var problem = new Itinero.Logistics.Solutions.STSP.STSPProblem<float>(new DefaultWeightHandler(), 0, 0, weights, _max);
+            _route = solver.Solve(problem, new Solutions.STSP.MinimumWeightObjective<float>(new DefaultWeightHandler()));
 
             this.HasSucceeded = true;
         }

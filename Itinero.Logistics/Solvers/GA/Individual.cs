@@ -27,7 +27,7 @@ namespace Itinero.Logistics.Solvers.GA
         /// <summary>
         /// Gets or sets the fitness.
         /// </summary>
-        public double Fitness { get; set; }
+        public float Fitness { get; set; }
 
         /// <summary>
         /// Gets or sets the solution.

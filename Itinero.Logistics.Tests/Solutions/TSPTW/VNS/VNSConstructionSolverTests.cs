@@ -66,17 +66,17 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.VNS
             };
 
             // create the solver.
-            var solver = new VNSConstructionSolver();
+            var solver = new VNSConstructionSolver<float>();
             solver.IntermidiateResult += (x) =>
             {
-                var fitness = (new FeasibleObjective()).Calculate(problem, x);
+                var fitness = (new FeasibleObjective<float>()).Calculate(problem, x);
                 fitness = fitness + 0;
             };
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new Itinero.Logistics.Solutions.TSPTW.Objectives.FeasibleObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new Itinero.Logistics.Solutions.TSPTW.Objectives.FeasibleObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(0, fitness);

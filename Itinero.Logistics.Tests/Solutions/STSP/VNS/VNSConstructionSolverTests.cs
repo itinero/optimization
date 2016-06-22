@@ -20,6 +20,7 @@ using Itinero.Logistics.Algorithms;
 using Itinero.Logistics.Solutions.STSP;
 using Itinero.Logistics.Solutions.STSP.Random;
 using Itinero.Logistics.Solutions.STSP.VNS;
+using Itinero.Logistics.Weights;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,7 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
         public void TestName()
         {
             // create the solver.
-            var solver = new RandomSolver();
+            var solver = new RandomSolver<float>();
 
             Assert.AreEqual("RAN", solver.Name);
         }
@@ -66,13 +67,13 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
             problem.Weights[9][0] = 1;
 
             // create the solver.
-            var solver = new VNSConstructionSolver();
-            var objective = new MinimumWeightObjective();
+            var solver = new VNSConstructionSolver<float>();
+            var objective = new MinimumWeightObjective<float>(new DefaultWeightHandler());
 
             for (var i = 0; i < 100; i++)
             {
                 // generate solution.
-                double fitness;
+                float fitness;
                 var solution = solver.Solve(problem, objective, out fitness);
 
                 // test contents.
@@ -104,13 +105,13 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
             problem.Weights[9][0] = 1;
 
             // create the solver.
-            var solver = new VNSConstructionSolver();
+            var solver = new VNSConstructionSolver<float>();
 
             for (int i = 0; i < 100; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(new DefaultWeightHandler()), out fitness);
 
                 // test contents.
                 Assert.IsTrue(fitness <= problem.Max * (problem.Weights.Length - solution.Count));
@@ -141,13 +142,13 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
             problem.Weights[9][0] = 1;
 
             //create the solver.
-            var solver = new RandomSolver();
+            var solver = new RandomSolver<float>();
 
             for (int i = 0; i < 100; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(new DefaultWeightHandler()), out fitness);
 
                 // test contents.
                 Assert.IsTrue(fitness <= problem.Max * (problem.Weights.Length - solution.Count));

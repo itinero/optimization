@@ -25,15 +25,15 @@ namespace Itinero.Logistics.Tests.Routing.TSPTW
     /// <summary>
     /// A mock-solver that has a pre-determined order.
     /// </summary>
-    public class TSPTWSolverMock : SolverBase<ITSPTW, ITSPTWObjective, IRoute>
+    public class TSPTWSolverMock : SolverBase<float, ITSPTW<float>, ITSPTWObjective<float>, IRoute>
     {
         private readonly IRoute _route;
-        private readonly double _fitness;
+        private readonly float _fitness;
 
         /// <summary>
         /// Creates a new mock-solver.
         /// </summary>
-        public TSPTWSolverMock(IRoute route, double fitness)
+        public TSPTWSolverMock(IRoute route, float fitness)
         {
             _route = route;
             _fitness = fitness;
@@ -51,7 +51,7 @@ namespace Itinero.Logistics.Tests.Routing.TSPTW
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSPTW problem, ITSPTWObjective objective, out double fitness)
+        public override IRoute Solve(ITSPTW<float> problem, ITSPTWObjective<float> objective, out float fitness)
         {
             fitness = _fitness;
             return _route;

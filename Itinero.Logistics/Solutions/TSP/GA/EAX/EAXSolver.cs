@@ -29,14 +29,15 @@ namespace Itinero.Logistics.Solutions.TSP.GA.EAX
     /// <summary>
     /// A solver using a GA and the edge-assembly crossover.
     /// </summary> 
-    public class EAXSolver : GASolver<ITSP, ITSPObjective, IRoute>
+    public class EAXSolver<T> : GASolver<T, ITSP<T>, ITSPObjective<T>, IRoute>
+        where T : struct
     {
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
         public EAXSolver(GASettings settings)
-            : base(new MinimumWeightObjective(), new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<ITSP, IRoute>(10, 0.5), new EmptyOperator<ITSP, ITSPObjective, IRoute>(), settings)
+            : base(new MinimumWeightObjective<T>(), new HillClimbing3OptSolver<T>(), new EAXOperator<T>(30, EAXOperator<T>.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
+            new TournamentSelectionOperator<ITSP<T>, IRoute>(10, 0.5), new EmptyOperator<T, ITSP<T>, ITSPObjective<T>, IRoute>(), settings)
         {
 
         }
@@ -44,9 +45,9 @@ namespace Itinero.Logistics.Solutions.TSP.GA.EAX
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
-        public EAXSolver(GASettings settings, IOperator<ITSP, ITSPObjective, IRoute> mutation)
-            : base(new MinimumWeightObjective(), new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<ITSP, IRoute>(10, 0.5), mutation, settings)
+        public EAXSolver(GASettings settings, IOperator<T, ITSP<T>, ITSPObjective<T>, IRoute> mutation)
+            : base(new MinimumWeightObjective<T>(), new HillClimbing3OptSolver<T>(), new EAXOperator<T>(30, EAXOperator<T>.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
+            new TournamentSelectionOperator<ITSP<T>, IRoute>(10, 0.5), mutation, settings)
         {
 
         }
@@ -55,11 +56,11 @@ namespace Itinero.Logistics.Solutions.TSP.GA.EAX
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP problem, ITSPObjective objective, out double fitness)
+        public override IRoute Solve(ITSP<T> problem, ITSPObjective<T> objective, out float fitness)
         {
             if(problem.Weights.Length < 5)
             { // use brute-force solver when problem is very small.
-                var bruteForceSolver = new BruteForceSolver();
+                var bruteForceSolver = new BruteForceSolver<T>();
                 return bruteForceSolver.Solve(problem, objective, out fitness);
             }
 
@@ -74,7 +75,7 @@ namespace Itinero.Logistics.Solutions.TSP.GA.EAX
                 fitness = 0;
                 foreach(var pair in route.Pairs())
                 {
-                    fitness = fitness + problem.Weights[pair.From][pair.To];
+                    fitness = fitness + problem.WeightHandler.GetTime(problem.Weights[pair.From][pair.To]);
                 }
                 return route;
             }
@@ -90,7 +91,7 @@ namespace Itinero.Logistics.Solutions.TSP.GA.EAX
                 fitness = 0;
                 foreach (var pair in route.Pairs())
                 {
-                    fitness = fitness + problem.Weights[pair.From][pair.To];
+                    fitness = fitness + problem.WeightHandler.GetTime(problem.Weights[pair.From][pair.To]);
                 }
                 return route;
             }

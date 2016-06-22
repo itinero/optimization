@@ -23,13 +23,13 @@ namespace Itinero.Logistics.Solutions.Algorithms
     /// <summary>
     /// An enumerable containing n-nearest neighbours and some extra information like maximum weight and n.
     /// </summary>
-    public class SortedNearestNeighbours : List<int>, ISortedNearestNeighbours
+    public class SortedNearestNeighbours<T> : List<int>, ISortedNearestNeighbours<T>
+        where T : struct
     {
         /// <summary>
         /// Creates a new sorted nearest neighbour collection.
         /// </summary>
-        /// <param name="max"></param>
-        public SortedNearestNeighbours(double max)
+        public SortedNearestNeighbours(T max)
         {
             this.Max = max;
         }
@@ -54,7 +54,7 @@ namespace Itinero.Logistics.Solutions.Algorithms
         /// <summary>
         /// Gets the maximum weight.
         /// </summary>
-        public double Max
+        public T Max
         {
             get;
             private set;

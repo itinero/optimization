@@ -38,7 +38,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Random
         public void TestName()
         {
             // create the perturber.
-            var perturber = new Random1Shift();
+            var perturber = new Random1Shift<float>();
 
             Assert.AreEqual("RAN_1SHFT", perturber.Name);
         }
@@ -53,7 +53,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Random
             RandomGeneratorExtensions.GetGetNewRandom = () => new RandomGenerator(4541247);
 
             // create the perturber.
-            var perturber = new Random1Shift();
+            var perturber = new Random1Shift<float>();
 
             // create a problem.
             var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
@@ -61,7 +61,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Random
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
             problem.Weights[3][4] = 1;
-            var objective = new MinimumWeightObjective();
+            var objective = new MinimumWeightObjective<float>();
 
             // execute random shifts.
             for(int i = 0; i < 1000; i++)
@@ -71,7 +71,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.Random
                 var fitnessBefore = objective.Calculate(problem, solution);
 
                 // shift one customer.
-                double difference;
+                float difference;
                 perturber.Apply(problem, objective, solution, out difference);
 
                 // check if valid solution.

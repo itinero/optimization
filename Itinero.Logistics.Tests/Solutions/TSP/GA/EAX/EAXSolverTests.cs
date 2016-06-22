@@ -43,7 +43,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             var problem = TSPHelper.CreateTSP(0, 0, 1, 0);
 
             // create the solver.
-            var solver = new EAXSolver(new GASettings()
+            var solver = new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -56,8 +56,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(0, fitness);
@@ -82,7 +82,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             problem.Weights[1][0] = 1;
 
             // create the solver.
-            var solver = new EAXSolver(new GASettings()
+            var solver = new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -95,8 +95,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(1, fitness);
@@ -125,7 +125,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             problem.Weights[4][0] = 1;
 
             // create the solver.
-            var solver = new EAXSolver(new GASettings()
+            var solver = new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -138,8 +138,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(4, fitness);
@@ -171,7 +171,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             problem.Weights[4][0] = 1;
 
             // create the solver.
-            var solver = new EAXSolver(new GASettings()
+            var solver = new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -184,8 +184,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(4, fitness);
@@ -217,7 +217,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             problem.Weights[4][0] = 1;
 
             // create the solver.
-            var solver = new EAXSolver(new GASettings()
+            var solver = new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -230,8 +230,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(5, fitness);
@@ -263,7 +263,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             problem.Weights[4][0] = 1;
 
             // create the solver.
-            var solver = new EAXSolver(new GASettings()
+            var solver = new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -276,8 +276,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(4, fitness);
@@ -323,7 +323,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             var problem = TSPHelper.CreateTSP(0, 16, weights);
 
             // create the solver.
-            var solver = new EAXSolver(new GASettings()
+            var solver = new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 5,
@@ -336,8 +336,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             for (var i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(0, solution.First);
@@ -397,7 +397,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             var problem = TSPHelper.CreateTSP(0, 0, weights);
 
             // create the solver.
-            var solver = new EAXSolver(new GASettings()
+            var solver = new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -410,8 +410,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             for (var i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(39, fitness);
@@ -469,7 +469,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             var problem = TSPHelper.CreateTSP(0, weights);
 
             // create the solver.
-            var solver = new EAXSolver(new GASettings()
+            var solver = new EAXSolver<float>(new GASettings()
             {
                 CrossOverPercentage = 10,
                 ElitismPercentage = 1,
@@ -482,8 +482,8 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.GA.EAX
             for (var i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.IsTrue(fitness <= 39);

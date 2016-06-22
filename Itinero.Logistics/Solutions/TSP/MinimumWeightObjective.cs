@@ -23,7 +23,8 @@ namespace Itinero.Logistics.Solutions.TSP
     /// <summary>
     /// Represents the default TSP fitness calculation.
     /// </summary>
-    public class MinimumWeightObjective : ITSPObjective
+    public class MinimumWeightObjective<T> : ITSPObjective<T>
+        where T : struct
     {
         /// <summary>
         /// The default name for this objective.
@@ -35,19 +36,19 @@ namespace Itinero.Logistics.Solutions.TSP
         /// </summary>
         public string Name
         {
-            get { return MinimumWeightObjective.MinimumWeightObjectiveName; }
+            get { return MinimumWeightObjective<T>.MinimumWeightObjectiveName; }
         }
 
         /// <summary>
         /// Calculates the fitness of a given solution based on the given problem definitions.
         /// </summary>
         /// <returns></returns>
-        public double Calculate(ITSP problem, Routes.IRoute solution)
+        public float Calculate(ITSP<T> problem, Routes.IRoute solution)
         {
-            var fitness = 0.0;
+            var fitness = 0f;
             foreach (var pair in solution.Pairs())
             {
-                fitness = fitness + problem.Weights[pair.From][pair.To];
+                fitness = fitness + problem.WeightHandler.GetTime(problem.Weights[pair.From][pair.To]);
             }
             return fitness;
         }
@@ -56,7 +57,7 @@ namespace Itinero.Logistics.Solutions.TSP
         /// Calculates the difference between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>
-        public bool ShiftAfter(ITSP problem, Routes.IRoute route, int customer, int before, out double difference)
+        public bool ShiftAfter(ITSP<T> problem, Routes.IRoute route, int customer, int before, out float difference)
         {
             var weights = problem.Weights;
 
@@ -77,12 +78,12 @@ namespace Itinero.Logistics.Solutions.TSP
                 newAfter = route.First;
             }
 
-            difference = - weights[oldBefore][customer]
-                    - weights[customer][oldAfter]
-                    + weights[oldBefore][oldAfter]
-                    - weights[before][newAfter]
-                    + weights[before][customer]
-                    + weights[customer][newAfter];
+            difference = -problem.WeightHandler.GetTime(weights[oldBefore][customer])
+                    - problem.WeightHandler.GetTime(weights[customer][oldAfter])
+                    + problem.WeightHandler.GetTime(weights[oldBefore][oldAfter])
+                    - problem.WeightHandler.GetTime(weights[before][newAfter])
+                    + problem.WeightHandler.GetTime(weights[before][customer])
+                    + problem.WeightHandler.GetTime(weights[customer][newAfter]);
             return true;
         }
 
@@ -90,7 +91,7 @@ namespace Itinero.Logistics.Solutions.TSP
         /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
         /// </summary>
         /// <returns></returns>
-        public double IfShiftAfter(ITSP problem, Routes.IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
+        public float IfShiftAfter(ITSP<T> problem, Routes.IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
         {
             var weights = problem.Weights;
 
@@ -103,12 +104,12 @@ namespace Itinero.Logistics.Solutions.TSP
                 newAfter = route.First;
             }
 
-            return -weights[oldBefore][customer]
-                    - weights[customer][oldAfter]
-                    + weights[oldBefore][oldAfter]
-                    - weights[before][newAfter]
-                    + weights[before][customer]
-                    + weights[customer][newAfter];
+            return -problem.WeightHandler.GetTime(weights[oldBefore][customer])
+                    - problem.WeightHandler.GetTime(weights[customer][oldAfter])
+                    + problem.WeightHandler.GetTime(weights[oldBefore][oldAfter])
+                    - problem.WeightHandler.GetTime(weights[before][newAfter])
+                    + problem.WeightHandler.GetTime(weights[before][customer])
+                    + problem.WeightHandler.GetTime(weights[customer][newAfter]);
         }
     }
 }

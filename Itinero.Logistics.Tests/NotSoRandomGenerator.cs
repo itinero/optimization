@@ -25,13 +25,13 @@ namespace Itinero.Logistics.Tests
     /// </summary>
     public class NotSoRandomGenerator : IRandomGenerator
     {
-        private readonly double[] _notSoRandomDoubles;
+        private readonly float[] _notSoRandomDoubles;
         private readonly int[] _notSoRandomIntegers;
 
         /// <summary>
         /// Creates a new not-so random generator.
         /// </summary>
-        public NotSoRandomGenerator(double[] notSoRandomDoubles, int[] notSoRandomIntegers)
+        public NotSoRandomGenerator(float[] notSoRandomDoubles, int[] notSoRandomIntegers)
         {
             _notSoRandomDoubles = notSoRandomDoubles;
             _notSoRandomIntegers = notSoRandomIntegers;
@@ -49,11 +49,11 @@ namespace Itinero.Logistics.Tests
         private int _currentDouble = -1;
 
         /// <summary>
-        /// Generates a random double
+        /// Generates a random float
         /// </summary>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double Generate(double max)
+        public float Generate(float max)
         {
             _currentDouble++;
             if (_currentDouble == _notSoRandomDoubles.Length)

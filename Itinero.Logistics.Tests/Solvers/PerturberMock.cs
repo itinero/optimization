@@ -23,7 +23,7 @@ namespace Itinero.Logistics.Tests.Solvers
     /// <summary>
     /// A mockup of a perturber procedure for a very simple problem, reduce a number to zero.
     /// </summary>
-    class PerturberMock : IPerturber<ProblemMock, ObjectiveMock, SolutionMock>
+    class PerturberMock : IPerturber<float, ProblemMock, ObjectiveMock, SolutionMock>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -46,7 +46,7 @@ namespace Itinero.Logistics.Tests.Solvers
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ProblemMock problem, ObjectiveMock objective, SolutionMock solution, out double delta)
+        public bool Apply(ProblemMock problem, ObjectiveMock objective, SolutionMock solution, out float delta)
         {
             return this.Apply(problem, objective, solution, 1, out delta);
         }
@@ -55,7 +55,7 @@ namespace Itinero.Logistics.Tests.Solvers
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ProblemMock problem, ObjectiveMock objective, SolutionMock solution, int level, out double delta)
+        public bool Apply(ProblemMock problem, ObjectiveMock objective, SolutionMock solution, int level, out float delta)
         {
             var fitnessBefore = problem.Max - solution.Value;
             delta = Algorithms.RandomGeneratorExtensions.GetRandom().Generate(problem.Max / 100);

@@ -27,11 +27,12 @@ namespace Itinero.Logistics.Solvers
         /// Apply the operator until no more improvements can be found.
         /// </summary>
         /// <returns></returns>
-        public static bool ApplyUntil<TProblem, TObjective, TSolution>(this IOperator<TProblem, TObjective, TSolution> oper, 
-            TProblem problem, TObjective objective, TSolution solution, out double delta)
+        public static bool ApplyUntil<TWeight, TProblem, TObjective, TSolution>(this IOperator<TWeight, TProblem, TObjective, TSolution> oper, 
+            TProblem problem, TObjective objective, TSolution solution, out float delta)
+            where TWeight : struct
         {
             delta = 0;
-            var localDelta = 0.0;
+            var localDelta = 0.0f;
             while (oper.Apply(problem, objective, solution, out localDelta))
             {
                 delta += localDelta;

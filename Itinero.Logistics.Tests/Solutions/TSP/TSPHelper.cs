@@ -18,6 +18,7 @@
 
 using Itinero.Logistics.Solutions.Algorithms;
 using Itinero.Logistics.Solutions.TSP;
+using Itinero.Logistics.Weights;
 
 namespace Itinero.Logistics.Tests.Solutions.TSP
 {
@@ -29,7 +30,7 @@ namespace Itinero.Logistics.Tests.Solutions.TSP
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static ITSP CreateTSP(int first, int size, float defaultWeight)
+        public static ITSP<float> CreateTSP(int first, int size, float defaultWeight)
         {
             var weights = new float[size][];
             for (int x = 0; x < size; x++)
@@ -44,13 +45,13 @@ namespace Itinero.Logistics.Tests.Solutions.TSP
                     }
                 }
             }
-            return new TSPProblem(0, weights);
+            return new TSPProblem<float>(new DefaultWeightHandler(), 0, weights);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static ITSP CreateTSP(int first, int last, int size, float defaultWeight)
+        public static ITSP<float> CreateTSP(int first, int last, int size, float defaultWeight)
         {
             var weights = new float[size][];
             for (int x = 0; x < size; x++)
@@ -61,25 +62,25 @@ namespace Itinero.Logistics.Tests.Solutions.TSP
                     weights[x][y] = defaultWeight;
                 }
             }
-            return new TSPProblem(first, last, weights);
+            return new TSPProblem<float>(new DefaultWeightHandler(), first, last, weights);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static ITSP CreateTSP(int first, float[][] weights)
+        public static ITSP<float> CreateTSP(int first, float[][] weights)
         {
-            return new TSPProblem(first, weights);
+            return new TSPProblem<float>(new DefaultWeightHandler(), first, weights);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static ITSP CreateTSP(int first, int last, float[][] weights)
+        public static ITSP<float> CreateTSP(int first, int last, float[][] weights)
         {
-            return new TSPProblem(first, last, weights);
+            return new TSPProblem<float>(new DefaultWeightHandler(), first, last, weights);
         }
     }
 }

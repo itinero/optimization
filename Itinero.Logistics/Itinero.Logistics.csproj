@@ -127,6 +127,8 @@
     <Compile Include="Solvers\SolverDelegates.cs" />
     <Compile Include="Solvers\SolverObjectiveWrapper.cs" />
     <Compile Include="Solvers\VNS\VNSSolver.cs" />
+    <Compile Include="Weights\DefaultWeightHandler.cs" />
+    <Compile Include="Weights\WeightHandler.cs" />
     <None Include="packages.config" />
     <None Include="README.md" />
     <Compile Include="Routes\IRoute.cs" />

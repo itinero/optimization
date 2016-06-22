@@ -23,7 +23,8 @@ namespace Itinero.Logistics.Solutions
     /// <summary>
     /// Abstract representation of nearest neighbours.
     /// </summary>
-    public interface INearestNeighbours : IEnumerable<int>
+    public interface INearestNeighbours<T> : IEnumerable<int>
+        where T : struct
     {   
         /// <summary>
         /// Gets the # of nearest neighbours.
@@ -33,7 +34,7 @@ namespace Itinero.Logistics.Solutions
         /// <summary>
         /// Gets the maximum weight.
         /// </summary>
-        double Max { get; }
+        T Max { get; }
 
         /// <summary>
         /// Determines whether this collection contains the specified element.

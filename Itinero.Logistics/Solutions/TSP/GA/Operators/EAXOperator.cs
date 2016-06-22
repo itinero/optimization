@@ -29,7 +29,8 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
     /// <summary>
     /// An edge assembly crossover.
     /// </summary>
-    public class EAXOperator : ICrossOverOperator<ITSP, ITSPObjective, IRoute>
+    public class EAXOperator<T> : ICrossOverOperator<T, ITSP<T>, ITSPObjective<T>, IRoute>
+        where T : struct
     {
         private readonly int _maxOffspring;
         private readonly EdgeAssemblyCrossoverSelectionStrategyEnum _strategy;
@@ -40,7 +41,7 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
         /// Creates a new EAX crossover.
         /// </summary>
         public EAXOperator()
-            : this(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true)
+            : this(30, EAXOperator<T>.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true)
         {
 
         }
@@ -110,7 +111,7 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
             {
                 foreach (int cycle in cycles)
                 {
-                    if (_random.Generate(1.0) > 0.25)
+                    if (_random.Generate(1.0f) > 0.25)
                     {
                         starts.Add(cycle);
                     }
@@ -135,7 +136,7 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
         /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
         /// <returns></returns>
-        public IRoute Apply(ITSP problem, ITSPObjective objective, IRoute solution1, IRoute solution2, out double fitness)
+        public IRoute Apply(ITSP<T> problem, ITSPObjective<T> objective, IRoute solution1, IRoute solution2, out float fitness)
         {
             if (solution1.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
             if (solution2.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
@@ -148,7 +149,7 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
                 Logger.Log("EAXOperator.Apply", Logging.TraceEventType.Warning,
                     string.Format("EAX operator cannot be applied to 'open' TSP's: converting problem and routes to a closed equivalent."));
 
-                problem = (problem.Clone() as ITSP).ToClosed();
+                problem = (problem.Clone() as ITSP<T>).ToClosed();
                 solution1 = new Logistics.Routes.Route(solution1, 0);
                 solution2 = new Logistics.Routes.Route(solution2, 0);
             }
@@ -157,13 +158,13 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
                 Logger.Log("EAXSolver.Solve", Logging.TraceEventType.Warning,
                     string.Format("EAX operator cannot be applied to 'closed' TSP's with a fixed endpoint: converting problem and routes to a closed equivalent."));
 
-                problem = (problem.Clone() as ITSP).ToClosed();
+                problem = (problem.Clone() as ITSP<T>).ToClosed();
                 solution1 = new Logistics.Routes.Route(solution1, 0);
                 solution2 = new Logistics.Routes.Route(solution2, 0);
                 solution1.Remove(originalProblem.Last.Value);
                 solution2.Remove(originalProblem.Last.Value);
             }
-            fitness = double.MaxValue;
+            fitness = float.MaxValue;
             var weights = problem.Weights;
 
             // first create E_a
@@ -274,7 +275,7 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
 
                         from = currentTour.Key;
                         to = nextArrayA[from];
-                        double weightFromTo = weights[from][to];
+                        var weightFromTo = problem.WeightHandler.GetTime(weights[from][to]);
                         do
                         {
                             // check the nearest neighbours of from
@@ -286,9 +287,9 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
                                     !ignoreList[nn] &&
                                     !ignoreList[nnTo])
                                 {
-                                    double mergeWeight =
-                                        (weights[from][nnTo] + weights[nn][to]) -
-                                        (weightFromTo + weights[nn][nnTo]);
+                                    float mergeWeight =
+                                        (problem.WeightHandler.GetTime(weights[from][nnTo]) + problem.WeightHandler.GetTime(weights[nn][to])) -
+                                        (weightFromTo + problem.WeightHandler.GetTime(weights[nn][nnTo]));
                                     if (weight > mergeWeight)
                                     {
                                         weight = mergeWeight;
@@ -316,8 +317,8 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
                                 !ignoreList[customerTo])
                             {
                                 var mergeWeight =
-                                    (weights[from][customerTo] + weights[customer][to]) -
-                                    (weights[from][to] + weights[customer][customerTo]);
+                                    (problem.WeightHandler.GetTime(weights[from][customerTo]) + problem.WeightHandler.GetTime(weights[customer][to])) -
+                                    (problem.WeightHandler.GetTime(weights[from][to]) + problem.WeightHandler.GetTime(weights[customer][customerTo]));
                                 if (weight > mergeWeight)
                                 {
                                     weight = mergeWeight;
@@ -348,10 +349,10 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
                 while (next != Constants.NOT_SET &&
                     next != problem.First);
 
-                var newFitness = 0.0;
+                var newFitness = 0.0f;
                 foreach(var edge in newRoute.Pairs())
                 {
-                    newFitness = newFitness + weights[edge.From][edge.To];
+                    newFitness = newFitness + problem.WeightHandler.GetTime(weights[edge.From][edge.To]);
                 }
 
                 if (newRoute.Count == solution1.Count)
@@ -381,10 +382,10 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
                 while (next != Constants.NOT_SET &&
                     next != problem.First);
 
-                fitness = 0.0;
+                fitness = 0.0f;
                 foreach (var edge in best.Pairs())
                 {
-                    fitness = fitness + weights[edge.From][edge.To];
+                    fitness = fitness + problem.WeightHandler.GetTime(weights[edge.From][edge.To]);
                 }
             }
 

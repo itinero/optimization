@@ -24,7 +24,7 @@ namespace Itinero.Logistics.Tests.Solvers.GA
     /// <summary>
     /// A mockup of a crossover operator.
     /// </summary>
-    class CrossOverMock : ICrossOverOperator<ProblemMock, ObjectiveMock, SolutionMock>
+    class CrossOverMock : ICrossOverOperator<float, ProblemMock, ObjectiveMock, SolutionMock>
     {
         /// <summary>
         /// Returns the name of this solver.
@@ -38,7 +38,7 @@ namespace Itinero.Logistics.Tests.Solvers.GA
         /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
         /// <returns></returns>
-        public SolutionMock Apply(ProblemMock problem, ObjectiveMock objective, SolutionMock solution1, SolutionMock solution2, out double fitness)
+        public SolutionMock Apply(ProblemMock problem, ObjectiveMock objective, SolutionMock solution1, SolutionMock solution2, out float fitness)
         {
             if (solution1.Value < solution2.Value)
             {

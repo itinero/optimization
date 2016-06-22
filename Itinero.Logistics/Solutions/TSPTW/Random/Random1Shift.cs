@@ -28,7 +28,8 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
     /// An operator to execute n random 1-shift* relocations.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere.</remarks>
-    public class Random1Shift : IPerturber<ITSPTW, ITSPTWObjective, IRoute>
+    public class Random1Shift<T> : IPerturber<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>
+        where T : struct
     {
         private IRandomGenerator _random = RandomGeneratorExtensions.GetRandom();
 
@@ -44,16 +45,16 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
         /// Returns true if the given objective is supported.
         /// </summary>
         /// <returns></returns>
-        public bool Supports(ITSPTWObjective objective)
+        public bool Supports(ITSPTWObjective<T>  objective)
         {
-            return objective.Name == MinimumWeightObjective.MinimumWeightObjectiveName;
+            return objective.Name == MinimumWeightObjective<T>.MinimumWeightObjectiveName;
         }
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSPTW problem, ITSPTWObjective objective, IRoute route, out double difference)
+        public bool Apply(ITSPTW<T> problem, ITSPTWObjective<T>  objective, IRoute route, out float difference)
         {
             return this.Apply(problem, objective, route, 1, out difference);
         }
@@ -62,7 +63,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSPTW problem, ITSPTWObjective objective, IRoute solution, int level, out double difference)
+        public bool Apply(ITSPTW<T> problem, ITSPTWObjective<T>  objective, IRoute solution, int level, out float difference)
         {
             if(problem.Weights.Length == 1)
             { // there is only one customer, cannot shift randomly.
@@ -83,7 +84,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
 
                 // calculate new total min diff.
                 var previous = Constants.NOT_SET;
-                var time = 0.0;
+                var time = 0.0f;
                 var enumerator = solution.GetEnumerator();
                 var feasible = true;
                 while (enumerator.MoveNext())
@@ -93,7 +94,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
                     { // ignore invalid, add it after 'before'.
                         if (previous != Constants.NOT_SET)
                         { // keep track if time.
-                            time += problem.Weights[previous][current];
+                            time += problem.WeightHandler.GetTime(problem.Weights[previous][current]);
                         }
                         var window = problem.Windows[enumerator.Current];
                         if (window.Max < time)
@@ -108,7 +109,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
                         previous = current;
                         if (current == before)
                         { // also add the before->invalid.
-                            time += problem.Weights[current][customer];
+                            time += problem.WeightHandler.GetTime(problem.Weights[current][customer]);
                             window = problem.Windows[customer];
                             if (window.Max < time)
                             { // ok, unfeasible.
@@ -126,7 +127,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
 
                 if (feasible)
                 { // move is feasible, do it.
-                    double shiftDiff;
+                    float shiftDiff;
                     if (!objective.ShiftAfter(problem, solution, customer, before, out shiftDiff))
                     {
                         throw new Exception(

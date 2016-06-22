@@ -50,9 +50,9 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 3, 2, 1, 4}, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local2Opt();
-            var delta = 0.0;
-            localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
+            var localSearch = new Local2Opt<float>();
+            var delta = 0.0f;
+            localSearch.Apply(problem, new MinimumWeightObjective<float>(), route, out delta);
 
             // test result.
             Assert.AreEqual(36, delta);
@@ -82,9 +82,9 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 1, 4, 3, 2, 5 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local2Opt();
-            var delta = 0.0;
-            localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
+            var localSearch = new Local2Opt<float>();
+            var delta = 0.0f;
+            localSearch.Apply(problem, new MinimumWeightObjective<float>(), route, out delta);
 
             // test result.
             Assert.AreEqual(36, delta);
@@ -119,9 +119,9 @@ namespace Itinero.Logistics.Tests.Solutions.TSP.LocalSearch
             var route = new Logistics.Routes.Route(new int[] { 0, 1, 6, 5, 4, 3, 2 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new Local2Opt();
-            var delta = 0.0;
-            localSearch.Apply(problem, new MinimumWeightObjective(), route, out delta);
+            var localSearch = new Local2Opt<float>();
+            var delta = 0.0f;
+            localSearch.Apply(problem, new MinimumWeightObjective<float>(), route, out delta);
 
             // test result.
             Assert.AreEqual(54, delta);

@@ -24,7 +24,8 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
     /// <summary>
     /// An objective that leads to minimum weight solutions for the TSP with TW.
     /// </summary>
-    public class MinimumWeightObjective : TSPTWObjectiveBase
+    public class MinimumWeightObjective<T> : TSPTWObjectiveBase<T>
+        where T : struct
     {
         /// <summary>
         /// The default name for this objective.
@@ -36,18 +37,18 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
         /// </summary>
         public override string Name
         {
-            get { return MinimumWeightObjective.MinimumWeightObjectiveName; }
+            get { return MinimumWeightObjective<T>.MinimumWeightObjectiveName; }
         }
 
         /// <summary>
         /// Calculates the fitness of a TSP solution.
         /// </summary>
         /// <returns></returns>
-        public override double Calculate(ITSPTW problem, Routes.IRoute solution)
+        public override float Calculate(ITSPTW<T> problem, Routes.IRoute solution)
         {
-            var infeasible = 0.0;
-            var weight = 0.0;
-            var wait = 0.0;
+            var infeasible = 0f;
+            var weight = 0f;
+            var wait = 0f;
             var previous = Constants.NOT_SET;
             var enumerator = solution.GetEnumerator();
             while (enumerator.MoveNext())
@@ -55,7 +56,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
                 var current = enumerator.Current;
                 if (previous != Constants.NOT_SET)
                 { // keep track of time.
-                    weight += problem.Weights[previous][current];
+                    weight += problem.WeightHandler.GetTime(problem.Weights[previous][current]);
                 }
                 var window = problem.Windows[current];
                 if (window.Max < (weight + wait))
@@ -73,7 +74,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
                 var current = solution.Last.Value;
                 if (previous != Constants.NOT_SET)
                 { // keep track of time.
-                    weight += problem.Weights[previous][current];
+                    weight += problem.WeightHandler.GetTime(problem.Weights[previous][current]);
                 }
                 if (solution.Last != solution.First)
                 {
@@ -99,7 +100,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
         /// Executes the shift-after and returns the difference between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>
-        public override bool ShiftAfter(ITSPTW problem, Routes.IRoute route, int customer, int before, out double difference)
+        public override bool ShiftAfter(ITSPTW<T> problem, Routes.IRoute route, int customer, int before, out float difference)
         {
             var fitnessBefore = this.Calculate(problem, route);
             route.ShiftAfter(customer, before);
@@ -112,7 +113,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
         /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
         /// </summary>
         /// <returns></returns>
-        public override double IfShiftAfter(ITSPTW problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
+        public override float IfShiftAfter(ITSPTW<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
         {
             var fitnessBefore = this.Calculate(problem, route);
             var clone = route.Clone() as IRoute;

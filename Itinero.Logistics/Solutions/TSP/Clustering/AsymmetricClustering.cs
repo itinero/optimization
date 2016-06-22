@@ -17,6 +17,7 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Logistics.Solutions.TSP;
+using Itinero.Logistics.Weights;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,25 +26,29 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
     /// <summary>
     /// Represents an asymmetric clustering algorithm.
     /// </summary>
-    public class AsymmetricClustering : Algorithm
+    public class AsymmetricClustering<T> : Algorithm
+        where T : struct
     {
         private readonly float _e = .1f; // epsilon in seconds (diff beneath this value is considered equal).
         private readonly float _threshold = 10; // a threshold in seconds.
-        private readonly float[][] _weights;
+        private readonly T[][] _weights;
+        private readonly WeightHandler<T> _weightHandler;
 
         /// <summary>
         /// Creates a new instance of this algorithm.
         /// </summary>
-        public AsymmetricClustering(float[][] weights)
+        public AsymmetricClustering(WeightHandler<T> weightHandler, T[][] weights)
         {
+            _weightHandler = weightHandler;
             _weights = weights;
         }
 
         /// <summary>
         /// Creates a new instance of this algorithm.
         /// </summary>
-        public AsymmetricClustering(float[][] weights, float threshold)
+        public AsymmetricClustering(WeightHandler<T> weightHandler, T[][] weights, float threshold)
         {
+            _weightHandler = weightHandler;
             _threshold = threshold;
             _weights = weights;
         }
@@ -51,15 +56,16 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
         /// <summary>
         /// Creates a new instance of this algorithm.
         /// </summary>
-        public AsymmetricClustering(float[][] weights, float threshold, float e)
+        public AsymmetricClustering(WeightHandler<T> weightHandler, T[][] weights, float threshold, float e)
         {
+            _weightHandler = weightHandler;
             _threshold = threshold;
             _e = e;
             _weights = weights;
         }
 
         private List<List<int>> _clusters;
-        private float[][] _clusteredWeights;
+        private T[][] _clusteredWeights;
 
         /// <summary>
         /// Get the resulting clusters.
@@ -75,7 +81,7 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
         /// <summary>
         /// Clustered weights.
         /// </summary>
-        public float[][] Weights
+        public T[][] Weights
         {
             get
             {
@@ -90,11 +96,11 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
         {
             // build initial cluster and clone weights.
             _clusters = new List<List<int>>();
-            var weights = new float[_weights.Length][];
+            var weights = new T[_weights.Length][];
             for (var i = 0; i < _weights.Length; i++)
             {
                 _clusters.Add(new List<int>(new int[] { i }));
-                weights[i] = _weights[i].Clone() as float[];
+                weights[i] = _weights[i].Clone() as T[];
             }
 
             // merge customers until no longer possible.
@@ -115,17 +121,17 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
                             continue;
                         }
                         var localForwardWeight = weights[x][y];
-                        if(localForwardWeight > forwardWeight)
+                        if(_weightHandler.GetTime(localForwardWeight) > forwardWeight)
                         {
                             continue;
                         }
                         var localBackwardWeight = weights[y][x];
-                        if(System.Math.Abs(localBackwardWeight - localForwardWeight) < _e)
+                        if(System.Math.Abs(_weightHandler.GetTime(localBackwardWeight) - _weightHandler.GetTime(localForwardWeight)) < _e)
                         { // ok, small neighbours and reverse direction is almost identical.
                             c1 = y;
                             c2 = x;
 
-                            forwardWeight = localForwardWeight;
+                            forwardWeight = _weightHandler.GetTime(localForwardWeight);
                         }
                     }
                 }
@@ -136,10 +142,10 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
                     // put average at c1-position.
                     for (int x = 0; x < size; x++)
                     {
-                        weights[x][c1] = (weights[x][c1] + weights[x][c2]) / 2;
-                        weights[c1][x] = (weights[c1][x] + weights[c2][x]) / 2;
+                        weights[x][c1] = _weightHandler.Divide(_weightHandler.Add(weights[x][c1], weights[x][c2]), 2);
+                        weights[c1][x] = _weightHandler.Divide(_weightHandler.Add(weights[c1][x], weights[c2][x]), 2);
                     }
-                    weights[c1][c1] = 0;
+                    weights[c1][c1] = _weightHandler.Zero;
 
                     // remove c2.
                     for (int x = 0; x < size - 1; x++)
@@ -166,10 +172,10 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
             }
 
             // resize things to fit only cluster-values.
-            _clusteredWeights = new float[_clusters.Count][];
+            _clusteredWeights = new T[_clusters.Count][];
             for(var x = 0; x < _clusters.Count; x++)
             {
-                _clusteredWeights[x] = new float[_clusters.Count];
+                _clusteredWeights[x] = new T[_clusters.Count];
                 for(var y = 0; y < _clusters.Count; y++)
                 {
                     _clusteredWeights[x][y] = weights[x][y];

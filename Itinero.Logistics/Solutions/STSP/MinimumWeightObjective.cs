@@ -16,13 +16,26 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Weights;
+
 namespace Itinero.Logistics.Solutions.STSP
 {
     /// <summary>
     /// Represents the default TSP fitness calculation.
     /// </summary>
-    public class MinimumWeightObjective : ISTSPObjective
+    public class MinimumWeightObjective<T> : ISTSPObjective<T>
+        where T : struct
     {
+        private readonly WeightHandler<T> _weightHandler;
+
+        /// <summary>
+        /// Creates a new objective.
+        /// </summary>
+        public MinimumWeightObjective(WeightHandler<T> weightHandler)
+        {
+            _weightHandler = weightHandler;
+        }
+
         /// <summary>
         /// The default name for this objective.
         /// </summary>
@@ -33,13 +46,13 @@ namespace Itinero.Logistics.Solutions.STSP
         /// </summary>
         public string Name
         {
-            get { return MinimumWeightObjective.MinimumWeightObjectiveName; }
+            get { return MinimumWeightObjectiveName; }
         }
 
         /// <summary>
         /// Calculates the fitness of a given solution based on the given problem definitions.
         /// </summary>
-        public double Calculate(ISTSP problem, Routes.IRoute solution)
+        public float Calculate(ISTSP<T> problem, Routes.IRoute solution)
         {
             var weight = this.CalculateWeight(problem, solution);
             return this.Calculate(problem, solution, weight);
@@ -48,27 +61,26 @@ namespace Itinero.Logistics.Solutions.STSP
         /// <summary>
         /// Calculates the fitness of a given solution based on the given problem definitions.
         /// </summary>
-        public double Calculate(ISTSP problem, Routes.IRoute solution, double weight)
+        public float Calculate(ISTSP<T> problem, Routes.IRoute solution, float weight)
         {
             var nonUsed = problem.Weights.Length - solution.Count;
-            weight *= nonUsed;
-            return weight;
+            return weight * nonUsed;
         }
 
         /// <summary>
         /// Calculates the fitness of a given solution based on the given problem definitions.
         /// </summary>
-        public double CalculateWeight(ISTSP problem, Routes.IRoute solution)
+        public float CalculateWeight(ISTSP<T> problem, Routes.IRoute solution)
         {
-            var fitness = 0.0;
+            var fitness = 0f;
             foreach (var pair in solution.Pairs())
             {
-                fitness = fitness + problem.Weights[pair.From][pair.To];
+                fitness = fitness + _weightHandler.GetTime(problem.Weights[pair.From][pair.To]);
             }
 
-            if (fitness > problem.Max)
+            if (fitness > _weightHandler.GetTime(problem.Max))
             { // oeps, constraint violated.
-                fitness = float.MaxValue;
+                fitness = 0;
             }
 
             return fitness;
@@ -77,7 +89,7 @@ namespace Itinero.Logistics.Solutions.STSP
         /// <summary>
         /// Calculates the difference between the solution before the shift and after the shift.
         /// </summary>
-        public bool ShiftAfter(ISTSP problem, Routes.IRoute route, int customer, int before, out double difference)
+        public bool ShiftAfter(ISTSP<T> problem, Routes.IRoute route, int customer, int before, out float difference)
         {
             var weights = problem.Weights;
 
@@ -98,12 +110,12 @@ namespace Itinero.Logistics.Solutions.STSP
                 newAfter = route.First;
             }
 
-            difference = -weights[oldBefore][customer]
-                    - weights[customer][oldAfter]
-                    + weights[oldBefore][oldAfter]
-                    - weights[before][newAfter]
-                    + weights[before][customer]
-                    + weights[customer][newAfter];
+            difference = -_weightHandler.GetTime(weights[oldBefore][customer])
+                    - _weightHandler.GetTime(weights[customer][oldAfter])
+                    + _weightHandler.GetTime(weights[oldBefore][oldAfter])
+                    - _weightHandler.GetTime(weights[before][newAfter])
+                    + _weightHandler.GetTime(weights[before][customer])
+                    + _weightHandler.GetTime(weights[customer][newAfter]);
             return true;
         }
 
@@ -111,7 +123,7 @@ namespace Itinero.Logistics.Solutions.STSP
         /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
         /// </summary>
         /// <returns></returns>
-        public double IfShiftAfter(ISTSP problem, Routes.IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
+        public float IfShiftAfter(ISTSP<T> problem, Routes.IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
         {
             var weights = problem.Weights;
 
@@ -123,13 +135,13 @@ namespace Itinero.Logistics.Solutions.STSP
             {
                 newAfter = route.First;
             }
-
-            return -weights[oldBefore][customer]
-                    - weights[customer][oldAfter]
-                    + weights[oldBefore][oldAfter]
-                    - weights[before][newAfter]
-                    + weights[before][customer]
-                    + weights[customer][newAfter];
+            
+            return -_weightHandler.GetTime(weights[oldBefore][customer])
+                    - _weightHandler.GetTime(weights[customer][oldAfter])
+                    + _weightHandler.GetTime(weights[oldBefore][oldAfter])
+                    - _weightHandler.GetTime(weights[before][newAfter])
+                    + _weightHandler.GetTime(weights[before][customer])
+                    + _weightHandler.GetTime(weights[customer][newAfter]);
         }
     }
 }

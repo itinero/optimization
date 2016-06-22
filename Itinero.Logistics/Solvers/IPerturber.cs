@@ -21,7 +21,8 @@ namespace Itinero.Logistics.Solvers
     /// <summary>
     /// An operator on the current solution that makes sure the neighbourhood varies.
     /// </summary>
-    public interface IPerturber<TProblem, TObjective, TSolution> : IOperator<TProblem, TObjective, TSolution>
+    public interface IPerturber<TWeight, TProblem, TObjective, TSolution> : IOperator<TWeight, TProblem, TObjective, TSolution>
+        where TWeight : struct
     {
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
@@ -32,6 +33,6 @@ namespace Itinero.Logistics.Solvers
         /// <param name="level">The level.</param>
         /// <param name="delta">The difference in fitness.</param>
         /// <returns></returns>
-        bool Apply(TProblem problem, TObjective objective, TSolution solution, int level, out double delta);
+        bool Apply(TProblem problem, TObjective objective, TSolution solution, int level, out float delta);
     }
 }

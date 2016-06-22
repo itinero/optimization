@@ -26,16 +26,18 @@ namespace Itinero.Logistics.Solutions.TSPTW.VNS
     /// <summary>
     /// A VND-operator/solver.
     /// </summary>
-    public class VNDOperator : VNSSolver<ITSPTW, ITSPTWObjective, IRoute>
+    public class VNDOperator<T> : VNSSolver<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>
+        where T : struct
     {
         /// <summary>
         /// Creates a new VND-operator/solver.
         /// </summary>
         public VNDOperator()
-            : base(new Itinero.Logistics.Solvers.SolverObjectiveWrapper<ITSPTW, ITSPTWObjective, IRoute>(
-                new VNSConstructionSolver(), new FeasibleObjective(), (p, o, s) => o.Calculate(p, s)), new OperatorAsPerturber<ITSPTW, ITSPTWObjective, IRoute>(
-                new LocalSearch.Local1Shift(true)),
-                    new LocalSearch.Local2Opt(), (i, l, p, o, s) =>
+            : base(new Itinero.Logistics.Solvers.SolverObjectiveWrapper<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>(
+                new VNSConstructionSolver<T>(), new FeasibleObjective<T>(), (p, o, s) => o.Calculate(p, s)), 
+                new OperatorAsPerturber<T,ITSPTW<T>, ITSPTWObjective<T>, IRoute>(
+                new LocalSearch.Local1Shift<T>(true)),
+                    new LocalSearch.Local2Opt<T>(), (i, l, p, o, s) =>
                     {
                         return l > 1;
                     })

@@ -26,7 +26,8 @@ namespace Itinero.Logistics.Solutions.TSPTW.VNS
     /// <summary>
     /// Implements a VNS-strategy to construct feasible solution for the TSP-TW from random tours.
     /// </summary>
-    public class VNSConstructionSolver : IterativeSolver<ITSPTW, ITSPTWObjective, IRoute>
+    public class VNSConstructionSolver<T> : IterativeSolver<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>
+        where T : struct
     {
         /// <summary>
         /// Creates a new VNS construction solver.
@@ -50,8 +51,9 @@ namespace Itinero.Logistics.Solutions.TSPTW.VNS
         /// Creates a new VNS construction solver.
         /// </summary>
         public VNSConstructionSolver(int maxIterations, int levelMax)
-            : base(new VNSSolver<ITSPTW, ITSPTWObjective, IRoute>(new RandomSolver(), new TSPPerturberWrapper(new TSP.Random.Random1Shift()),
-                new LocalSearch.Local1Shift(), (i, l, p, o, r) =>
+            : base(new VNSSolver<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>(new RandomSolver<T>(), new TSPPerturberWrapper<T>(
+                    new TSP.Random.Random1Shift<T>()),
+                new LocalSearch.Local1Shift<T>(), (i, l, p, o, r) =>
             {
                 if (l > levelMax)
                 {

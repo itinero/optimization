@@ -66,12 +66,12 @@ namespace Itinero.Logistics.Tests.Solutions.TSPTW.VNS
             };
 
             // create the solver.
-            var solver = new VNDOperator();
+            var solver = new VNDOperator<float>();
             for (int i = 0; i < 10; i++)
             {
                 // generate solution.
-                double fitness;
-                var solution = solver.Solve(problem, new MinimumWeightObjective(), out fitness);
+                float fitness;
+                var solution = solver.Solve(problem, new MinimumWeightObjective<float>(), out fitness);
 
                 // test contents.
                 Assert.AreEqual(50, fitness);
