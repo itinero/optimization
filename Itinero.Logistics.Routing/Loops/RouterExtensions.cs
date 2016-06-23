@@ -16,7 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Algorithms.Weights;
 using Itinero.LocalGeo;
+using Itinero.Logistics.Routing.Weights;
 using Itinero.Profiles;
 using System;
 
@@ -30,11 +32,13 @@ namespace Itinero.Logistics.Routing.Loops
         /// <summary>
         /// Tries to generates a loop with a maximum weight around the given location.
         /// </summary>
-        public static Result<Route> TryGenerateLoop(this Router router, Profile profile, Coordinate location, float max)
+        public static Result<Route> TryGenerateLoop(this Router router, Profile profile, Coordinate location, ProfileMetric maxMetric, float max)
         {
+            var maxWeight = (new Weight()).SetWithMetric(maxMetric, max);
+
             try
             {
-                var loopGenerator = new LoopGenerator(router, location, profile, max);
+                var loopGenerator = new LoopGenerator(router, location, profile, maxWeight);
                 loopGenerator.Run();
                 if (!loopGenerator.HasSucceeded)
                 {
@@ -51,9 +55,9 @@ namespace Itinero.Logistics.Routing.Loops
         /// <summary>
         /// Generates a loop with a maximum weight around the given location.
         /// </summary>
-        public static Route GenerateLoop(this Router router, Profile profile, Coordinate location, float max)
+        public static Route GenerateLoop(this Router router, Profile profile, Coordinate location, ProfileMetric maxMetric, float max)
         {
-            return router.TryGenerateLoop(profile, location, max).Value;
+            return router.TryGenerateLoop(profile, location, maxMetric, max).Value;
         }
     }
 }

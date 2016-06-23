@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Algorithms.Weights;
 using Itinero.Graphs;
 using Itinero.LocalGeo;
 using Itinero.Profiles;
@@ -31,12 +32,12 @@ namespace Itinero.Logistics.Routing.Loops
         private readonly Router _router;
         private readonly Coordinate _location;
         private readonly Profile _profile;
-        private readonly float _max;
+        private readonly Weight _max;
 
         /// <summary>
         /// Creates a new loop generator.
         /// </summary>
-        public LoopGenerator(Router router, Coordinate location, Profile profile, float max)
+        public LoopGenerator(Router router, Coordinate location, Profile profile, Weight max)
         {
             _router = router;
             _location = location;
@@ -78,8 +79,13 @@ namespace Itinero.Logistics.Routing.Loops
         protected override void DoRun()
         {
             // generate vertices.
-            // assume time as a parameter for now.
-            var distance = _profile.MinSpeed().Value * _max;
+            var distance = _max.Distance;
+            if (_max.Distance == float.MaxValue)
+            {
+                distance = _profile.MinSpeed().Value * _max.Time;
+            }
+
+
             // TODO: calculate this box based on max once we can define this as distance not time.
             var box = new Box(_location.OffsetWithDirection(distance, Navigation.Directions.DirectionEnum.NorthEast),
                  _location.OffsetWithDirection(distance, Navigation.Directions.DirectionEnum.SouthWest));

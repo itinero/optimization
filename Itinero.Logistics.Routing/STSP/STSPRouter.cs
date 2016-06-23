@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using Itinero.Logistics.Weights;
+using Itinero.Algorithms.Weights;
 using Itinero.Profiles;
 using System.Collections.Generic;
 
@@ -31,12 +31,12 @@ namespace Itinero.Logistics.Routing.STSP
         private readonly Profile _profile;
         private readonly HashSet<RouterPoint> _locations;
         private readonly Router _router;
-        private readonly float _max;
+        private readonly Weight _max;
 
         /// <summary>
         /// Creates a new STSP-router starting at the given source and using the given locations as guideline.
         /// </summary>
-        public STSPRouter(Router router, Profile profile, RouterPoint source, HashSet<RouterPoint> locations, float max)
+        public STSPRouter(Router router, Profile profile, RouterPoint source, HashSet<RouterPoint> locations, Weight max)
         {
             _router = router;
             _profile = profile;
@@ -48,7 +48,7 @@ namespace Itinero.Logistics.Routing.STSP
         /// <summary>
         /// Creates a new STSP-router starting at the given source and using the given locations as guideline.
         /// </summary>
-        public STSPRouter(Router router, Profile profile, RouterPoint source, HashSet<uint> vertices, float max)
+        public STSPRouter(Router router, Profile profile, RouterPoint source, HashSet<uint> vertices, Weight max)
         {
             _router = router;
             _profile = profile;
@@ -72,11 +72,11 @@ namespace Itinero.Logistics.Routing.STSP
         {
             _all = new List<RouterPoint>(_locations);
             _all.Insert(0, _source);
-            var weights = _router.CalculateWeight(_profile, _all.ToArray(), null);
+            var weights = _router.CalculateWeight<Weight>(_profile, _profile.AugmentedWeightHandler(_router), _all.ToArray(), null);
 
-            var solver = new Itinero.Logistics.Solutions.STSP.VNS.VNSConstructionSolver<float>(2, 2);
-            var problem = new Itinero.Logistics.Solutions.STSP.STSPProblem<float>(new DefaultWeightHandler(), 0, 0, weights, _max);
-            _route = solver.Solve(problem, new Solutions.STSP.MinimumWeightObjective<float>(new DefaultWeightHandler()));
+            var solver = new Itinero.Logistics.Solutions.STSP.VNS.VNSConstructionSolver<Weight>(2, 2);
+            var problem = new Itinero.Logistics.Solutions.STSP.STSPProblem<Weight>(new Weights.AugmentedTimeWeightHandler(), 0, 0, weights, _max);
+            _route = solver.Solve(problem, new Solutions.STSP.MinimumWeightObjective<Weight>(new Weights.AugmentedTimeWeightHandler()));
 
             this.HasSucceeded = true;
         }

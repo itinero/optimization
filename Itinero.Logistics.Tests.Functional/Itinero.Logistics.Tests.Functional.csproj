@@ -37,16 +37,16 @@
       <HintPath>..\packages\GeoAPI.1.7.4\lib\net45\GeoAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero, Version=0.11.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.0.11.1-rc1\lib\net45\Itinero.dll</HintPath>
+    <Reference Include="Itinero, Version=0.11.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.0.11.5-rc1\lib\net45\Itinero.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Itinero.Geo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.Geo.0.11.1-rc1\lib\net45\Itinero.Geo.dll</HintPath>
+      <HintPath>..\packages\Itinero.Geo.0.11.5-rc1\lib\net45\Itinero.Geo.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Itinero.IO.Osm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.IO.Osm.0.11.1-rc1\lib\net45\Itinero.IO.Osm.dll</HintPath>
+      <HintPath>..\packages\Itinero.IO.Osm.0.11.5-rc1\lib\net45\Itinero.IO.Osm.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
@@ -91,12 +91,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeoExtensions.cs" />
+    <Compile Include="Problems\STSP\ProblemBuilder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Problems\STSP\problem1.geojson" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Itinero.Logistics.Routing\Itinero.Logistics.Routing.csproj">

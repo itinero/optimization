@@ -1,8 +1,11 @@
-﻿using GeoAPI.Geometries;
+﻿using Itinero.Algorithms.Weights;
 using Itinero.Data.Edges;
 using Itinero.IO.Osm;
+using Itinero.LocalGeo;
 using Itinero.Logistics.Routing.Loops;
+using Itinero.Logistics.Routing.STSP;
 using Itinero.Osm.Vehicles;
+using Itinero.Profiles;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using System;
@@ -26,11 +29,21 @@ namespace Itinero.Logistics.Tests.Functional
 
             var routerDb = new RouterDb();
             routerDb.LoadOsmData(File.OpenRead(@"D:\work\data\OSM\kempen-big.osm.pbf"), false, Vehicle.Bicycle);
-            var profile = Vehicle.Bicycle.Fastest();
-            //routerDb.AddContracted(profile);
+            var profile = (Vehicle.Bicycle as Bicycle).Networks();
+
             var router = new Router(routerDb);
-            
-            var route = router.GenerateLoop(profile, new LocalGeo.Coordinate(51.26781748613334f, 4.801349937915802f), 4 * 3600);
+            routerDb.AddContracted(profile, profile.AugmentedWeightHandler(router), false);
+
+
+            Coordinate source;
+            Coordinate[] locations;
+            Problems.STSP.ProblemBuilder.BuildEmbedded("Itinero.Logistics.Tests.Functional.Problems.STSP.problem1.geojson", out source, out locations);
+
+            var route = router.CalculateSTSP(profile, source, locations, ProfileMetric.TimeInSeconds,
+                4 * 3600);
+
+            //var route = router.GenerateLoop(profile, new LocalGeo.Coordinate(51.26781748613334f, 4.801349937915802f), Profiles.ProfileMetric.TimeInSeconds, 
+            //    4 * 3600);
             var routeJson = route.ToGeoJson();
 
             //var features = new FeatureCollection();
