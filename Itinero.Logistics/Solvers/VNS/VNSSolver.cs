@@ -26,6 +26,7 @@ namespace Itinero.Logistics.Solvers.VNS
         where TSolution : ISolution
         where TWeight : struct
     {
+        private static Itinero.Logistics.Logging.Logger _log = new Logging.Logger("VNSSolver");
         private readonly SolverDelegates.StopConditionWithLevelDelegate<TProblem, TObjective, TSolution> _stopCondition;
         private readonly ISolver<TWeight, TProblem, TObjective, TSolution> _generator;
         private readonly IPerturber<TWeight, TProblem, TObjective, TSolution> _perturber;
@@ -85,8 +86,12 @@ namespace Itinero.Logistics.Solvers.VNS
         /// <returns></returns>
         public override TSolution Solve(TProblem problem, TObjective objective, out float fitness)
         {
+            _log.Log(Logging.TraceEventType.Information, "Started generating initial solution...");
+
             var globalBestFitness = float.MaxValue;
             var globalBest = _generator.Solve(problem, objective, out globalBestFitness);
+
+            _log.Log(Logging.TraceEventType.Information, "Initial solution generated: {0}.", globalBestFitness);
 
             // report new solution.
             this.ReportIntermidiateResult(globalBest);
@@ -95,6 +100,8 @@ namespace Itinero.Logistics.Solvers.VNS
             if (_localSearch.Apply(problem, objective, globalBest, out difference))
             { // localsearch leads to better solution, adjust the fitness.
                 globalBestFitness = globalBestFitness - difference;
+
+                _log.Log(Logging.TraceEventType.Information, "Improvement found by local search: {0}.", globalBestFitness);
 
                 // report new solution.
                 this.ReportIntermidiateResult(globalBest);
@@ -120,6 +127,8 @@ namespace Itinero.Logistics.Solvers.VNS
                     globalBest = perturbedSolution;
                     level = 1; // reset level.
 
+                    _log.Log(Logging.TraceEventType.Information, "Improvement found by perturber and local search: {0}.", globalBestFitness);
+
                     // report new solution.
                     this.ReportIntermidiateResult(globalBest);
                 }
@@ -128,6 +137,9 @@ namespace Itinero.Logistics.Solvers.VNS
                     level = level + 1;
                 }
             }
+
+            _log.Log(Logging.TraceEventType.Information, "Stop condition reached, best: {0}.", globalBestFitness);
+
             fitness = globalBestFitness;
             return globalBest;
         }
