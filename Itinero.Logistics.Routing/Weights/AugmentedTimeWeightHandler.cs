@@ -16,7 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using Itinero.Algorithms.Weights;
 
 namespace Itinero.Logistics.Routing.Weights
@@ -26,6 +25,9 @@ namespace Itinero.Logistics.Routing.Weights
     /// </summary>
     public class AugmentedTimeWeightHandler : Itinero.Logistics.Weights.WeightHandler<Weight>
     {
+        /// <summary>
+        /// Gets the weight that represents infinity.
+        /// </summary>
         public override Weight Infinity
         {
             get
@@ -39,6 +41,9 @@ namespace Itinero.Logistics.Routing.Weights
             }
         }
 
+        /// <summary>
+        /// Gets the weight that represents zero.
+        /// </summary>
         public override Weight Zero
         {
             get
@@ -52,7 +57,9 @@ namespace Itinero.Logistics.Routing.Weights
             }
         }
 
-
+        /// <summary>
+        /// Adds weight1 and weight2.
+        /// </summary>
         public override Weight Add(Weight weight1, Weight weight2)
         {
             return new Weight()
@@ -63,11 +70,17 @@ namespace Itinero.Logistics.Routing.Weights
             };
         }
 
+        /// <summary>
+        /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+        /// </summary>
         public override int Compare(Weight x, Weight y)
         {
             return x.Time.CompareTo(y.Time);
         }
 
+        /// <summary>
+        /// Divides the given weight with the given divider.
+        /// </summary>
         public override Weight Divide(Weight weight, float divider)
         {
             return new Weight()
@@ -78,11 +91,17 @@ namespace Itinero.Logistics.Routing.Weights
             };
         }
 
+        /// <summary>
+        /// Gets the time component.
+        /// </summary>
         public override float GetTime(Weight weight)
         {
             return weight.Time;
         }
 
+        /// <summary>
+        /// Returns true if the given weight is bigger in any of it's fields compared to the other weight.
+        /// </summary>
         public override bool IsLargerThanAny(Weight weight, Weight other)
         {
             return weight.Time > other.Time &&
@@ -90,6 +109,9 @@ namespace Itinero.Logistics.Routing.Weights
                 weight.Value > other.Value;
         }
 
+        /// <summary>
+        /// Multiplies the given weight with the given factor.
+        /// </summary>
         public override Weight Multiply(Weight weight, float factor)
         {
             return new Weight()
@@ -100,6 +122,9 @@ namespace Itinero.Logistics.Routing.Weights
             };
         }
 
+        /// <summary>
+        /// Subtracts weight2 from weight1.
+        /// </summary>
         public override Weight Subtract(Weight weight1, Weight weight2)
         {
             return new Weight()

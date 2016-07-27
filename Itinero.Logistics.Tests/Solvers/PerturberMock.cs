@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -23,7 +23,7 @@ namespace Itinero.Logistics.Tests.Solvers
     /// <summary>
     /// A mockup of a perturber procedure for a very simple problem, reduce a number to zero.
     /// </summary>
-    class PerturberMock : IPerturber<float, ProblemMock, ObjectiveMock, SolutionMock>
+    class PerturberMock : IPerturber<float, ProblemMock, ObjectiveMock, SolutionMock, float>
     {
         /// <summary>
         /// Returns the name of the operator.

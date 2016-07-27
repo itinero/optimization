@@ -26,17 +26,17 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
     /// <summary>
     /// A solver that uses the clustering algorithm to pre-process the weights and post-processes the route afterwards.
     /// </summary>
-    public class AsymmetricClusteringSolver<T> : SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute>
+    public class AsymmetricClusteringSolver<T> : SolverBase<T, ITSP<T>, TSPObjective<T>, IRoute, float>
         where T : struct
     {
-        private readonly SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute> _solver;
+        private readonly SolverBase<T, ITSP<T>, TSPObjective<T>, IRoute, float> _solver;
         private readonly Func<ITSP<T>, AsymmetricClustering<T>> _createClustering;
-        private readonly IOperator<T, ITSP<T>, ITSPObjective<T>, IRoute> _localSearch;
+        private readonly IOperator<T, ITSP<T>, TSPObjective<T>, IRoute, float> _localSearch;
 
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public AsymmetricClusteringSolver(SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute> solver)
+        public AsymmetricClusteringSolver(SolverBase<T, ITSP<T>, TSPObjective<T>, IRoute, float> solver)
             : this(solver, (p) => new AsymmetricClustering<T>(p.WeightHandler, p.Weights))
         {
 
@@ -45,7 +45,7 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public AsymmetricClusteringSolver(SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute> solver, 
+        public AsymmetricClusteringSolver(SolverBase<T, ITSP<T>, TSPObjective<T>, IRoute, float> solver, 
             Func<ITSP<T>, AsymmetricClustering<T>> createClustering)
             : this(solver, new LocalSearch.Local1Shift<T>(), createClustering)
         {
@@ -55,8 +55,8 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public AsymmetricClusteringSolver(SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute> solver, 
-            IOperator<T, ITSP<T>, ITSPObjective<T>, IRoute> localSearch, Func<ITSP<T>, AsymmetricClustering<T>> createClustering)
+        public AsymmetricClusteringSolver(SolverBase<T, ITSP<T>, TSPObjective<T>, IRoute, float> solver, 
+            IOperator<T, ITSP<T>, TSPObjective<T>, IRoute, float> localSearch, Func<ITSP<T>, AsymmetricClustering<T>> createClustering)
         {
             _solver = solver;
             _createClustering = createClustering;
@@ -75,7 +75,7 @@ namespace Itinero.Logistics.Solutions.TSP.Clustering
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP<T> problem, ITSPObjective<T> objective, out float fitness)
+        public override IRoute Solve(ITSP<T> problem, TSPObjective<T> objective, out float fitness)
         {
             // do the clustering.
             var clustering =_createClustering(problem);

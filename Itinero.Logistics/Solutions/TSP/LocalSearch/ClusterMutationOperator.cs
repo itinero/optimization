@@ -26,7 +26,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
     /// <summary>
     /// An operator that uses best-effort to transform the route into a route that contains no edge a->b while an edge a->c with weight 0 exists.
     /// </summary>
-    public class ClusterMutationOperator<T> : IOperator<T, ITSP<T>, ITSPObjective<T>, IRoute>
+    public class ClusterMutationOperator<T> : IOperator<T, ITSP<T>, TSPObjective<T>, IRoute, float>
         where T : struct
     {
         private Dictionary<int, int> _shouldFollow;
@@ -45,7 +45,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// </summary>
         /// <param name="objective"></param>
         /// <returns></returns>
-        public bool Supports(ITSPObjective<T> objective)
+        public bool Supports(TSPObjective<T> objective)
         {
             return objective.Name == MinimumWeightObjective<T>.MinimumWeightObjectiveName;
         }
@@ -54,7 +54,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSP<T> problem, ITSPObjective<T> objective, IRoute solution, out float delta)
+        public bool Apply(ITSP<T> problem, TSPObjective<T> objective, IRoute solution, out float delta)
         {
             if (objective.Name != MinimumWeightObjective<T>.MinimumWeightObjectiveName) 
             { // check, because assumptions are made in this operator about the objective.

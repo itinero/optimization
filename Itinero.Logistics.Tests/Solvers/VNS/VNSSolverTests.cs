@@ -35,7 +35,7 @@ namespace Itinero.Logistics.Tests.Solvers.VNS
         public void TestName()
         {
             // create solver.
-            var solver = new VNSSolver<float, ProblemMock, ObjectiveMock, SolutionMock>(
+            var solver = new VNSSolver<float, ProblemMock, ObjectiveMock, SolutionMock, float>(
                 new GeneratorMock(), new PerturberMock(), new LocalSearchMock());
 
             Assert.AreEqual("VNS_[MOCK_GENERATOR_MOCK_PERTURBER_MOCK_LOCALSEARCH]", solver.Name);
@@ -51,7 +51,7 @@ namespace Itinero.Logistics.Tests.Solvers.VNS
             RandomGeneratorExtensions.GetGetNewRandom = () => new RandomGenerator(4541247);
 
             // create solver.
-            var solver = new VNSSolver<float, ProblemMock, ObjectiveMock, SolutionMock>(
+            var solver = new VNSSolver<float, ProblemMock, ObjectiveMock, SolutionMock, float>(
                 new GeneratorMock(), new PerturberMock(), new LocalSearchMock());
 
             // run solver but stop when after a few reported improvements.
@@ -88,7 +88,7 @@ namespace Itinero.Logistics.Tests.Solvers.VNS
             RandomGeneratorExtensions.GetGetNewRandom = () => new RandomGenerator(4541247);
 
             // create solver.
-            var solver = new VNSSolver<float, ProblemMock, ObjectiveMock, SolutionMock>(
+            var solver = new VNSSolver<float, ProblemMock, ObjectiveMock, SolutionMock, float>(
                 new GeneratorMock(), new PerturberMock(), new LocalSearchMock(), (i, l, p, o, s) =>
             {
                 return s.Value < 100;

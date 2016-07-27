@@ -34,7 +34,7 @@ namespace Itinero.Logistics.Tests.Solvers.GA
         public void TestName()
         {
             // create the solver.
-            var solver = new GASolver<float, ProblemMock, ObjectiveMock, SolutionMock>(new ObjectiveMock(),
+            var solver = new GASolver<float, ProblemMock, ObjectiveMock, SolutionMock, float>(new ObjectiveMock(),
                 new GeneratorMock(), new CrossOverMock(),
                 new SelectionMock(), new LocalSearchMock());
 
@@ -48,7 +48,7 @@ namespace Itinero.Logistics.Tests.Solvers.GA
         public void Test()
         {
             // create the solver.
-            var solver = new GASolver<float, ProblemMock, ObjectiveMock, SolutionMock>(new ObjectiveMock(),
+            var solver = new GASolver<float, ProblemMock, ObjectiveMock, SolutionMock, float>(new ObjectiveMock(),
                 new GeneratorMock(), new CrossOverMock(),
                 new SelectionMock(), new LocalSearchMock());
 

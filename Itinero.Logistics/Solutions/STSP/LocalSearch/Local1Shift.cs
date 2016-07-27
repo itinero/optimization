@@ -25,7 +25,7 @@ namespace Itinero.Logistics.Solutions.STSP.LocalSearch
     /// A local 1-Shift search for the STSP using the TSP local 1-Shift implementation.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere also called reinsertion heuristic.</remarks>
-    public class Local1Shift<T> : IOperator<T, ISTSP<T>, ISTSPObjective<T>, IRoute>
+    public class Local1Shift<T> : IOperator<T, ISTSP<T>, STSPObjective<T>, IRoute, float>
         where T : struct
     {
         private readonly TSP.LocalSearch.Local1Shift<T> _local1shift = new TSP.LocalSearch.Local1Shift<T>();
@@ -45,7 +45,7 @@ namespace Itinero.Logistics.Solutions.STSP.LocalSearch
         /// Returns true if the given object is supported.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ISTSP<T> problem, ISTSPObjective<T> objective, IRoute solution, out float delta)
+        public bool Apply(ISTSP<T> problem, STSPObjective<T> objective, IRoute solution, out float delta)
         {
             return _local1shift.Apply(problem.ToTSP(), objective.ToTSPObjective(), solution, out delta);
         }
@@ -54,7 +54,7 @@ namespace Itinero.Logistics.Solutions.STSP.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Supports(ISTSPObjective<T> objective)
+        public bool Supports(STSPObjective<T> objective)
         {
             return _local1shift.Supports(objective.ToTSPObjective());
         }

@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,34 +16,48 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+using Itinero.Logistics.Fitness;
 
 namespace Itinero.Logistics.Solutions.TSP
 {
     /// <summary>
     /// Represents the default TSP fitness calculation.
     /// </summary>
-    public class MinimumWeightObjective<T> : ITSPObjective<T>
+    public sealed class MinimumWeightObjective<T> : TSPObjective<T>
         where T : struct
     {
+        private readonly DefaultFitnessHandler _fitnessHandler = new DefaultFitnessHandler();
+
         /// <summary>
         /// The default name for this objective.
         /// </summary>
         public const string MinimumWeightObjectiveName = "MIN_WEIGHT";
 
+
         /// <summary>
         /// Returns the name of this fitness type.
         /// </summary>
-        public string Name
+        public override sealed string Name
         {
             get { return MinimumWeightObjective<T>.MinimumWeightObjectiveName; }
+        }
+
+        /// <summary>
+        /// Gets the fitness handler.
+        /// </summary>
+        public sealed override FitnessHandler<float> FitnessHandler
+        {
+            get
+            {
+                return _fitnessHandler;
+            }
         }
 
         /// <summary>
         /// Calculates the fitness of a given solution based on the given problem definitions.
         /// </summary>
         /// <returns></returns>
-        public float Calculate(ITSP<T> problem, Routes.IRoute solution)
+        public override sealed float Calculate(ITSP<T> problem, Routes.IRoute solution)
         {
             var fitness = 0f;
             foreach (var pair in solution.Pairs())
@@ -57,7 +71,7 @@ namespace Itinero.Logistics.Solutions.TSP
         /// Calculates the difference between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>
-        public bool ShiftAfter(ITSP<T> problem, Routes.IRoute route, int customer, int before, out float difference)
+        public override sealed bool ShiftAfter(ITSP<T> problem, Routes.IRoute route, int customer, int before, out float difference)
         {
             var weights = problem.Weights;
 
@@ -91,7 +105,7 @@ namespace Itinero.Logistics.Solutions.TSP
         /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
         /// </summary>
         /// <returns></returns>
-        public float IfShiftAfter(ITSP<T> problem, Routes.IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
+        public override sealed float IfShiftAfter(ITSP<T> problem, Routes.IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
         {
             var weights = problem.Weights;
 

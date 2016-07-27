@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Objective;
 using System;
 
 namespace Itinero.Logistics.Solvers
@@ -23,10 +24,11 @@ namespace Itinero.Logistics.Solvers
     /// <summary>
     /// A wrapper for an operator, replacing the objective with another objective on each call.
     /// </summary>
-    public class OperatorAndObjective<TWeight, TProblem, TObjective, TSolution> : IOperator<TWeight, TProblem, TObjective, TSolution>
+    public class OperatorAndObjective<TWeight, TProblem, TObjective, TSolution, TFitness> : IOperator<TWeight, TProblem, TObjective, TSolution, TFitness>
+        where TObjective : ObjectiveBase<TFitness>
         where TWeight : struct
     {
-        private readonly IOperator<TWeight, TProblem, TObjective, TSolution> _operator;
+        private readonly IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> _operator;
         private readonly TObjective _objective;
 
         /// <summary>
@@ -34,7 +36,7 @@ namespace Itinero.Logistics.Solvers
         /// </summary>
         /// <param name="oper"></param>
         /// <param name="objective"></param>
-        public OperatorAndObjective(IOperator<TWeight, TProblem, TObjective, TSolution> oper, TObjective objective)
+        public OperatorAndObjective(IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> oper, TObjective objective)
         {
             _operator = oper;
             _objective = objective;
@@ -65,7 +67,7 @@ namespace Itinero.Logistics.Solvers
         /// <param name="solution">The solution.</param>
         /// <param name="delta">The difference in fitness, when > 0 there was an improvement and a reduction in fitness.</param>
         /// <returns></returns>
-        public bool Apply(TProblem problem, TObjective objective, TSolution solution, out float delta)
+        public bool Apply(TProblem problem, TObjective objective, TSolution solution, out TFitness delta)
         {
             return _operator.Apply(problem, _objective, solution, out delta);
         }

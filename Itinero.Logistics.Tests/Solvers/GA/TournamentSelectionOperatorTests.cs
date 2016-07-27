@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -43,19 +43,20 @@ namespace Itinero.Logistics.Tests.Solvers.GA
             };
 
             // create population and selector.
-            var population = new Individual<int>[] { 
-                new Individual<int>() { Fitness = 10, Solution = 10 },
-                new Individual<int>() { Fitness = 1, Solution = 1 },
-                new Individual<int>() { Fitness = 3, Solution = 3 },
-                new Individual<int>() { Fitness = 4, Solution = 4 } };
-            var selector = new TournamentSelectionOperator<int, int>(50, 0.5);
+            var population = new Individual<int, float>[] { 
+                new Individual<int, float>() { Fitness = 10, Solution = 10 },
+                new Individual<int, float>() { Fitness = 1, Solution = 1 },
+                new Individual<int, float>() { Fitness = 3, Solution = 3 },
+                new Individual<int, float>() { Fitness = 4, Solution = 4 } };
+            var selector = new TournamentSelectionOperator<int, int, ObjectiveMock, float>(50, 0.5);
 
-            Assert.AreEqual(2, selector.Select(0, population, null));
-            Assert.AreEqual(-1, selector.Select(0, population, null));
-            Assert.AreEqual(3, selector.Select(0, population, null));
-            Assert.AreEqual(-1, selector.Select(0, population, null));
-            Assert.AreEqual(0, selector.Select(0, population, null));
-            Assert.AreEqual(-1, selector.Select(0, population, null));
+            var objective = new ObjectiveMock();
+            Assert.AreEqual(2, selector.Select(0, objective, population, null));
+            Assert.AreEqual(-1, selector.Select(0, objective, population, null));
+            Assert.AreEqual(3, selector.Select(0, objective, population, null));
+            Assert.AreEqual(-1, selector.Select(0, objective, population, null));
+            Assert.AreEqual(0, selector.Select(0, objective, population, null));
+            Assert.AreEqual(-1, selector.Select(0, objective, population, null));
         }
     }
 }

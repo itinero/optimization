@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -27,7 +27,7 @@ namespace Itinero.Logistics.Solutions.TSP.Random
     /// An operator to execute n random 1-shift* relocations.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere.</remarks>
-    public class Random1Shift<T> : IPerturber<T, ITSP<T>, ITSPObjective<T>, IRoute>
+    public class Random1Shift<T> : IPerturber<T, ITSP<T>, TSPObjective<T>, IRoute, float>
         where T : struct
     {
         private readonly IRandomGenerator _random = RandomGeneratorExtensions.GetRandom();
@@ -44,7 +44,7 @@ namespace Itinero.Logistics.Solutions.TSP.Random
         /// Returns true if the given objective is supported.
         /// </summary>
         /// <returns></returns>
-        public bool Supports(ITSPObjective<T> objective)
+        public bool Supports(TSPObjective<T> objective)
         {
             return objective.Name == MinimumWeightObjective<T>.MinimumWeightObjectiveName;
         }
@@ -53,7 +53,7 @@ namespace Itinero.Logistics.Solutions.TSP.Random
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSP<T> problem, ITSPObjective<T> objective, IRoute route, out float difference)
+        public bool Apply(ITSP<T> problem, TSPObjective<T> objective, IRoute route, out float difference)
         {
             return this.Apply(problem, objective, route, 1, out difference);
         }
@@ -62,7 +62,7 @@ namespace Itinero.Logistics.Solutions.TSP.Random
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSP<T> problem, ITSPObjective<T> objective, IRoute route, int level, out float difference)
+        public bool Apply(ITSP<T> problem, TSPObjective<T> objective, IRoute route, int level, out float difference)
         {
             difference = 0;
             while (level > 0)

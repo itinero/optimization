@@ -28,7 +28,7 @@ namespace Itinero.Logistics.Solutions.STSP.Random
     /// <summary>
     /// A random exchange operator for the STSP. Tries to remove customers and then cheapest insert other customers.
     /// </summary>
-    public class RandomExchange<T> : IPerturber<T, ISTSP<T>, ISTSPObjective<T>, IRoute>
+    public class RandomExchange<T> : IPerturber<T, ISTSP<T>, STSPObjective<T>, IRoute, float>
         where T : struct
     {
         private readonly int _max; // holds the maxium customers to be exchanged.
@@ -55,7 +55,7 @@ namespace Itinero.Logistics.Solutions.STSP.Random
         /// <summary>
         /// Applies this operator.
         /// </summary>
-        public bool Apply(ISTSP<T> problem, ISTSPObjective<T> objective, IRoute solution, out float delta)
+        public bool Apply(ISTSP<T> problem, STSPObjective<T> objective, IRoute solution, out float delta)
         {
             return this.Apply(problem, objective, solution, 1, out delta);
         }
@@ -63,7 +63,7 @@ namespace Itinero.Logistics.Solutions.STSP.Random
         /// <summary>
         /// Applies this operator.
         /// </summary>
-        public bool Apply(ISTSP<T> problem, ISTSPObjective<T> objective, IRoute solution, int level, out float delta)
+        public bool Apply(ISTSP<T> problem, STSPObjective<T> objective, IRoute solution, int level, out float delta)
         {
             var fitnessBefore = objective.Calculate(problem, solution);
             var rand = Itinero.Logistics.Algorithms.RandomGeneratorExtensions.GetRandom();
@@ -117,7 +117,7 @@ namespace Itinero.Logistics.Solutions.STSP.Random
         /// Returns true if the given objective is supported.
         /// </summary>
         /// <returns></returns>
-        public bool Supports(ISTSPObjective<T> objective)
+        public bool Supports(STSPObjective<T> objective)
         {
             return objective.Name == MinimumWeightObjective<T>.MinimumWeightObjectiveName;
         }

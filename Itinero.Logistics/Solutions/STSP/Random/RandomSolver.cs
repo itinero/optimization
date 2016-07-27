@@ -26,7 +26,7 @@ namespace Itinero.Logistics.Solutions.STSP.Random
     /// <summary>
     /// Just generates random feasible solutions.
     /// </summary>
-    public class RandomSolver<T> : SolverBase<T, ISTSP<T>, ISTSPObjective<T>, IRoute>
+    public class RandomSolver<T> : SolverBase<T, ISTSP<T>, STSPObjective<T>, IRoute, float>
         where T : struct
     {
         private const int MAX_SECOND_ATTEMPTS = 10000;
@@ -43,7 +43,7 @@ namespace Itinero.Logistics.Solutions.STSP.Random
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ISTSP<T> problem, ISTSPObjective<T> objective, out float fitness)
+        public override IRoute Solve(ISTSP<T> problem, STSPObjective<T> objective, out float fitness)
         {
             // create initial empty solution
             var route = problem.EmptyRoute();

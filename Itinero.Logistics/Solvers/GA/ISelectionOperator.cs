@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Objective;
 using System.Collections.Generic;
 
 namespace Itinero.Logistics.Solvers.GA
@@ -23,7 +24,8 @@ namespace Itinero.Logistics.Solvers.GA
     /// <summary>
     /// Abstract representation of an operator to select a solution for reproduction.
     /// </summary>
-    public interface ISelectionOperator<TProblem, TSolution>
+    public interface ISelectionOperator<TProblem, TSolution, TObjective, TFitness>
+        where TObjective : ObjectiveBase<TFitness>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -37,6 +39,6 @@ namespace Itinero.Logistics.Solvers.GA
         /// Selects a new solution for reproduction.
         /// </summary>
         /// <returns></returns>
-        int Select(TProblem problem, Individual<TSolution>[] population, ISet<int> exclude);
+        int Select(TProblem problem, TObjective objective, Individual<TSolution, TFitness>[] population, ISet<int> exclude);
     }
 }

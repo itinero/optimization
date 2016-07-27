@@ -44,7 +44,7 @@ namespace Itinero.Logistics.Weights
         public abstract T Multiply(T weight, float factor);
 
         /// <summary>
-        /// Multiplies the given weight with the given divider.
+        /// Divides the given weight with the given divider.
         /// </summary>
         public abstract T Divide(T weight, float divider);
 

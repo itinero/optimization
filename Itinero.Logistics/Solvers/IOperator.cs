@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -21,7 +21,7 @@ namespace Itinero.Logistics.Solvers
     /// <summary>
     /// Represents a heuristic/solver operator that is applied to a single instance and may lead to better/worse solution.
     /// </summary>
-    public interface IOperator<TWeight, TProblem, TObjective, TSolution>
+    public interface IOperator<TWeight, TProblem, TObjective, TSolution, TFitness>
         where TWeight : struct
     {
         /// <summary>
@@ -42,6 +42,6 @@ namespace Itinero.Logistics.Solvers
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        bool Apply(TProblem problem, TObjective objective, TSolution solution, out float delta);
+        bool Apply(TProblem problem, TObjective objective, TSolution solution, out TFitness delta);
     }
 }

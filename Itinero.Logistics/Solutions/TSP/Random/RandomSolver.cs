@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -26,7 +26,7 @@ namespace Itinero.Logistics.Solutions.TSP.Random
     /// <summary>
     /// Just generates random solutions.
     /// </summary>
-    public class RandomSolver<T> : SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute>
+    public class RandomSolver<T> : SolverBase<T, ITSP<T>, TSPObjective<T>, IRoute, float>
         where T : struct
     {
         /// <summary>
@@ -41,7 +41,7 @@ namespace Itinero.Logistics.Solutions.TSP.Random
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP<T> problem, ITSPObjective<T> objective, out float fitness)
+        public override IRoute Solve(ITSP<T> problem, TSPObjective<T> objective, out float fitness)
         {
             // generate random solution.
             var customers = new List<int>();

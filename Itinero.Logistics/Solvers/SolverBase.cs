@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,12 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Objective;
+
 namespace Itinero.Logistics.Solvers
 {
     /// <summary>
     /// A base implementation for a solver.
     /// </summary>
-    public abstract class SolverBase<TWeight, TProblem, TObjective, TSolution> : ISolver<TWeight, TProblem, TObjective, TSolution>
+    public abstract class SolverBase<TWeight, TProblem, TObjective, TSolution, TFitness> : ISolver<TWeight, TProblem, TObjective, TSolution, TFitness>
+        where TObjective : ObjectiveBase<TFitness>
     {
         /// <summary>
         /// Holds the stopped-flag.
@@ -42,7 +45,7 @@ namespace Itinero.Logistics.Solvers
         /// <returns></returns>
         public TSolution Solve(TProblem problem, TObjective objective)
         {
-            float fitness;
+            TFitness fitness;
             return this.Solve(problem, objective, out fitness);
         }
 
@@ -50,7 +53,7 @@ namespace Itinero.Logistics.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public abstract TSolution Solve(TProblem problem, TObjective objective, out float fitness);
+        public abstract TSolution Solve(TProblem problem, TObjective objective, out TFitness fitness);
 
         /// <summary>
         /// Returns true if this solver was stopped.

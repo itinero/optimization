@@ -16,44 +16,47 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using Itinero.Logistics.Objective;
-
-namespace Itinero.Logistics.Solvers
+namespace Itinero.Logistics.Fitness
 {
     /// <summary>
-    /// Abstract representation of a solver.
+    /// Represents a fitness handler.
     /// </summary>
-    public interface ISolver<TWeight, TProblem, TObjective, TSolution, TFitness>
-        where TObjective : ObjectiveBase<TFitness>
+    public abstract class FitnessHandler<TFitness>
     {
         /// <summary>
-        /// Returns the name of this solver.
+        /// Gets a fitness value that represent zero.
         /// </summary>
-        string Name
+        public abstract TFitness Zero
         {
             get;
         }
 
         /// <summary>
-        /// Solves the given problem.
+        /// Gets a fitness value that represent the highest possible value.
         /// </summary>
-        /// <returns></returns>
-        TSolution Solve(TProblem problem, TObjective objective);
+        public abstract TFitness Infinite
+        {
+            get;
+        }
 
         /// <summary>
-        /// Solves the given problem.
+        /// Compares fitness1 to fitness2 and returns 1 if fitness1 is better, 0 if equal and -1 if fitness2 is better.
         /// </summary>
-        /// <returns></returns>
-        TSolution Solve(TProblem problem, TObjective objective, out TFitness fitness);
+        public abstract int CompareTo(TFitness fitness1, TFitness fitness2);
 
         /// <summary>
-        /// Stops the executing of the solving process.
+        /// Adds two fitness value.
         /// </summary>
-        void Stop();
+        public abstract TFitness Add(TFitness fitness1, TFitness fitness2);
 
         /// <summary>
-        /// Raised when an intermidiate result is available.
+        /// Substracts a fitness value from another.
         /// </summary>
-        event SolverDelegates.IntermidiateDelegate<TSolution> IntermidiateResult;
+        public abstract TFitness Subtract(TFitness fitness1, TFitness fitness2);
+
+        /// <summary>
+        /// Returns true if the given fitness value is zero.
+        /// </summary>
+        public abstract bool IsZero(TFitness fitness);
     }
 }

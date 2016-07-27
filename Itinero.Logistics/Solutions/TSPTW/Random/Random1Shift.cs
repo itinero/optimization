@@ -28,7 +28,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
     /// An operator to execute n random 1-shift* relocations.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere.</remarks>
-    public class Random1Shift<T> : IPerturber<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>
+    public class Random1Shift<T> : IPerturber<T, ITSPTW<T>, TSPTWObjective<T>, IRoute, float>
         where T : struct
     {
         private IRandomGenerator _random = RandomGeneratorExtensions.GetRandom();
@@ -45,7 +45,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
         /// Returns true if the given objective is supported.
         /// </summary>
         /// <returns></returns>
-        public bool Supports(ITSPTWObjective<T>  objective)
+        public bool Supports(TSPTWObjective<T>  objective)
         {
             return objective.Name == MinimumWeightObjective<T>.MinimumWeightObjectiveName;
         }
@@ -54,7 +54,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSPTW<T> problem, ITSPTWObjective<T>  objective, IRoute route, out float difference)
+        public bool Apply(ITSPTW<T> problem, TSPTWObjective<T>  objective, IRoute route, out float difference)
         {
             return this.Apply(problem, objective, route, 1, out difference);
         }
@@ -63,7 +63,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSPTW<T> problem, ITSPTWObjective<T>  objective, IRoute solution, int level, out float difference)
+        public bool Apply(ITSPTW<T> problem, TSPTWObjective<T>  objective, IRoute solution, int level, out float difference)
         {
             if(problem.Weights.Length == 1)
             { // there is only one customer, cannot shift randomly.

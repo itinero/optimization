@@ -29,7 +29,7 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
     /// <summary>
     /// An edge assembly crossover.
     /// </summary>
-    public class EAXOperator<T> : ICrossOverOperator<T, ITSP<T>, ITSPObjective<T>, IRoute>
+    public class EAXOperator<T> : ICrossOverOperator<T, ITSP<T>, TSPObjective<T>, IRoute, float>
         where T : struct
     {
         private readonly int _maxOffspring;
@@ -136,7 +136,7 @@ namespace Itinero.Logistics.Solutions.TSP.GA.Operators
         /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
         /// <returns></returns>
-        public IRoute Apply(ITSP<T> problem, ITSPObjective<T> objective, IRoute solution1, IRoute solution2, out float fitness)
+        public IRoute Apply(ITSP<T> problem, TSPObjective<T> objective, IRoute solution1, IRoute solution2, out float fitness)
         {
             if (solution1.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
             if (solution2.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }

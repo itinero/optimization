@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -26,10 +26,10 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
     /// <summary>
     /// A 3-opt solver.
     /// </summary>
-    public class HillClimbing3OptSolver<T> : SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute>, IOperator<T, ITSP<T>, ITSPObjective<T>, IRoute>
+    public class HillClimbing3OptSolver<T> : SolverBase<T, ITSP<T>, TSPObjective<T>, IRoute, float>, IOperator<T, ITSP<T>, TSPObjective<T>, IRoute, float>
         where T : struct
     {
-        private readonly ISolver<T, ITSP<T>, ITSPObjective<T>, IRoute> _generator;
+        private readonly ISolver<T, ITSP<T>, TSPObjective<T>, IRoute, float> _generator;
         private readonly bool _nearestNeighbours = false;
         private readonly bool _dontLook = false;
         private readonly double _epsilon = 0.001f;
@@ -47,7 +47,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public HillClimbing3OptSolver(ISolver<T, ITSP<T>, ITSPObjective<T>, IRoute> generator, bool nearestNeighbours, bool dontLook)
+        public HillClimbing3OptSolver(ISolver<T, ITSP<T>, TSPObjective<T>, IRoute, float> generator, bool nearestNeighbours, bool dontLook)
         {
             _generator = generator;
             _dontLook = dontLook;
@@ -81,7 +81,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Returns true if the given objective is supported.
         /// </summary>
         /// <returns></returns>
-        public bool Supports(ITSPObjective<T> objective)
+        public bool Supports(TSPObjective<T> objective)
         {
             return objective.Name == MinimumWeightObjective<T>.MinimumWeightObjectiveName;
         }
@@ -90,7 +90,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP<T> problem, ITSPObjective<T> objective, out float fitness)
+        public override IRoute Solve(ITSP<T> problem, TSPObjective<T> objective, out float fitness)
         {
             if (!problem.Last.HasValue) { throw new ArgumentException("OPT3 cannot be used on open TSP-problems."); }
 
@@ -114,7 +114,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSP<T> problem, ITSPObjective<T> objective, IRoute solution, out float delta)
+        public bool Apply(ITSP<T> problem, TSPObjective<T> objective, IRoute solution, out float delta)
         {
             if (!problem.Last.HasValue) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
             if (solution.First != solution.Last) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }

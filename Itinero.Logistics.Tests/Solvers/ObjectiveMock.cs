@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,13 +16,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Fitness;
+using Itinero.Logistics.Objective;
+
 namespace Itinero.Logistics.Tests.Solvers
 {
     /// <summary>
     /// A mockup of an objective.
     /// </summary>
-    class ObjectiveMock
+    class ObjectiveMock : ObjectiveBase<float>
     {
-
+        /// <summary>
+        /// Gets the fitness handler.
+        /// </summary>
+        public override FitnessHandler<float> FitnessHandler
+        {
+            get
+            {
+                return new DefaultFitnessHandler();
+            }
+        }
     }
 }

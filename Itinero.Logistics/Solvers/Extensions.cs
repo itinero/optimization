@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Objective;
+
 namespace Itinero.Logistics.Solvers
 {
     /// <summary>
@@ -27,17 +29,19 @@ namespace Itinero.Logistics.Solvers
         /// Apply the operator until no more improvements can be found.
         /// </summary>
         /// <returns></returns>
-        public static bool ApplyUntil<TWeight, TProblem, TObjective, TSolution>(this IOperator<TWeight, TProblem, TObjective, TSolution> oper, 
-            TProblem problem, TObjective objective, TSolution solution, out float delta)
+        public static bool ApplyUntil<TWeight, TProblem, TObjective, TSolution, TFitness>(this IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> oper, 
+            TProblem problem, TObjective objective, TSolution solution, out TFitness delta)
+            where TObjective : ObjectiveBase<TFitness>
             where TWeight : struct
         {
-            delta = 0;
-            var localDelta = 0.0f;
+            var fitnessHandler = objective.FitnessHandler;
+            delta = fitnessHandler.Zero;
+            var localDelta = delta;
             while (oper.Apply(problem, objective, solution, out localDelta))
             {
-                delta += localDelta;
+                delta = fitnessHandler.Add(delta, localDelta);
             }
-            return delta > 0;
+            return !fitnessHandler.IsZero(delta);
         }
     }
 }

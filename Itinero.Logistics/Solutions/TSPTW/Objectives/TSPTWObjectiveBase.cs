@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -21,13 +21,13 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
     /// <summary>
     /// Abstract base class for TSPTW objectives.
     /// </summary>
-    public abstract class TSPTWObjectiveBase<T> : ITSPTWObjective<T>
+    public abstract class TSPTWObjectiveBase<T> : TSPTWObjective<T>
         where T : struct
     {
         /// <summary>
         /// Returns the name of this objective.
         /// </summary>
-        public abstract string Name
+        public override abstract string Name
         {
             get;
         }
@@ -36,7 +36,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
         /// Calculates the fitness of a TSP solution.
         /// </summary>
         /// <returns></returns>
-        public float Calculate(TSP.ITSP<T> problem, Routes.IRoute solution)
+        public sealed override float Calculate(TSP.ITSP<T> problem, Routes.IRoute solution)
         {
             return this.Calculate(problem as ITSPTW<T>, solution);
         }
@@ -45,25 +45,25 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
         /// Calculates the fitness of a TSP solution.
         /// </summary>
         /// <returns></returns>
-        public abstract float Calculate(ITSPTW<T> problem, Routes.IRoute solution);
+        public abstract override float Calculate(ITSPTW<T> problem, Routes.IRoute solution);
 
         /// <summary>
         /// Executes the shift-after and returns the difference between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>
-        public abstract bool ShiftAfter(ITSPTW<T> problem, Routes.IRoute route, int customer, int before, out float difference);
+        public abstract override bool ShiftAfter(ITSPTW<T> problem, Routes.IRoute route, int customer, int before, out float difference);
         
         /// <summary>
         /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
         /// </summary>
         /// <returns></returns>
-        public abstract float IfShiftAfter(ITSPTW<T> problem, Routes.IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter);
+        public abstract override float IfShiftAfter(ITSPTW<T> problem, Routes.IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter);
 
         /// <summary>
         /// Executes the shift-after and returns the difference between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>
-        public bool ShiftAfter(TSP.ITSP<T> problem, Routes.IRoute route, int customer, int before, out float difference)
+        public sealed override bool ShiftAfter(TSP.ITSP<T> problem, Routes.IRoute route, int customer, int before, out float difference)
         {
             return this.ShiftAfter(problem as ITSPTW<T>, route, customer, before, out difference);
         }
@@ -72,7 +72,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
         /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
         /// </summary>
         /// <returns></returns>
-        public float IfShiftAfter(TSP.ITSP<T> problem, Routes.IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
+        public sealed override float IfShiftAfter(TSP.ITSP<T> problem, Routes.IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
         {
             return this.IfShiftAfter(problem, route, customer, before, oldBefore, oldAfter, newAfter);
         }

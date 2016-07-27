@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Objective;
 using System;
 
 namespace Itinero.Logistics.Solvers
@@ -23,16 +24,17 @@ namespace Itinero.Logistics.Solvers
     /// <summary>
     /// A wrapper for a solver, replacing the objective with another objective on each call.
     /// </summary>
-    public class SolverObjectiveWrapper<TWeight, TProblem, TObjective, TSolution> : ISolver<TWeight, TProblem, TObjective, TSolution>
+    public class SolverObjectiveWrapper<TWeight, TProblem, TObjective, TSolution, TFitness> : ISolver<TWeight, TProblem, TObjective, TSolution, TFitness>
+        where TObjective : ObjectiveBase<TFitness>
     {
-        private readonly ISolver<TWeight, TProblem, TObjective, TSolution> _solver;
+        private readonly ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> _solver;
         private readonly TObjective _objective;
-        private readonly Func<TProblem, TObjective, TSolution, float> _calculateFitness;
+        private readonly Func<TProblem, TObjective, TSolution, TFitness> _calculateFitness;
 
         /// <summary>
         /// Creates a new solver objective wrapper.
         /// </summary>
-        public SolverObjectiveWrapper(ISolver<TWeight, TProblem, TObjective, TSolution> solver, TObjective objective, Func<TProblem, TObjective, TSolution, float> calculateFitness)
+        public SolverObjectiveWrapper(ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> solver, TObjective objective, Func<TProblem, TObjective, TSolution, TFitness> calculateFitness)
         {
             _solver = solver;
             _solver.IntermidiateResult += _solver_IntermidiateResult;
@@ -61,7 +63,7 @@ namespace Itinero.Logistics.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public TSolution Solve(TProblem problem, TObjective objective, out float fitness)
+        public TSolution Solve(TProblem problem, TObjective objective, out TFitness fitness)
         {
             var solution = _solver.Solve(problem, _objective, out fitness);
             fitness = _calculateFitness(problem, objective, solution);

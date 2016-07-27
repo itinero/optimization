@@ -35,7 +35,7 @@ namespace Itinero.Logistics.Routing.TSPTW
     /// </summary>
     public class TSPTWRouter : RoutingAlgorithmBase, Itinero.Logistics.Routing.TSPTW.ITSPTWRouter
     {
-        private readonly ISolver<float, ITSPTW<float>, ITSPTWObjective<float>, Itinero.Logistics.Routes.IRoute> _solver;
+        private readonly ISolver<float, ITSPTW<float>, TSPTWObjective<float>, Itinero.Logistics.Routes.IRoute, float> _solver;
         private readonly RouterBase _router;
         private readonly Profile _profile;
         private readonly Coordinate[] _locations;
@@ -67,7 +67,7 @@ namespace Itinero.Logistics.Routing.TSPTW
         /// Creates a new router with a given solver.
         /// </summary>
         public TSPTWRouter(RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows,
-            int first, int? last, ISolver<float, ITSPTW<float>, ITSPTWObjective<float>, Itinero.Logistics.Routes.IRoute> solver)
+            int first, int? last, ISolver<float, ITSPTW<float>, TSPTWObjective<float>, Itinero.Logistics.Routes.IRoute, float> solver)
             : this(router, profile, locations, windows, first, last, solver, new WeightMatrixAlgorithm(router, profile, locations))
         {
 
@@ -87,7 +87,7 @@ namespace Itinero.Logistics.Routing.TSPTW
         /// Creates a new router with a given solver.
         /// </summary>
         public TSPTWRouter(RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, 
-            int first, int? last, ISolver<float, ITSPTW<float>, ITSPTWObjective<float>, Itinero.Logistics.Routes.IRoute> solver,
+            int first, int? last, ISolver<float, ITSPTW<float>, TSPTWObjective<float>, Itinero.Logistics.Routes.IRoute, float> solver,
             IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
         {
             _router = router;

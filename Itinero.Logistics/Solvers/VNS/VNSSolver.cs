@@ -16,21 +16,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Fitness;
+using Itinero.Logistics.Objective;
+
 namespace Itinero.Logistics.Solvers.VNS
 {
     /// <summary>
     /// A Variable Neighbourhood Search (VNS) solver.
     /// </summary>
-    public class VNSSolver<TWeight, TProblem, TObjective, TSolution> : SolverBase<TWeight, TProblem, TObjective, TSolution>, 
-        IOperator<TWeight, TProblem, TObjective, TSolution>
+    public class VNSSolver<TWeight, TProblem, TObjective, TSolution, TFitness> : SolverBase<TWeight, TProblem, TObjective, TSolution, TFitness>, 
+        IOperator<TWeight, TProblem, TObjective, TSolution, TFitness>
         where TSolution : ISolution
+        where TObjective : ObjectiveBase<TFitness>
         where TWeight : struct
     {
         private static Itinero.Logistics.Logging.Logger _log = new Logging.Logger("VNSSolver");
         private readonly SolverDelegates.StopConditionWithLevelDelegate<TProblem, TObjective, TSolution> _stopCondition;
-        private readonly ISolver<TWeight, TProblem, TObjective, TSolution> _generator;
-        private readonly IPerturber<TWeight, TProblem, TObjective, TSolution> _perturber;
-        private readonly IOperator<TWeight, TProblem, TObjective, TSolution> _localSearch;
+        private readonly ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> _generator;
+        private readonly IPerturber<TWeight, TProblem, TObjective, TSolution, TFitness> _perturber;
+        private readonly IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> _localSearch;
 
         /// <summary>
         /// Creates a new VNS solver.
@@ -38,8 +42,8 @@ namespace Itinero.Logistics.Solvers.VNS
         /// <param name="generator">The solver that generates initial solutions.</param>
         /// <param name="perturber">The perturber that varies neighbourhood.</param>
         /// <param name="localSearch">The local search that improves solutions.</param>
-        public VNSSolver(ISolver<TWeight, TProblem, TObjective, TSolution> generator, IPerturber<TWeight, TProblem, TObjective, TSolution> perturber,
-            IOperator<TWeight, TProblem, TObjective, TSolution> localSearch)
+        public VNSSolver(ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> generator, IPerturber<TWeight, TProblem, TObjective, TSolution, TFitness> perturber,
+            IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> localSearch)
         {
             _generator = generator;
             _perturber = perturber;
@@ -53,8 +57,8 @@ namespace Itinero.Logistics.Solvers.VNS
         /// <param name="perturber">The perturber that varies neighbourhood.</param>
         /// <param name="localSearch">The local search that improves solutions.</param>
         /// <param name="stopCondition">The stop condition to control the number of iterations.</param>
-        public VNSSolver(ISolver<TWeight, TProblem, TObjective, TSolution> generator, IPerturber<TWeight, TProblem, TObjective, TSolution> perturber,
-            IOperator<TWeight, TProblem, TObjective, TSolution> localSearch, SolverDelegates.StopConditionWithLevelDelegate<TProblem, TObjective, TSolution> stopCondition)
+        public VNSSolver(ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> generator, IPerturber<TWeight, TProblem, TObjective, TSolution, TFitness> perturber,
+            IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> localSearch, SolverDelegates.StopConditionWithLevelDelegate<TProblem, TObjective, TSolution> stopCondition)
         {
             _generator = generator;
             _perturber = perturber;
@@ -84,11 +88,13 @@ namespace Itinero.Logistics.Solvers.VNS
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override TSolution Solve(TProblem problem, TObjective objective, out float fitness)
+        public override TSolution Solve(TProblem problem, TObjective objective, out TFitness fitness)
         {
+            var fitnessHandler = objective.FitnessHandler;
+
             _log.Log(Logging.TraceEventType.Information, "Started generating initial solution...");
 
-            var globalBestFitness = float.MaxValue;
+            TFitness globalBestFitness;
             var globalBest = _generator.Solve(problem, objective, out globalBestFitness);
 
             _log.Log(Logging.TraceEventType.Information, "Initial solution generated: {0}.", globalBestFitness);
@@ -96,10 +102,10 @@ namespace Itinero.Logistics.Solvers.VNS
             // report new solution.
             this.ReportIntermidiateResult(globalBest);
 
-            var difference = 0.0f;
+            var difference = fitnessHandler.Zero;
             if (_localSearch.Apply(problem, objective, globalBest, out difference))
             { // localsearch leads to better solution, adjust the fitness.
-                globalBestFitness = globalBestFitness - difference;
+                globalBestFitness = fitnessHandler.Subtract(globalBestFitness, difference);
 
                 _log.Log(Logging.TraceEventType.Information, "Improvement found by local search: {0}.", globalBestFitness);
 
@@ -114,16 +120,17 @@ namespace Itinero.Logistics.Solvers.VNS
             { // keep running until stop condition is true or this solver is stopped.
                 // shake things up a bit, or in other word change neighbourhood.
                 var perturbedSolution = (TSolution)globalBest.Clone();
-                var perturbedDifference = 0.0f;
+                var perturbedDifference = fitnessHandler.Zero;
                 _perturber.Apply(problem, objective, perturbedSolution, level, out perturbedDifference);
 
                 // improve things by using a local search procedure.
-                var localSearchDifference = 0.0f;
+                var localSearchDifference = fitnessHandler.Zero;
                 _localSearch.ApplyUntil(problem, objective, perturbedSolution, out localSearchDifference);
 
-                if (localSearchDifference + perturbedDifference > 0)
+                if (!fitnessHandler.IsZero(localSearchDifference) || !fitnessHandler.IsZero(perturbedDifference))
                 { // there was an improvement, keep new solution as global.
-                    globalBestFitness = globalBestFitness - perturbedDifference - localSearchDifference;
+                    globalBestFitness = fitnessHandler.Subtract(globalBestFitness, perturbedDifference);
+                    globalBestFitness = fitnessHandler.Subtract(globalBestFitness, localSearchDifference);
                     globalBest = perturbedSolution;
                     level = 1; // reset level.
 
@@ -148,9 +155,11 @@ namespace Itinero.Logistics.Solvers.VNS
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(TProblem problem, TObjective objective, TSolution solution, out float delta)
+        public bool Apply(TProblem problem, TObjective objective, TSolution solution, out TFitness delta)
         {
-            delta = 0;
+            var fitnessHandler = objective.FitnessHandler;
+
+            delta = fitnessHandler.Zero;
             var globalBest = (TSolution)solution.Clone();
 
             var i = 0;
@@ -160,16 +169,16 @@ namespace Itinero.Logistics.Solvers.VNS
             { // keep running until stop condition is true or this solver is stopped.
                 // shake things up a bit, or in other word change neighbourhood.
                 var perturbedSolution = (TSolution)globalBest.Clone();
-                var perturbedDifference = 0.0f;
+                var perturbedDifference = fitnessHandler.Zero;
                 _perturber.Apply(problem, objective, perturbedSolution, level, out perturbedDifference);
 
                 // improve things by using a local search procedure.
-                var localSearchDifference = 0.0f;
+                var localSearchDifference = fitnessHandler.Zero;
                 _localSearch.ApplyUntil(problem, objective, perturbedSolution, out localSearchDifference);
 
-                if (localSearchDifference + perturbedDifference > 0)
+                if (!fitnessHandler.IsZero(localSearchDifference) || !fitnessHandler.IsZero(perturbedDifference))
                 { // there was an improvement, keep new solution as global.
-                    delta = delta + perturbedDifference + localSearchDifference;
+                    delta = fitnessHandler.Add(delta, perturbedDifference, localSearchDifference);
                     globalBest = perturbedSolution;
                     level = 1; // reset level.
 
@@ -182,7 +191,7 @@ namespace Itinero.Logistics.Solvers.VNS
                 }
             }
 
-            if (delta > 0)
+            if (!fitnessHandler.IsZero(delta))
             {
                 solution.CopyFrom(globalBest);
                 return true;

@@ -34,7 +34,7 @@ namespace Itinero.Logistics.Routing.TSP
     /// </summary>
     public class TSPRouter : RoutingAlgorithmBase, Itinero.Logistics.Routing.TSP.ITSPRouter
     {
-        private readonly ISolver<float, ITSP<float>, ITSPObjective<float>, Itinero.Logistics.Routes.IRoute> _solver;
+        private readonly ISolver<float, ITSP<float>, TSPObjective<float>, Itinero.Logistics.Routes.IRoute, float> _solver;
         private readonly RouterBase _router;
         private readonly Profile _profile;
         private readonly Coordinate[] _locations;
@@ -97,7 +97,7 @@ namespace Itinero.Logistics.Routing.TSP
         /// Creates a new router with a given solver.
         /// </summary>
         public TSPRouter(RouterBase router, Profile profile, Coordinate[] locations, int first, int? last, 
-            ISolver<float, ITSP<float>, ITSPObjective<float>, Itinero.Logistics.Routes.IRoute> solver)
+            ISolver<float, ITSP<float>, TSPObjective<float>, Itinero.Logistics.Routes.IRoute, float> solver)
             : this(router, profile, locations, first, last, solver, new WeightMatrixAlgorithm(router, profile, locations))
         {
 
@@ -107,7 +107,7 @@ namespace Itinero.Logistics.Routing.TSP
         /// Creates a new router with a given solver.
         /// </summary>
         public TSPRouter(RouterBase router, Profile profile, Coordinate[] locations, int first, int? last, 
-            ISolver<float, ITSP<float>, ITSPObjective<float>, Itinero.Logistics.Routes.IRoute> solver, IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
+            ISolver<float, ITSP<float>, TSPObjective<float>, Itinero.Logistics.Routes.IRoute, float> solver, IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
         {
             _router = router;
             _profile = profile;

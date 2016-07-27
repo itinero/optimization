@@ -17,6 +17,7 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Logistics.Algorithms;
+using Itinero.Logistics.Objective;
 using System;
 using System.Collections.Generic;
 
@@ -25,7 +26,8 @@ namespace Itinero.Logistics.Solvers.GA
     /// <summary>
     /// A selector selecting individials using a tournament base selection.
     /// </summary>
-    public class TournamentSelectionOperator<TProblem, TSolution> : ISelectionOperator<TProblem, TSolution>
+    public class TournamentSelectionOperator<TProblem, TSolution, TObjective, TFitness> : ISelectionOperator<TProblem, TSolution, TObjective, TFitness>
+        where TObjective : ObjectiveBase<TFitness>
     {
         private double _tournamentSize;
         private double _tournamentProbability;
@@ -65,24 +67,26 @@ namespace Itinero.Logistics.Solvers.GA
         /// Selects a new solution for reproduction.
         /// </summary>
         /// <returns></returns>
-        public int Select(TProblem problem, Individual<TSolution>[] population, System.Collections.Generic.ISet<int> exclude)
+        public int Select(TProblem problem, TObjective objective, Individual<TSolution, TFitness>[] population, System.Collections.Generic.ISet<int> exclude)
         {
+            var fitnessHandler = objective.FitnessHandler;
+
             var tournamentSizeInt = (int)System.Math.Ceiling(((_tournamentSize / 100f) * (double)population.Length));
-            var tempPop = new List<Tuple<int, Individual<TSolution>>>(tournamentSizeInt);
+            var tempPop = new List<Tuple<int, Individual<TSolution, TFitness>>>(tournamentSizeInt);
 
             while (tempPop.Count < tournamentSizeInt)
             { // keep looping until enough individuals are selected or until no more are available.
                 var idx = _random.Generate(population.Length);
                 if (exclude == null || !exclude.Contains(idx))
                 { // do not tournament excluded solutions.
-                    tempPop.Add(new Tuple<int, Individual<TSolution>>(idx, population[idx]));
+                    tempPop.Add(new Tuple<int, Individual<TSolution, TFitness>>(idx, population[idx]));
                 }
             }
 
             // sort the population..
             tempPop.Sort((x, y) =>
             {
-                return y.Item2.Fitness.CompareTo(x.Item2.Fitness);
+                return fitnessHandler.CompareTo(y.Item2.Fitness, x.Item2.Fitness);
             });
 
             // choose a candidate.

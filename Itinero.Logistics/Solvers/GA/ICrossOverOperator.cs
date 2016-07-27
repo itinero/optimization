@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,12 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Objective;
+
 namespace Itinero.Logistics.Solvers.GA
 {
     /// <summary>
     /// Abstract representation of a crossover operation.
     /// </summary>
-    public interface ICrossOverOperator<TWeight, TProblem, TObjective, TSolution>
+    public interface ICrossOverOperator<TWeight, TProblem, TObjective, TSolution, TFitness>
+        where TObjective : ObjectiveBase<TFitness>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -35,6 +38,6 @@ namespace Itinero.Logistics.Solvers.GA
         /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
         /// <returns></returns>
-        TSolution Apply(TProblem problem, TObjective objective, TSolution solution1, TSolution solution2, out float fitness);
+        TSolution Apply(TProblem problem, TObjective objective, TSolution solution1, TSolution solution2, out TFitness fitness);
     }
 }

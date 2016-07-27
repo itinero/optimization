@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -26,14 +26,14 @@ namespace Itinero.Logistics.Solutions.TSPTW.VNS
     /// <summary>
     /// A VNS-solver for the TSP-TW problem.
     /// </summary>
-    public class VNSSolver<T> : VNSSolver<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>
+    public class VNSSolver<T> : VNSSolver<T, ITSPTW<T>, TSPTWObjective<T>, IRoute, float>
         where T : struct
     {
         /// <summary>
         /// Creates a new VNS-solver.
         /// </summary>
         public VNSSolver()
-            : base(new Itinero.Logistics.Solvers.SolverObjectiveWrapper<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>(
+            : base(new Itinero.Logistics.Solvers.SolverObjectiveWrapper<T, ITSPTW<T>, TSPTWObjective<T>, IRoute, float>(
                 new VNSConstructionSolver<T>(), new FeasibleObjective<T>(), (p, o, s) => o.Calculate(p, s)), new Random.Random1Shift<T>(),
                     new VNDOperator<T>(), (i, l, p, o, s) =>
                     {

@@ -16,51 +16,46 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Fitness;
 using Itinero.Logistics.Routes;
-using Itinero.Logistics.Weights;
 
-namespace Itinero.Logistics.Solutions.STSP
+namespace Itinero.Logistics.Solutions.TSPTW
 {
     /// <summary>
-    /// Abstract representation of a basic STSP-objective.
+    /// Abstract representation of a basic TSPTW-objective.
     /// </summary>
-    public interface ISTSPObjective<T>
+    public abstract class TSPTWObjective<T> : Itinero.Logistics.Solutions.TSP.TSPObjective<T>
         where T : struct
     {
+        private readonly DefaultFitnessHandler _fitnessHandler = new DefaultFitnessHandler();
+        
         /// <summary>
-        /// Returns the name of this objective.
+        /// Gets the fitness handler.
         /// </summary>
-        string Name
+        public sealed override FitnessHandler<float> FitnessHandler
         {
-            get;
+            get
+            {
+                return _fitnessHandler;
+            }
         }
 
         /// <summary>
-        /// Calculates the fitness of a STSP solution.
+        /// Calculates the fitness of a TSP solution.
         /// </summary>
         /// <returns></returns>
-        float Calculate(ISTSP<T> problem, IRoute solution);
-
-        /// <summary>
-        /// Calculates only the weight of a STSP solution without taking into account the customer count.
-        /// </summary>
-        float CalculateWeight(ISTSP<T> problem, IRoute solution);
-
-        /// <summary>
-        /// Calculates the fitness when the weight is already known.
-        /// </summary>
-        float Calculate(ISTSP<T> problem, IRoute solution, float weight);
+        public abstract float Calculate(ITSPTW<T> problem, IRoute solution);
 
         /// <summary>
         /// Executes the shift-after and returns the difference between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>
-        bool ShiftAfter(ISTSP<T> problem, IRoute route, int customer, int before, out float difference);
+        public abstract bool ShiftAfter(ITSPTW<T> problem, IRoute route, int customer, int before, out float difference);
 
         /// <summary>
         /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
         /// </summary>
         /// <returns></returns>
-        float IfShiftAfter(ISTSP<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter);
+        public abstract float IfShiftAfter(ITSPTW<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter);
     }
 }

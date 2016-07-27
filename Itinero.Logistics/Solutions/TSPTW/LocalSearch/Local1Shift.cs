@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -27,7 +27,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
     /// <summary>
     /// A local search procedure to move around and improve the time window 'violations' in a solution.
     /// </summary>
-    public class Local1Shift<T> : IOperator<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>
+    public class Local1Shift<T> : IOperator<T, ITSPTW<T>, TSPTWObjective<T>, IRoute, float>
         where T : struct
     {
         private readonly bool _assumeFeasible;
@@ -60,7 +60,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
         /// Returns true if the given objective is supported.
         /// </summary>
         /// <returns></returns>
-        public bool Supports(ITSPTWObjective<T> objective)
+        public bool Supports(TSPTWObjective<T> objective)
         {
             return objective.Name == FeasibleObjective<T>.FeasibleObjectiveName;
         }
@@ -69,7 +69,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSPTW<T> problem, ITSPTWObjective<T> objective, IRoute solution, out float delta)
+        public bool Apply(ITSPTW<T> problem, TSPTWObjective<T> objective, IRoute solution, out float delta)
         {
             // STRATEGY: 
             // 1: try to move a violated customer backwards.
@@ -105,7 +105,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool MoveViolatedBackward(ITSPTW<T> problem, ITSPTWObjective<T> objective, IRoute solution, out float delta)
+        public bool MoveViolatedBackward(ITSPTW<T> problem, TSPTWObjective<T> objective, IRoute solution, out float delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();
@@ -205,7 +205,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool MoveNonViolatedForward(ITSPTW<T> problem, ITSPTWObjective<T>  objective, IRoute solution, out float delta)
+        public bool MoveNonViolatedForward(ITSPTW<T> problem, TSPTWObjective<T>  objective, IRoute solution, out float delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();
@@ -317,7 +317,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool MoveNonViolatedBackward(ITSPTW<T> problem, ITSPTWObjective<T> objective, IRoute solution, out float delta)
+        public bool MoveNonViolatedBackward(ITSPTW<T> problem, TSPTWObjective<T> objective, IRoute solution, out float delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();
@@ -425,7 +425,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool MoveViolatedForward(ITSPTW<T> problem, ITSPTWObjective<T>  objective, IRoute solution, out float delta)
+        public bool MoveViolatedForward(ITSPTW<T> problem, TSPTWObjective<T>  objective, IRoute solution, out float delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();

@@ -17,6 +17,7 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using Itinero.Logistics.Fitness;
 using Itinero.Logistics.Routes;
 using Itinero.Logistics.Solutions.TSP;
 using Itinero.Logistics.Weights;
@@ -24,30 +25,30 @@ using Itinero.Logistics.Weights;
 namespace Itinero.Logistics.Solutions.STSP
 {
     /// <summary>
-    /// Extension methods for the ISTSPObjective.
+    /// Extension methods for the STSPObjective.
     /// </summary>
-    public static class ISTSPObjectiveExtensions
+    public static class STSPObjectiveExtensions
     {
         /// <summary>
         /// Converts the ISTSPObjective to an equivalent TSPObjective.
         /// </summary>
-        public static ITSPObjective<T> ToTSPObjective<T>(this ISTSPObjective<T> istspObjective)
+        public static TSPObjective<T> ToTSPObjective<T>(this STSPObjective<T> istspObjective)
             where T : struct
         {
             return new STSPObjectiveAsTSPObjective<T>(istspObjective);
         }
         
-        private class STSPObjectiveAsTSPObjective<T> : ITSPObjective<T>
+        private class STSPObjectiveAsTSPObjective<T> : TSPObjective<T>
             where T : struct
         {
-            private readonly ISTSPObjective<T> _o;
+            private readonly STSPObjective<T> _o;
 
-            public STSPObjectiveAsTSPObjective(ISTSPObjective<T> o)
+            public STSPObjectiveAsTSPObjective(STSPObjective<T> o)
             {
                 _o = o;
             }
 
-            public string Name
+            public override string Name
             {
                 get
                 {
@@ -55,17 +56,25 @@ namespace Itinero.Logistics.Solutions.STSP
                 }
             }
 
-            public float Calculate(ITSP<T> problem, IRoute solution)
+            public override FitnessHandler<float> FitnessHandler
+            {
+                get
+                {
+                    return _o.FitnessHandler;
+                }
+            }
+
+            public override float Calculate(ITSP<T> problem, IRoute solution)
             {
                 return _o.CalculateWeight(problem.ToSTSP(), solution);
             }
 
-            public float IfShiftAfter(ITSP<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
+            public override float IfShiftAfter(ITSP<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
             {
                 return _o.IfShiftAfter(problem.ToSTSP(), route, customer, before, oldBefore, oldAfter, newAfter);
             }
 
-            public bool ShiftAfter(ITSP<T> problem, IRoute route, int customer, int before, out float difference)
+            public override bool ShiftAfter(ITSP<T> problem, IRoute route, int customer, int before, out float difference)
             {
                 return _o.ShiftAfter(problem.ToSTSP(), route, customer, before, out difference);
             }

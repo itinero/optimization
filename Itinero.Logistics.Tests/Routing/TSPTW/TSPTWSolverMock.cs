@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -25,7 +25,7 @@ namespace Itinero.Logistics.Tests.Routing.TSPTW
     /// <summary>
     /// A mock-solver that has a pre-determined order.
     /// </summary>
-    public class TSPTWSolverMock : SolverBase<float, ITSPTW<float>, ITSPTWObjective<float>, IRoute>
+    public class TSPTWSolverMock : SolverBase<float, ITSPTW<float>, TSPTWObjective<float>, IRoute, float>
     {
         private readonly IRoute _route;
         private readonly float _fitness;
@@ -51,7 +51,7 @@ namespace Itinero.Logistics.Tests.Routing.TSPTW
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSPTW<float> problem, ITSPTWObjective<float> objective, out float fitness)
+        public override IRoute Solve(ITSPTW<float> problem, TSPTWObjective<float> objective, out float fitness)
         {
             fitness = _fitness;
             return _route;

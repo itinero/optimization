@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -17,7 +17,6 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Logistics.Routes;
-using Itinero.Logistics.Solutions.TSP;
 
 namespace Itinero.Logistics.Solutions.TSPTW.Objectives
 {
@@ -44,7 +43,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
         /// Calculates the fitness of a TSP solution.
         /// </summary>
         /// <returns></returns>
-        public override float Calculate(ITSPTW<T> problem, Routes.IRoute solution)
+        public sealed override float Calculate(ITSPTW<T> problem, Routes.IRoute solution)
         {
             var infeasible = 0f;
             var weight = 0f;
@@ -100,7 +99,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
         /// Executes the shift-after and returns the difference between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>
-        public override bool ShiftAfter(ITSPTW<T> problem, Routes.IRoute route, int customer, int before, out float difference)
+        public sealed override bool ShiftAfter(ITSPTW<T> problem, Routes.IRoute route, int customer, int before, out float difference)
         {
             var fitnessBefore = this.Calculate(problem, route);
             route.ShiftAfter(customer, before);
@@ -113,7 +112,7 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
         /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
         /// </summary>
         /// <returns></returns>
-        public override float IfShiftAfter(ITSPTW<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
+        public sealed override float IfShiftAfter(ITSPTW<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
         {
             var fitnessBefore = this.Calculate(problem, route);
             var clone = route.Clone() as IRoute;

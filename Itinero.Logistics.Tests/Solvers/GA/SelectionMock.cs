@@ -25,7 +25,7 @@ namespace Itinero.Logistics.Tests.Solvers.GA
     /// <summary>
     /// A mockup of a selection operator.
     /// </summary>
-    class SelectionMock : ISelectionOperator<ProblemMock, SolutionMock>
+    class SelectionMock : ISelectionOperator<ProblemMock, SolutionMock,  ObjectiveMock, float>
     {
         /// <summary>
         /// Returns the name of this solver.
@@ -39,7 +39,7 @@ namespace Itinero.Logistics.Tests.Solvers.GA
         /// Selects a new solution for reproduction.
         /// </summary>
         /// <returns></returns>
-        public int Select(ProblemMock problem, Individual<SolutionMock>[] population, ISet<int> exclude)
+        public int Select(ProblemMock problem, ObjectiveMock objective, Individual<SolutionMock, float>[] population, ISet<int> exclude)
         {
             // try two and select the best one.
             var selected = -1;

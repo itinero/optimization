@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -26,16 +26,16 @@ namespace Itinero.Logistics.Solutions.TSPTW.VNS
     /// <summary>
     /// A VND-operator/solver.
     /// </summary>
-    public class VNDOperator<T> : VNSSolver<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>
+    public class VNDOperator<T> : VNSSolver<T, ITSPTW<T>, TSPTWObjective<T>, IRoute, float>
         where T : struct
     {
         /// <summary>
         /// Creates a new VND-operator/solver.
         /// </summary>
         public VNDOperator()
-            : base(new Itinero.Logistics.Solvers.SolverObjectiveWrapper<T, ITSPTW<T>, ITSPTWObjective<T>, IRoute>(
+            : base(new Itinero.Logistics.Solvers.SolverObjectiveWrapper<T, ITSPTW<T>, TSPTWObjective<T>, IRoute, float>(
                 new VNSConstructionSolver<T>(), new FeasibleObjective<T>(), (p, o, s) => o.Calculate(p, s)), 
-                new OperatorAsPerturber<T,ITSPTW<T>, ITSPTWObjective<T>, IRoute>(
+                new OperatorAsPerturber<T,ITSPTW<T>, TSPTWObjective<T>, IRoute, float>(
                 new LocalSearch.Local1Shift<T>(true)),
                     new LocalSearch.Local2Opt<T>(), (i, l, p, o, s) =>
                     {

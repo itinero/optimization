@@ -24,15 +24,15 @@ namespace Itinero.Logistics.Solutions.STSP.VNS
     /// <summary>
     /// A wrapper for a TSP-perturber that can also be used for the TSP-TW.
     /// </summary>
-    public class TSPPerturberWrapper<T> : IPerturber<T, ISTSP<T>, ISTSPObjective<T>, IRoute>
+    public class TSPPerturberWrapper<T> : IPerturber<T, ISTSP<T>, STSPObjective<T>, IRoute, float>
         where T : struct
     {
-        private readonly IPerturber<T, TSP.ITSP<T>, TSP.ITSPObjective<T>, IRoute> _perturber;
+        private readonly IPerturber<T, TSP.ITSP<T>, TSP.TSPObjective<T>, IRoute, float> _perturber;
 
         /// <summary>
         /// Creates a new wrapper.
         /// </summary>
-        public TSPPerturberWrapper(IPerturber<T, TSP.ITSP<T>, TSP.ITSPObjective<T>, IRoute> perturber)
+        public TSPPerturberWrapper(IPerturber<T, TSP.ITSP<T>, TSP.TSPObjective<T>, IRoute, float> perturber)
         {
             _perturber = perturber;
         }
@@ -49,7 +49,7 @@ namespace Itinero.Logistics.Solutions.STSP.VNS
         /// Returns true if the given objective is supported.
         /// </summary>
         /// <returns></returns>
-        public bool Supports(ISTSPObjective<T> objective)
+        public bool Supports(STSPObjective<T> objective)
         { // it is assumed the objective will be supported, also for the perturber being wrapped.
             return true;
         }
@@ -58,7 +58,7 @@ namespace Itinero.Logistics.Solutions.STSP.VNS
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ISTSP<T> problem, ISTSPObjective<T> objective, IRoute solution, out float delta)
+        public bool Apply(ISTSP<T> problem, STSPObjective<T> objective, IRoute solution, out float delta)
         {
             return _perturber.Apply(problem.ToTSP(), objective.ToTSPObjective(), solution, out delta);
         }
@@ -67,7 +67,7 @@ namespace Itinero.Logistics.Solutions.STSP.VNS
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ISTSP<T> problem, ISTSPObjective<T> objective, IRoute solution, int level, out float delta)
+        public bool Apply(ISTSP<T> problem, STSPObjective<T> objective, IRoute solution, int level, out float delta)
         {
             return _perturber.Apply(problem.ToTSP(), objective.ToTSPObjective(), solution, level, out delta);
         }

@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2016 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,22 +16,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using Itinero.Logistics.Routes;
-using Itinero.Logistics.Solvers;
+using Itinero.Logistics.Fitness;
 
-namespace Itinero.Logistics.Solutions.TSPTW.Random
+namespace Itinero.Logistics.Objective
 {
-    class RandomSolver<T> : TSP.Random.RandomSolver<T>, ISolver<T, ITSPTW<T>, TSPTWObjective<T>, IRoute, float>
-        where T : struct
+    /// <summary>
+    /// Represents an objective for an algoritm to work towards.
+    /// </summary>
+    /// <typeparam name="TFitness"></typeparam>
+    public abstract class ObjectiveBase<TFitness>
     {
-        public IRoute Solve(ITSPTW<T> problem, TSPTWObjective<T>  objective)
+        /// <summary>
+        /// Gets the fitness handler for this objective.
+        /// </summary>
+        public abstract FitnessHandler<TFitness> FitnessHandler
         {
-            return base.Solve(problem, objective);
-        }
-
-        public IRoute Solve(ITSPTW<T> problem, TSPTWObjective<T>  objective, out float fitness)
-        {
-            return base.Solve(problem, objective, out fitness);
+            get;
         }
     }
 }

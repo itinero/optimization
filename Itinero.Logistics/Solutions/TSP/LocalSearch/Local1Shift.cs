@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -25,7 +25,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
     /// A local 1-Shift search for the TSP.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere also called reinsertion heuristic.</remarks>
-    public class Local1Shift<T> : IOperator<T, ITSP<T>, ITSPObjective<T>, IRoute>
+    public class Local1Shift<T> : IOperator<T, ITSP<T>, TSPObjective<T>, IRoute, float>
         where T : struct
     {
         /// <summary>
@@ -40,7 +40,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Returns true if the given objective is supported.
         /// </summary>
         /// <returns></returns>
-        public bool Supports(ITSPObjective<T> objective)
+        public bool Supports(TSPObjective<T> objective)
         {
             return objective.Name == MinimumWeightObjective<T>.MinimumWeightObjectiveName;
         }
@@ -49,7 +49,7 @@ namespace Itinero.Logistics.Solutions.TSP.LocalSearch
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSP<T> problem, ITSPObjective<T> objective, IRoute route, out float delta)
+        public bool Apply(ITSP<T> problem, TSPObjective<T> objective, IRoute route, out float delta)
         {
             var originalRoute = route;
             var originalProblem = problem;

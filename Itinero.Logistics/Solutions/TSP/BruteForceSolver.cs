@@ -25,7 +25,7 @@ namespace Itinero.Logistics.Solutions.TSP
     /// <summary>
     /// Implements a brute force solver by checking all possible combinations.
     /// </summary>
-    public class BruteForceSolver<T> : SolverBase<T, ITSP<T>, ITSPObjective<T>, IRoute>
+    public class BruteForceSolver<T> : SolverBase<T, ITSP<T>, TSPObjective<T>, IRoute, float>
         where T : struct
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace Itinero.Logistics.Solutions.TSP
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP<T> problem, ITSPObjective<T> objective, out float fitness)
+        public override IRoute Solve(ITSP<T> problem, TSPObjective<T> objective, out float fitness)
         {
             // initialize.
             var solution = new List<int>();

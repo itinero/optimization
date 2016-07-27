@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,12 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Logistics.Objective;
+using Itinero.Logistics.Fitness;
+
 namespace Itinero.Logistics.Solvers.Iterative
 {
     /// <summary>
     /// A solver that let's another solver try n-times and keeps the best obtained solution.
     /// </summary>
-    public class IterativeSolver<TWeight, TProblem, TObjective, TSolution> : SolverBase<TWeight, TProblem, TObjective, TSolution>
+    public class IterativeSolver<TWeight, TProblem, TObjective, TSolution, TFitness> : SolverBase<TWeight, TProblem, TObjective, TSolution, TFitness>
+        where TObjective : ObjectiveBase<TFitness>
         where TWeight : struct
     {
         /// <summary>
@@ -32,7 +36,7 @@ namespace Itinero.Logistics.Solvers.Iterative
         /// <summary>
         /// The solver to try.
         /// </summary>
-        private ISolver<TWeight, TProblem, TObjective, TSolution> _solver;
+        private ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> _solver;
 
         /// <summary>
         /// Holds the stop condition.
@@ -44,7 +48,7 @@ namespace Itinero.Logistics.Solvers.Iterative
         /// </summary>
         /// <param name="solver"></param>
         /// <param name="n"></param>
-        public IterativeSolver(ISolver<TWeight, TProblem, TObjective, TSolution> solver, int n)
+        public IterativeSolver(ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> solver, int n)
         {
             _solver = solver;
             _n = n;
@@ -56,7 +60,7 @@ namespace Itinero.Logistics.Solvers.Iterative
         /// <param name="solver"></param>
         /// <param name="n"></param>
         /// <param name="stopCondition"></param>
-        public IterativeSolver(ISolver<TWeight, TProblem, TObjective, TSolution> solver, int n, 
+        public IterativeSolver(ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> solver, int n, 
             SolverDelegates.StopConditionDelegate<TProblem, TObjective, TSolution> stopCondition)
         {
             _solver = solver;
@@ -79,17 +83,19 @@ namespace Itinero.Logistics.Solvers.Iterative
         /// <param name="objective">The objective to reach.</param>
         /// <param name="fitness">The fitness of the solution found.</param>
         /// <returns></returns>
-        public override TSolution Solve(TProblem problem, TObjective objective, out float fitness)
+        public override TSolution Solve(TProblem problem, TObjective objective, out TFitness fitness)
         {
+            var fitnessHandler = objective.FitnessHandler;
+
             var i = 0;
             var best = default(TSolution);
-            fitness = float.MaxValue;
+            fitness = fitnessHandler.Infinite;
             while (i < _n && !this.IsStopped &&
                 (_stopCondition == null || best == null || !_stopCondition.Invoke(i, problem, objective, best)))
             {
-                var nextFitness = float.MaxValue;
+                TFitness nextFitness;
                 var nextRoute = _solver.Solve(problem, objective, out nextFitness);
-                if (nextFitness < fitness)
+                if (fitnessHandler.IsBetterThan(nextFitness, fitness))
                 { // yep, found a better solution!
                     best = nextRoute;
                     fitness = nextFitness;

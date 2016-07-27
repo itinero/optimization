@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -26,7 +26,7 @@ namespace Itinero.Logistics.Solutions.STSP.VNS
     /// <summary>
     /// Implements a VNS-strategy to construct feasible solution for the STSP from random tours.
     /// </summary>
-    public class VNSConstructionSolver<T> : IterativeSolver<T, ISTSP<T>, ISTSPObjective<T>, IRoute>
+    public class VNSConstructionSolver<T> : IterativeSolver<T, ISTSP<T>, STSPObjective<T>, IRoute, float>
         where T : struct
     {
         /// <summary>
@@ -51,7 +51,7 @@ namespace Itinero.Logistics.Solutions.STSP.VNS
         /// Creates a new VNS construction solver.
         /// </summary>
         public VNSConstructionSolver(int maxIterations, int levelMax)
-            : base(new VNSSolver<T, ISTSP<T>, ISTSPObjective<T>, IRoute>(new RandomSolver<T>(), new RandomExchange<T>(),
+            : base(new VNSSolver<T, ISTSP<T>, STSPObjective<T>, IRoute, float>(new RandomSolver<T>(), new RandomExchange<T>(),
                 new LocalSearch.Local1Shift<T>(), (i, l, p, o, r) =>
                 {
                     if (l > levelMax)

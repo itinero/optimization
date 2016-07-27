@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -23,7 +23,7 @@ namespace Itinero.Logistics.Tests.Solvers
     /// <summary>
     /// A mockup of a solver that generates solution to the mockup problem of reducing a number to zero.
     /// </summary>
-    class GeneratorMock : SolverBase<float, ProblemMock, ObjectiveMock, SolutionMock>
+    class GeneratorMock : SolverBase<float, ProblemMock, ObjectiveMock, SolutionMock, float>
     {
         /// <summary>
         /// Returns the name of this solver.

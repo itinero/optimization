@@ -1,5 +1,5 @@
 ﻿// Itinero.Logistics - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -22,14 +22,13 @@ using Itinero.Logistics.Solutions.TSP.GA.Operators;
 using Itinero.Logistics.Solutions.TSP.LocalSearch;
 using Itinero.Logistics.Solvers;
 using Itinero.Logistics.Solvers.GA;
-using System;
 
 namespace Itinero.Logistics.Solutions.TSP.GA.EAX
 {
     /// <summary>
     /// A solver using a GA and the edge-assembly crossover.
     /// </summary> 
-    public class EAXSolver<T> : GASolver<T, ITSP<T>, ITSPObjective<T>, IRoute>
+    public class EAXSolver<T> : GASolver<T, ITSP<T>, TSPObjective<T>, IRoute, float>
         where T : struct
     {
         /// <summary>
@@ -37,7 +36,7 @@ namespace Itinero.Logistics.Solutions.TSP.GA.EAX
         /// </summary>
         public EAXSolver(GASettings settings)
             : base(new MinimumWeightObjective<T>(), new HillClimbing3OptSolver<T>(), new EAXOperator<T>(30, EAXOperator<T>.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<ITSP<T>, IRoute>(10, 0.5), new EmptyOperator<T, ITSP<T>, ITSPObjective<T>, IRoute>(), settings)
+            new TournamentSelectionOperator<ITSP<T>, IRoute, TSPObjective<T>, float>(10, 0.5), new EmptyOperator<T, ITSP<T>, TSPObjective<T>, IRoute, float>(), settings)
         {
 
         }
@@ -45,9 +44,9 @@ namespace Itinero.Logistics.Solutions.TSP.GA.EAX
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
-        public EAXSolver(GASettings settings, IOperator<T, ITSP<T>, ITSPObjective<T>, IRoute> mutation)
+        public EAXSolver(GASettings settings, IOperator<T, ITSP<T>, TSPObjective<T>, IRoute, float> mutation)
             : base(new MinimumWeightObjective<T>(), new HillClimbing3OptSolver<T>(), new EAXOperator<T>(30, EAXOperator<T>.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<ITSP<T>, IRoute>(10, 0.5), mutation, settings)
+            new TournamentSelectionOperator<ITSP<T>, IRoute, TSPObjective<T>, float>(10, 0.5), mutation, settings)
         {
 
         }
@@ -56,7 +55,7 @@ namespace Itinero.Logistics.Solutions.TSP.GA.EAX
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override IRoute Solve(ITSP<T> problem, ITSPObjective<T> objective, out float fitness)
+        public override IRoute Solve(ITSP<T> problem, TSPObjective<T> objective, out float fitness)
         {
             if(problem.Weights.Length < 5)
             { // use brute-force solver when problem is very small.

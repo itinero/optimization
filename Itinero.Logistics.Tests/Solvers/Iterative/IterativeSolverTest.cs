@@ -35,7 +35,7 @@ namespace Itinero.Logistics.Tests.Solvers.Iterative
         public void TestName()
         {
             // create solver.
-            var solver = new IterativeSolver<float, ProblemMock, ObjectiveMock, SolutionMock>(
+            var solver = new IterativeSolver<float, ProblemMock, ObjectiveMock, SolutionMock, float>(
                 new GeneratorMock(), 10);
 
             Assert.AreEqual("ITER_[10xMOCK_GENERATOR]", solver.Name);
@@ -51,7 +51,7 @@ namespace Itinero.Logistics.Tests.Solvers.Iterative
             RandomGeneratorExtensions.GetGetNewRandom = () => new RandomGenerator(4541247);
 
             // create solver.
-            var solver = new IterativeSolver<float, ProblemMock, ObjectiveMock, SolutionMock>(
+            var solver = new IterativeSolver<float, ProblemMock, ObjectiveMock, SolutionMock, float>(
                 new GeneratorMock(), 10);
 
             // run solver.
@@ -76,8 +76,8 @@ namespace Itinero.Logistics.Tests.Solvers.Iterative
 
             // create solver.
             var best = new SolutionMock() { Value = 1000 };
-            IterativeSolver<float, ProblemMock, ObjectiveMock, SolutionMock> solver = null;
-            solver = new IterativeSolver<float, ProblemMock, ObjectiveMock, SolutionMock>(
+            IterativeSolver<float, ProblemMock, ObjectiveMock, SolutionMock, float> solver = null;
+            solver = new IterativeSolver<float, ProblemMock, ObjectiveMock, SolutionMock, float>(
                 new GeneratorMock(), 10, (i, p, o, s) =>
             {
                 if(s != null && best.Value > s.Value)
@@ -115,8 +115,8 @@ namespace Itinero.Logistics.Tests.Solvers.Iterative
 
             // create solver.
             var best = new SolutionMock() { Value = 1000 };
-            IterativeSolver<float, ProblemMock, ObjectiveMock, SolutionMock> solver = null;
-            solver = new IterativeSolver<float, ProblemMock, ObjectiveMock, SolutionMock>(
+            IterativeSolver<float, ProblemMock, ObjectiveMock, SolutionMock, float> solver = null;
+            solver = new IterativeSolver<float, ProblemMock, ObjectiveMock, SolutionMock, float>(
                 new GeneratorMock(), 10, (i, p, o, s) =>
                 {
                     if (s != null && best.Value > s.Value)

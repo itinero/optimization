@@ -16,30 +16,30 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-namespace Itinero.Logistics.Solvers.GA
+namespace Itinero.Logistics.Fitness
 {
     /// <summary>
-    /// Represents an individual in a GA population.
+    /// Contains extension methods for the fitness handler.
     /// </summary>
-    public struct Individual<TSolution, TFitness>
+    public static class FitnessHandlerExtensions
     {
-        /// <summary>
-        /// Gets or sets the fitness.
-        /// </summary>
-        public TFitness Fitness { get; set; }
 
         /// <summary>
-        /// Gets or sets the solution.
+        /// Returns true if fitness1 is better than the fitness2.
         /// </summary>
-        public TSolution Solution { get; set; }
-
-        /// <summary>
-        /// Returns a string representing this instance.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
+        public static bool IsBetterThan<TFitness>(this FitnessHandler<TFitness> handler, TFitness fitness1, TFitness fitness2)
         {
-            return string.Format("[{0} - ({1})]", this.Fitness, this.Solution);
+            return handler.CompareTo(fitness1, fitness2) > 0;
+        }
+
+        /// <summary>
+        /// Adds the given fitnesses together.
+        /// </summary>
+        /// <typeparam name="TFitness"></typeparam>
+        public static TFitness Add<TFitness>(this FitnessHandler<TFitness> handler, TFitness fitness1, TFitness fitness2, TFitness fitness3)
+        {
+            var fitness = handler.Add(fitness1, fitness2);
+            return handler.Add(fitness, fitness3);
         }
     }
 }
