@@ -29,7 +29,7 @@ namespace Itinero.Logistics.Fitness
         /// </summary>
         public static bool IsBetterThan<TFitness>(this FitnessHandler<TFitness> handler, TFitness fitness1, TFitness fitness2)
         {
-            return handler.CompareTo(fitness1, fitness2) > 0;
+            return handler.CompareTo(fitness1, fitness2) < 0;
         }
 
         /// <summary>

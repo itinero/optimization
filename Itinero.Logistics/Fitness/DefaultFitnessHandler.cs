@@ -54,7 +54,7 @@ namespace Itinero.Logistics.Fitness
         }
 
         /// <summary>
-        /// Compares fitness1 to fitness2 and returns 1 if fitness1 is better, 0 if equal and -1 if fitness2 is better.
+        /// Compares fitness1 to fitness2 and returns -1 if fitness1 is better, 0 if equal and 1 if fitness2 is better.
         /// </summary>
         public override int CompareTo(float fitness1, float fitness2)
         {

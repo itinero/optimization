@@ -67,17 +67,17 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
             problem.Weights[9][0] = 1;
 
             // create the solver.
-            var solver = new VNSConstructionSolver<float>();
+            var solver = new VNSConstructionSolver<float>(2, 5);
             var objective = new MinimumWeightObjective<float>(new DefaultWeightHandler());
 
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < 10; i++)
             {
                 // generate solution.
                 float fitness;
                 var solution = solver.Solve(problem, objective, out fitness);
 
                 // test contents.
-                Assert.IsTrue(fitness <= problem.Max * (problem.Weights.Length - solution.Count));
+                Assert.IsTrue(fitness <= problem.Max);
                 Assert.AreEqual(problem.First, solution.First);
                 Assert.AreEqual(null, solution.Last);
             }
@@ -105,16 +105,16 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
             problem.Weights[9][0] = 1;
 
             // create the solver.
-            var solver = new VNSConstructionSolver<float>();
+            var solver = new VNSConstructionSolver<float>(2, 20);
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10; i++)
             {
                 // generate solution.
                 float fitness;
                 var solution = solver.Solve(problem, new MinimumWeightObjective<float>(new DefaultWeightHandler()), out fitness);
 
                 // test contents.
-                Assert.IsTrue(fitness <= problem.Max * (problem.Weights.Length - solution.Count));
+                Assert.IsTrue(fitness <= 10);
                 Assert.AreEqual(problem.First, solution.First);
                 Assert.AreEqual(problem.First, solution.Last);
             }
@@ -151,7 +151,7 @@ namespace Itinero.Logistics.Tests.Solutions.STSP.Random
                 var solution = solver.Solve(problem, new MinimumWeightObjective<float>(new DefaultWeightHandler()), out fitness);
 
                 // test contents.
-                Assert.IsTrue(fitness <= problem.Max * (problem.Weights.Length - solution.Count));
+                Assert.IsTrue(fitness <= problem.Max);
                 Assert.AreEqual(problem.First, solution.First);
                 Assert.AreEqual(problem.Last, solution.Last);
             }

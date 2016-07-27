@@ -47,7 +47,15 @@ namespace Itinero.Logistics.Solutions.STSP.LocalSearch
         /// <returns></returns>
         public bool Apply(ISTSP<T> problem, STSPObjective<T> objective, IRoute solution, out float delta)
         {
-            return _local1shift.Apply(problem.ToTSP(), objective.ToTSPObjective(), solution, out delta);
+            var before = objective.Calculate(problem, solution);
+            if (_local1shift.Apply(problem.ToTSP(), objective.ToTSPObjective(), solution, out delta))
+            {
+                var after = objective.Calculate(problem, solution);
+                delta = before - after;
+                return true;
+            }
+            delta = 0;
+            return false;
         }
 
         /// <summary>

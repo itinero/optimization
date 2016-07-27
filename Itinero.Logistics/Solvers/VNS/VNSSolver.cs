@@ -127,7 +127,8 @@ namespace Itinero.Logistics.Solvers.VNS
                 var localSearchDifference = fitnessHandler.Zero;
                 _localSearch.ApplyUntil(problem, objective, perturbedSolution, out localSearchDifference);
 
-                if (!fitnessHandler.IsZero(localSearchDifference) || !fitnessHandler.IsZero(perturbedDifference))
+                var diff = fitnessHandler.Add(localSearchDifference, perturbedDifference);
+                if (!fitnessHandler.IsZero(diff))
                 { // there was an improvement, keep new solution as global.
                     globalBestFitness = fitnessHandler.Subtract(globalBestFitness, perturbedDifference);
                     globalBestFitness = fitnessHandler.Subtract(globalBestFitness, localSearchDifference);
@@ -176,7 +177,8 @@ namespace Itinero.Logistics.Solvers.VNS
                 var localSearchDifference = fitnessHandler.Zero;
                 _localSearch.ApplyUntil(problem, objective, perturbedSolution, out localSearchDifference);
 
-                if (!fitnessHandler.IsZero(localSearchDifference) || !fitnessHandler.IsZero(perturbedDifference))
+                var diff = fitnessHandler.Add(localSearchDifference, perturbedDifference);
+                if (!fitnessHandler.IsZero(diff))
                 { // there was an improvement, keep new solution as global.
                     delta = fitnessHandler.Add(delta, perturbedDifference, localSearchDifference);
                     globalBest = perturbedSolution;

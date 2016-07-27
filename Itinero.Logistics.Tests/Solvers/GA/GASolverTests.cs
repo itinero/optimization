@@ -50,16 +50,25 @@ namespace Itinero.Logistics.Tests.Solvers.GA
             // create the solver.
             var solver = new GASolver<float, ProblemMock, ObjectiveMock, SolutionMock, float>(new ObjectiveMock(),
                 new GeneratorMock(), new CrossOverMock(),
-                new SelectionMock(), new LocalSearchMock());
+                new SelectionMock(), new LocalSearchMock(),
+                new GASettings()
+                {
+                    MaxGenerations = 1000,
+                    PopulationSize = 200,
+                    StagnationCount = 100,
+                    CrossOverPercentage = 10,
+                    ElitismPercentage = 5,
+                    MutationPercentage = 10
+                });
 
             // execute and test result.
             var solutionFitness = 0.0f;
             var solution = solver.Solve(new ProblemMock()
             {
-                Max = 1000
+                Max = 100
             }, new ObjectiveMock(), out solutionFitness);
 
-            Assert.AreEqual(0, solution.Value);
+            Assert.AreEqual(0, solution.Value, 1);
         }
     }
 }

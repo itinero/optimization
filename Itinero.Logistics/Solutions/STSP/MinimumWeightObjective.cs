@@ -76,7 +76,7 @@ namespace Itinero.Logistics.Solutions.STSP
         /// </summary>
         public override sealed float Calculate(ISTSP<T> problem, Routes.IRoute solution, float weight)
         {
-            var nonUsed = problem.Weights.Length - solution.Count;
+            var nonUsed = problem.Weights.Length - solution.Count + 1;
             return weight * nonUsed;
         }
 
