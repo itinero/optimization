@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using Itinero.Logistics.Fitness;
+using System;
 
 namespace Itinero.Logistics.Solutions.TSP
 {
@@ -26,30 +26,19 @@ namespace Itinero.Logistics.Solutions.TSP
     public sealed class MinimumWeightObjective<T> : TSPObjective<T>
         where T : struct
     {
-        private readonly DefaultFitnessHandler _fitnessHandler = new DefaultFitnessHandler();
-
         /// <summary>
         /// The default name for this objective.
         /// </summary>
         public const string MinimumWeightObjectiveName = "MIN_WEIGHT";
-
-
+        
         /// <summary>
-        /// Returns the name of this fitness type.
+        /// Gets the name.
         /// </summary>
-        public override sealed string Name
-        {
-            get { return MinimumWeightObjective<T>.MinimumWeightObjectiveName; }
-        }
-
-        /// <summary>
-        /// Gets the fitness handler.
-        /// </summary>
-        public sealed override FitnessHandler<float> FitnessHandler
+        public override string Name
         {
             get
             {
-                return _fitnessHandler;
+               return MinimumWeightObjective<T>.MinimumWeightObjectiveName;
             }
         }
 

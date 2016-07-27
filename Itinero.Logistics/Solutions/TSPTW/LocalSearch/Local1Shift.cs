@@ -71,6 +71,12 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
         /// <returns></returns>
         public bool Apply(ITSPTW<T> problem, TSPTWObjective<T> objective, IRoute solution, out float delta)
         {
+            var before = float.MaxValue;
+            if (objective.IsNonLineair)
+            {
+                before = objective.Calculate(problem, solution);
+            }
+
             // STRATEGY: 
             // 1: try to move a violated customer backwards.
             // 2: try to move a non-violated customer forward.
@@ -80,22 +86,38 @@ namespace Itinero.Logistics.Solutions.TSPTW.LocalSearch
             {
                 if (this.MoveViolatedBackward(problem, objective, solution, out delta))
                 { // success already, don't try anything else.
-                    return true;
+                    if (objective.IsNonLineair)
+                    {
+                        delta = before - objective.Calculate(problem, solution);
+                    }
+                    return delta > 0;
                 }
             }
             if (this.MoveNonViolatedForward(problem, objective, solution, out delta))
             { // success already, don't try anything else.
-                return true;
+                if (objective.IsNonLineair)
+                {
+                    delta = before - objective.Calculate(problem, solution);
+                }
+                return delta > 0;
             }
             if (this.MoveNonViolatedBackward(problem, objective, solution, out delta))
             { // success already, don't try anything else.
-                return true;
+                if (objective.IsNonLineair)
+                {
+                    delta = before - objective.Calculate(problem, solution);
+                }
+                return delta > 0;
             }
             if (!_assumeFeasible)
             {
                 if (this.MoveViolatedForward(problem, objective, solution, out delta))
                 { // success already, don't try anything else.
-                    return true;
+                    if (objective.IsNonLineair)
+                    {
+                        delta = before - objective.Calculate(problem, solution);
+                    }
+                    return delta > 0;
                 }
             }
             return false;

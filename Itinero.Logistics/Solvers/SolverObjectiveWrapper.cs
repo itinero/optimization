@@ -25,7 +25,7 @@ namespace Itinero.Logistics.Solvers
     /// A wrapper for a solver, replacing the objective with another objective on each call.
     /// </summary>
     public class SolverObjectiveWrapper<TWeight, TProblem, TObjective, TSolution, TFitness> : ISolver<TWeight, TProblem, TObjective, TSolution, TFitness>
-        where TObjective : ObjectiveBase<TFitness>
+        where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
     {
         private readonly ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> _solver;
         private readonly TObjective _objective;

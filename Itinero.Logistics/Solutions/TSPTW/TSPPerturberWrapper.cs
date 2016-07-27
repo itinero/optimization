@@ -58,9 +58,12 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSPTW<T> problem, TSPTWObjective<T>  objective, IRoute solution, out float delta)
+        public bool Apply(ITSPTW<T> problem, TSPTWObjective<T> objective, IRoute solution, out float delta)
         {
-            return _perturber.Apply(problem, objective, solution, out delta);
+            var before = objective.Calculate(problem, solution);
+            _perturber.Apply(problem, new TSPObjectiveWrapper<T>(objective), solution, out delta);
+            delta = before - objective.Calculate(problem, solution);
+            return delta > 0;
         }
 
         /// <summary>
@@ -69,7 +72,10 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
         /// <returns></returns>
         public bool Apply(ITSPTW<T> problem, TSPTWObjective<T>  objective, IRoute solution, int level, out float delta)
         {
-            return _perturber.Apply(problem, objective, solution, level, out delta);
+            var before = objective.Calculate(problem, solution);
+            _perturber.Apply(problem, new TSPObjectiveWrapper<T>(objective), solution, level, out delta);
+            delta = before - objective.Calculate(problem, solution);
+            return delta > 0;
         }
     }
 }

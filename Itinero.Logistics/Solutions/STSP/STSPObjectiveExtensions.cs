@@ -17,7 +17,6 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Itinero.Logistics.Fitness;
 using Itinero.Logistics.Routes;
 using Itinero.Logistics.Solutions.TSP;
 using Itinero.Logistics.Weights;
@@ -53,14 +52,6 @@ namespace Itinero.Logistics.Solutions.STSP
                 get
                 {
                     return _o.Name;
-                }
-            }
-
-            public override FitnessHandler<float> FitnessHandler
-            {
-                get
-                {
-                    return _o.FitnessHandler;
                 }
             }
 

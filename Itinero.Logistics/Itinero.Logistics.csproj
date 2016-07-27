@@ -46,13 +46,11 @@
     <Compile Include="Collections\SortedDictionary.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Fitness\DefaultFitnessHandler.cs" />
-    <Compile Include="Fitness\FitnessHandler.cs" />
-    <Compile Include="Fitness\FitnessHandlerExtensions.cs" />
     <Compile Include="IAlgorithm.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\TraceEventType.cs" />
     <Compile Include="Objective\ObjectiveBase.cs" />
+    <Compile Include="Objective\ObjectiveBaseExtensions.cs" />
     <Compile Include="Routes\Cycles\AsymmetricAlternatingCycles.cs" />
     <Compile Include="Routes\Cycles\AsymmetricCycles.cs" />
     <Compile Include="Routes\RouteExtensions.cs" />
@@ -79,6 +77,7 @@
     <Compile Include="Solutions\TimeWindow.cs" />
     <Compile Include="Solutions\TSPTW\Extensions.cs" />
     <Compile Include="Solutions\TSPTW\ITSPTW.cs" />
+    <Compile Include="Solutions\TSPTW\TSPObjectiveWrapper.cs" />
     <Compile Include="Solutions\TSPTW\TSPTWObjective.cs" />
     <Compile Include="Solutions\TSPTW\LocalSearch\Local1Shift.cs" />
     <Compile Include="Solutions\TSPTW\LocalSearch\Local2Opt.cs" />

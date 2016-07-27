@@ -24,7 +24,7 @@ namespace Itinero.Logistics.Solvers
     /// An empty operator that does nothing.
     /// </summary>
     public class EmptyOperator<TWeight, TProblem, TObjective, TSolution, TFitness> : IOperator<TWeight, TProblem, TObjective, TSolution, TFitness>
-        where TObjective : ObjectiveBase<TFitness>
+        where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
         where TWeight : struct
     {
         /// <summary>
@@ -50,7 +50,7 @@ namespace Itinero.Logistics.Solvers
         /// <returns></returns>
         public bool Apply(TProblem problem, TObjective objective, TSolution solution, out TFitness delta)
         {
-            delta = objective.FitnessHandler.Zero;
+            delta = objective.Zero;
             return false;
         }
     }

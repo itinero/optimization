@@ -24,7 +24,7 @@ namespace Itinero.Logistics.Solvers
     /// Wraps an operator and uses it as a perturber, ignoring the level-parameter.
     /// </summary>
     public class OperatorAsPerturber<TWeight, TProblem, TObjective, TSolution, TFitness> : IPerturber<TWeight, TProblem, TObjective, TSolution, TFitness>
-        where TObjective : ObjectiveBase<TFitness>
+        where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
         where TWeight : struct
     {
         private readonly IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> _operator;

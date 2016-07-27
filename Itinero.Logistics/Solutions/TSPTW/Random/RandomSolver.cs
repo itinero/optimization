@@ -26,12 +26,14 @@ namespace Itinero.Logistics.Solutions.TSPTW.Random
     {
         public IRoute Solve(ITSPTW<T> problem, TSPTWObjective<T>  objective)
         {
-            return base.Solve(problem, objective);
+            return base.Solve(problem, new TSPObjectiveWrapper<T>(objective));
         }
 
         public IRoute Solve(ITSPTW<T> problem, TSPTWObjective<T>  objective, out float fitness)
         {
-            return base.Solve(problem, objective, out fitness);
+            var solution = base.Solve(problem, new TSPObjectiveWrapper<T>(objective));
+            fitness = objective.Calculate(problem, solution);
+            return solution;
         }
     }
 }

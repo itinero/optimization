@@ -16,7 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using Itinero.Logistics.Fitness;
 using Itinero.Logistics.Objective;
 using System;
 using System.Collections.Generic;
@@ -27,7 +26,7 @@ namespace Itinero.Logistics.Solvers.GA
     /// A Genetic Algorithm (GA) solver.
     /// </summary>
     public class GASolver<TWeight, TProblem, TObjective, TSolution, TFitness> : SolverBase<TWeight, TProblem, TObjective, TSolution, TFitness>
-        where TObjective : ObjectiveBase<TFitness>
+        where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
         where TWeight : struct
     {
         private readonly ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> _generator;
@@ -82,8 +81,6 @@ namespace Itinero.Logistics.Solvers.GA
         /// <returns></returns>
         public override TSolution Solve(TProblem problem, TObjective objective, out TFitness fitness)
         {
-            var fitnessHandler = objective.FitnessHandler;
-
             var population = new Individual<TSolution, TFitness>[_settings.PopulationSize];
 
             // generate initial population.
@@ -103,7 +100,7 @@ namespace Itinero.Logistics.Solvers.GA
             // sort population.
             Array.Sort(population, (x, y) =>
                 {
-                    return fitnessHandler.CompareTo(x.Fitness, y.Fitness);
+                    return objective.CompareTo(problem, x.Fitness, y.Fitness);
                 });
             var bestIndividual = population[0];
             this.ReportIntermidiateResult(bestIndividual.Solution);
@@ -163,7 +160,7 @@ namespace Itinero.Logistics.Solvers.GA
                         TFitness mutatedDelta;
                         if (_mutation.Apply(problem, objective, population[i].Solution, out mutatedDelta))
                         { // mutation succeeded.
-                            population[i].Fitness = fitnessHandler.Subtract(population[i].Fitness, mutatedDelta);
+                            population[i].Fitness = objective.Subtract(problem, population[i].Fitness, mutatedDelta);
                         }
                     }
                 }
@@ -171,9 +168,9 @@ namespace Itinero.Logistics.Solvers.GA
                 // sort new population.
                 Array.Sort(population, (x, y) =>
                 {
-                    return fitnessHandler.CompareTo(x.Fitness, y.Fitness);
+                    return objective.CompareTo(problem, x.Fitness, y.Fitness);
                 });
-                if (fitnessHandler.IsBetterThan(bestIndividual.Fitness, population[0].Fitness))
+                if (objective.IsBetterThan(problem, bestIndividual.Fitness, population[0].Fitness))
                 { // a better individual was found.
                     bestIndividual = population[0];
                     stagnation = 0; // reset stagnation flag.

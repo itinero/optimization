@@ -24,7 +24,7 @@ namespace Itinero.Logistics.Solvers
     /// A base implementation for a solver.
     /// </summary>
     public abstract class SolverBase<TWeight, TProblem, TObjective, TSolution, TFitness> : ISolver<TWeight, TProblem, TObjective, TSolution, TFitness>
-        where TObjective : ObjectiveBase<TFitness>
+        where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
     {
         /// <summary>
         /// Holds the stopped-flag.

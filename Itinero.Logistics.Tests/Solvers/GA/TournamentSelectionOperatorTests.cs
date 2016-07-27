@@ -43,20 +43,20 @@ namespace Itinero.Logistics.Tests.Solvers.GA
             };
 
             // create population and selector.
-            var population = new Individual<int, float>[] { 
-                new Individual<int, float>() { Fitness = 10, Solution = 10 },
-                new Individual<int, float>() { Fitness = 1, Solution = 1 },
-                new Individual<int, float>() { Fitness = 3, Solution = 3 },
-                new Individual<int, float>() { Fitness = 4, Solution = 4 } };
-            var selector = new TournamentSelectionOperator<int, int, ObjectiveMock, float>(50, 0.5);
+            var population = new Individual<SolutionMock, float>[] { 
+                new Individual<SolutionMock, float>() { Fitness = 10, Solution = new SolutionMock(10) },
+                new Individual<SolutionMock, float>() { Fitness = 1, Solution = new SolutionMock(1) },
+                new Individual<SolutionMock, float>() { Fitness = 3, Solution = new SolutionMock(3) },
+                new Individual<SolutionMock, float>() { Fitness = 4, Solution = new SolutionMock(4) } };
+            var selector = new TournamentSelectionOperator<ProblemMock, SolutionMock, ObjectiveMock, float>(50, 0.5);
 
             var objective = new ObjectiveMock();
-            Assert.AreEqual(2, selector.Select(0, objective, population, null));
-            Assert.AreEqual(-1, selector.Select(0, objective, population, null));
-            Assert.AreEqual(3, selector.Select(0, objective, population, null));
-            Assert.AreEqual(-1, selector.Select(0, objective, population, null));
-            Assert.AreEqual(0, selector.Select(0, objective, population, null));
-            Assert.AreEqual(-1, selector.Select(0, objective, population, null));
+            Assert.AreEqual(2, selector.Select(new ProblemMock(), objective, population, null));
+            Assert.AreEqual(-1, selector.Select(new ProblemMock(), objective, population, null));
+            Assert.AreEqual(3, selector.Select(new ProblemMock(), objective, population, null));
+            Assert.AreEqual(-1, selector.Select(new ProblemMock(), objective, population, null));
+            Assert.AreEqual(0, selector.Select(new ProblemMock(), objective, population, null));
+            Assert.AreEqual(-1, selector.Select(new ProblemMock(), objective, population, null));
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Itinero.Logistics.Solvers.GA
     /// A selector selecting individials using a tournament base selection.
     /// </summary>
     public class TournamentSelectionOperator<TProblem, TSolution, TObjective, TFitness> : ISelectionOperator<TProblem, TSolution, TObjective, TFitness>
-        where TObjective : ObjectiveBase<TFitness>
+        where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
     {
         private double _tournamentSize;
         private double _tournamentProbability;
@@ -69,8 +69,6 @@ namespace Itinero.Logistics.Solvers.GA
         /// <returns></returns>
         public int Select(TProblem problem, TObjective objective, Individual<TSolution, TFitness>[] population, System.Collections.Generic.ISet<int> exclude)
         {
-            var fitnessHandler = objective.FitnessHandler;
-
             var tournamentSizeInt = (int)System.Math.Ceiling(((_tournamentSize / 100f) * (double)population.Length));
             var tempPop = new List<Tuple<int, Individual<TSolution, TFitness>>>(tournamentSizeInt);
 
@@ -86,7 +84,7 @@ namespace Itinero.Logistics.Solvers.GA
             // sort the population..
             tempPop.Sort((x, y) =>
             {
-                return fitnessHandler.CompareTo(y.Item2.Fitness, x.Item2.Fitness);
+                return objective.CompareTo(problem, y.Item2.Fitness, x.Item2.Fitness);
             });
 
             // choose a candidate.

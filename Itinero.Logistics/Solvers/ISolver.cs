@@ -24,7 +24,7 @@ namespace Itinero.Logistics.Solvers
     /// Abstract representation of a solver.
     /// </summary>
     public interface ISolver<TWeight, TProblem, TObjective, TSolution, TFitness>
-        where TObjective : ObjectiveBase<TFitness>
+        where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
     {
         /// <summary>
         /// Returns the name of this solver.

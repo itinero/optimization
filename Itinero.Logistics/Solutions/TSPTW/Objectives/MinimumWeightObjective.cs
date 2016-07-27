@@ -40,6 +40,17 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
         }
 
         /// <summary>
+        /// Gets the non-lineair flag, affects using deltas.
+        /// </summary>
+        public override bool IsNonLineair
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Calculates the fitness of a TSP solution.
         /// </summary>
         /// <returns></returns>
@@ -96,6 +107,20 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
         }
 
         /// <summary>
+        /// Calculates the fitness of a TSP solution.
+        /// </summary>
+        /// <returns></returns>
+        public sealed override float CalculateTSP(TSP.ITSP<T> problem, Routes.IRoute solution)
+        {
+            var fitness = 0f;
+            foreach (var pair in solution.Pairs())
+            {
+                fitness = fitness + problem.WeightHandler.GetTime(problem.Weights[pair.From][pair.To]);
+            }
+            return fitness;
+        }
+
+        /// <summary>
         /// Executes the shift-after and returns the difference between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>
@@ -104,6 +129,19 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
             var fitnessBefore = this.Calculate(problem, route);
             route.ShiftAfter(customer, before);
             var fitnessAfter = this.Calculate(problem, route);
+            difference = fitnessBefore - fitnessAfter;
+            return true;
+        }
+
+        /// <summary>
+        /// Executes the shift-after and returns the difference between the solution before the shift and after the shift.
+        /// </summary>
+        /// <returns></returns>
+        public sealed override bool ShiftAfterTSP(TSP.ITSP<T> problem, Routes.IRoute route, int customer, int before, out float difference)
+        {
+            var fitnessBefore = this.CalculateTSP(problem, route);
+            route.ShiftAfter(customer, before);
+            var fitnessAfter = this.CalculateTSP(problem, route);
             difference = fitnessBefore - fitnessAfter;
             return true;
         }
@@ -118,6 +156,19 @@ namespace Itinero.Logistics.Solutions.TSPTW.Objectives
             var clone = route.Clone() as IRoute;
             clone.ShiftAfter(customer, before);
             var fitnessAfter = this.Calculate(problem, route);
+            return fitnessBefore - fitnessAfter;
+        }
+
+        /// <summary>
+        /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
+        /// </summary>
+        /// <returns></returns>
+        public sealed override float IfShiftAfterTSP(TSP.ITSP<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
+        {
+            var fitnessBefore = this.CalculateTSP(problem, route);
+            var clone = route.Clone() as IRoute;
+            clone.ShiftAfter(customer, before);
+            var fitnessAfter = this.CalculateTSP(problem, route);
             return fitnessBefore - fitnessAfter;
         }
     }

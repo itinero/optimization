@@ -16,28 +16,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using Itinero.Logistics.Objective;
-
-namespace Itinero.Logistics.Solvers.GA
+namespace Itinero.Logistics.Objective
 {
     /// <summary>
-    /// Abstract representation of a crossover operation.
+    /// Contains extension methods for the objective class.
     /// </summary>
-    public interface ICrossOverOperator<TWeight, TProblem, TObjective, TSolution, TFitness>
-        where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
+    public static class ObjectiveBaseExtensions
     {
         /// <summary>
-        /// Returns the name of the operator.
+        /// Returns true if fitness1 is better than the fitness2.
         /// </summary>
-        string Name
+        public static bool IsBetterThan<TProblem, TSolution, TFitness>(this ObjectiveBase<TProblem, TSolution, TFitness> handler, TProblem problem, TFitness fitness1, TFitness fitness2)
         {
-            get;
+            return handler.CompareTo(problem, fitness1, fitness2) < 0;
         }
 
         /// <summary>
-        /// Applies this operator using the given solutions and produces a new solution.
+        /// Adds the given fitnesses together.
         /// </summary>
-        /// <returns></returns>
-        TSolution Apply(TProblem problem, TObjective objective, TSolution solution1, TSolution solution2, out TFitness fitness);
+        public static TFitness Add<TProblem, TSolution, TFitness>(this ObjectiveBase<TProblem, TSolution, TFitness> handler, TProblem problem, TFitness fitness1, TFitness fitness2, TFitness fitness3)
+        {
+            var fitness = handler.Add(problem, fitness1, fitness2);
+            return handler.Add(problem, fitness, fitness3);
+        }
     }
 }

@@ -31,17 +31,16 @@ namespace Itinero.Logistics.Solvers
         /// <returns></returns>
         public static bool ApplyUntil<TWeight, TProblem, TObjective, TSolution, TFitness>(this IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> oper, 
             TProblem problem, TObjective objective, TSolution solution, out TFitness delta)
-            where TObjective : ObjectiveBase<TFitness>
+            where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
             where TWeight : struct
         {
-            var fitnessHandler = objective.FitnessHandler;
-            delta = fitnessHandler.Zero;
+            delta = objective.Zero;
             var localDelta = delta;
             while (oper.Apply(problem, objective, solution, out localDelta))
             {
-                delta = fitnessHandler.Add(delta, localDelta);
+                delta = objective.Add(problem, delta, localDelta);
             }
-            return !fitnessHandler.IsZero(delta);
+            return !objective.IsZero(problem, delta);
         }
     }
 }

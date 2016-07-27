@@ -26,6 +26,23 @@ namespace Itinero.Logistics.Tests.Solvers
     class SolutionMock : ISolution
     {
         /// <summary>
+        /// Creates a new solution mock.
+        /// </summary>
+        public SolutionMock()
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new mock solution.
+        /// </summary>
+        /// <param name="value"></param>
+        public SolutionMock(float value)
+        {
+            this.Value = value;
+        }
+
+        /// <summary>
         /// Gets or sets the value.
         /// </summary>
         public float Value { get; set; }

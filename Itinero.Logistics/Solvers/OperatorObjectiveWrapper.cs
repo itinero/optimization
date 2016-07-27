@@ -25,7 +25,7 @@ namespace Itinero.Logistics.Solvers
     /// A wrapper for an operator, replacing the objective with another objective on each call.
     /// </summary>
     public class OperatorAndObjective<TWeight, TProblem, TObjective, TSolution, TFitness> : IOperator<TWeight, TProblem, TObjective, TSolution, TFitness>
-        where TObjective : ObjectiveBase<TFitness>
+        where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
         where TWeight : struct
     {
         private readonly IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> _operator;

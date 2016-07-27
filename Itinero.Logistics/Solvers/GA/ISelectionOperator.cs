@@ -25,7 +25,7 @@ namespace Itinero.Logistics.Solvers.GA
     /// Abstract representation of an operator to select a solution for reproduction.
     /// </summary>
     public interface ISelectionOperator<TProblem, TSolution, TObjective, TFitness>
-        where TObjective : ObjectiveBase<TFitness>
+        where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
     {
         /// <summary>
         /// Returns the name of the operator.

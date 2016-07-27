@@ -16,7 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using Itinero.Logistics.Fitness;
 using Itinero.Logistics.Weights;
 
 namespace Itinero.Logistics.Solutions.STSP
@@ -27,7 +26,6 @@ namespace Itinero.Logistics.Solutions.STSP
     public sealed class MinimumWeightObjective<T> : STSPObjective<T>
         where T : struct
     {
-        private readonly DefaultFitnessHandler _fitnessHandler = new DefaultFitnessHandler();
         private readonly WeightHandler<T> _weightHandler;
 
         /// <summary>
@@ -52,13 +50,13 @@ namespace Itinero.Logistics.Solutions.STSP
         }
 
         /// <summary>
-        /// Gets the fitness handler.
+        /// Gets the non-lineair flag, affects using deltas.
         /// </summary>
-        public sealed override FitnessHandler<float> FitnessHandler
+        public override bool IsNonLineair
         {
             get
             {
-                return _fitnessHandler;
+                return false;
             }
         }
 

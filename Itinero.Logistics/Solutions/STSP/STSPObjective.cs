@@ -24,13 +24,13 @@ namespace Itinero.Logistics.Solutions.STSP
     /// <summary>
     /// Abstract representation of a basic STSP-objective.
     /// </summary>
-    public abstract class STSPObjective<T> : ObjectiveBase<float>
+    public abstract class STSPObjective<T> : ObjectiveBase<ISTSP<T>, IRoute, float>
         where T : struct
     {
         /// <summary>
         /// Returns the name of this objective.
         /// </summary>
-        public abstract string Name
+        public override abstract string Name
         {
             get;
         }
@@ -39,7 +39,7 @@ namespace Itinero.Logistics.Solutions.STSP
         /// Calculates the fitness of a STSP solution.
         /// </summary>
         /// <returns></returns>
-        public abstract float Calculate(ISTSP<T> problem, IRoute solution);
+        public override abstract float Calculate(ISTSP<T> problem, IRoute solution);
 
         /// <summary>
         /// Calculates only the weight of a STSP solution without taking into account the customer count.
@@ -62,5 +62,59 @@ namespace Itinero.Logistics.Solutions.STSP
         /// </summary>
         /// <returns></returns>
         public abstract float IfShiftAfter(ISTSP<T> problem, IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter);
+
+        /// <summary>
+        /// Gets a fitness value that represent the highest possible value.
+        /// </summary>
+        public override sealed float Infinite
+        {
+            get
+            {
+                return float.MaxValue;
+            }
+        }
+
+        /// <summary>
+        /// Gets a fitness value that represent zero.
+        /// </summary>
+        public override sealed float Zero
+        {
+            get
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Adds two fitness value.
+        /// </summary>
+        public override sealed float Add(ISTSP<T> problem, float fitness1, float fitness2)
+        {
+            return fitness1 + fitness2;
+        }
+
+        /// <summary>
+        /// Compares fitness1 to fitness2 and returns -1 if fitness1 is better, 0 if equal and 1 if fitness2 is better.
+        /// </summary>
+        public override sealed int CompareTo(ISTSP<T> problem, float fitness1, float fitness2)
+        {
+            return fitness1.CompareTo(fitness2);
+        }
+
+        /// <summary>
+        /// Returns true if the given fitness value is zero.
+        /// </summary>
+        public override sealed bool IsZero(ISTSP<T> problem, float fitness)
+        {
+            return fitness == 0;
+        }
+
+        /// <summary>
+        /// Substracts a fitness value from another.
+        /// </summary>
+        public override sealed float Subtract(ISTSP<T> problem, float fitness1, float fitness2)
+        {
+            return fitness1 - fitness2;
+        }
     }
 }

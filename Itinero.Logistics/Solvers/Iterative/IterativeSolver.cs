@@ -17,7 +17,6 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Logistics.Objective;
-using Itinero.Logistics.Fitness;
 
 namespace Itinero.Logistics.Solvers.Iterative
 {
@@ -25,7 +24,7 @@ namespace Itinero.Logistics.Solvers.Iterative
     /// A solver that let's another solver try n-times and keeps the best obtained solution.
     /// </summary>
     public class IterativeSolver<TWeight, TProblem, TObjective, TSolution, TFitness> : SolverBase<TWeight, TProblem, TObjective, TSolution, TFitness>
-        where TObjective : ObjectiveBase<TFitness>
+        where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
         where TWeight : struct
     {
         /// <summary>
@@ -85,17 +84,15 @@ namespace Itinero.Logistics.Solvers.Iterative
         /// <returns></returns>
         public override TSolution Solve(TProblem problem, TObjective objective, out TFitness fitness)
         {
-            var fitnessHandler = objective.FitnessHandler;
-
             var i = 0;
             var best = default(TSolution);
-            fitness = fitnessHandler.Infinite;
+            fitness = objective.Infinite;
             while (i < _n && !this.IsStopped &&
                 (_stopCondition == null || best == null || !_stopCondition.Invoke(i, problem, objective, best)))
             {
                 TFitness nextFitness;
                 var nextRoute = _solver.Solve(problem, objective, out nextFitness);
-                if (fitnessHandler.IsBetterThan(nextFitness, fitness))
+                if (objective.IsBetterThan(problem, nextFitness, fitness))
                 { // yep, found a better solution!
                     best = nextRoute;
                     fitness = nextFitness;
