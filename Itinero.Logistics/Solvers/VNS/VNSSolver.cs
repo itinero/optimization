@@ -91,6 +91,7 @@ namespace Itinero.Logistics.Solvers.VNS
         public override TSolution Solve(TProblem problem, TObjective objective, out TFitness fitness)
         {
             var fitnessHandler = objective.FitnessHandler;
+            var zero = fitnessHandler.Zero;
 
             _log.Log(Logging.TraceEventType.Information, "Started generating initial solution...");
 
@@ -128,7 +129,7 @@ namespace Itinero.Logistics.Solvers.VNS
                 _localSearch.ApplyUntil(problem, objective, perturbedSolution, out localSearchDifference);
 
                 var diff = fitnessHandler.Add(localSearchDifference, perturbedDifference);
-                if (!fitnessHandler.IsZero(diff))
+                if (!fitnessHandler.IsBetterThan(diff, zero))
                 { // there was an improvement, keep new solution as global.
                     globalBestFitness = fitnessHandler.Subtract(globalBestFitness, perturbedDifference);
                     globalBestFitness = fitnessHandler.Subtract(globalBestFitness, localSearchDifference);
@@ -159,6 +160,7 @@ namespace Itinero.Logistics.Solvers.VNS
         public bool Apply(TProblem problem, TObjective objective, TSolution solution, out TFitness delta)
         {
             var fitnessHandler = objective.FitnessHandler;
+            var zero = fitnessHandler.Zero;
 
             delta = fitnessHandler.Zero;
             var globalBest = (TSolution)solution.Clone();
@@ -178,7 +180,7 @@ namespace Itinero.Logistics.Solvers.VNS
                 _localSearch.ApplyUntil(problem, objective, perturbedSolution, out localSearchDifference);
 
                 var diff = fitnessHandler.Add(localSearchDifference, perturbedDifference);
-                if (!fitnessHandler.IsZero(diff))
+                if (!fitnessHandler.IsBetterThan(diff, zero))
                 { // there was an improvement, keep new solution as global.
                     delta = fitnessHandler.Add(delta, perturbedDifference, localSearchDifference);
                     globalBest = perturbedSolution;
