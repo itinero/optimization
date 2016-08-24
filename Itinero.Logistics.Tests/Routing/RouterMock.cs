@@ -18,11 +18,11 @@
 
 using System.Collections.Generic;
 using Itinero.Profiles;
-using System;
 using Itinero.Attributes;
 using Itinero.LocalGeo;
 using Itinero.Data.Network;
 using Itinero.Algorithms.Weights;
+using Itinero.Algorithms;
 
 namespace Itinero.Logistics.Tests.Routing
 {
@@ -55,12 +55,18 @@ namespace Itinero.Logistics.Tests.Routing
             }
         }
 
-        public override Result<Route[][]> TryCalculate(Itinero.Profiles.Profile profile, RouterPoint[] sources, RouterPoint[] targets, ISet<int> invalidSources, ISet<int> invalidTargets)
+        public override Result<EdgePath<T>[][]> TryCalculateRaw<T>(Itinero.Profiles.Profile profile, WeightHandler<T> weightHandler, RouterPoint[] sources, RouterPoint[] targets,
+            ISet<int> invalidSources, ISet<int> invalidTargets)
         {
             throw new System.NotImplementedException();
         }
 
-        public override Result<Route> TryCalculate(Itinero.Profiles.Profile profile, RouterPoint source, RouterPoint target)
+        public override Result<EdgePath<T>> TryCalculateRaw<T>(Itinero.Profiles.Profile profile, WeightHandler<T> weightHandler, RouterPoint source, RouterPoint target)
+        {
+            return new Result<EdgePath<T>>(new EdgePath<T>());
+        }
+
+        public override Result<Route> BuildRoute<T>(Profile profile, WeightHandler<T> weightHandler, RouterPoint source, RouterPoint target, EdgePath<T> path)
         {
             var route = new Route();
             route.Shape = new Coordinate[]
@@ -68,23 +74,10 @@ namespace Itinero.Logistics.Tests.Routing
                 source.Location(),
                 target.Location()
             };
-            route.ShapeMeta = new Route.Meta[]
-            {
-                new Route.Meta()
-                {
-                    Shape = 0,
-                    Profile = profile.Name
-                },
-                new Route.Meta()
-                {
-                    Shape = 1,
-                    Profile = profile.Name
-                }
-            };
             return new Result<Route>(route);
         }
 
-        public override Result<T[][]> TryCalculateWeight<T>(Itinero.Profiles.Profile profile, WeightHandler<T> weightHandler,
+        public override Result<T[][]> TryCalculateWeight<T>(Profile profile, WeightHandler<T> weightHandler,
             RouterPoint[] sources, RouterPoint[] targets, ISet<int> invalidSources, ISet<int> invalidTargets)
         {
             var weights = new T[sources.Length][];
@@ -108,22 +101,29 @@ namespace Itinero.Logistics.Tests.Routing
             return new Result<T[][]>(weights);
         }
 
-        public override Result<T> TryCalculateWeight<T>(Itinero.Profiles.Profile profile, WeightHandler<T> weightHandler, RouterPoint source, RouterPoint target)
+        public override Result<T> TryCalculateWeight<T>(Profile profile, WeightHandler<T> weightHandler, RouterPoint source, RouterPoint target)
         {
             throw new System.NotImplementedException();
         }
 
-        public override Result<bool> TryCheckConnectivity(Itinero.Profiles.Profile profile, RouterPoint point, float radiusInMeters)
+        public override Result<bool> TryCheckConnectivity(Profile profile, RouterPoint point, float radiusInMeters)
         {
             throw new System.NotImplementedException();
-        }        
+        }
 
-        public override Result<RouterPoint> TryResolve(Profile[] profiles, float latitude, float longitude, Func<RoutingEdge, bool> isBetter, float searchDistanceInMeter = 50)
+        public override Result<RouterPoint> TryResolve(Profile[] profiles,
+            float latitude, float longitude, System.Func<RoutingEdge, bool> isBetter,
+                float maxSearchDistance = Itinero.Constants.SearchDistanceInMeter)
         {
             if (latitude < -90 || latitude > 90 ||
                 longitude < -180 || longitude > 180)
             {
-                return null;
+                return new Result<RouterPoint>("Outside of loaded network.");
+            }
+            if (isBetter != null &&
+               !isBetter(null))
+            {
+                return new Result<RouterPoint>("Not better.");
             }
             _resolvedId++;
             return new Result<RouterPoint>(new RouterPoint(latitude, longitude, 0, 0));
