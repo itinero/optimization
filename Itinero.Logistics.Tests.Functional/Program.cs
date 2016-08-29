@@ -30,12 +30,16 @@ namespace Itinero.Logistics.Tests.Functional
             };
 
             var routerDb = new RouterDb();
-            routerDb.LoadOsmData(File.OpenRead(@"D:\work\data\OSM\kempen-big.osm.pbf"), false, Vehicle.Bicycle);
+            routerDb.LoadOsmData(File.OpenRead(@"D:\work\data\OSM\wechel.osm.pbf"), false, Vehicle.Bicycle);
             var profile = (Vehicle.Bicycle as Bicycle).Networks();
 
+
+            //routerDb.Serialize(File.OpenWrite("temp.routerdb"));
+
+            //var routerDb = RouterDb.Deserialize(File.OpenRead("temp.routerdb"));
             var router = new Router(routerDb);
             routerDb.AddContracted(profile, profile.AugmentedWeightHandler(router), true);
-            
+
             var locations = new List<Coordinate>(new Coordinate[]
              {
                             new Coordinate(51.270453873703080f, 4.8008108139038080f),
@@ -44,12 +48,12 @@ namespace Itinero.Logistics.Tests.Functional
                             new Coordinate(51.260733228426076f, 4.7796106338500980f),
                             new Coordinate(51.256489871317920f, 4.7884941101074220f),
                             new Coordinate(51.270964016530680f, 4.7894811630249020f)
-            });
+             });
 
             var resolved = router.Resolve(profile, locations.ToArray());
 
-            var matrix = new AdvancedManyToManyBidirectionalDykstra<float>(routerDb, profile, profile.DefaultWeightHandler(router),
-                resolved, resolved);
+            var matrix = new AdvancedManyToManyBidirectionalDykstra<Weight>(routerDb, profile, profile.AugmentedWeightHandlerCached(router.Db),
+                resolved);
             matrix.Run();
 
 

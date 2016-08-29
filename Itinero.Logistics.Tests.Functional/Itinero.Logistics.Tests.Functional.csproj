@@ -38,16 +38,16 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Itinero, Version=0.17.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.0.17.2-rc1\lib\net45\Itinero.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\itinero\routing\src\Itinero\bin\Debug\net45\Itinero.dll</HintPath>
     </Reference>
     <Reference Include="Itinero.Geo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.Geo.0.17.2-rc1\lib\net45\Itinero.Geo.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\itinero\routing\src\Itinero.Geo\bin\Debug\net45\Itinero.Geo.dll</HintPath>
     </Reference>
     <Reference Include="Itinero.IO.Osm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.IO.Osm.0.17.2-rc1\lib\net45\Itinero.IO.Osm.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\itinero\routing\src\Itinero.IO.Osm\bin\Debug\net45\Itinero.IO.Osm.dll</HintPath>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
       <HintPath>..\packages\NetTopologySuite.1.14\lib\net45\NetTopologySuite.dll</HintPath>

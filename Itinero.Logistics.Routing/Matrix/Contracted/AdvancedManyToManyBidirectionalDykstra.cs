@@ -34,20 +34,17 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
     {
         private readonly RouterDb _routerDb;
         private readonly DirectedDynamicGraph _graph;
-        private readonly RouterPoint[] _sources;
-        private readonly RouterPoint[] _targets;
+        private readonly RouterPoint[] _locations;
         private readonly Dictionary<uint, Dictionary<int, LinkedEdgePath<T>>> _buckets;
         private readonly WeightHandler<T> _weightHandler;
 
         /// <summary>
         /// Creates a new algorithm.
         /// </summary>
-        public AdvancedManyToManyBidirectionalDykstra(RouterDb routerDb, Profile profile, WeightHandler<T> weightHandler, RouterPoint[] sources,
-            RouterPoint[] targets)
+        public AdvancedManyToManyBidirectionalDykstra(RouterDb routerDb, Profile profile, WeightHandler<T> weightHandler, RouterPoint[] locations)
         {
             _routerDb = routerDb;
-            _sources = sources;
-            _targets = targets;
+            _locations = locations;
             _weightHandler = weightHandler;
 
             ContractedDb contractedDb;
@@ -67,20 +64,28 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
             _buckets = new Dictionary<uint, Dictionary<int, LinkedEdgePath<T>>>();
         }
 
+        private Dictionary<int, LocationError> _errors; // all errors per original location idx.
+        private List<int> _resolvedPointsIndices; // the original location per resolved point index.
         private T[][] _weights;
         private EdgePath<T>[] _sourcePaths;
         private EdgePath<T>[] _targetPaths;
+        private List<RouterPoint> _validPoints;
 
         /// <summary>
         /// Executes the actual run.
         /// </summary>
         protected override void DoRun()
         {
+            _errors = new Dictionary<int, LocationError>();
+            _resolvedPointsIndices = new List<int>();
+
             // convert sources into directed paths.
-            _sourcePaths = new EdgePath<T>[_sources.Length * 2];
-            for(var i = 0; i < _sources.Length; i++)
+            _sourcePaths = new EdgePath<T>[_locations.Length * 2];
+            for(var i = 0; i < _locations.Length; i++)
             {
-                var paths = _sources[i].ToEdgePathsAdvanced(_routerDb, _weightHandler, true);
+                _resolvedPointsIndices.Add(i);
+
+                var paths = _locations[i].ToEdgePathsAdvanced(_routerDb, _weightHandler, true);
                 if (paths.Length == 0)
                 {
                     this.ErrorMessage = string.Format("Source at {0} could not be resolved properly.", i);
@@ -93,10 +98,10 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
             }
 
             // convert targets into directed paths.
-            _targetPaths = new EdgePath<T>[_targets.Length * 2];
-            for (var i = 0; i < _targets.Length; i++)
+            _targetPaths = new EdgePath<T>[_locations.Length * 2];
+            for (var i = 0; i < _locations.Length; i++)
             {
-                var paths = _targets[i].ToEdgePathsAdvanced(_routerDb, _weightHandler, false);
+                var paths = _locations[i].ToEdgePathsAdvanced(_routerDb, _weightHandler, false);
                 if (paths.Length == 0)
                 {
                     this.ErrorMessage = string.Format("Target at {0} could not be resolved properly.", i);
@@ -163,6 +168,67 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
                     backward.Run();
                 }
             }
+
+            // check for invalids.
+            var invalidTargetCounts = new int[_sourcePaths.Length];
+            var nonNullInvalids = new HashSet<int>();
+            for (var s = 0; s < _weights.Length; s++)
+            {
+                var invalids = 0;
+                for (var t = 0; t < _weights[s].Length; t++)
+                {
+                    if (t != s)
+                    {
+                        if (_weightHandler.GetMetric(_weights[s][t]) == float.MaxValue)
+                        {
+                            invalids++;
+                            invalidTargetCounts[t]++;
+                            if (invalidTargetCounts[t] > (_sourcePaths.Length - 1) / 2)
+                            {
+                                nonNullInvalids.Add(t);
+                            }
+                        }
+                    }
+                }
+
+                if (invalids > (_sourcePaths.Length - 1) / 2)
+                {
+                    nonNullInvalids.Add(s);
+                }
+            }
+
+            // take into account the non-null invalids now.
+            if (nonNullInvalids.Count > 0)
+            { // shrink lists and add errors.
+                foreach (var invalid in nonNullInvalids)
+                {
+                    _errors[_resolvedPointsIndices[invalid / 2]] = new LocationError()
+                    {
+                        Code = LocationErrorCode.NotRoutable,
+                        Message = "Location could not routed to or from."
+                    };
+                }
+
+                // convert to original indices.
+                var originalInvalids = new HashSet<int>();
+                foreach(var invalid in nonNullInvalids)
+                {
+                    originalInvalids.Add(invalid / 2);
+                }
+
+                _validPoints = (new List<RouterPoint>(_locations)).ShrinkAndCopyList(originalInvalids);
+                _resolvedPointsIndices = _resolvedPointsIndices.ShrinkAndCopyList(originalInvalids);
+
+                // convert back to the path indexes.
+                nonNullInvalids = new HashSet<int>();
+                foreach (var invalid in originalInvalids)
+                {
+                    nonNullInvalids.Add(invalid * 2);
+                    nonNullInvalids.Add(invalid * 2 + 1);
+                }
+                _weights = _weights.SchrinkAndCopyMatrix(nonNullInvalids);
+            }
+
             this.HasSucceeded = true;
         }
 
@@ -269,6 +335,41 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
             }
             return false;
         }
+
+        /// <summary>
+        /// Returns the index of the location in the resolved points list.
+        /// </summary>
+        /// <returns></returns>
+        public int IndexOf(int locationIdx)
+        {
+            this.CheckHasRunAndHasSucceeded();
+
+            return _resolvedPointsIndices.IndexOf(locationIdx);
+        }
+
+        /// <summary>
+        /// Returns the index of the router point in the original locations array.
+        /// </summary>
+        /// <returns></returns>
+        public int LocationIndexOf(int routerPointIdx)
+        {
+            this.CheckHasRunAndHasSucceeded();
+
+            return _resolvedPointsIndices[routerPointIdx];
+        }
+
+        /// <summary>
+        /// Returns the errors indexed per location idx.
+        /// </summary>
+        public Dictionary<int, LocationError> Errors
+        {
+            get
+            {
+                this.CheckHasRunAndHasSucceeded();
+
+                return _errors;
+            }
+        }
     }
 
     /// <summary>
@@ -279,9 +380,8 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
         /// <summary>
         /// Creates a new algorithm.
         /// </summary>
-        public AdvancedManyToManyBidirectionalDykstra(Router router, Profile profile, RouterPoint[] sources,
-            RouterPoint[] targets)
-            : base(router.Db, profile, profile.DefaultWeightHandler(router), sources, targets)
+        public AdvancedManyToManyBidirectionalDykstra(Router router, Profile profile, RouterPoint[] locations)
+            : base(router.Db, profile, profile.DefaultWeightHandler(router), locations)
         {
 
         }
