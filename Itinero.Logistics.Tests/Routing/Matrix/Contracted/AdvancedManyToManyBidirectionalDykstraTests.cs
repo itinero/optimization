@@ -50,12 +50,11 @@ namespace Itinero.Logistics.Tests.Routing.Matrix.Contracted
                 Profile = 0,
                 MetaId = 0
             });
-            routerDb.AddContracted(MockProfile.CarMock());
+            routerDb.AddContracted(MockProfile.CarMock(), true);
 
             // create algorithm and run.
             var algorithm = new AdvancedManyToManyBidirectionalDykstra(new Router(routerDb), MockProfile.CarMock(),
-                new RouterPoint[] { new RouterPoint(0, 0, 0, 0) },
-                new RouterPoint[] { new RouterPoint(1, 1, 0, ushort.MaxValue) });
+                new RouterPoint[] { new RouterPoint(0, 0, 0, 0), new RouterPoint(1, 1, 0, ushort.MaxValue) });
             algorithm.Run();
 
             // check results.
@@ -63,9 +62,9 @@ namespace Itinero.Logistics.Tests.Routing.Matrix.Contracted
             Assert.IsTrue(algorithm.HasSucceeded);
 
             Assert.IsNotNull(algorithm.Weights);
-            Assert.AreEqual(2, algorithm.Weights.Length);
-            Assert.AreEqual(2, algorithm.Weights[0].Length);
-            Assert.AreEqual(MockProfile.CarMock().Factor(null).Value * 100, algorithm.Weights[0][0], 0.01);
+            Assert.AreEqual(4, algorithm.Weights.Length);
+            Assert.AreEqual(4, algorithm.Weights[0].Length);
+            Assert.AreEqual(MockProfile.CarMock().Factor(null).Value * 100, algorithm.Weights[0][2], 0.01);
         }
 
         /// <summary>
@@ -124,11 +123,6 @@ namespace Itinero.Logistics.Tests.Routing.Matrix.Contracted
                     routerDb.Network.CreateRouterPointForVertex(0),
                     routerDb.Network.CreateRouterPointForVertex(1),
                     routerDb.Network.CreateRouterPointForVertex(2)
-                },
-                new RouterPoint[] {
-                    routerDb.Network.CreateRouterPointForVertex(0),
-                    routerDb.Network.CreateRouterPointForVertex(1),
-                    routerDb.Network.CreateRouterPointForVertex(2)
                 });
             algorithm.Run();
 
@@ -137,19 +131,31 @@ namespace Itinero.Logistics.Tests.Routing.Matrix.Contracted
 
             var weights = algorithm.Weights;
             Assert.IsNotNull(weights);
-            Assert.AreEqual(3, weights.Length);
-            Assert.AreEqual(3, weights[0].Length);
+            Assert.AreEqual(6, weights.Length);
+
+            Assert.AreEqual(6, weights[0].Length);
             Assert.AreEqual(0, weights[0][0], 0.001);
-            Assert.AreEqual(100 * MockProfile.CarMock().Factor(null).Value, weights[0][1], 0.01);
-            Assert.AreEqual(100 * MockProfile.CarMock().Factor(null).Value, weights[0][2], 0.01);
-            Assert.AreEqual(3, weights[1].Length);
-            Assert.AreEqual(100 * MockProfile.CarMock().Factor(null).Value, weights[1][0], 0.01);
-            Assert.AreEqual(0, weights[1][1], 0.001);
-            Assert.AreEqual(100 * MockProfile.CarMock().Factor(null).Value, weights[1][2], 0.01);
-            Assert.AreEqual(3, weights[2].Length);
-            Assert.AreEqual(100 * MockProfile.CarMock().Factor(null).Value, weights[2][0], 0.01);
-            Assert.AreEqual(100 * MockProfile.CarMock().Factor(null).Value, weights[2][1], 0.01);
-            Assert.AreEqual(0, weights[2][2], 0.001);
+            Assert.AreEqual(300 * MockProfile.CarMock().Factor(null).Value, weights[0][1], 0.1);
+            Assert.AreEqual(100 * MockProfile.CarMock().Factor(null).Value, weights[0][2], 0.1);
+            Assert.AreEqual(200 * MockProfile.CarMock().Factor(null).Value, weights[0][3], 0.1);
+            Assert.AreEqual(300 * MockProfile.CarMock().Factor(null).Value, weights[0][4], 0.1);
+            Assert.AreEqual(100 * MockProfile.CarMock().Factor(null).Value, weights[0][5], 0.1);
+
+            Assert.AreEqual(6, weights[1].Length);
+            Assert.AreEqual(300 * MockProfile.CarMock().Factor(null).Value, weights[1][0], 0.1);
+            Assert.AreEqual(200 * MockProfile.CarMock().Factor(null).Value, weights[1][1], 0.1);
+            Assert.AreEqual(400 * MockProfile.CarMock().Factor(null).Value, weights[1][2], 0.1);
+            Assert.AreEqual(100 * MockProfile.CarMock().Factor(null).Value, weights[1][3], 0.1);
+            Assert.AreEqual(200 * MockProfile.CarMock().Factor(null).Value, weights[1][4], 0.1);
+            Assert.AreEqual(200 * MockProfile.CarMock().Factor(null).Value, weights[1][5], 0.1);
+
+            Assert.AreEqual(6, weights[2].Length);
+            Assert.AreEqual(100 * MockProfile.CarMock().Factor(null).Value, weights[2][0], 0.1);
+            Assert.AreEqual(400 * MockProfile.CarMock().Factor(null).Value, weights[2][1], 0.1);
+            Assert.AreEqual(200 * MockProfile.CarMock().Factor(null).Value, weights[2][2], 0.1);
+            Assert.AreEqual(300 * MockProfile.CarMock().Factor(null).Value, weights[2][3], 0.1);
+            Assert.AreEqual(400 * MockProfile.CarMock().Factor(null).Value, weights[2][4], 0.1);
+            Assert.AreEqual(200 * MockProfile.CarMock().Factor(null).Value, weights[2][5], 0.1);
         }
     }
 }

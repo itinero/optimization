@@ -212,8 +212,21 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
                 // convert to original indices.
                 var originalInvalids = new HashSet<int>();
                 foreach(var invalid in nonNullInvalids)
-                {
-                    originalInvalids.Add(invalid / 2);
+                { // check if both are invalid for each router point.
+                    if (invalid % 2 == 0)
+                    {
+                        if (originalInvalids.Contains(invalid + 1))
+                        {
+                            originalInvalids.Add(invalid / 2);
+                        }
+                    }
+                    else
+                    {
+                        if (originalInvalids.Contains(invalid - 1))
+                        {
+                            originalInvalids.Add(invalid / 2);
+                        }
+                    }
                 }
 
                 _validPoints = (new List<RouterPoint>(_locations)).ShrinkAndCopyList(originalInvalids);
