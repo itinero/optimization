@@ -29,16 +29,16 @@ namespace Itinero.Logistics.Tests.Functional
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", origin, level, message));
             };
 
-            var routerDb = new RouterDb();
-            routerDb.LoadOsmData(File.OpenRead(@"D:\work\data\OSM\wechel.osm.pbf"), false, Vehicle.Bicycle);
+            //var routerDb = new RouterDb();
+            //routerDb.LoadOsmData(File.OpenRead(@"D:\work\data\OSM\wechel.osm.pbf"), false, Vehicle.Bicycle);
             var profile = (Vehicle.Bicycle as Bicycle).Networks();
 
 
             //routerDb.Serialize(File.OpenWrite("temp.routerdb"));
 
-            //var routerDb = RouterDb.Deserialize(File.OpenRead("temp.routerdb"));
+            var routerDb = RouterDb.Deserialize(File.OpenRead("temp.routerdb"));
             var router = new Router(routerDb);
-            routerDb.AddContracted(profile, profile.AugmentedWeightHandler(router), true);
+            //routerDb.AddContracted(profile, profile.AugmentedWeightHandler(router), true);
 
             var locations = new List<Coordinate>(new Coordinate[]
              {
@@ -55,8 +55,7 @@ namespace Itinero.Logistics.Tests.Functional
             var matrix = new AdvancedManyToManyBidirectionalDykstra<Weight>(routerDb, profile, profile.AugmentedWeightHandlerCached(router.Db),
                 resolved);
             matrix.Run();
-
-
+            
             //Coordinate source;
             //Coordinate[] locations;
             //Problems.STSP.ProblemBuilder.BuildEmbedded("Itinero.Logistics.Tests.Functional.Problems.STSP.problem1.geojson", out source, out locations);
