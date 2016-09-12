@@ -319,11 +319,16 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
                 foreach (var pair in bucket)
                 {
                     var best = _weights[pair.Key][i];
-
+                    
                     var forwardVisit = pair.Value;
                     while (forwardVisit != null)
                     {
                         var forwardCurrent = forwardVisit.Path;
+                        if (_weightHandler.IsLargerThan(forwardCurrent.Weight, best))
+                        {
+                            forwardVisit = forwardVisit.Next;
+                            continue;
+                        }
                         backwardVisit = originalBackwardVisit;
                         while (backwardVisit != null)
                         {
