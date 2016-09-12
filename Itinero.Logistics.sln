@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itinero.Logistics", "Itinero.Logistics\Itinero.Logistics.csproj", "{8F2D411D-8F8E-43EF-BD20-5700806C22DE}"
 EndProject
@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itinero.Logistics.Tests", "Itinero.Logistics.Tests\Itinero.Logistics.Tests.csproj", "{6A3AE5FD-7D94-45D5-BD18-D5F54531CE54}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itinero.Logistics.Tests.Functional", "Itinero.Logistics.Tests.Functional\Itinero.Logistics.Tests.Functional.csproj", "{B0849939-1915-4D30-86C8-A867BA43BEB3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B79D627D-6D59-4A70-9E19-7DFA339F673F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.TSP", "samples\Sample.TSP\Sample.TSP.csproj", "{71884616-980C-4CBB-BA2E-94463A33E548}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +37,15 @@ Global
 		{B0849939-1915-4D30-86C8-A867BA43BEB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0849939-1915-4D30-86C8-A867BA43BEB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0849939-1915-4D30-86C8-A867BA43BEB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71884616-980C-4CBB-BA2E-94463A33E548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71884616-980C-4CBB-BA2E-94463A33E548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71884616-980C-4CBB-BA2E-94463A33E548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71884616-980C-4CBB-BA2E-94463A33E548}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{71884616-980C-4CBB-BA2E-94463A33E548} = {B79D627D-6D59-4A70-9E19-7DFA339F673F}
 	EndGlobalSection
 EndGlobal

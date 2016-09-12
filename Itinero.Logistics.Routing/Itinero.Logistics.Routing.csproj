@@ -51,10 +51,11 @@
     <Compile Include="Matrix\AdvancedWeightMatrixCalculator.cs" />
     <Compile Include="Matrix\Contracted\AdvancedManyToManyBidirectionalDykstra.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TSP\RouterExtensions.cs" />
     <Compile Include="RouterPointExtensions.cs" />
     <Compile Include="RoutingAlgorithmBase.cs" />
     <Compile Include="STSP\ISTSPRouter.cs" />
-    <Compile Include="STSP\RouteExtensions.cs" />
+    <Compile Include="STSP\RouterExtensions.cs" />
     <Compile Include="STSP\STSPRouter.cs" />
     <Compile Include="TSPTW\ITSPTWRouter.cs" />
     <Compile Include="TSPTW\TSPTWRouter.cs" />
