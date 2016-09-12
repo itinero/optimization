@@ -29,16 +29,15 @@ namespace Itinero.Logistics.Tests.Functional
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", origin, level, message));
             };
 
-            //var routerDb = new RouterDb();
-            //routerDb.LoadOsmData(File.OpenRead(@"D:\work\data\OSM\wechel.osm.pbf"), false, Vehicle.Bicycle);
-            var profile = (Vehicle.Bicycle as Bicycle).Networks();
 
+            // download test-data (if not there yet).
+            Download.ToFile("http://files.itinero.tech/data/itinero/routerdbs/planet/europe/belgium.c.cf.routerdb", "belgium.c.cf.routerdb").Wait();
 
-            //routerDb.Serialize(File.OpenWrite("temp.routerdb"));
+            var routerDb = RouterDb.Deserialize(File.OpenRead("belgium.c.cf.routerdb"));
 
-            var routerDb = RouterDb.Deserialize(File.OpenRead("temp.routerdb"));
             var router = new Router(routerDb);
-            //routerDb.AddContracted(profile, profile.AugmentedWeightHandler(router), true);
+            var profile = Vehicle.Car.Fastest();
+            routerDb.AddContracted(profile, profile.AugmentedWeightHandler(router), true);
 
             var locations = new List<Coordinate>(new Coordinate[]
              {

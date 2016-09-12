@@ -37,11 +37,21 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
         private readonly RouterPoint[] _locations;
         private readonly Dictionary<uint, Dictionary<int, LinkedEdgePath<T>>> _buckets;
         private readonly WeightHandler<T> _weightHandler;
-
+        private readonly T _max;
         /// <summary>
         /// Creates a new algorithm.
         /// </summary>
         public AdvancedManyToManyBidirectionalDykstra(RouterDb routerDb, Profile profile, WeightHandler<T> weightHandler, RouterPoint[] locations)
+            : this(routerDb, profile, weightHandler, locations, weightHandler.Infinite)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new algorithm.
+        /// </summary>
+        public AdvancedManyToManyBidirectionalDykstra(RouterDb routerDb, Profile profile, WeightHandler<T> weightHandler, RouterPoint[] locations, 
+            T max)
         {
             _routerDb = routerDb;
             _locations = locations;
@@ -60,6 +70,7 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
             }
             _graph = contractedDb.EdgeBasedGraph;
             weightHandler.CheckCanUse(contractedDb);
+            _max = max;
 
             _buckets = new Dictionary<uint, Dictionary<int, LinkedEdgePath<T>>>();
         }
@@ -141,7 +152,7 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
                 var path = _sourcePaths[i];
                 if (path != null)
                 {
-                    var forward = new Itinero.Algorithms.Contracted.EdgeBased.Dykstra<T>(_graph, _weightHandler, new EdgePath<T>[] { path }, (v) => null, false);
+                    var forward = new Itinero.Algorithms.Contracted.EdgeBased.Dykstra<T>(_graph, _weightHandler, new EdgePath<T>[] { path }, (v) => null, false, _max);
                     forward.WasFound += (vertex, weight) =>
                     {
                         LinkedEdgePath<T> visits;
@@ -158,7 +169,7 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
                 var path = _targetPaths[i];
                 if (path != null)
                 {
-                    var backward = new Itinero.Algorithms.Contracted.EdgeBased.Dykstra<T>(_graph, _weightHandler, new EdgePath<T>[] { path }, (v) => null, true);
+                    var backward = new Itinero.Algorithms.Contracted.EdgeBased.Dykstra<T>(_graph, _weightHandler, new EdgePath<T>[] { path }, (v) => null, true, _max);
                     backward.WasFound += (vertex, weight) =>
                     {
                         LinkedEdgePath<T> visits;
@@ -394,8 +405,8 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
         /// <summary>
         /// Creates a new algorithm.
         /// </summary>
-        public AdvancedManyToManyBidirectionalDykstra(Router router, Profile profile, RouterPoint[] locations)
-            : base(router.Db, profile, profile.DefaultWeightHandler(router), locations)
+        public AdvancedManyToManyBidirectionalDykstra(Router router, Profile profile, RouterPoint[] locations, float max = float.MaxValue)
+            : base(router.Db, profile, profile.DefaultWeightHandler(router), locations, max)
         {
 
         }

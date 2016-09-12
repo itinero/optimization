@@ -6,16 +6,16 @@
     <title>Itinero - Logistical Optimization Module</title>
     <authors>Ben Abelshausen</authors>
     <owners>Ben Abelshausen</owners>
-    <licenseUrl>http://raw.github.com/xivk/OsmSharp/master/license.txt</licenseUrl>
-    <projectUrl>http://www.osmsharp.com/</projectUrl>
-    <iconUrl>http://osmsharp.com/sites/default/files/osmsharp_logo64.png</iconUrl>
+    <licenseUrl>https://github.com/itinero/logistics/blob/develop/LICENSE.md</licenseUrl>
+    <projectUrl>http://www.itinero.tech/</projectUrl>
+    <iconUrl>http://www.itinero.tech/logos/itinero_logo_notext.svg.128.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A module for solving logistical routing problems.</description>
     <summary>A module for solving logistical routing problems based on Itinero.</summary>
     <copyright>Ben Abelshausen</copyright>
     <tags>osm, openstreetmap, routing</tags>
     <dependencies>
-		<dependency id="Itinero" version="0.6.1-rc1" />
+		<dependency id="Itinero" version="0.23.9-rc1" />
     </dependencies>
   </metadata>
   <files>
