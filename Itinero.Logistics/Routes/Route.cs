@@ -58,15 +58,15 @@ namespace Itinero.Logistics.Routes
         /// </summary>
         public Route(IEnumerable<int> customers, int? last)
         {
-            var nextArray = new int[0];
+            _nextArray = new int[0];
             var first = -1;
             var previous = -1;
             foreach (var customer in customers)
             {
                 // resize the array if needed.
-                if (nextArray.Length <= customer)
+                if (_nextArray.Length <= customer)
                 {
-                    Array.Resize<int>(ref nextArray, customer + 1);
+                    this.Resize(customer);
                 }
 
                 // the first customer.
@@ -76,17 +76,16 @@ namespace Itinero.Logistics.Routes
                 }
                 else
                 { // set the next array.
-                    nextArray[previous] = customer;
+                    _nextArray[previous] = customer;
                 }
 
                 previous = customer;
             }
 
-            nextArray[previous] = Constants.END;
+            _nextArray[previous] = Constants.END;
 
             // set actual route-data.
             _first = first;
-            _nextArray = nextArray;
             _internalLast = previous;
             _last = last;
         }
