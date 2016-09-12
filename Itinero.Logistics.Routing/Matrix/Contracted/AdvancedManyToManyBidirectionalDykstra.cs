@@ -200,15 +200,6 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
             // take into account the non-null invalids now.
             if (nonNullInvalids.Count > 0)
             { // shrink lists and add errors.
-                foreach (var invalid in nonNullInvalids)
-                {
-                    _errors[_resolvedPointsIndices[invalid / 2]] = new LocationError()
-                    {
-                        Code = LocationErrorCode.NotRoutable,
-                        Message = "Location could not routed to or from."
-                    };
-                }
-
                 // convert to original indices.
                 var originalInvalids = new HashSet<int>();
                 foreach(var invalid in nonNullInvalids)
@@ -239,6 +230,16 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
                     nonNullInvalids.Add(invalid * 2);
                     nonNullInvalids.Add(invalid * 2 + 1);
                 }
+
+                foreach (var invalid in nonNullInvalids)
+                {
+                    _errors[_resolvedPointsIndices[invalid / 2]] = new LocationError()
+                    {
+                        Code = LocationErrorCode.NotRoutable,
+                        Message = "Location could not routed to or from."
+                    };
+                }
+
                 _weights = _weights.SchrinkAndCopyMatrix(nonNullInvalids);
             }
 
