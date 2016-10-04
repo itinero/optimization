@@ -167,6 +167,39 @@ namespace Itinero.Logistics.Routes
         }
 
         /// <summary>
+        /// Replaces the given old customer with the new customer. Assumes the new customer doesn't exist yet.
+        /// </summary>
+        public void Replace(int oldCustomer, int newCustomer)
+        {
+            if (newCustomer >= _nextArray.Length)
+            {
+                this.Resize(newCustomer);
+            }
+
+            _nextArray[newCustomer] = _nextArray[oldCustomer];
+            _nextArray[oldCustomer] = Constants.NOT_SET;
+
+            if (oldCustomer == _first)
+            {
+                _first = newCustomer;
+            }
+
+            if (oldCustomer == _last)
+            {
+                _last = newCustomer;
+            }
+
+            for (var i = 0; i < _nextArray.Length; i++)
+            {
+                if (_nextArray[i] == oldCustomer)
+                {
+                    _nextArray[i] = newCustomer;
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
         /// Inserts a customer right after from and before to.
         /// </summary>
         /// <param name="from"></param>

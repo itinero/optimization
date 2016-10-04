@@ -971,5 +971,27 @@ namespace Itinero.Logistics.Tests.Routes
                 }
             }
         }
+
+        /// <summary>
+        /// Tests replace.
+        /// </summary>
+        [Test]
+        public void TestReplaceClosed()
+        {
+            var customers = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+            var route = new Logistics.Routes.Route(customers, 0);
+
+            route.Replace(0, 10);
+            
+            ExtraAssert.ItemsAreEqual(new int[] { 10, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, route);
+
+            route.Replace(5, 15);
+
+            ExtraAssert.ItemsAreEqual(new int[] { 10, 1, 2, 3, 4, 15, 6, 7, 8, 9 }, route);
+
+            route.Replace(9, 19);
+
+            ExtraAssert.ItemsAreEqual(new int[] { 10, 1, 2, 3, 4, 15, 6, 7, 8, 19 }, route);
+        }
     }
 }
