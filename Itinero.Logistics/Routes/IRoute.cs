@@ -133,6 +133,11 @@ namespace Itinero.Logistics.Routes
         void ReplaceEdgeFrom(int from, int to);
 
         /// <summary>
+        /// Replaces the old customer with the new customer, assuming the new customer isn't already part of the route.
+        /// </summary>
+        void Replace(int oldCustomer, int newCustomer);
+
+        /// <summary>
         /// Removes the edge from->unknown and replaces it with the edge from->to->unknown.
         /// </summary>
         /// <param name="from"></param>
