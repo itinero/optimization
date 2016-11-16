@@ -153,11 +153,11 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
                 if (path != null)
                 {
                     var forward = new Itinero.Algorithms.Contracted.EdgeBased.Dykstra<T>(_graph, _weightHandler, new EdgePath<T>[] { path }, (v) => null, false, _max);
-                    forward.WasFound += (vertex, weight) =>
+                    forward.WasFound += (visit) =>
                     {
                         LinkedEdgePath<T> visits;
-                        forward.TryGetVisits(vertex, out visits);
-                        return this.ForwardVertexFound(i, vertex, visits);
+                        forward.TryGetVisits(visit.Vertex, out visits);
+                        return this.ForwardVertexFound(i, visit.Vertex, visits);
                     };
                     forward.Run();
                 }
@@ -170,11 +170,11 @@ namespace Itinero.Logistics.Routing.Matrix.Contracted
                 if (path != null)
                 {
                     var backward = new Itinero.Algorithms.Contracted.EdgeBased.Dykstra<T>(_graph, _weightHandler, new EdgePath<T>[] { path }, (v) => null, true, _max);
-                    backward.WasFound += (vertex, weight) =>
+                    backward.WasFound += (visit) =>
                     {
                         LinkedEdgePath<T> visits;
-                        backward.TryGetVisits(vertex, out visits);
-                        return this.BackwardVertexFound(i, vertex, visits);
+                        backward.TryGetVisits(visit.Vertex, out visits);
+                        return this.BackwardVertexFound(i, visit.Vertex, visits);
                     };
                     backward.Run();
                 }

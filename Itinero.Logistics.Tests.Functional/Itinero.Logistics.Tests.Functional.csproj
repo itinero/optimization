@@ -37,16 +37,16 @@
       <HintPath>..\packages\GeoAPI.1.7.4\lib\net45\GeoAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero, Version=0.23.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.0.23.10-rc1\lib\net45\Itinero.dll</HintPath>
+    <Reference Include="Itinero, Version=0.30.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.0.30.0-rc1\lib\net45\Itinero.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero.Geo, Version=0.23.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.Geo.0.23.10-rc1\lib\net45\Itinero.Geo.dll</HintPath>
+    <Reference Include="Itinero.Geo, Version=0.30.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.Geo.0.30.0-rc1\lib\net45\Itinero.Geo.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero.IO.Osm, Version=0.23.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.IO.Osm.0.23.10-rc1\lib\net45\Itinero.IO.Osm.dll</HintPath>
+    <Reference Include="Itinero.IO.Osm, Version=0.30.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.IO.Osm.0.30.0-rc1\lib\net45\Itinero.IO.Osm.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
@@ -61,8 +61,8 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp, Version=2.2.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.2.2.9-beta\lib\net45\OsmSharp.dll</HintPath>
+    <Reference Include="OsmSharp, Version=2.2.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.2.2.11-beta\lib\net45\OsmSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">

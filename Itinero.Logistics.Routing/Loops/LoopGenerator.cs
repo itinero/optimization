@@ -82,7 +82,7 @@ namespace Itinero.Logistics.Routing.Loops
             var distance = _max.Distance;
             if (_max.Distance == float.MaxValue)
             {
-                distance = _profile.MinSpeed().Value * _max.Time;
+                distance = 5 * _max.Time;
             }
 
 
