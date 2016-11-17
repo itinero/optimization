@@ -6,7 +6,6 @@ using Itinero.Logistics.Routing.Loops;
 using Itinero.Logistics.Routing.Matrix.Contracted;
 using Itinero.Logistics.Routing.STSP;
 using Itinero.Osm.Vehicles;
-using Itinero.Profiles;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using System;
@@ -29,6 +28,7 @@ namespace Itinero.Logistics.Tests.Functional
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", origin, level, message));
             };
 
+            Vehicle.RegisterVehicles();
 
             // download test-data (if not there yet).
             Download.ToFile("http://files.itinero.tech/data/itinero/routerdbs/planet/europe/belgium.c.cf.routerdb", "belgium.c.cf.routerdb").Wait();

@@ -56,24 +56,24 @@ namespace Itinero.Logistics.Tests.Routing
             }
         }
 
-        public override Result<EdgePath<T>[][]> TryCalculateRaw<T>(Itinero.Profiles.Profile profile, WeightHandler<T> weightHandler, RouterPoint[] sources, RouterPoint[] targets,
-            ISet<int> invalidSources, ISet<int> invalidTargets, RoutingSettings<T> settings)
+        public override Result<EdgePath<T>[][]> TryCalculateRaw<T>(IProfileInstance profile, WeightHandler<T> weightHandler, RouterPoint[] sources, RouterPoint[] targets, RoutingSettings<T> settings = null)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override Result<EdgePath<T>> TryCalculateRaw<T>(Profile profile, WeightHandler<T> weightHandler, long sourceDirectedEdge, long targetDirectedEdge, RoutingSettings<T> settings = null)
-        {
-            return new Result<EdgePath<T>>(new EdgePath<T>());
-        }
 
-        public override Result<EdgePath<T>> TryCalculateRaw<T>(Profile profile, WeightHandler<T> weightHandler, RouterPoint source, RouterPoint target, RoutingSettings<T> settings = null)
+        public override Result<EdgePath<T>> TryCalculateRaw<T>(IProfileInstance profile, WeightHandler<T> weightHandler, long sourceDirectedEdge, long targetDirectedEdge, RoutingSettings<T> settings = null)
         {
             return new Result<EdgePath<T>>(new EdgePath<T>());
         }
 
+        public override Result<EdgePath<T>> TryCalculateRaw<T>(IProfileInstance profile, WeightHandler<T> weightHandler, RouterPoint source, RouterPoint target, RoutingSettings<T> settings = null)
+        {
+            return new Result<EdgePath<T>>(new EdgePath<T>());
+        }
 
-        public override Result<Route> BuildRoute<T>(Profile profile, WeightHandler<T> weightHandler, RouterPoint source, RouterPoint target, EdgePath<T> path)
+
+        public override Result<Route> BuildRoute<T>(IProfileInstance profile, WeightHandler<T> weightHandler, RouterPoint source, RouterPoint target, EdgePath<T> path)
         {
             var route = new Route();
             route.Shape = new Coordinate[]
@@ -84,7 +84,7 @@ namespace Itinero.Logistics.Tests.Routing
             return new Result<Route>(route);
         }
 
-        public override Result<T[][]> TryCalculateWeight<T>(Profile profile, WeightHandler<T> weightHandler,
+        public override Result<T[][]> TryCalculateWeight<T>(IProfileInstance profile, WeightHandler<T> weightHandler,
             RouterPoint[] sources, RouterPoint[] targets, ISet<int> invalidSources, ISet<int> invalidTargets, RoutingSettings<T> settings)
         {
             var weights = new T[sources.Length][];
@@ -108,12 +108,12 @@ namespace Itinero.Logistics.Tests.Routing
             return new Result<T[][]>(weights);
         }
         
-        public override Result<bool> TryCheckConnectivity(Profile profile, RouterPoint point, float radiusInMeters)
+        public override Result<bool> TryCheckConnectivity(IProfileInstance profile, RouterPoint point, float radiusInMeters)
         {
             throw new System.NotImplementedException();
         }
 
-        public override Result<RouterPoint> TryResolve(Profile[] profiles,
+        public override Result<RouterPoint> TryResolve(IProfileInstance[] profiles,
             float latitude, float longitude, System.Func<RoutingEdge, bool> isBetter,
                 float maxSearchDistance = Itinero.Constants.SearchDistanceInMeter)
         {
