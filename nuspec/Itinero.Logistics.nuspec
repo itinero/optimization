@@ -42,13 +42,13 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="src\Itinero.Logistics\Release\net40\Itinero.Logistics.dll" target="lib\net40\Itinero.Logistics.dll" />
-    <file src="src\Itinero.Logistics.Routing\Release\net40\Itinero.Logistics.dll" target="lib\net40\Itinero.Logistics.Routing.dll" />
-    <file src="src\Itinero.Logistics\Release\net45\Itinero.Logistics.dll" target="lib\net45\Itinero.Logistics.dll" />
-    <file src="src\Itinero.Logistics.Routing\Release\net45\Itinero.Logistics.dll" target="lib\net45\Itinero.Logistics.Routing.dll" />
-    <file src="src\Itinero.Logistics\Release\netstandard1.3\Itinero.Logistics.dll" target="lib\netstandard1.3\Itinero.Logistics.dll" />
-    <file src="src\Itinero.Logistics.Routing\Release\netstandard1.3\Itinero.Logistics.dll" target="lib\netstandard1.3\Itinero.Logistics.Routing.dll" />
-    <file src="src\Itinero.Logistics\Release\portable40-net403+sl5+win8+wp8\Itinero.Logistics.dll" target="lib\portable40-net403+sl5+win8+wp8\Itinero.Logistics.dll" />
-    <file src="src\Itinero.Logistics.Routing\Release\portable40-net403+sl5+win8+wp8\Itinero.Logistics.dll" target="lib\portable40-net403+sl5+win8+wp8\Itinero.Logistics.Routing.dll" />
+    <file src="src\Itinero.Logistics\bin\Release\net40\Itinero.Logistics.dll" target="lib\net40\Itinero.Logistics.dll" />
+    <file src="src\Itinero.Logistics.Routing\bin\Release\net40\Itinero.Logistics.dll" target="lib\net40\Itinero.Logistics.Routing.dll" />
+    <file src="src\Itinero.Logistics\bin\Release\net45\Itinero.Logistics.dll" target="lib\net45\Itinero.Logistics.dll" />
+    <file src="src\Itinero.Logistics.Routing\bin\Release\net45\Itinero.Logistics.dll" target="lib\net45\Itinero.Logistics.Routing.dll" />
+    <file src="src\Itinero.Logistics\bin\Release\netstandard1.3\Itinero.Logistics.dll" target="lib\netstandard1.3\Itinero.Logistics.dll" />
+    <file src="src\Itinero.Logistics.Routing\bin\Release\netstandard1.3\Itinero.Logistics.dll" target="lib\netstandard1.3\Itinero.Logistics.Routing.dll" />
+    <file src="src\Itinero.Logistics\bin\Release\portable40-net403+sl5+win8+wp8\Itinero.Logistics.dll" target="lib\portable40-net403+sl5+win8+wp8\Itinero.Logistics.dll" />
+    <file src="src\Itinero.Logistics.Routing\bin\Release\portable40-net403+sl5+win8+wp8\Itinero.Logistics.dll" target="lib\portable40-net403+sl5+win8+wp8\Itinero.Logistics.Routing.dll" />
   </files>
 </package>
