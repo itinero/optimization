@@ -13,13 +13,42 @@
     <description>A module for solving logistical routing problems.</description>
     <summary>A module for solving logistical routing problems based on Itinero.</summary>
     <copyright>Ben Abelshausen</copyright>
-    <tags>osm, openstreetmap, routing</tags>
+    <tags>routing, logistics, optimization, itinero</tags>
     <dependencies>
-		<dependency id="Itinero" version="0.31.2-rc1" />
+      <group targetFramework=".NETFramework4.0">
+        <dependency id="Itinero" version="[0.31.2-rc1, )" />
+        <dependency id="Itinero.Logistics" version="[1.0.0, )" />
+      </group>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="Itinero" version="[0.31.2-rc1, )" />
+        <dependency id="Itinero.Logistics" version="[1.0.0, )" />
+      </group>
+      <group targetFramework=".NETPortable4.0-Profile147">
+        <dependency id="Itinero" version="[0.31.2-rc1, )" />
+        <dependency id="Itinero.Logistics" version="[1.0.0, )" />
+      </group>
+      <group targetFramework=".NETStandard1.3">
+        <dependency id="NETStandard.Library" version="[1.6.0, )" />
+        <dependency id="System.Diagnostics.Debug" version="[4.3.0, )" />
+        <dependency id="System.Runtime" version="[4.3.0, )" />
+        <dependency id="Itinero" version="[0.31.2-rc1, )" />
+        <dependency id="Itinero.Logistics" version="[1.0.0, )" />
+      </group>
     </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="mscorlib" targetFramework=".NETPortable4.0-Profile147" />
+      <frameworkAssembly assemblyName="System" targetFramework=".NETPortable4.0-Profile147" />
+      <frameworkAssembly assemblyName="System.Core" targetFramework=".NETPortable4.0-Profile147" />
+    </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="Output\Itinero.Logistics.dll" target="lib\net45\Itinero.Logistics.dll" />
-    <file src="Output\Itinero.Logistics.Routing.dll" target="lib\net45\Itinero.Logistics.Routing.dll" />
+    <file src="src\Itinero.Logistics\Release\net40\Itinero.Logistics.dll" target="lib\net40\Itinero.Logistics.dll" />
+    <file src="src\Itinero.Logistics.Routing\Release\net40\Itinero.Logistics.dll" target="lib\net40\Itinero.Logistics.Routing.dll" />
+    <file src="src\Itinero.Logistics\Release\net45\Itinero.Logistics.dll" target="lib\net45\Itinero.Logistics.dll" />
+    <file src="src\Itinero.Logistics.Routing\Release\net45\Itinero.Logistics.dll" target="lib\net45\Itinero.Logistics.Routing.dll" />
+    <file src="src\Itinero.Logistics\Release\netstandard1.3\Itinero.Logistics.dll" target="lib\netstandard1.3\Itinero.Logistics.dll" />
+    <file src="src\Itinero.Logistics.Routing\Release\netstandard1.3\Itinero.Logistics.dll" target="lib\netstandard1.3\Itinero.Logistics.Routing.dll" />
+    <file src="src\Itinero.Logistics\Release\portable40-net403+sl5+win8+wp8\Itinero.Logistics.dll" target="lib\portable40-net403+sl5+win8+wp8\Itinero.Logistics.dll" />
+    <file src="src\Itinero.Logistics.Routing\Release\portable40-net403+sl5+win8+wp8\Itinero.Logistics.dll" target="lib\portable40-net403+sl5+win8+wp8\Itinero.Logistics.Routing.dll" />
   </files>
 </package>

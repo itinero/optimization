@@ -3,17 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itinero.Logistics", "Itinero.Logistics\Itinero.Logistics.csproj", "{8F2D411D-8F8E-43EF-BD20-5700806C22DE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8053A06F-B6C2-4A38-B849-B9EE0A9726D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itinero.Logistics.Routing", "Itinero.Logistics.Routing\Itinero.Logistics.Routing.csproj", "{6D3C631D-4A2A-4D56-B1E2-95EC3BCBD3D0}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Itinero.Logistics", "src\Itinero.Logistics\Itinero.Logistics.xproj", "{DFE848AE-7A00-419E-B06E-59EE34F33927}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itinero.Logistics.Tests", "Itinero.Logistics.Tests\Itinero.Logistics.Tests.csproj", "{6A3AE5FD-7D94-45D5-BD18-D5F54531CE54}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Itinero.Logistics.Routing", "src\Itinero.Logistics.Routing\Itinero.Logistics.Routing.xproj", "{AB7D6985-99B9-420A-B9A9-FBD012F691E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itinero.Logistics.Tests.Functional", "Itinero.Logistics.Tests.Functional\Itinero.Logistics.Tests.Functional.csproj", "{B0849939-1915-4D30-86C8-A867BA43BEB3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{386F4425-15BF-4E78-96BC-740E4D082BF3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B79D627D-6D59-4A70-9E19-7DFA339F673F}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Itinero.Logistics.Tests", "test\Itinero.Logistics.Tests\Itinero.Logistics.Tests.xproj", "{53BF2CBC-3751-41BB-A305-FE2D4CFB8E32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.TSP", "samples\Sample.TSP\Sample.TSP.csproj", "{71884616-980C-4CBB-BA2E-94463A33E548}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8D1BB5CF-5C29-47D3-B23D-107E9969B542}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Itinero.Logistics.Tests.Functional", "test\Itinero.Logistics.Tests.Functional\Itinero.Logistics.Tests.Functional.xproj", "{E73AD648-6AB7-4F43-8A46-3F7760F8BEDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,31 +26,30 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8F2D411D-8F8E-43EF-BD20-5700806C22DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F2D411D-8F8E-43EF-BD20-5700806C22DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F2D411D-8F8E-43EF-BD20-5700806C22DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F2D411D-8F8E-43EF-BD20-5700806C22DE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6D3C631D-4A2A-4D56-B1E2-95EC3BCBD3D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6D3C631D-4A2A-4D56-B1E2-95EC3BCBD3D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6D3C631D-4A2A-4D56-B1E2-95EC3BCBD3D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6D3C631D-4A2A-4D56-B1E2-95EC3BCBD3D0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6A3AE5FD-7D94-45D5-BD18-D5F54531CE54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A3AE5FD-7D94-45D5-BD18-D5F54531CE54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A3AE5FD-7D94-45D5-BD18-D5F54531CE54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A3AE5FD-7D94-45D5-BD18-D5F54531CE54}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0849939-1915-4D30-86C8-A867BA43BEB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0849939-1915-4D30-86C8-A867BA43BEB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0849939-1915-4D30-86C8-A867BA43BEB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0849939-1915-4D30-86C8-A867BA43BEB3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{71884616-980C-4CBB-BA2E-94463A33E548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{71884616-980C-4CBB-BA2E-94463A33E548}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{71884616-980C-4CBB-BA2E-94463A33E548}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71884616-980C-4CBB-BA2E-94463A33E548}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFE848AE-7A00-419E-B06E-59EE34F33927}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFE848AE-7A00-419E-B06E-59EE34F33927}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFE848AE-7A00-419E-B06E-59EE34F33927}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFE848AE-7A00-419E-B06E-59EE34F33927}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB7D6985-99B9-420A-B9A9-FBD012F691E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB7D6985-99B9-420A-B9A9-FBD012F691E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB7D6985-99B9-420A-B9A9-FBD012F691E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB7D6985-99B9-420A-B9A9-FBD012F691E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53BF2CBC-3751-41BB-A305-FE2D4CFB8E32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53BF2CBC-3751-41BB-A305-FE2D4CFB8E32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53BF2CBC-3751-41BB-A305-FE2D4CFB8E32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53BF2CBC-3751-41BB-A305-FE2D4CFB8E32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E73AD648-6AB7-4F43-8A46-3F7760F8BEDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E73AD648-6AB7-4F43-8A46-3F7760F8BEDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E73AD648-6AB7-4F43-8A46-3F7760F8BEDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E73AD648-6AB7-4F43-8A46-3F7760F8BEDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{71884616-980C-4CBB-BA2E-94463A33E548} = {B79D627D-6D59-4A70-9E19-7DFA339F673F}
+		{DFE848AE-7A00-419E-B06E-59EE34F33927} = {8053A06F-B6C2-4A38-B849-B9EE0A9726D0}
+		{AB7D6985-99B9-420A-B9A9-FBD012F691E0} = {8053A06F-B6C2-4A38-B849-B9EE0A9726D0}
+		{53BF2CBC-3751-41BB-A305-FE2D4CFB8E32} = {386F4425-15BF-4E78-96BC-740E4D082BF3}
+		{E73AD648-6AB7-4F43-8A46-3F7760F8BEDF} = {386F4425-15BF-4E78-96BC-740E4D082BF3}
 	EndGlobalSection
 EndGlobal

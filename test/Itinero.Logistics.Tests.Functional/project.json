@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+    "GeoAPI": "1.7.4",
+    "NetTopologySuite.IO.GeoJSON": "1.14.0",
+    "NetTopologySuite": "1.14.0",
+    "Itinero": "0.31.2-rc1",
+    "Itinero.Logistics": "1.0.0-*",
+    "Itinero.Logistics.Routing": "1.0.0-*",
+    "NUnit": "3.4.1",
+    "dotnet-test-nunit": "3.4.0-beta-2",
+    "OsmSharp": "5.0.2-rc1",
+    "System.Net.Http": "4.3.0"
+  },
+
+  "frameworks": {
+    "net4.5.1": {
+      "frameworkAssemblies": {
+        "System.Xml": "",
+        "System.IO.Compression": "",
+        "System.IO.Compression.FileSystem": ""
+      }
+    }
+  },
+
+  "runtimes": {
+    "win10-x64": {},
+    "osx.10.10-x64": {},
+    "ubuntu.14.04-x64": {}
+  }
+}
