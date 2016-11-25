@@ -1,4 +1,5 @@
 ﻿using Itinero.Algorithms.Weights;
+using Itinero.Data.Contracted;
 using Itinero.Data.Edges;
 using Itinero.LocalGeo;
 using Itinero.Logistics.Routing.Loops;
@@ -32,12 +33,28 @@ namespace Itinero.Logistics.Tests.Functional
             // download test-data (if not there yet).
             Download.ToFile("http://files.itinero.tech/data/itinero/routerdbs/planet/europe/belgium.c.cf.routerdb", "belgium.c.cf.routerdb").Wait();
 
-            var routerDb = RouterDb.Deserialize(File.OpenRead("belgium.c.cf.routerdb"));
-
+            // get router db and make sure it has the correct contracted graph.
+            RouterDb routerDb = null;
+            using (var stream = File.OpenRead("belgium.c.cf.routerdb"))
+            {
+                routerDb = RouterDb.Deserialize(stream);
+            }
             var router = new Router(routerDb);
             var profile = Vehicle.Car.Fastest();
-            routerDb.AddContracted(profile, profile.AugmentedWeightHandler(router), true);
+            var augmentedWeightHandler = profile.AugmentedWeightHandler(router);
+            ContractedDb contractedDb;
+            if (!routerDb.TryGetContracted(profile, out contractedDb) ||
+                !augmentedWeightHandler.CanUse(contractedDb))
+            {
+                routerDb.AddContracted(profile, augmentedWeightHandler, true);
 
+                using (var stream = File.OpenWrite("belgium.c.cf.routerdb"))
+                {
+                    routerDb.Serialize(stream);
+                }
+            }
+
+            // run the actual tests.
             var locations = new List<Coordinate>(new Coordinate[]
              {
                             new Coordinate(51.270453873703080f, 4.8008108139038080f),
@@ -47,7 +64,6 @@ namespace Itinero.Logistics.Tests.Functional
                             new Coordinate(51.256489871317920f, 4.7884941101074220f),
                             new Coordinate(51.270964016530680f, 4.7894811630249020f)
              });
-
             var resolved = router.Resolve(profile, locations.ToArray());
 
             var matrix = new AdvancedManyToManyBidirectionalDykstra<Weight>(routerDb, profile, profile.AugmentedWeightHandlerCached(router.Db),
@@ -64,6 +80,7 @@ namespace Itinero.Logistics.Tests.Functional
             //var route = router.GenerateLoop(profile, new LocalGeo.Coordinate(51.26781748613334f, 4.801349937915802f), Profiles.ProfileMetric.TimeInSeconds, 
             //    4 * 3600);
             //var routeJson = route.ToGeoJson();
+
 
             //var features = new FeatureCollection();
             //foreach(var vertex in vertexSearch.Vertices)
