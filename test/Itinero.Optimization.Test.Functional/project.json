@@ -5,7 +5,9 @@
   },
 
   "dependencies": {
-    "Itinero.Optimization": "1.0.0-*"
+    "Itinero": "0.31.4-rc1",
+    "Itinero.Optimization": "1.0.0-*",
+    "Itinero.Routing.Optimization": "1.0.0-*"
   },
 
   "frameworks": {

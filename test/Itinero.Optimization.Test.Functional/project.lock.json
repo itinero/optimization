@@ -3,6 +3,30 @@
   "version": 2,
   "targets": {
     ".NETFramework,Version=v4.5.1": {
+      "Itinero/0.31.4-rc1": {
+        "type": "package",
+        "dependencies": {
+          "Reminiscence": "1.0.5"
+        },
+        "frameworkAssemblies": [
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net45/Itinero.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Itinero.dll": {}
+        }
+      },
+      "Reminiscence/1.0.5": {
+        "type": "package",
+        "compile": {
+          "lib/net45/Reminiscence.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Reminiscence.dll": {}
+        }
+      },
       "Itinero.Optimization/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5",
@@ -12,19 +36,67 @@
         "runtime": {
           "net45/Itinero.Optimization.dll": {}
         }
+      },
+      "Itinero.Routing.Optimization/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5",
+        "dependencies": {
+          "Itinero": "0.31.4-rc1",
+          "Itinero.Optimization": "1.0.0"
+        },
+        "compile": {
+          "net45/Itinero.Routing.Optimization.dll": {}
+        },
+        "runtime": {
+          "net45/Itinero.Routing.Optimization.dll": {}
+        }
       }
     }
   },
   "libraries": {
+    "Itinero/0.31.4-rc1": {
+      "sha512": "JTIq70aUG0UlbfjD152kI13VrF7giuK1lnDZxzSVPzRQSqdNHTTGkq8XKwAt9qJDWsYpYwv+HIvCbygA6S+e1g==",
+      "type": "package",
+      "path": "Itinero/0.31.4-rc1",
+      "files": [
+        "Itinero.0.31.4-rc1.nupkg.sha512",
+        "Itinero.nuspec",
+        "lib/net40/Itinero.dll",
+        "lib/net45/Itinero.dll",
+        "lib/netstandard1.3/Itinero.dll",
+        "lib/portable-net40+sl4+win8+wp7/Itinero.dll"
+      ]
+    },
+    "Reminiscence/1.0.5": {
+      "sha512": "PrjrLzIAT1fWIQLv7Bz3KDrQ3fvsqqafOPtiSpQ5K3UVMjvmO8c2T/yFpqO85SV97RH8XTc9f8V/KtTj+Sgsvw==",
+      "type": "package",
+      "path": "Reminiscence/1.0.5",
+      "files": [
+        "Reminiscence.1.0.5.nupkg.sha512",
+        "Reminiscence.nuspec",
+        "lib/net40/Reminiscence.dll",
+        "lib/net45/Reminiscence.dll",
+        "lib/netstandard1.3/Reminiscence.dll",
+        "lib/portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10/Reminiscence.dll",
+        "lib/portable-net45+win8+wpa81+wp8/Reminiscence.dll"
+      ]
+    },
     "Itinero.Optimization/1.0.0": {
       "type": "project",
       "path": "../../src/Itinero.Optimization/project.json",
       "msbuildProject": "../../src/Itinero.Optimization/Itinero.Optimization.xproj"
+    },
+    "Itinero.Routing.Optimization/1.0.0": {
+      "type": "project",
+      "path": "../../src/Itinero.Routing.Optimization/project.json",
+      "msbuildProject": "../../src/Itinero.Routing.Optimization/Itinero.Routing.Optimization.xproj"
     }
   },
   "projectFileDependencyGroups": {
     "": [
-      "Itinero.Optimization >= 1.0.0-*"
+      "Itinero >= 0.31.4-rc1",
+      "Itinero.Optimization >= 1.0.0-*",
+      "Itinero.Routing.Optimization >= 1.0.0-*"
     ],
     ".NETFramework,Version=v4.5.1": [
       "System.IO.Compression",

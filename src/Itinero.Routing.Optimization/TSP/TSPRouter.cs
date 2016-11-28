@@ -45,6 +45,7 @@ namespace Itinero.Routing.Optimization.TSP
         {
             _router = router;
             _locations = locations;
+            _profile = profile;
             _first = first;
             _last = last;
 
