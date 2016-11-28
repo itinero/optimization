@@ -1,0 +1,37 @@
+{
+  "locked": false,
+  "version": 2,
+  "targets": {
+    ".NETFramework,Version=v4.5.1": {
+      "Itinero.Optimization/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5",
+        "compile": {
+          "net45/Itinero.Optimization.dll": {}
+        },
+        "runtime": {
+          "net45/Itinero.Optimization.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Itinero.Optimization/1.0.0": {
+      "type": "project",
+      "path": "../../src/Itinero.Optimization/project.json",
+      "msbuildProject": "../../src/Itinero.Optimization/Itinero.Optimization.xproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "": [
+      "Itinero.Optimization >= 1.0.0-*"
+    ],
+    ".NETFramework,Version=v4.5.1": [
+      "System.IO.Compression",
+      "System.IO.Compression.FileSystem",
+      "System.Xml"
+    ]
+  },
+  "tools": {},
+  "projectFileToolGroups": {}
+}
