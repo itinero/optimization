@@ -117,7 +117,6 @@ namespace Itinero.Routing.Optimization.TSP
                 _originalRoute = problem.Solve(_solver);
             }
 
-
             // convert route to a route with the original location indices.
             if (_originalRoute.Last.HasValue)
             {

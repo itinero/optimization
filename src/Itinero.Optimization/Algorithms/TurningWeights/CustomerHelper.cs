@@ -57,6 +57,27 @@ namespace Itinero.Optimization.Algorithms.TurningWeights
         }
 
         /// <summary>
+        /// Extracts the customer.
+        /// </summary>
+        public static int ExtractCustomer(int id)
+        {
+            int direction, customer;
+            ExtractIdAndDirection(id, out customer, out direction);
+            return customer;
+        }
+
+        /// <summary>
+        /// Extracts the customer and the direction.
+        /// </summary>
+        public static void ExtractIdAndDirection(int id, out int customer, out int direction)
+        {
+            direction = id % 4;
+            var idx = (id - direction) / 2;
+            customer = idx / 2;
+            return;
+        }
+
+        /// <summary>
         /// Creates a directed id from a customer-id.
         /// </summary>
         public static int DirectedIdFrom(int customer, int direction = 0)
@@ -64,6 +85,40 @@ namespace Itinero.Optimization.Algorithms.TurningWeights
             if (direction < 0 || direction > 3) { throw new ArgumentOutOfRangeException("direction"); }
 
             return (customer * 4) + direction;
+        }
+
+        /// <summary>
+        /// Extract the directed source index.
+        /// </summary>
+        ///    0  1 => sources
+        /// 0 [0, 1]
+        /// 1 [2, 3]
+        public static int ExtractDirectedSource(int id)
+        {
+            var i = id % 4;
+            var offset = 0;
+            if (i == 2 || i == 3)
+            {
+                offset = 1;
+            }
+            return (id - i) / 2 + offset;
+        }
+
+        /// <summary>
+        /// Extract the directed target index.
+        ///    0  1 => sources
+        /// 0 [0, 1]
+        /// 1 [2, 3]
+        /// </summary>
+        public static int ExtractDirectedTarget(int id)
+        {
+            var i = id % 4;
+            var offset = 0;
+            if (i == 1 || i == 3)
+            {
+                offset = 1;
+            }
+            return (id - i) / 2 + offset;
         }
     }
 }

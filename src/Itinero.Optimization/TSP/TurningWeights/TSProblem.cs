@@ -36,11 +36,12 @@ namespace Itinero.Optimization.TSP.TurningWeights
         /// <summary>
         /// Creates a new TSP 'open' TSP with only a start customer.
         /// </summary>
-        public TSProblem(int first, float[][] weights)
+        public TSProblem(int first, float[][] weights, float turnPenalty)
         {
             this.First = first;
             this.Last = null;
             this.Weights = weights;
+            this.TurnPenalty = turnPenalty;
 
             for (var x = 0; x < this.Weights.Length; x++)
             {
@@ -51,11 +52,12 @@ namespace Itinero.Optimization.TSP.TurningWeights
         /// <summary>
         /// Creates a new TSP, 'closed' when first equals last.
         /// </summary>
-        public TSProblem(int first, int last, float[][] weights)
+        public TSProblem(int first, int last, float[][] weights, float turnPenalty)
         {
             this.First = first;
             this.Last = last;
             this.Weights = weights;
+            this.TurnPenalty = turnPenalty;
 
             this.Weights[first][last] = 0;
         }
@@ -76,6 +78,11 @@ namespace Itinero.Optimization.TSP.TurningWeights
         public int? Last { get; set; }
 
         /// <summary>
+        /// Gets or sets the turn penalty.
+        /// </summary>
+        public float TurnPenalty { get; set; }
+
+        /// <summary>
         /// Solves this TSP using a default solver.
         /// </summary>
         /// <returns></returns>
@@ -87,7 +94,7 @@ namespace Itinero.Optimization.TSP.TurningWeights
         /// <summary>
         /// Solvers this problem using the given solver.
         /// </summary>
-        public Route Solve(Itinero.Optimization.Algorithms.Solvers.ISolver<float, TSProblem, TSPObjective, Route, float> solver)
+        public Route Solve(Algorithms.Solvers.ISolver<float, TSProblem, TSPObjective, Route, float> solver)
         {
             return solver.Solve(this, new TSPObjective());
         }

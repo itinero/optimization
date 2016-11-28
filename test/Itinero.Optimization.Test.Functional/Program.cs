@@ -4,6 +4,7 @@ using Itinero.LocalGeo;
 using System.Collections.Generic;
 using Itinero.Routing.Optimization.TurningWeights;
 using System;
+using Itinero.Optimization.TSP.TurningWeights;
 
 namespace Itinero.Optimization.Test.Functional
 {
@@ -39,11 +40,10 @@ namespace Itinero.Optimization.Test.Functional
                 new Coordinate(51.270054481615624f, 4.799646735191345f)
             });
 
-            var route = router.CalculateTSP(Osm.Vehicles.Vehicle.Car.Fastest(), locations.ToArray());
+            var route = router.CalculateTSP(car.Fastest(), locations.ToArray());
 
-            var turningWeight = new TurningWeightBidirectionalDykstra(router, car.Fastest(),
-                router.Resolve(car.Fastest(), locations.ToArray()));
-            turningWeight.Run();
+            var routeWithTurnPenalty = router.CalculateTSP(car.Fastest(), locations.ToArray(), 120);
+
         }
     }
 }
