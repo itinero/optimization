@@ -21,7 +21,7 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Routes;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.TSP.TurningWeights.Solvers
+namespace Itinero.Optimization.TSP.Directed.Solvers
 {
     /// <summary>
     /// A solver that generates random solutions.
@@ -64,7 +64,7 @@ namespace Itinero.Optimization.TSP.TurningWeights.Solvers
             // convert customers to directed customer id's.
             for (var i = 0; i < customers.Count; i++)
             {
-                customers[i] = Algorithms.TurningWeights.CustomerHelper.DirectedIdFrom(customers[i],
+                customers[i] = Algorithms.Directed.DirectedHelper.BuildDirectedId(customers[i],
                     random.Generate(4));
             }
             int? directedLast = null;
@@ -76,13 +76,13 @@ namespace Itinero.Optimization.TSP.TurningWeights.Solvers
                 }
                 else
                 {
-                    directedLast = Algorithms.TurningWeights.CustomerHelper.DirectedIdFrom(problem.Last.Value,
+                    directedLast = Algorithms.Directed.DirectedHelper.BuildDirectedId(problem.Last.Value,
                         random.Generate(4));
                 }
             }
 
             // build the route.
-            var route = new Route(customers, problem.Last);
+            var route = new Route(customers, directedLast);
 
             // calculate fitness.
             fitness = objective.Calculate(problem, route);

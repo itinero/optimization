@@ -29,9 +29,9 @@ namespace Itinero.Routing.Optimization.TSP
         /// <summary>
         /// Calculates TSP.
         /// </summary>
-        public static Result<Route> TryCalculateTSP(this RouterBase router, Profile profile, Coordinate[] locations)
+        public static Result<Route> TryCalculateTSP(this RouterBase router, Profile profile, Coordinate[] locations, int first = 0, int? last = null)
         {
-            var tspRouter = new TSPRouter(router, profile, locations, 0);
+            var tspRouter = new TSPRouter(router, profile, locations, first, last);
             tspRouter.Run();
             if (!tspRouter.HasSucceeded)
             {
@@ -43,17 +43,17 @@ namespace Itinero.Routing.Optimization.TSP
         /// <summary>
         /// Calculates TSP.
         /// </summary>
-        public static Route CalculateTSP(this RouterBase router, Profile profile, Coordinate[] locations)
+        public static Route CalculateTSP(this RouterBase router, Profile profile, Coordinate[] locations, int first = 0, int? last = null)
         {
-            return router.TryCalculateTSP(profile, locations).Value;
+            return router.TryCalculateTSP(profile, locations, first, last).Value;
         }
 
         /// <summary>
         /// Calculates TSP.
         /// </summary>
-        public static Result<Route> TryCalculateTSP(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds)
+        public static Result<Route> TryCalculateTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, int first = 0, int? last = null)
         {
-            var tspRouter = new TurningWeights.TSPRouter(router, profile, router.Resolve(profile, locations), turnPenaltyInSeconds);
+            var tspRouter = new Directed.TSPRouter(router, profile, router.Resolve(profile, locations), turnPenaltyInSeconds, first, last);
             tspRouter.Run();
             if (!tspRouter.HasSucceeded)
             {
@@ -65,9 +65,9 @@ namespace Itinero.Routing.Optimization.TSP
         /// <summary>
         /// Calculates TSP.
         /// </summary>
-        public static Route CalculateTSP(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds)
+        public static Route CalculateTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, int first = 0, int? last = null)
         {
-            return router.TryCalculateTSP(profile, locations, turnPenaltyInSeconds).Value;
+            return router.TryCalculateTSPDirected(profile, locations, turnPenaltyInSeconds, first, last).Value;
         }
     }
 }

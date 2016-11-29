@@ -17,6 +17,7 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
+using Itinero.Optimization.Algorithms.Directed;
 
 namespace Itinero.Optimization.Algorithms.NearestNeighbour
 {
@@ -96,6 +97,51 @@ namespace Itinero.Optimization.Algorithms.NearestNeighbour
             }
             return result;
         }
+        
+        /// <summary>
+        /// Calculates then n-nearest neighbours in a forward-direction only.
+        /// </summary>
+        /// <returns></returns>
+        public static NearestNeighbours ForwardDirected(float[][] weights, int n, int customer)
+        {
+            var neighbours = new Collections.SortedDictionary<float, List<int>>();
+            for (var current = 0; current < weights.Length / 2; current++)
+            {
+                if (current != customer)
+                {
+                    var weight = weights.MinWeight(customer, current);
+                    List<int> customers = null;
+                    if (!neighbours.TryGetValue(weight, out customers))
+                    {
+                        customers = new List<int>();
+                        neighbours.Add(weight, customers);
+                    }
+                    customers.Add(current);
+                }
+            }
+
+            var result = new NearestNeighbours(n);
+            foreach (var pair in neighbours)
+            {
+                foreach (var current in pair.Value)
+                {
+                    if (result.Count < n)
+                    {
+                        if (result.Max < pair.Key)
+                        {
+                            result.Max = pair.Key;
+                        }
+                        result.Add(current);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
 
         /// <summary>
         /// Calculates then n-nearest neighbours in a backward-direction only.
@@ -109,6 +155,50 @@ namespace Itinero.Optimization.Algorithms.NearestNeighbour
                 if (current != customer)
                 {
                     var weight = weights[current][customer];
+                    List<int> customers = null;
+                    if (!neighbours.TryGetValue(weight, out customers))
+                    {
+                        customers = new List<int>();
+                        neighbours.Add(weight, customers);
+                    }
+                    customers.Add(current);
+                }
+            }
+
+            var result = new NearestNeighbours(n);
+            foreach (var pair in neighbours)
+            {
+                foreach (var current in pair.Value)
+                {
+                    if (result.Count < n)
+                    {
+                        if (result.Max < pair.Key)
+                        {
+                            result.Max = pair.Key;
+                        }
+                        result.Add(current);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+        
+        /// <summary>
+        /// Calculates then n-nearest neighbours in a backward-direction only.
+        /// </summary>
+        /// <returns></returns>
+        public static NearestNeighbours BackwardDirected(float[][] weights, int n, int customer)
+        {
+            var neighbours = new Collections.SortedDictionary<float, List<int>>();
+            for (var current = 0; current < weights.Length / 2; current++)
+            {
+                if (current != customer)
+                {
+                    var weight = weights.MinWeight(current, customer);
                     List<int> customers = null;
                     if (!neighbours.TryGetValue(weight, out customers))
                     {

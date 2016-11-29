@@ -17,10 +17,10 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Optimization.Algorithms.Solvers.Objective;
-using Itinero.Optimization.Algorithms.TurningWeights;
+using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Routes;
 
-namespace Itinero.Optimization.TSP.TurningWeights
+namespace Itinero.Optimization.TSP.Directed
 {
     /// <summary>
     /// The default TSP objective.
@@ -89,21 +89,32 @@ namespace Itinero.Optimization.TSP.TurningWeights
             var weight = 0f;
             var previousFrom = int.MaxValue;
             var firstTo = int.MaxValue;
-            foreach (var p in solution)
+            foreach (var directedId in solution)
             {
-                int from, to, poi;
-                CustomerHelper.ExtractIndices(p, out to, out from, out poi);
+                // extract turns and stuff from directed id.
+                int arrivalId, departureId, id, turn;
+                DirectedHelper.ExtractAll(directedId, out arrivalId, out departureId, out id, out turn);
+
+                // add the weight from the previous customer to the current one.
                 if (previousFrom != int.MaxValue)
                 {
-                    weight = weight + weights[previousFrom][to];
+                    weight = weight + weights[previousFrom][arrivalId];
                 }
                 else
                 {
-                    firstTo = to;
+                    firstTo = arrivalId;
                 }
-                previousFrom = from;
-                weight = weight + weights[to][from];
+
+                // add turn penalty.
+                if (turn == 1 || turn == 3)
+                {
+                    weight += problem.TurnPenalty;
+                }
+
+                previousFrom = departureId;
             }
+
+            // add the weight between last and first.
             if (previousFrom != int.MaxValue)
             {
                 weight = weight + weights[previousFrom][firstTo];

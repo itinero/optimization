@@ -25,6 +25,14 @@ namespace Itinero.Optimization.Routes.TurningWeights
     /// </summary>
     public static class RouteExtensions
     {
+        ///// <summary>
+        ///// Replace 
+        ///// </summary>
+        ///// <param name="directedId1"></param>
+        ///// <param name="directedId2"></param>
+        //public static void ReplaceDirectedEdgeFrom(int directedId1, int directedId2)
+        //{
 
+        //}
     }
 }

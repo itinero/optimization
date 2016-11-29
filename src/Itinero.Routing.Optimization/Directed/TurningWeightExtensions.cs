@@ -16,35 +16,35 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using Itinero.Optimization.Algorithms.TurningWeights;
+using Itinero.Optimization.Algorithms.Directed;
 
-namespace Itinero.Routing.Optimization.TurningWeights
+namespace Itinero.Routing.Optimization.Directed
 {
     /// <summary>
     /// Contains extension methods related to turning weights and the algorithm calculating them.
     /// </summary>
-    public static class TurningWeightExtensions
+    public static class DirectedExtensions
     {
         /// <summary>
         /// Converts a directed customer to a direction location index.
         /// </summary>
-        public static int DirectedLocationIndexOf(this TurningWeightBidirectionalDykstra algorithm, int id)
+        public static int DirectedLocationIndexOf(this DirectedBidirectionalDykstra algorithm, int directedId)
         {
-            int originalId, direction;
-            CustomerHelper.ExtractIdAndDirection(id, out originalId, out direction);
-            var index = algorithm.LocationIndexOf(originalId);
-            return CustomerHelper.DirectedIdFrom(index, direction);
+            int arrivalId, departuredId, id, turn;
+            DirectedHelper.ExtractAll(directedId, out arrivalId, out departuredId, out id, out turn);
+            var index = algorithm.LocationIndexOf(id);
+            return DirectedHelper.BuildDirectedId(index, turn);
         }
 
         /// <summary>
         /// Converts a directed customer to a weight index.
         /// </summary>
-        public static int DirectedIndexOf(this TurningWeightBidirectionalDykstra algorithm, int id)
+        public static int DirectedIndexOf(this DirectedBidirectionalDykstra algorithm, int directedId)
         {
-            int originalId, direction;
-            CustomerHelper.ExtractIdAndDirection(id, out direction, out originalId);
-            var index = algorithm.IndexOf(originalId);
-            return CustomerHelper.DirectedIdFrom(index, direction);
+            int arrivalId, departuredId, id, turn;
+            DirectedHelper.ExtractAll(directedId, out arrivalId, out departuredId, out id, out turn);
+            var index = algorithm.IndexOf(id);
+            return DirectedHelper.BuildDirectedId(index, turn);
         }
     }
 }

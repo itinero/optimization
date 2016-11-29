@@ -2,9 +2,13 @@
 using Itinero.Routing.Optimization.TSP;
 using Itinero.LocalGeo;
 using System.Collections.Generic;
-using Itinero.Routing.Optimization.TurningWeights;
+using Itinero.Routing.Optimization.Directed;
 using System;
-using Itinero.Optimization.TSP.TurningWeights;
+using Itinero.Optimization.TSP.Directed;
+using Itinero.Algorithms.Weights;
+using Itinero.Algorithms;
+using NetTopologySuite.Features;
+using Itinero.Geo;
 
 namespace Itinero.Optimization.Test.Functional
 {
@@ -40,10 +44,51 @@ namespace Itinero.Optimization.Test.Functional
                 new Coordinate(51.270054481615624f, 4.799646735191345f)
             });
 
-            var route = router.CalculateTSP(car.Fastest(), locations.ToArray());
+            //var route = router.CalculateTSP(car.Fastest(), locations.ToArray(), 0, 0);
 
-            var routeWithTurnPenalty = router.CalculateTSP(car.Fastest(), locations.ToArray(), 120);
+            var routeWithTurnPenalty = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 120, 0, 0);
 
+            //var features = routerDb.GetFeaturesIn(new Coordinate(51.25691959619085f, 4.781885147094727f),
+            //    new Coordinate(51.274937566783876f, 4.8088788986206055f), true, true);
+            //var featuresJson = ToJson(features);
+
+            //// test directed calculations.
+            //var profile = car.Fastest();
+            //var weightHandler = profile.DefaultWeightHandler(router);
+            //for (var i = 0; i < locations.Count - 1; i++)
+            //{
+            //    var routerpoint1 = router.Resolve(profile, locations[i]);
+            //    var routerpoint2 = router.Resolve(profile, locations[i + 1]);
+
+            //    //var rawRoute = router.TryCalculateRaw(profile, weightHandler, routerpoint1.EdgeId + 1, routerpoint2.EdgeId + 1, null).Value;
+            //    //rawRoute.StripSource();
+            //    //rawRoute.StripTarget();
+            //    //var route = router.BuildRoute(profile, weightHandler, routerpoint1, routerpoint2, rawRoute);
+
+            //    //rawRoute = router.TryCalculateRaw(profile, weightHandler, routerpoint1.EdgeId + 1, -(routerpoint2.EdgeId + 1), null).Value;
+            //    //rawRoute.StripSource();
+            //    //rawRoute.StripTarget();
+            //    //route = router.BuildRoute(profile, weightHandler, routerpoint1, routerpoint2, rawRoute);
+
+            //    //rawRoute = router.TryCalculateRaw(profile, weightHandler, -(routerpoint1.EdgeId + 1), routerpoint2.EdgeId + 1, null).Value;
+            //    //rawRoute.StripSource();
+            //    //rawRoute.StripTarget();
+            //    //route = router.BuildRoute(profile, weightHandler, routerpoint1, routerpoint2, rawRoute);
+
+            //    var rawRoute = router.TryCalculateRaw(profile, weightHandler, -(routerpoint1.EdgeId + 1), -(routerpoint2.EdgeId + 1), null).Value;
+            //    rawRoute.StripSource();
+            //    rawRoute.StripTarget();
+            //    var route = router.BuildRoute(profile, weightHandler, routerpoint1, routerpoint2, rawRoute);
+            //}
+        }
+
+        private static string ToJson(FeatureCollection featureCollection)
+        {
+            var jsonSerializer = new NetTopologySuite.IO.GeoJsonSerializer();
+            var jsonStream = new StringWriter();
+            jsonSerializer.Serialize(jsonStream, featureCollection);
+            var json = jsonStream.ToInvariantString();
+            return json;
         }
     }
 }

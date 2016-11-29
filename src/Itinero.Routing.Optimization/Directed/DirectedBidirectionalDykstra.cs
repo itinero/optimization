@@ -24,12 +24,12 @@ using Itinero.Profiles;
 using System;
 using System.Collections.Generic;
 
-namespace Itinero.Routing.Optimization.TurningWeights
+namespace Itinero.Routing.Optimization.Directed
 {
     /// <summary>
     /// An algorithm to calculate a turn-aware weight matrix.
     /// </summary>
-    public class TurningWeightBidirectionalDykstra<T> : AlgorithmBase
+    public class DirectedBidirectionalDykstra<T> : AlgorithmBase
         where T : struct
     {
         private readonly RouterDb _routerDb;
@@ -41,7 +41,7 @@ namespace Itinero.Routing.Optimization.TurningWeights
         /// <summary>
         /// Creates a new algorithm.
         /// </summary>
-        public TurningWeightBidirectionalDykstra(RouterDb routerDb, Profile profile, WeightHandler<T> weightHandler, RouterPoint[] locations)
+        public DirectedBidirectionalDykstra(RouterDb routerDb, Profile profile, WeightHandler<T> weightHandler, RouterPoint[] locations)
             : this(routerDb, profile, weightHandler, locations, weightHandler.Infinite)
         {
 
@@ -50,7 +50,7 @@ namespace Itinero.Routing.Optimization.TurningWeights
         /// <summary>
         /// Creates a new algorithm.
         /// </summary>
-        public TurningWeightBidirectionalDykstra(RouterDb routerDb, Profile profile, WeightHandler<T> weightHandler, RouterPoint[] locations,
+        public DirectedBidirectionalDykstra(RouterDb routerDb, Profile profile, WeightHandler<T> weightHandler, RouterPoint[] locations,
             T max)
         {
             _routerDb = routerDb;
@@ -405,12 +405,12 @@ namespace Itinero.Routing.Optimization.TurningWeights
     /// <summary>
     /// An algorithm to calculate many-to-many weights based on a contraction hierarchy.
     /// </summary>
-    public sealed class TurningWeightBidirectionalDykstra : TurningWeightBidirectionalDykstra<float>
+    public sealed class DirectedBidirectionalDykstra : DirectedBidirectionalDykstra<float>
     {
         /// <summary>
         /// Creates a new algorithm.
         /// </summary>
-        public TurningWeightBidirectionalDykstra(Router router, Profile profile, RouterPoint[] locations, float max = float.MaxValue)
+        public DirectedBidirectionalDykstra(Router router, Profile profile, RouterPoint[] locations, float max = float.MaxValue)
             : base(router.Db, profile, profile.DefaultWeightHandler(router), locations, max)
         {
 

@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Optimization.Algorithms.Directed;
 using System.Collections.Generic;
 
 namespace Itinero.Optimization.Algorithms.NearestNeighbour
@@ -102,6 +103,48 @@ namespace Itinero.Optimization.Algorithms.NearestNeighbour
         }
 
         /// <summary>
+        /// Calculates then nearest neighbours using a weight smaller than or equal to a maximum in a forward-direction only.
+        /// </summary>
+        /// <returns></returns>
+        public static SortedNearestNeighbours ForwardDirected(float[][] weights, float max, int customer)
+        {
+            var neighbours = new Collections.SortedDictionary<float, List<int>>();
+            var maxFound = 0f;
+            for (var current = 0; current < weights.Length / 2; current++)
+            {
+                if (current != customer)
+                {
+                    var weight = weights.MinWeight(customer, current);
+                    if (weight <= max)
+                    {
+                        List<int> customers = null;
+                        if (!neighbours.TryGetValue(weight, out customers))
+                        {
+                            customers = new List<int>();
+                            neighbours.Add(weight, customers);
+                        }
+                        customers.Add(current);
+
+                        if (maxFound < weight)
+                        {
+                            maxFound = weight;
+                        }
+                    }
+                }
+            }
+
+            var result = new SortedNearestNeighbours(maxFound);
+            foreach (var pair in neighbours)
+            {
+                foreach (var current in pair.Value)
+                {
+                    result.Add(current);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Calculates then nearest neighbours using a weight smaller than or equal to a maximum in a backward-direction only.
         /// </summary>
         /// <returns></returns>
@@ -114,6 +157,48 @@ namespace Itinero.Optimization.Algorithms.NearestNeighbour
                 if (current != customer)
                 {
                     var weight = weights[current][customer];
+                    if (weight <= max)
+                    {
+                        List<int> customers = null;
+                        if (!neighbours.TryGetValue(weight, out customers))
+                        {
+                            customers = new List<int>();
+                            neighbours.Add(weight, customers);
+                        }
+                        customers.Add(current);
+
+                        if (maxFound <= weight)
+                        {
+                            maxFound = weight;
+                        }
+                    }
+                }
+            }
+
+            var result = new SortedNearestNeighbours(maxFound);
+            foreach (var pair in neighbours)
+            {
+                foreach (var current in pair.Value)
+                {
+                    result.Add(current);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Calculates then nearest neighbours using a weight smaller than or equal to a maximum in a backward-direction only.
+        /// </summary>
+        /// <returns></returns>
+        public static SortedNearestNeighbours BackwardDirected(float[][] weights, float max, int customer)
+        {
+            var neighbours = new Collections.SortedDictionary<float, List<int>>();
+            var maxFound = 0f;
+            for (var current = 0; current < weights.Length / 2; current++)
+            {
+                if (current != customer)
+                {
+                    var weight = weights.MinWeight(current, customer);
                     if (weight <= max)
                     {
                         List<int> customers = null;

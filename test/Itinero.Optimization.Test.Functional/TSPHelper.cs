@@ -82,7 +82,7 @@ namespace Itinero.Optimization.Test.Functional
         /// <summary>
         /// Creates a directed TSP.
         /// </summary>
-        public static TSP.TurningWeights.TSProblem CreateDirectedTSP(int first, int size, float defaultWeight, float turnPenalities)
+        public static TSP.Directed.TSProblem CreateDirectedTSP(int first, int size, float defaultWeight, float turnPenalities)
         {
             var weights = new float[size * 2][];
             for (int x = 0; x < size * 2; x++)
@@ -109,13 +109,13 @@ namespace Itinero.Optimization.Test.Functional
                     }
                 }
             }
-            return new Itinero.Optimization.TSP.TurningWeights.TSProblem(0, weights, turnPenalities);
+            return new Itinero.Optimization.TSP.Directed.TSProblem(0, weights, turnPenalities);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static TSP.TurningWeights.TSProblem CreateDirectedTSP(int first, int last, int size, float defaultWeight, float turnPenalities)
+        public static TSP.Directed.TSProblem CreateDirectedTSP(int first, int last, int size, float defaultWeight, float turnPenalities)
         {
             var weights = new float[size * 2][];
             for (int x = 0; x < size * 2; x++)
@@ -142,7 +142,7 @@ namespace Itinero.Optimization.Test.Functional
                     }
                 }
             }
-            return new TSP.TurningWeights.TSProblem(first, last, weights, turnPenalities);
+            return new TSP.Directed.TSProblem(first, last, weights, turnPenalities);
         }
     }
 }

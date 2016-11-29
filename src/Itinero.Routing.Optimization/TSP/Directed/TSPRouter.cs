@@ -19,14 +19,14 @@
 using System.Linq;
 using Itinero.Algorithms;
 using Itinero.Profiles;
-using Itinero.Routing.Optimization.TurningWeights;
-using Itinero.Optimization.TSP.TurningWeights;
-using Itinero.Optimization.Algorithms.TurningWeights;
 using Itinero.Data.Network;
 using Itinero.Algorithms.Weights;
 using System.Collections.Generic;
+using Itinero.Optimization.TSP.Directed;
+using Itinero.Routing.Optimization.Directed;
+using Itinero.Optimization.Algorithms.Directed;
 
-namespace Itinero.Routing.Optimization.TSP.TurningWeights
+namespace Itinero.Routing.Optimization.TSP.Directed
 {
     /// <summary>
     /// An algorithm to calculate u-turn aware TSP solutions.
@@ -44,20 +44,20 @@ namespace Itinero.Routing.Optimization.TSP.TurningWeights
         /// <summary>
         /// Creates a new TSP router.
         /// </summary>
-        public TSPRouter(Router router, Profile profile, RouterPoint[] locations, float turnPenalty)
+        public TSPRouter(Router router, Profile profile, RouterPoint[] locations, float turnPenalty, int first, int? last = null)
         {
             _router = router;
             _locations = locations;
             _profile = profile;
             _turnPenalty = turnPenalty;
 
-            _first = 0;
-            _last = null;
+            _first = first;
+            _last = last;
         }
 
         private Itinero.Optimization.Routes.Route _route = null;
         private Itinero.Optimization.Routes.Route _originalRoute = null;
-        private TurningWeightBidirectionalDykstra _turnWeightMatrix;
+        private DirectedBidirectionalDykstra _turnWeightMatrix;
 
         /// <summary>
         /// Executes the actual algorithm.
@@ -65,7 +65,7 @@ namespace Itinero.Routing.Optimization.TSP.TurningWeights
         protected override void DoRun()
         {
             // calculates weight matrix.
-            _turnWeightMatrix = new TurningWeightBidirectionalDykstra(_router, _profile, _locations);
+            _turnWeightMatrix = new DirectedBidirectionalDykstra(_router, _profile, _locations);
             _turnWeightMatrix.Run();
             if (!_turnWeightMatrix.HasSucceeded)
             { // algorithm has not succeeded.
@@ -151,19 +151,20 @@ namespace Itinero.Routing.Optimization.TSP.TurningWeights
             var weightHandler = _profile.DefaultWeightHandler(_router);
             foreach (var pair in _originalRoute.Pairs())
             {
-                var pairDirectedFrom = _turnWeightMatrix.SourcePaths[CustomerHelper.ExtractDirectedSource(pair.From)];
-                var pairDirectedTo = _turnWeightMatrix.TargetPaths[CustomerHelper.ExtractDirectedTarget(pair.To)];
+                // TODO: extract more info at once!
+                var pairFromDepartureId = _turnWeightMatrix.SourcePaths[DirectedHelper.ExtractDepartureId(pair.From)];
+                var pairToArrivalId = _turnWeightMatrix.TargetPaths[DirectedHelper.ExtractArrivalId(pair.To)];
 
-                var pairDirectedFromEdge = _router.Db.Network.GetEdges(pairDirectedFrom.From.Vertex).First(x => x.To == pairDirectedFrom.Vertex).IdDirected();
-                var pairDirectedToEdge = _router.Db.Network.GetEdges(pairDirectedTo.Vertex).First(x => x.To == pairDirectedTo.From.Vertex).IdDirected();
+                var pairFromEdgeId = _router.Db.Network.GetEdges(pairFromDepartureId.From.Vertex).First(x => x.To == pairFromDepartureId.Vertex).IdDirected();
+                var pairToEdgeId = _router.Db.Network.GetEdges(pairToArrivalId.Vertex).First(x => x.To == pairToArrivalId.From.Vertex).IdDirected();
 
-                var fromPoi = CustomerHelper.ExtractCustomer(pair.From);
-                var toPoi = CustomerHelper.ExtractCustomer(pair.To);
+                var pairFromId = DirectedHelper.ExtractId(pair.From);
+                var pairToId = DirectedHelper.ExtractId(pair.To);
 
-                var fromRouterPoint = _locations[fromPoi];
-                var toRouterPoint = _locations[toPoi];
+                var fromRouterPoint = _locations[pairFromId];
+                var toRouterPoint = _locations[pairToId];
 
-                var localRouteRaw = _router.TryCalculateRaw(_profile, weightHandler, pairDirectedFromEdge, pairDirectedToEdge, null).Value;
+                var localRouteRaw = _router.TryCalculateRaw(_profile, weightHandler, pairFromEdgeId, pairToEdgeId, null).Value;
                 localRouteRaw.StripSource();
                 localRouteRaw.StripTarget();
 
@@ -193,19 +194,20 @@ namespace Itinero.Routing.Optimization.TSP.TurningWeights
             var weightHandler = _profile.DefaultWeightHandler(_router);
             foreach (var pair in _originalRoute.Pairs())
             {
-                var pairDirectedFrom = _turnWeightMatrix.SourcePaths[CustomerHelper.ExtractDirectedSource(pair.From)];
-                var pairDirectedTo = _turnWeightMatrix.TargetPaths[CustomerHelper.ExtractDirectedTarget(pair.To)];
+                // TODO: extract more info at once!
+                var pairFromDepartureId = _turnWeightMatrix.SourcePaths[DirectedHelper.ExtractDepartureId(pair.From)];
+                var pairToArrivalId = _turnWeightMatrix.TargetPaths[DirectedHelper.ExtractArrivalId(pair.To)];
 
-                var pairDirectedFromEdge = _router.Db.Network.GetEdges(pairDirectedFrom.From.Vertex).First(x => x.To == pairDirectedFrom.Vertex).IdDirected();
-                var pairDirectedToEdge = _router.Db.Network.GetEdges(pairDirectedTo.Vertex).First(x => x.To == pairDirectedTo.From.Vertex).IdDirected();
+                var pairFromEdgeId = _router.Db.Network.GetEdges(pairFromDepartureId.From.Vertex).First(x => x.To == pairFromDepartureId.Vertex).IdDirected();
+                var pairToEdgeId = _router.Db.Network.GetEdges(pairToArrivalId.Vertex).First(x => x.To == pairToArrivalId.From.Vertex).IdDirected();
 
-                var fromPoi = CustomerHelper.ExtractCustomer(pair.From);
-                var toPoi = CustomerHelper.ExtractCustomer(pair.To);
+                var pairFromId = DirectedHelper.ExtractId(pair.From);
+                var pairToId = DirectedHelper.ExtractId(pair.To);
 
-                var fromRouterPoint = _locations[fromPoi];
-                var toRouterPoint = _locations[toPoi];
+                var fromRouterPoint = _locations[pairFromId];
+                var toRouterPoint = _locations[pairToId];
 
-                var localRouteRaw = _router.TryCalculateRaw(_profile, weightHandler, pairDirectedFromEdge, pairDirectedToEdge, null).Value;
+                var localRouteRaw = _router.TryCalculateRaw(_profile, weightHandler, pairFromEdgeId, pairToEdgeId, null).Value;
                 localRouteRaw.StripSource();
                 localRouteRaw.StripTarget();
 
@@ -228,19 +230,20 @@ namespace Itinero.Routing.Optimization.TSP.TurningWeights
             var weightHandler = _profile.DefaultWeightHandler(_router);
             foreach (var pair in _originalRoute.Pairs())
             {
-                var pairDirectedFrom = _turnWeightMatrix.SourcePaths[CustomerHelper.ExtractDirectedSource(pair.From)];
-                var pairDirectedTo = _turnWeightMatrix.TargetPaths[CustomerHelper.ExtractDirectedTarget(pair.To)];
+                // TODO: extract more info at once!
+                var pairFromDepartureId = _turnWeightMatrix.SourcePaths[DirectedHelper.ExtractDepartureId(pair.From)];
+                var pairToArrivalId = _turnWeightMatrix.TargetPaths[DirectedHelper.ExtractArrivalId(pair.To)];
 
-                var pairDirectedFromEdge = _router.Db.Network.GetEdges(pairDirectedFrom.From.Vertex).First(x => x.To == pairDirectedFrom.Vertex).IdDirected();
-                var pairDirectedToEdge = _router.Db.Network.GetEdges(pairDirectedTo.Vertex).First(x => x.To == pairDirectedTo.From.Vertex).IdDirected();
+                var pairFromEdgeId = _router.Db.Network.GetEdges(pairFromDepartureId.From.Vertex).First(x => x.To == pairFromDepartureId.Vertex).IdDirected();
+                var pairToEdgeId = _router.Db.Network.GetEdges(pairToArrivalId.Vertex).First(x => x.To == pairToArrivalId.From.Vertex).IdDirected();
 
-                var fromPoi = CustomerHelper.ExtractCustomer(pair.From);
-                var toPoi = CustomerHelper.ExtractCustomer(pair.To);
+                var pairFromId = DirectedHelper.ExtractId(pair.From);
+                var pairToId = DirectedHelper.ExtractId(pair.To);
 
-                var fromRouterPoint = _locations[fromPoi];
-                var toRouterPoint = _locations[toPoi];
+                var fromRouterPoint = _locations[pairFromId];
+                var toRouterPoint = _locations[pairToId];
 
-                var localRouteRaw = _router.TryCalculateRaw(_profile, weightHandler, pairDirectedFromEdge, pairDirectedToEdge, null).Value;
+                var localRouteRaw = _router.TryCalculateRaw(_profile, weightHandler, pairFromEdgeId, pairToEdgeId, null).Value;
                 localRouteRaw.StripSource();
                 localRouteRaw.StripTarget();
 
@@ -249,7 +252,7 @@ namespace Itinero.Routing.Optimization.TSP.TurningWeights
                 {
                     throw new Itinero.Exceptions.RouteNotFoundException(
                         string.Format("Part of the TSP-route was not found: {0}[{1}] -> {2}[{3}] - {4}.",
-                            pair.From, fromPoi, pair.To, toPoi, localRoute.ErrorMessage));
+                            pair.From, pairFromId, pair.To, pairToId, localRoute.ErrorMessage));
                 }
                 routes.Add(localRoute.Value);
             }
