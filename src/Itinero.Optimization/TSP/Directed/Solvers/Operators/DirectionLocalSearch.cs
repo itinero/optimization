@@ -113,7 +113,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
                 else
                 { // three options left, excluding the current one of 4.
                     weightBefore += weights[currentDepartureId][nextArrivalId];
-                    weightBefore += objective.Penalty(problem, currentTurn);
+                    weightBefore += problem.TurnPenalties[currentTurn];
 
                     currentArrivalId = currentArrivalId - (currentArrivalId % 2);
                     currentDepartureId = currentDepartureId - (currentDepartureId % 2);
@@ -128,7 +128,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
                         DirectedHelper.ExtractOffset(i, out arrivalOffset, out departureOffset);
                         var newWeightAfter = weights[previousDepartureId][currentArrivalId + arrivalOffset]
                             + weights[currentDepartureId + departureOffset][nextArrivalId]
-                            + objective.Penalty(problem, i);
+                            + problem.TurnPenalties[i];
                         if (newWeightAfter < weightAfter &&
                             newWeightAfter < weightBefore)
                         {

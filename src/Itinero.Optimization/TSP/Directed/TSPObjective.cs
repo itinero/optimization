@@ -106,7 +106,7 @@ namespace Itinero.Optimization.TSP.Directed
                 }
 
                 // add turn penalty.
-                weight += this.Penalty(problem, turn);
+                weight += problem.TurnPenalties[turn];
 
                 previousFrom = departureId;
             }
@@ -117,18 +117,6 @@ namespace Itinero.Optimization.TSP.Directed
                 weight = weight + weights[previousFrom][firstTo];
             }
             return weight;
-        }
-
-        /// <summary>
-        /// Returns a penalty if suitable.
-        /// </summary>
-        public float Penalty(TSProblem problem, int turn)
-        {
-            if (turn == 1 || turn == 2)
-            {
-                return problem.TurnPenalty;
-            }
-            return 0;
         }
 
         /// <summary>

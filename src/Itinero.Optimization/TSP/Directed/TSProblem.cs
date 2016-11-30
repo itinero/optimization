@@ -45,7 +45,12 @@ namespace Itinero.Optimization.TSP.Directed
             this.First = first;
             this.Last = null;
             this.Weights = weights;
-            this.TurnPenalty = turnPenalty;
+            this.TurnPenalties = new float[] {
+                0,
+                turnPenalty,
+                turnPenalty,
+                0
+            };
 
             for (var x = 0; x < this.Weights.Length; x++)
             {
@@ -62,7 +67,12 @@ namespace Itinero.Optimization.TSP.Directed
             this.First = first;
             this.Last = last;
             this.Weights = weights;
-            this.TurnPenalty = turnPenalty;
+            this.TurnPenalties = new float[] {
+                0,
+                turnPenalty,
+                turnPenalty,
+                0
+            };
 
             this.Weights[first * 2 + 0][last * 2 + 0] = 0;
             this.Weights[first * 2 + 1][last * 2 + 0] = 0;
@@ -86,9 +96,13 @@ namespace Itinero.Optimization.TSP.Directed
         public int? Last { get; set; }
 
         /// <summary>
-        /// Gets or sets the turn penalty.
+        /// Gets or sets the turn penalties per type of turn.
+        /// 0: forward, forward.
+        /// 1: forward, backward.
+        /// 2: backward, forward.
+        /// 3: backward, backward.
         /// </summary>
-        public float TurnPenalty { get; set; }
+        public float[] TurnPenalties { get; set; }
 
         /// <summary>
         /// Solves this TSP using a default solver.
@@ -97,7 +111,7 @@ namespace Itinero.Optimization.TSP.Directed
         public Route Solve()
         {
             var solver = new IterativeSolver<float, TSProblem, TSPObjective, Route, float>(
-                new Solvers.HillClimbing3OptSolver(), 5, new DirectionLocalSearch());
+                new Solvers.HillClimbing3OptSolver(), 100, new CheapestInsertionOperator(2), new DirectionLocalSearch());
             return this.Solve(solver);
         }
 

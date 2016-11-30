@@ -83,6 +83,31 @@ namespace Itinero.Optimization.Algorithms.Directed
         }
 
         /// <summary>
+        /// Extracts the turn.
+        /// </summary>
+        public static int ExtractTurn(int directedId)
+        {
+            return directedId % 4;
+        }
+
+        /// <summary>
+        /// Extracts the turn and id.
+        /// </summary>
+        public static int ExtractId(int directedId, out int turn)
+        {
+            turn = (directedId % 4);
+            return (directedId - turn) / 4;
+        }
+
+        /// <summary>
+        /// Builds a turn from an arrival and departure offset.
+        /// </summary>
+        public static int BuildTurn(int arrivalOffset, int departureOffset)
+        {
+            return arrivalOffset * 2 + departureOffset;
+        }
+
+        /// <summary>
         /// Extracts the arrival and departure offsets.
         /// </summary>
         public static void ExtractOffset(int turn, out int arrivalOffset, out int departureoffset)
@@ -117,7 +142,31 @@ namespace Itinero.Optimization.Algorithms.Directed
             arrivalId = idx + arrivalOffset;
             departureId = idx + departureOffset;
         }
-        
+
+        /// <summary>
+        /// Updates the departure offset.
+        /// </summary>
+        public static int UpdateDepartureOffset(int directedId, int departureOffset)
+        {
+            int turn;
+            var id = DirectedHelper.ExtractId(directedId, out turn);
+            int arrivalOffset, oldDepartureOffset;
+            DirectedHelper.ExtractOffset(turn, out arrivalOffset, out oldDepartureOffset);
+            return DirectedHelper.BuildDirectedId(id, DirectedHelper.BuildTurn(arrivalOffset, departureOffset));
+        }
+
+        /// <summary>
+        /// Updates the arrival offset.
+        /// </summary>
+        public static int UpdateArrivalOffset(int directedId, int arrivalOffset)
+        {
+            int turn;
+            var id = DirectedHelper.ExtractId(directedId, out turn);
+            int oldArrivalOffset, oldDepartureOffset;
+            DirectedHelper.ExtractOffset(turn, out oldArrivalOffset, out oldDepartureOffset);
+            return DirectedHelper.BuildDirectedId(id, DirectedHelper.BuildTurn(arrivalOffset, oldDepartureOffset));
+        }
+
         /// <summary>
         /// Gets the minimum weight from customer1 -> customer2.
         /// </summary>
@@ -145,6 +194,47 @@ namespace Itinero.Optimization.Algorithms.Directed
                 weight = weight11;
             }
             return weight11;
+        }
+
+        /// <summary>
+        /// Gets the minimum weight from customer1 -> customer3 while inserting customer3 and the best direction and turns to use.
+        /// </summary>
+        public static float CheapestInsert(this float[][] weights, float[] penalties, int id1, int id2, int id3,
+            out int departureOffset1, out int arrivalOffset3, out int turn2)
+        {
+            var best = float.MaxValue;
+            var base1 = id1 * 2;
+            var base2 = id2 * 2;
+            var base3 = id3 * 2;
+
+            departureOffset1 = Constants.NOT_SET;
+            arrivalOffset3 = Constants.NOT_SET;
+            turn2 = Constants.NOT_SET;
+            for (var do1 = 0; do1 < 2; do1++)
+            {
+                var d1 = base1 + do1;
+                for(var ao3 = 0; ao3 < 2; ao3++)
+                {
+                    var a3 = base3 + ao3;
+                    for (var t = 0; t < 3; t++)
+                    {
+                        int ao2, do2;
+                        DirectedHelper.ExtractOffset(t, out ao2, out do2);
+
+                        var weight = weights[d1][base2 + ao2] +
+                            weights[base2 + do2][a3] +
+                            penalties[t];
+                        if (weight < best)
+                        {
+                            best = weight;
+                            departureOffset1 = do1;
+                            arrivalOffset3 = ao3;
+                            turn2 = t;
+                        }
+                    }
+                }
+            }
+            return best;
         }
 
         /// <summary>
