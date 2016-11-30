@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Optimization.Algorithms.Directed;
 using System;
 
 namespace Itinero.Optimization.Routes.TurningWeights
@@ -25,14 +26,32 @@ namespace Itinero.Optimization.Routes.TurningWeights
     /// </summary>
     public static class RouteExtensions
     {
-        ///// <summary>
-        ///// Replace 
-        ///// </summary>
-        ///// <param name="directedId1"></param>
-        ///// <param name="directedId2"></param>
-        //public static void ReplaceDirectedEdgeFrom(int directedId1, int directedId2)
-        //{
-
-        //}
+        /// <summary>
+        /// Gets the directedId in the route for the given id. 
+        /// </summary>
+        public static int GetDirectedId(this Route route, int id)
+        {
+            var directed = DirectedHelper.BuildDirectedId(id, 0);
+            if (route.Contains(directed))
+            {
+                return directed;
+            }
+            directed = DirectedHelper.BuildDirectedId(id, 1);
+            if (route.Contains(directed))
+            {
+                return directed;
+            }
+            directed = DirectedHelper.BuildDirectedId(id, 2);
+            if (route.Contains(directed))
+            {
+                return directed;
+            }
+            directed = DirectedHelper.BuildDirectedId(id, 3);
+            if (route.Contains(directed))
+            {
+                return directed;
+            }
+            throw new ArgumentOutOfRangeException("id", string.Format("Customer id {0} not found in route.", id));
+        }
     }
 }

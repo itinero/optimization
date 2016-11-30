@@ -17,7 +17,9 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Optimization.Algorithms.NearestNeighbour;
+using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Routes;
+using Itinero.Optimization.TSP.Directed.Solvers.Operators;
 using System.Collections.Generic;
 
 namespace Itinero.Optimization.TSP.Directed
@@ -94,7 +96,9 @@ namespace Itinero.Optimization.TSP.Directed
         /// <returns></returns>
         public Route Solve()
         {
-            return this.Solve(new Solvers.HillClimbing3OptSolver());
+            var solver = new IterativeSolver<float, TSProblem, TSPObjective, Route, float>(
+                new Solvers.HillClimbing3OptSolver(), 5, new DirectionLocalSearch());
+            return this.Solve(solver);
         }
 
         /// <summary>

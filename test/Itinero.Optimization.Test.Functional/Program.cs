@@ -8,7 +8,7 @@ using Itinero.Optimization.TSP.Directed;
 using Itinero.Algorithms.Weights;
 using Itinero.Algorithms;
 using NetTopologySuite.Features;
-using Itinero.Geo;
+using Itinero.Profiles;
 
 namespace Itinero.Optimization.Test.Functional
 {
@@ -21,7 +21,7 @@ namespace Itinero.Optimization.Test.Functional
             {
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", origin, level, message));
             };
-
+            
             var routerDb = RouterDb.Deserialize(File.OpenRead(@"C:\work\data\routing\belgium.c.cf-e.routerdb"));
             var car = routerDb.GetSupportedVehicle("car");
             var router = new Router(routerDb);
@@ -46,7 +46,11 @@ namespace Itinero.Optimization.Test.Functional
 
             //var route = router.CalculateTSP(car.Fastest(), locations.ToArray(), 0, 0);
 
-            var routeWithTurnPenalty = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 120, 0, 0);
+            var routeWithTurnPenalty000 = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 0, 0, 0);
+            var routeWithTurnPenalty020 = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 20, 0, 0);
+            var routeWithTurnPenalty040 = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 40, 0, 0);
+            var routeWithTurnPenalty060 = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 60, 0, 0);
+            var routeWithTurnPenalty100 = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 100, 0, 0);
 
             //var features = routerDb.GetFeaturesIn(new Coordinate(51.25691959619085f, 4.781885147094727f),
             //    new Coordinate(51.274937566783876f, 4.8088788986206055f), true, true);

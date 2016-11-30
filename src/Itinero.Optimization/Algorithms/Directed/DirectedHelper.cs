@@ -81,6 +81,28 @@ namespace Itinero.Optimization.Algorithms.Directed
         {
             return (directedId - (directedId % 4)) / 4;
         }
+
+        /// <summary>
+        /// Extracts the arrival and departure offsets.
+        /// </summary>
+        public static void ExtractOffset(int turn, out int arrivalOffset, out int departureoffset)
+        {
+            arrivalOffset = 0;
+            departureoffset = 0;
+            switch (turn)
+            {
+                case 1:
+                    departureoffset = 1;
+                    return;
+                case 2:
+                    arrivalOffset = 1;
+                    return;
+                case 3:
+                    arrivalOffset = 1;
+                    departureoffset = 1;
+                    return;
+            }
+        }
         
         /// <summary>
         /// Extracts the arrivalId, departureId, id, and turn.
@@ -90,29 +112,10 @@ namespace Itinero.Optimization.Algorithms.Directed
             turn = directedId % 4;
             var idx = (directedId - turn) / 2;
             id = idx / 2;
-            switch (turn)
-            {
-                case 0:
-                    arrivalId = idx + 0;
-                    departureId = idx + 0;
-                    return;
-                case 1:
-                    arrivalId = idx + 0;
-                    departureId = idx + 1;
-                    return;
-                case 2:
-                    arrivalId = idx + 1;
-                    departureId = idx + 0;
-                    return;
-                case 3:
-                    arrivalId = idx + 1;
-                    departureId = idx + 1;
-                    return;
-            }
-            arrivalId = int.MaxValue;
-            departureId = int.MaxValue;
-            id = int.MaxValue;
-            turn = int.MaxValue;
+            int arrivalOffset, departureOffset;
+            ExtractOffset(turn, out arrivalOffset, out departureOffset);
+            arrivalId = idx + arrivalOffset;
+            departureId = idx + departureOffset;
         }
         
         /// <summary>

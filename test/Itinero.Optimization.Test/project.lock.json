@@ -348,9 +348,6 @@
       "Itinero.Optimization/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5",
-        "dependencies": {
-          "Itinero": "0.31.5-rc1"
-        },
         "compile": {
           "net45/Itinero.Optimization.dll": {}
         },

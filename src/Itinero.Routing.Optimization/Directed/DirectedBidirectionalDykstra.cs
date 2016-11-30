@@ -102,10 +102,13 @@ namespace Itinero.Routing.Optimization.Directed
                     this.ErrorMessage = string.Format("Source at {0} could not be resolved properly.", i);
                     return;
                 }
-                for (var p = 0; p < paths.Length; p++)
+                if (paths.Length != 2)
                 {
-                    _sourcePaths[i * 2 + p] = paths[p];
+                    this.ErrorMessage = "There should be exactly two paths leaving every location.";
+                    return;
                 }
+                _sourcePaths[i * 2 + 0] = paths[0];
+                _sourcePaths[i * 2 + 1] = paths[1];
             }
 
             // convert targets into directed paths.
@@ -118,9 +121,22 @@ namespace Itinero.Routing.Optimization.Directed
                     this.ErrorMessage = string.Format("Target at {0} could not be resolved properly.", i);
                     return;
                 }
-                for (var p = 0; p < paths.Length; p++)
+                if (paths.Length != 2)
                 {
-                    _targetPaths[i * 2 + p] = paths[p];
+                    this.ErrorMessage = "There should be exactly two paths leaving every location.";
+                    return;
+                }
+
+                // make sure paths are the opposive of the sources.
+                if (paths[0].Edge == _sourcePaths[i * 2 + 0].Edge)
+                { // switchs.
+                    _targetPaths[i * 2 + 1] = paths[0];
+                    _targetPaths[i * 2 + 0] = paths[1];
+                }
+                else
+                { // keep.
+                    _targetPaths[i * 2 + 0] = paths[0];
+                    _targetPaths[i * 2 + 1] = paths[1];
                 }
             }
 
