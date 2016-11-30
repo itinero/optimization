@@ -20,8 +20,6 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Itinero.Routing.Optimizatio
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Itinero.Optimization.Test", "test\Itinero.Optimization.Test\Itinero.Optimization.Test.xproj", "{AF0B251E-C7FE-4C3A-B84A-DBFC5C82CD92}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Itinero.Geo", "..\routing\src\Itinero.Geo\Itinero.Geo.xproj", "{596D3128-D18F-49F0-A7AD-2D94362819B8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,10 +42,6 @@ Global
 		{AF0B251E-C7FE-4C3A-B84A-DBFC5C82CD92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF0B251E-C7FE-4C3A-B84A-DBFC5C82CD92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF0B251E-C7FE-4C3A-B84A-DBFC5C82CD92}.Release|Any CPU.Build.0 = Release|Any CPU
-		{596D3128-D18F-49F0-A7AD-2D94362819B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{596D3128-D18F-49F0-A7AD-2D94362819B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{596D3128-D18F-49F0-A7AD-2D94362819B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{596D3128-D18F-49F0-A7AD-2D94362819B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

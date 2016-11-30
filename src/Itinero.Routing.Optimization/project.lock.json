@@ -3,6 +3,21 @@
   "version": 2,
   "targets": {
     ".NETFramework,Version=v4.0": {
+      "Itinero/0.31.5-rc1": {
+        "type": "package",
+        "dependencies": {
+          "Reminiscence": "1.0.5"
+        },
+        "frameworkAssemblies": [
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net40/Itinero.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Itinero.dll": {}
+        }
+      },
       "Reminiscence/1.0.5": {
         "type": "package",
         "compile": {
@@ -12,25 +27,12 @@
           "lib/net40/Reminiscence.dll": {}
         }
       },
-      "Itinero/1.0.0": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.0",
-        "dependencies": {
-          "Reminiscence": "1.0.5"
-        },
-        "frameworkAssemblies": [
-          "System.Xml"
-        ],
-        "compile": {
-          "net40/Itinero.dll": {}
-        },
-        "runtime": {
-          "net40/Itinero.dll": {}
-        }
-      },
       "Itinero.Optimization/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.0",
+        "dependencies": {
+          "Itinero": "0.31.5-rc1"
+        },
         "compile": {
           "net40/Itinero.Optimization.dll": {}
         },
@@ -40,6 +42,21 @@
       }
     },
     ".NETFramework,Version=v4.5": {
+      "Itinero/0.31.5-rc1": {
+        "type": "package",
+        "dependencies": {
+          "Reminiscence": "1.0.5"
+        },
+        "frameworkAssemblies": [
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net45/Itinero.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Itinero.dll": {}
+        }
+      },
       "Reminiscence/1.0.5": {
         "type": "package",
         "compile": {
@@ -49,25 +66,12 @@
           "lib/net45/Reminiscence.dll": {}
         }
       },
-      "Itinero/1.0.0": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.5",
-        "dependencies": {
-          "Reminiscence": "1.0.5"
-        },
-        "frameworkAssemblies": [
-          "System.Xml"
-        ],
-        "compile": {
-          "net45/Itinero.dll": {}
-        },
-        "runtime": {
-          "net45/Itinero.dll": {}
-        }
-      },
       "Itinero.Optimization/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5",
+        "dependencies": {
+          "Itinero": "0.31.5-rc1"
+        },
         "compile": {
           "net45/Itinero.Optimization.dll": {}
         },
@@ -77,18 +81,8 @@
       }
     },
     ".NETPortable,Version=v4.0,Profile=Profile147": {
-      "Reminiscence/1.0.5": {
+      "Itinero/0.31.5-rc1": {
         "type": "package",
-        "compile": {
-          "lib/portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10/Reminiscence.dll": {}
-        },
-        "runtime": {
-          "lib/portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10/Reminiscence.dll": {}
-        }
-      },
-      "Itinero/1.0.0": {
-        "type": "project",
-        "framework": ".NETPortable,Version=v4.0,Profile=Profile147",
         "dependencies": {
           "Reminiscence": "1.0.5"
         },
@@ -98,15 +92,27 @@
           "System.Xml.Serialization"
         ],
         "compile": {
-          "portable40-net403+sl5+win8+wp8/Itinero.dll": {}
+          "lib/portable-net40+sl4+win8+wp7/Itinero.dll": {}
         },
         "runtime": {
-          "portable40-net403+sl5+win8+wp8/Itinero.dll": {}
+          "lib/portable-net40+sl4+win8+wp7/Itinero.dll": {}
+        }
+      },
+      "Reminiscence/1.0.5": {
+        "type": "package",
+        "compile": {
+          "lib/portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10/Reminiscence.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10/Reminiscence.dll": {}
         }
       },
       "Itinero.Optimization/1.0.0": {
         "type": "project",
         "framework": ".NETPortable,Version=v4.0,Profile=Profile147",
+        "dependencies": {
+          "Itinero": "0.31.5-rc1"
+        },
         "frameworkAssemblies": [
           "System",
           "System.Core",
@@ -121,6 +127,22 @@
       }
     },
     ".NETStandard,Version=v1.3": {
+      "Itinero/0.31.5-rc1": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.0",
+          "Reminiscence": "1.0.5",
+          "System.Reflection": "4.1.0",
+          "System.Reflection.TypeExtensions": "4.1.0",
+          "System.Xml.XmlSerializer": "4.0.11"
+        },
+        "compile": {
+          "lib/netstandard1.3/Itinero.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/Itinero.dll": {}
+        }
+      },
       "Microsoft.NETCore.Platforms/1.1.0": {
         "type": "package",
         "compile": {
@@ -1005,27 +1027,11 @@
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
       },
-      "Itinero/1.0.0": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v1.3",
-        "dependencies": {
-          "NETStandard.Library": "1.6.0",
-          "Reminiscence": "1.0.5",
-          "System.Reflection": "4.1.0",
-          "System.Reflection.TypeExtensions": "4.1.0",
-          "System.Xml.XmlSerializer": "4.0.11"
-        },
-        "compile": {
-          "netstandard1.3/Itinero.dll": {}
-        },
-        "runtime": {
-          "netstandard1.3/Itinero.dll": {}
-        }
-      },
       "Itinero.Optimization/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.3",
         "dependencies": {
+          "Itinero": "0.31.5-rc1",
           "NETStandard.Library": "1.6.0",
           "System.Diagnostics.Debug": "4.3.0",
           "System.Runtime": "4.3.0"
@@ -1040,6 +1046,19 @@
     }
   },
   "libraries": {
+    "Itinero/0.31.5-rc1": {
+      "sha512": "dZU55Qw8ZL/CDRTzjVLzLaalF7ZoKV/ibZU8C1LrvFkrFYliKV999/QLOAfsBVwajgMXKOelfEC1sRT17AEffQ==",
+      "type": "package",
+      "path": "Itinero/0.31.5-rc1",
+      "files": [
+        "Itinero.0.31.5-rc1.nupkg.sha512",
+        "Itinero.nuspec",
+        "lib/net40/Itinero.dll",
+        "lib/net45/Itinero.dll",
+        "lib/netstandard1.3/Itinero.dll",
+        "lib/portable-net40+sl4+win8+wp7/Itinero.dll"
+      ]
+    },
     "Microsoft.NETCore.Platforms/1.1.0": {
       "sha512": "YpbfLFhQ9U87Q2OlCef9rnduk1ZP6AYbq7Asya2Xg/R4pUJGtCbbpVWl2muYACXBILz9KCH22Ntp2cvgeOt5cQ==",
       "type": "package",
@@ -3951,11 +3970,6 @@
         "runtimes/aot/lib/netcore50/System.Xml.XmlSerializer.dll"
       ]
     },
-    "Itinero/1.0.0": {
-      "type": "project",
-      "path": "../../../routing/src/Itinero/project.json",
-      "msbuildProject": "../../../routing/src/Itinero/Itinero.xproj"
-    },
     "Itinero.Optimization/1.0.0": {
       "type": "project",
       "path": "../Itinero.Optimization/project.json",
@@ -3964,7 +3978,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Itinero >= 0.31.4-rc1",
+      "Itinero >= 0.31.5-rc1",
       "Itinero.Optimization >= 1.0.0-*"
     ],
     ".NETFramework,Version=v4.0": [],

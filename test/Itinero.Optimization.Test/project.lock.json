@@ -18,6 +18,21 @@
           "lib/net451/dotnet-test-nunit.exe": {}
         }
       },
+      "Itinero/0.31.5-rc1": {
+        "type": "package",
+        "dependencies": {
+          "Reminiscence": "1.0.5"
+        },
+        "frameworkAssemblies": [
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net45/Itinero.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Itinero.dll": {}
+        }
+      },
       "Microsoft.DiaSymReader/1.0.8": {
         "type": "package",
         "dependencies": {
@@ -330,25 +345,12 @@
           "lib/net45/_._": {}
         }
       },
-      "Itinero/1.0.0": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.5",
-        "dependencies": {
-          "Reminiscence": "1.0.5"
-        },
-        "frameworkAssemblies": [
-          "System.Xml"
-        ],
-        "compile": {
-          "net45/Itinero.dll": {}
-        },
-        "runtime": {
-          "net45/Itinero.dll": {}
-        }
-      },
       "Itinero.Optimization/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5",
+        "dependencies": {
+          "Itinero": "0.31.5-rc1"
+        },
         "compile": {
           "net45/Itinero.Optimization.dll": {}
         },
@@ -360,7 +362,7 @@
         "type": "project",
         "framework": ".NETFramework,Version=v4.5",
         "dependencies": {
-          "Itinero": "0.31.4-rc1",
+          "Itinero": "0.31.5-rc1",
           "Itinero.Optimization": "1.0.0"
         },
         "compile": {
@@ -383,6 +385,19 @@
         "lib/net451/dotnet-test-nunit.exe",
         "lib/netcoreapp1.0/dotnet-test-nunit.dll",
         "lib/netcoreapp1.0/dotnet-test-nunit.runtimeconfig.json"
+      ]
+    },
+    "Itinero/0.31.5-rc1": {
+      "sha512": "dZU55Qw8ZL/CDRTzjVLzLaalF7ZoKV/ibZU8C1LrvFkrFYliKV999/QLOAfsBVwajgMXKOelfEC1sRT17AEffQ==",
+      "type": "package",
+      "path": "Itinero/0.31.5-rc1",
+      "files": [
+        "Itinero.0.31.5-rc1.nupkg.sha512",
+        "Itinero.nuspec",
+        "lib/net40/Itinero.dll",
+        "lib/net45/Itinero.dll",
+        "lib/netstandard1.3/Itinero.dll",
+        "lib/portable-net40+sl4+win8+wp7/Itinero.dll"
       ]
     },
     "Microsoft.DiaSymReader/1.0.8": {
@@ -914,11 +929,6 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "Itinero/1.0.0": {
-      "type": "project",
-      "path": "../../../routing/src/Itinero/project.json",
-      "msbuildProject": "../../../routing/src/Itinero/Itinero.xproj"
-    },
     "Itinero.Optimization/1.0.0": {
       "type": "project",
       "path": "../../src/Itinero.Optimization/project.json",
@@ -932,7 +942,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Itinero >= 0.31.2-rc1",
+      "Itinero >= 0.31.5-rc1",
       "Itinero.Optimization >= 1.0.0-*",
       "Itinero.Routing.Optimization >= 1.0.0-*",
       "NUnit >= 3.4.1",

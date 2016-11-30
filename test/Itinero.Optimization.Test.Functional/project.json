@@ -5,8 +5,7 @@
   },
 
   "dependencies": {
-    "Itinero": "1.0.0-*",
-    "Itinero.Geo": "0.31.4-rc1",
+    "Itinero": "0.31.5-rc1",
     "Itinero.Optimization": "1.0.0-*",
     "Itinero.Routing.Optimization": "1.0.0-*",
     "NetTopologySuite.IO.GeoJSON": "1.14.0",
