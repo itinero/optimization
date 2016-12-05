@@ -27,6 +27,20 @@
           "lib/net45/Itinero.dll": {}
         }
       },
+      "Itinero.Geo/0.31.9-rc1": {
+        "type": "package",
+        "dependencies": {
+          "GeoAPI": "[1.7.4, 2.0.0)",
+          "Itinero": "0.31.9-rc1",
+          "NetTopologySuite": "[1.14.0, 2.0.0)"
+        },
+        "compile": {
+          "lib/net45/Itinero.Geo.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Itinero.Geo.dll": {}
+        }
+      },
       "NetTopologySuite/1.14.0": {
         "type": "package",
         "dependencies": {
@@ -140,6 +154,18 @@
         "lib/portable-net40+sl4+win8+wp7/Itinero.dll"
       ]
     },
+    "Itinero.Geo/0.31.9-rc1": {
+      "sha512": "6Dti+wUmuHq4vu2YdVcThSQUOzR9NS4wl2A42ovtInT0bd42Yy3xmQrr+iK/M4WeLjBPZtvOq9SW7cbyg/5JUA==",
+      "type": "package",
+      "path": "Itinero.Geo/0.31.9-rc1",
+      "files": [
+        "Itinero.Geo.0.31.9-rc1.nupkg.sha512",
+        "Itinero.Geo.nuspec",
+        "lib/net40/Itinero.Geo.dll",
+        "lib/net45/Itinero.Geo.dll",
+        "lib/portable-net40+sl4+win8+wp7/Itinero.Geo.dll"
+      ]
+    },
     "NetTopologySuite/1.14.0": {
       "sha512": "WZxN1WPRELed8vrTFZXc1lxRuLB29hJMx7W6FiisgZc27XGV+1Q9tdwb9ESAimc1i1sFfG7jQqVW9v090wtchQ==",
       "type": "package",
@@ -246,6 +272,7 @@
   "projectFileDependencyGroups": {
     "": [
       "Itinero >= 0.31.5-rc1",
+      "Itinero.Geo >= 0.31.9-rc1",
       "Itinero.Optimization >= 1.0.0-*",
       "Itinero.Routing.Optimization >= 1.0.0-*",
       "NetTopologySuite.IO.GeoJSON >= 1.14.0",

@@ -17,6 +17,7 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Algorithms;
+using Itinero.Algorithms.Contracted.EdgeBased;
 using Itinero.Algorithms.Weights;
 using Itinero.Data.Contracted;
 using Itinero.Graphs.Directed;
@@ -151,14 +152,33 @@ namespace Itinero.Routing.Optimization.Directed
                     var target = _targetPaths[j];
                     _weights[i][j] = _weightHandler.Infinite;
 
-                    //if (target.EdgeId == source.EdgeId)
-                    //{
-                    //    var path = source.EdgePathTo(_routerDb, _weightHandler, target);
-                    //    if (path != null)
-                    //    {
-                    //        _weights[i][j] = path.Weight;
-                    //    }
-                    //}
+                    if (target.Edge == -source.Edge)
+                    {
+                        var s = i / 2;
+                        var t = j / 2;
+                        var sourcePoint = _locations[s];
+                        var targetPoint = _locations[t];
+
+                        EdgePath<T> newPath = null;
+                        if (source.Edge > 0 &&
+                            sourcePoint.Offset <= targetPoint.Offset)
+                        {
+                            newPath = sourcePoint.EdgePathTo(_routerDb, _weightHandler, targetPoint);
+                        }
+                        else if (source.Edge < 0 &&
+                            sourcePoint.Offset >= targetPoint.Offset)
+                        {
+                            newPath = sourcePoint.EdgePathTo(_routerDb, _weightHandler, targetPoint);
+                        }
+
+                        if (newPath != null)
+                        {
+                            if (_weightHandler.IsLargerThan(_weights[i][j], newPath.Weight))
+                            {
+                                _weights[i][j] = newPath.Weight;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -331,6 +351,8 @@ namespace Itinero.Routing.Optimization.Directed
             Dictionary<int, LinkedEdgePath<T>> bucket;
             if (_buckets.TryGetValue(vertex, out bucket))
             {
+                var edgeEnumerator = _graph.GetEdgeEnumerator();
+
                 var originalBackwardVisit = backwardVisit;
                 foreach (var pair in bucket)
                 {
@@ -353,11 +375,26 @@ namespace Itinero.Routing.Optimization.Directed
                             if (_weightHandler.IsSmallerThan(totalCurrentWeight, best))
                             { // potentially a weight improvement.
                                 var allowed = true;
-                                //if (restrictions != null)
+
+                                // check u-turn.
+                                var sequence2Forward = backwardCurrent.GetSequence2(edgeEnumerator);
+                                var sequence2Current = forwardCurrent.GetSequence2(edgeEnumerator);
+                                if (sequence2Current != null && sequence2Current.Length > 0 &&
+                                    sequence2Forward != null && sequence2Forward.Length > 0)
+                                {
+                                    if (sequence2Current[sequence2Current.Length - 1] ==
+                                        sequence2Forward[sequence2Forward.Length - 1])
+                                    {
+                                        allowed = false;
+                                    }
+                                }
+
+                                //// check restrictions.
+                                //if (restrictions != null && allowed)
                                 //{
                                 //    allowed = false;
                                 //    var sequence = new List<uint>(
-                                //        current.GetSequence2(edgeEnumerator));
+                                //        forwardCurrent.GetSequence2(edgeEnumerator));
                                 //    sequence.Reverse();
                                 //    sequence.Add(current.Vertex);
                                 //    var s1 = backwardPath.Path.GetSequence2(edgeEnumerator);
