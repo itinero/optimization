@@ -45,15 +45,34 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
         {
             var bestCost = float.MaxValue;
             location = new Pair(int.MaxValue, int.MaxValue);
-            foreach (var pair in route.Pairs())
+
+            if (route.Count == 1)
             {
-                var cost = weights[pair.From][customer] +
-                    weights[customer][pair.To] -
-                    weights[pair.From][pair.To];
-                if (cost < bestCost)
+                var first = route.First;
+                if (route.IsClosed())
                 {
-                    bestCost = cost;
-                    location = pair;
+                    bestCost = weights[first][customer] +
+                            weights[customer][first];
+                    location = new Pair(first, first);
+                }
+                else
+                {
+                    bestCost = weights[first][customer];
+                    location = new Pair(first, int.MaxValue);
+                }
+            }
+            else
+            {
+                foreach (var pair in route.Pairs())
+                {
+                    var cost = weights[pair.From][customer] +
+                        weights[customer][pair.To] -
+                        weights[pair.From][pair.To];
+                    if (cost < bestCost)
+                    {
+                        bestCost = cost;
+                        location = pair;
+                    }
                 }
             }
             return bestCost;

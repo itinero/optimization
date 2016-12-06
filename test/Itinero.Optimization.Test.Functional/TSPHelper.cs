@@ -144,5 +144,26 @@ namespace Itinero.Optimization.Test.Functional
             }
             return new TSP.Directed.TSProblem(first, last, weights, turnPenalities);
         }
+        
+        /// <summary>
+        /// Creates a new STSP.
+        /// </summary>
+        public static STSP.STSProblem CreateSTSP(int first, int size, float defaultWeight, float max)
+        {
+            var weights = new float[size][];
+            for (int x = 0; x < size; x++)
+            {
+                weights[x] = new float[size];
+                for (int y = 0; y < size; y++)
+                {
+                    weights[x][y] = defaultWeight;
+                    if (x == y)
+                    {
+                        weights[x][y] = 0;
+                    }
+                }
+            }
+            return new STSP.STSProblem(0, weights, max);
+        }
     }
 }
