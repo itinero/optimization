@@ -1,4 +1,4 @@
-Itinero.Logistics
------------------
+Itinero.Optimization
+--------------------
 
-A module for solving logistical routing problems with Itinero as a routing solution.
+A module for solving optimization routing problems with Itinero as a routing solution.
