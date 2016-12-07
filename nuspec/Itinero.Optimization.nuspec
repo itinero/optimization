@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Itinero.Optimization</id>
+    <version>1.0.0</version>
+    <authors>Itinero.Optimization</authors>
+    <owners>Itinero.Optimization</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Itinero.Optimization</description>
+    <tags></tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.0">
+        <dependency id="Itinero" version="[0.31.9-rc1, )" />
+      </group>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="Itinero" version="[0.31.9-rc1, )" />
+      </group>
+      <group targetFramework=".NETPortable4.0-Profile147">
+        <dependency id="Itinero" version="[0.31.9-rc1, )" />
+      </group>
+      <group targetFramework=".NETStandard1.3">
+        <dependency id="NETStandard.Library" version="[1.6.0, )" />
+        <dependency id="System.Diagnostics.Debug" version="[4.3.0, )" />
+        <dependency id="System.Runtime" version="[4.3.0, )" />
+        <dependency id="Itinero" version="[0.31.9-rc1, )" />
+      </group>
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="mscorlib" targetFramework=".NETPortable4.0-Profile147" />
+      <frameworkAssembly assemblyName="System" targetFramework=".NETPortable4.0-Profile147" />
+      <frameworkAssembly assemblyName="System.Core" targetFramework=".NETPortable4.0-Profile147" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="src\Itinero.Optimization\bin\Release\net40\Itinero.Optimization.dll" target="lib\net40\Itinero.Optimization.dll" />
+    <file src="src\Itinero.Optimization\bin\Release\net45\Itinero.Optimization.dll" target="lib\net45\Itinero.Optimization.dll" />
+    <file src="src\Itinero.Optimization\bin\Release\netstandard1.3\Itinero.Optimization.dll" target="lib\netstandard1.3\Itinero.Optimization.dll" />
+    <file src="src\Itinero.Optimization\bin\Release\portable40-net403+sl5+win8+wp8\Itinero.Optimization.dll" target="lib\portable40-net403+sl5+win8+wp8\Itinero.Optimization.dll" />
+</files>
+</package>
