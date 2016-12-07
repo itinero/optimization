@@ -45,7 +45,7 @@ namespace Itinero.Optimization.Test.Functional
                 new Coordinate(51.270054481615624f, 4.799646735191345f)
             });
 
-            var route = router.CalculateSTSP(car.Fastest(), locations.ToArray(), 60 * 10);
+            var route = router.CalculateSTSPDirected(car.Fastest(), locations.ToArray(), 100, 60 * 20);
             var json = route.ToGeoJson();
 
             ////var route = router.CalculateTSP(car.Fastest(), locations.ToArray(), 0, 0);

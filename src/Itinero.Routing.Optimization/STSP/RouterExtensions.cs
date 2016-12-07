@@ -47,5 +47,27 @@ namespace Itinero.Routing.Optimization.STSP
         {
             return router.TryCalculateSTSP(profile, locations, max, first, last).Value;
         }
+
+        /// <summary>
+        /// Calculates STSP.
+        /// </summary>
+        public static Result<Route> TryCalculateSTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, float max, int first = 0, int? last = null)
+        {
+            var tspRouter = new STSP.Directed.STSPRouter(router, profile, router.Resolve(profile, locations), turnPenaltyInSeconds, max, first, last);
+            tspRouter.Run();
+            if (!tspRouter.HasSucceeded)
+            {
+                return new Result<Route>(tspRouter.ErrorMessage);
+            }
+            return new Result<Route>(tspRouter.BuildRoute());
+        }
+
+        /// <summary>
+        /// Calculates STSP.
+        /// </summary>
+        public static Route CalculateSTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, float max, int first = 0, int? last = null)
+        {
+            return router.TryCalculateSTSPDirected(profile, locations, turnPenaltyInSeconds, max, first, last).Value;
+        }
     }
 }

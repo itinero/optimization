@@ -107,6 +107,27 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
         }
 
         /// <summary>
+        /// Inserts a new customer at the given location using the given turn and departure and arrival directions.
+        /// </summary>
+        public static void InsertDirected(this Route route, int customer, Pair bestLocation, int departureOffsetFrom, int arrivalOffsetTo, int turn)
+        {
+            var directedId = DirectedHelper.BuildDirectedId(customer, turn);
+            route.InsertAfter(bestLocation.From, directedId);
+
+            // update departure offset at from.
+            var newFromId = DirectedHelper.UpdateDepartureOffset(bestLocation.From, departureOffsetFrom);
+            if (bestLocation.From != newFromId)
+            {
+                route.Replace(bestLocation.From, newFromId);
+            }
+            var newToId = DirectedHelper.UpdateArrivalOffset(bestLocation.To, arrivalOffsetTo);
+            if (bestLocation.To != newToId)
+            {
+                route.Replace(bestLocation.To, newToId);
+            }
+        }
+
+        /// <summary>
         /// Calculates the best position and direction to insert a given customer.
         /// </summary>
         public static float CalculateCheapestDirected(this Route route, float[][] weights, float[] turnPenalties, int id, out Pair location,

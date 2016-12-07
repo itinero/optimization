@@ -51,7 +51,7 @@ namespace Itinero.Optimization.Routes.TurningWeights
             {
                 return directed;
             }
-            throw new ArgumentOutOfRangeException("id", string.Format("Customer id {0} not found in route.", id));
+            return Constants.NOT_SET;
         }
     }
 }
