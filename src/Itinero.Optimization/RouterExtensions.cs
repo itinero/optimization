@@ -18,6 +18,7 @@
 
 using Itinero.LocalGeo;
 using Itinero.Optimization.Routing.Directed.STSP;
+using Itinero.Optimization.TimeWindows;
 using Itinero.Optimization.TSP;
 using Itinero.Profiles;
 
@@ -70,6 +71,27 @@ namespace Itinero.Optimization
         public static Route CalculateTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, int first = 0, int? last = null)
         {
             return router.TryCalculateTSPDirected(profile, locations, turnPenaltyInSeconds, first, last).Value;
+        }
+        /// <summary>
+        /// Calculates TSP.
+        /// </summary>
+        public static Result<Route> TryCalculateTSPTW(this RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, int first = 0, int? last = null)
+        {
+            var tspRouter = new TSP.TimeWindows.TSPTWRouter(router, profile, locations, windows, first, last);
+            tspRouter.Run();
+            if (!tspRouter.HasSucceeded)
+            {
+                return new Result<Route>(tspRouter.ErrorMessage);
+            }
+            return new Result<Route>(tspRouter.BuildRoute());
+        }
+
+        /// <summary>
+        /// Calculates TSP.
+        /// </summary>
+        public static Route CalculateTSPTW(this RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, int first = 0, int? last = null)
+        {
+            return router.TryCalculateTSPTW(profile, locations, windows, first, last).Value;
         }
 
         /// <summary>
