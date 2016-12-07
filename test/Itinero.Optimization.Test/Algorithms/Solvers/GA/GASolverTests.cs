@@ -54,8 +54,8 @@ namespace Itinero.Optimization.Test.Algorithms.Solvers.GA
                 new GASettings()
                 {
                     MaxGenerations = 1000,
-                    PopulationSize = 200,
-                    StagnationCount = 100,
+                    PopulationSize = 400,
+                    StagnationCount = 200,
                     CrossOverPercentage = 10,
                     ElitismPercentage = 5,
                     MutationPercentage = 10
