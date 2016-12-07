@@ -24,7 +24,7 @@ namespace Itinero.Optimization.Algorithms.Random
     /// <summary>
     /// A random generator.
     /// </summary>
-    public sealed class RandomGenerator
+    public class RandomGenerator
     {
         private System.Random _rand;
 
@@ -47,7 +47,7 @@ namespace Itinero.Optimization.Algorithms.Random
         /// <summary>
         /// Generates a random integer
         /// </summary>
-        public void Generate(byte[] buffer)
+        public virtual void Generate(byte[] buffer)
         {
             _rand.NextBytes(buffer);
         }
@@ -55,7 +55,7 @@ namespace Itinero.Optimization.Algorithms.Random
         /// <summary>
         /// Generates a random double
         /// </summary>
-        public float Generate(float max)
+        public virtual float Generate(float max)
         {
             return (float)(_rand.NextDouble() * max);
         }
@@ -63,7 +63,7 @@ namespace Itinero.Optimization.Algorithms.Random
         /// <summary>
         /// Sets the seed of the static generator.
         /// </summary>
-        public int Generate(int max)
+        public virtual int Generate(int max)
         {
             return _rand.Next(max);
         }
