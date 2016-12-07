@@ -40,8 +40,8 @@ namespace Itinero.Optimization.Test.TSP.Solvers.Operators
             var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
 
             // create solutions.
-            var solution1 = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 }, 4);
-            var solution2 = new Optimization.Routes.Route(new int[] { 0, 1, 3, 2, 4 }, 4);
+            var solution1 = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, 4);
+            var solution2 = new Optimization.Tours.Tour(new int[] { 0, 1, 3, 2, 4 }, 4);
 
             // execute crossover.
             var crossover = new EAXOperator();
@@ -62,8 +62,8 @@ namespace Itinero.Optimization.Test.TSP.Solvers.Operators
             var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
 
             // create solutions.
-            var solution1 = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 }, 0);
-            var solution2 = new Optimization.Routes.Route(new int[] { 0, 1, 3, 2, 4 }, 0);
+            var solution1 = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
+            var solution2 = new Optimization.Tours.Tour(new int[] { 0, 1, 3, 2, 4 }, 0);
 
             // execute crossover.
             var crossover = new EAXOperator();
@@ -84,8 +84,8 @@ namespace Itinero.Optimization.Test.TSP.Solvers.Operators
             var problem = TSPHelper.CreateTSP(0, 5, 10);
 
             // create solutions.
-            var solution1 = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 }, null);
-            var solution2 = new Optimization.Routes.Route(new int[] { 0, 1, 3, 2, 4 }, null);
+            var solution1 = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, null);
+            var solution2 = new Optimization.Tours.Tour(new int[] { 0, 1, 3, 2, 4 }, null);
 
             // execute crossover.
             var crossover = new EAXOperator();

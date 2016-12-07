@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-namespace Itinero.Optimization.Routes.Operations
+namespace Itinero.Optimization.Tours.Operations
 {
     /// <summary>
     /// Contains general shiftafter operations.
@@ -27,11 +27,11 @@ namespace Itinero.Optimization.Routes.Operations
         /// Shifts the given customer after the given 'before' customer and returns the difference in fitness between the solution before the shift and after the shift.
         /// </summary>
         /// <returns></returns>
-        public static bool Do(float[][] weights, Route route, int customer, int before, out float difference)
+        public static bool Do(float[][] weights, Tour tour, int customer, int before, out float difference)
         {
             // shift after and keep all info.
             int oldBefore, oldAfter, newAfter;
-            if (!route.ShiftAfter(customer, before, out oldBefore, out oldAfter, out newAfter))
+            if (!tour.ShiftAfter(customer, before, out oldBefore, out oldAfter, out newAfter))
             { // shift did not succeed.
                 difference = 0;
                 return false;
@@ -39,11 +39,11 @@ namespace Itinero.Optimization.Routes.Operations
 
             if (oldAfter == Constants.END)
             {
-                oldAfter = route.First;
+                oldAfter = tour.First;
             }
             if (newAfter == Constants.END)
             {
-                newAfter = route.First;
+                newAfter = tour.First;
             }
 
             difference = -weights[oldBefore][customer]
@@ -59,15 +59,15 @@ namespace Itinero.Optimization.Routes.Operations
         /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
         /// </summary>
         /// <returns></returns>
-        public static float If(float[][] weights, Routes.IRoute route, int customer, int before, int oldBefore, int oldAfter, int newAfter)
+        public static float If(float[][] weights, Tours.ITour tour, int customer, int before, int oldBefore, int oldAfter, int newAfter)
         {
             if (oldAfter == Constants.END)
             {
-                oldAfter = route.First;
+                oldAfter = tour.First;
             }
             if (newAfter == Constants.END)
             {
-                newAfter = route.First;
+                newAfter = tour.First;
             }
 
             return -weights[oldBefore][customer]

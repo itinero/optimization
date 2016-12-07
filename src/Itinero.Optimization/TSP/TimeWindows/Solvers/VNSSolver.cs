@@ -18,7 +18,7 @@
 
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.Algorithms.Solvers.VNS;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using Itinero.Optimization.TSP.TimeWindows.Solvers.Operators;
 
 namespace Itinero.Optimization.TSP.TimeWindows.Solvers
@@ -26,13 +26,13 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers
     /// <summary>
     /// A VNS-solver for the TSP-TW problem.
     /// </summary>
-    public class VNSSolver : VNSSolver<float, TSPTWProblem, TSPTWObjective, Route, float>
+    public class VNSSolver : VNSSolver<float, TSPTWProblem, TSPTWObjective, Tour, float>
     {
         /// <summary>
         /// Creates a new VNS-solver.
         /// </summary>
         public VNSSolver()
-            : base(new SolverObjectiveWrapper<float, TSPTWProblem, TSPTWObjective, TSPTWFeasibleObjective, Route, float>(
+            : base(new SolverObjectiveWrapper<float, TSPTWProblem, TSPTWObjective, TSPTWFeasibleObjective, Tour, float>(
                 new VNSConstructionSolver(), new TSPTWFeasibleObjective(), (p, o, s) => o.Calculate(p, s)), new Random1Shift<TSPTWObjective>(),
                     new VNDOperator(), (i, l, p, o, s) =>
                     {

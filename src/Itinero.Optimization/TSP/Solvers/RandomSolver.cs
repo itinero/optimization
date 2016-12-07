@@ -18,7 +18,7 @@
 
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 
 namespace Itinero.Optimization.TSP.Solvers
@@ -26,7 +26,7 @@ namespace Itinero.Optimization.TSP.Solvers
     /// <summary>
     /// A solver that generates random solutions.
     /// </summary>
-    public sealed class RandomSolver : SolverBase<float, TSProblem, TSPObjective, Route, float>
+    public sealed class RandomSolver : SolverBase<float, TSProblem, TSPObjective, Tour, float>
     {
         /// <summary>
         /// Returns the name of this solver.
@@ -40,7 +40,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public sealed override Route Solve(TSProblem problem, TSPObjective objective, out float fitness)
+        public sealed override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
         {
             // generate random solution.
             var customers = new List<int>();
@@ -58,7 +58,7 @@ namespace Itinero.Optimization.TSP.Solvers
             { // the special case of a fixed last customer.
                 customers.Add(problem.Last.Value);
             }
-            var route = new Route(customers, problem.Last);
+            var route = new Tour(customers, problem.Last);
 
             // calculate fitness.
             fitness = objective.Calculate(problem, route);

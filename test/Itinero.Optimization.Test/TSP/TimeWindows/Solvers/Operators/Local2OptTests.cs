@@ -47,7 +47,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
 
             problem.Times[3][1] = 100;
 
-            var route = new Optimization.Routes.Route(new int[] { 0, 3, 2, 1, 4 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 3, 2, 1, 4 }, 0);
 
             var localSearch = new Local2Opt();
             var delta = 0.0f;
@@ -86,7 +86,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
                 Max = 12
             };
 
-            var route = new Optimization.Routes.Route(new int[] { 0, 3, 2, 1, 4 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 3, 2, 1, 4 }, 0);
 
             var localSearch = new Local2Opt();
             var delta = 0.0f;

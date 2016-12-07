@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Directed;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using System;
 
 namespace Itinero.Optimization.TSP.Directed.Solvers
@@ -27,9 +27,9 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
     /// <summary>
     /// A 3-opt solver.
     /// </summary>
-    public sealed class HillClimbing3OptSolver : SolverBase<float, TSProblem, TSPObjective, Route, float>, IOperator<float, TSProblem, TSPObjective, Route, float>
+    public sealed class HillClimbing3OptSolver : SolverBase<float, TSProblem, TSPObjective, Tour, float>, IOperator<float, TSProblem, TSPObjective, Tour, float>
     {
-        private readonly ISolver<float, TSProblem, TSPObjective, Route, float> _generator;
+        private readonly ISolver<float, TSProblem, TSPObjective, Tour, float> _generator;
         private readonly bool _nearestNeighbours = false;
         private readonly bool _dontLook = false;
         private readonly double _epsilon = 0.001f;
@@ -47,7 +47,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public HillClimbing3OptSolver(ISolver<float, TSProblem, TSPObjective, Route, float> generator, bool nearestNeighbours, bool dontLook)
+        public HillClimbing3OptSolver(ISolver<float, TSProblem, TSPObjective, Tour, float> generator, bool nearestNeighbours, bool dontLook)
         {
             _generator = generator;
             _dontLook = dontLook;
@@ -90,7 +90,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override Route Solve(TSProblem problem, TSPObjective objective, out float fitness)
+        public override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
         {
             if (!problem.Last.HasValue) { throw new ArgumentException("OPT3 cannot be used on open TSP-problems."); }
 
@@ -114,7 +114,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(TSProblem problem, TSPObjective objective, Route solution, out float delta)
+        public bool Apply(TSProblem problem, TSPObjective objective, Tour solution, out float delta)
         {
             if (!problem.Last.HasValue) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
             if (solution.First != solution.Last) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
@@ -153,17 +153,17 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
         /// Tries all 3Opt Moves for the neighbourhood of v1.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(TSProblem problem, float[][] weights, Route route, int v1, out float delta)
+        public bool Try3OptMoves(TSProblem problem, float[][] weights, Tour tour, int v1, out float delta)
         {
             // get v_2.
-            var v2 = route.GetNeigbour(v1);
+            var v2 = tour.GetNeigbour(v1);
             if (v2 < 0)
             {
                 delta = 0;
                 return false;
             }
 
-            var betweenV2V1 = route.Between(v2, v1);
+            var betweenV2V1 = tour.Between(v2, v1);
             //var weightV1V2 = weights[v1][v2];
             var weightV1V2 = weights.WeightWithoutTurns(v1, v2);
             if (DirectedHelper.ExtractId(v2) == problem.First && !problem.Last.HasValue)
@@ -197,7 +197,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
                         var weightV1V2PlusV3V4 = weightV1V2 + weightV3V4;
                         //var weightsV3 = weights[v3];
                         var weightsV3 = weights[DirectedHelper.ExtractDepartureId(v3)];
-                        if (this.Try3OptMoves(problem, weights, route, v1, v2, v3, weightsV3, v4, weightV1V2PlusV3V4, weightV1V4, out delta))
+                        if (this.Try3OptMoves(problem, weights, tour, v1, v2, v3, weightsV3, v4, weightV1V2PlusV3V4, weightV1V4, out delta))
                         {
                             return true;
                         }
@@ -233,12 +233,12 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(TSProblem problem, float[][] weights, Route route,
+        public bool Try3OptMoves(TSProblem problem, float[][] weights, Tour tour,
             int v1, int v2, int v3, float[] weightsV3, int v4, float weightV1V2PlusV3V4, float weightV1V4, out float delta)
         {
             var v2ArrivalId = DirectedHelper.ExtractArrivalId(v2); // TODO: optimize this, extract all v2 info in one go.
             var v2Id = DirectedHelper.ExtractId(v2);
-            var betweenV4V1Enumerator = route.Between(v4, v1).GetEnumerator();
+            var betweenV4V1Enumerator = tour.Between(v4, v1).GetEnumerator();
             if (betweenV4V1Enumerator.MoveNext())
             {
                 var v5 = betweenV4V1Enumerator.Current;
@@ -274,12 +274,12 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
 
                         if (weight - weightNew > _epsilon)
                         { // actually do replace the vertices.
-                            var countBefore = route.Count;
+                            var countBefore = tour.Count;
                             delta = weightNew - weight;
 
-                            route.ReplaceEdgeFrom(v1, v4);
-                            route.ReplaceEdgeFrom(v3, v6);
-                            route.ReplaceEdgeFrom(v5, v2);
+                            tour.ReplaceEdgeFrom(v1, v4);
+                            tour.ReplaceEdgeFrom(v3, v6);
+                            tour.ReplaceEdgeFrom(v5, v2);
 
                             //int count_after = route.Count;
 

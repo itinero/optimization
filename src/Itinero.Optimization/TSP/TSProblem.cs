@@ -17,7 +17,7 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Optimization.Algorithms.NearestNeighbour;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 
 namespace Itinero.Optimization.TSP
@@ -260,7 +260,7 @@ namespace Itinero.Optimization.TSP
         /// Solves this TSP using a default solver.
         /// </summary>
         /// <returns></returns>
-        public Route Solve()
+        public Tour Solve()
         {
             return this.Solve(new Solvers.EAXSolver(Algorithms.Solvers.GA.GASettings.Default));
         }
@@ -268,7 +268,7 @@ namespace Itinero.Optimization.TSP
         /// <summary>
         /// Solvers this problem using the given solver.
         /// </summary>
-        public Route Solve(Itinero.Optimization.Algorithms.Solvers.ISolver<float, TSProblem, TSPObjective, Route, float> solver)
+        public Tour Solve(Itinero.Optimization.Algorithms.Solvers.ISolver<float, TSProblem, TSPObjective, Tour, float> solver)
         {
             return solver.Solve(this, new TSPObjective());
         }

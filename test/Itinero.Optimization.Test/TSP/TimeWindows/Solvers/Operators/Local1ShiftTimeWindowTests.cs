@@ -59,7 +59,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
             };
 
             // create a route with one shift.
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift<TSPTWFeasibleObjective>();
@@ -71,7 +71,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
             Assert.AreEqual(new int[] { 0, 2, 1, 3, 4 }, route.ToArray());
 
             // create a route with one shift.
-            route = new Optimization.Routes.Route(new int[] { 0, 4, 1, 3, 2 }, 0);
+            route = new Optimization.Tours.Tour(new int[] { 0, 4, 1, 3, 2 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             Assert.IsTrue(localSearch.MoveViolatedBackward(problem, objective, route, out delta)); // shifts 2 after 0
@@ -81,7 +81,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
             Assert.AreEqual(new int[] { 0, 2, 4, 1, 3 }, route.ToArray());
 
             // create a feasible route.
-            route = new Optimization.Routes.Route(new int[] { 0, 2, 4, 1, 3 }, 0);
+            route = new Optimization.Tours.Tour(new int[] { 0, 2, 4, 1, 3 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             Assert.IsFalse(localSearch.MoveViolatedBackward(problem, objective, route, out delta));
@@ -103,7 +103,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
             };
 
             // create a route with one shift.
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift<TSPTWFeasibleObjective>();
@@ -115,7 +115,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
             Assert.AreEqual(new int[] { 0, 2, 1, 3, 4 }, route.ToArray());
 
             // create a feasible route.
-            route = new Optimization.Routes.Route(new int[] { 0, 2, 4, 1, 3 }, 0);
+            route = new Optimization.Tours.Tour(new int[] { 0, 2, 4, 1, 3 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             Assert.IsFalse(localSearch.MoveNonViolatedForward(problem, objective, route, out delta));
@@ -139,7 +139,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
             };
 
             // create a route with one shift.
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift<TSPTWFeasibleObjective>();
@@ -151,7 +151,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
             Assert.AreEqual(new int[] { 0, 3, 1, 2, 4 }, route.ToArray());
 
             // create a feasible route.
-            route = new Optimization.Routes.Route(new int[] { 0, 2, 4, 1, 3 }, 0);
+            route = new Optimization.Tours.Tour(new int[] { 0, 2, 4, 1, 3 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             Assert.IsFalse(localSearch.MoveNonViolatedBackward(problem, objective, route, out delta));
@@ -180,7 +180,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
             };
 
             // create a route with one shift.
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 3, 2, 4 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 3, 2, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift<TSPTWFeasibleObjective>();
@@ -192,7 +192,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
             Assert.AreEqual(new int[] { 0, 3, 1, 2, 4 }, route.ToArray());
 
             // create a feasible route.
-            route = new Optimization.Routes.Route(new int[] { 0, 3, 1, 2, 4 }, 0);
+            route = new Optimization.Tours.Tour(new int[] { 0, 3, 1, 2, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             Assert.IsFalse(localSearch.MoveViolatedForward(problem, objective, route, out delta));
@@ -219,7 +219,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
             };
 
             // create a route with one shift.
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 3, 2, 4 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 3, 2, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift<TSPTWFeasibleObjective>();
@@ -252,7 +252,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
             };
 
             // create a route with one shift.
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 3, 2, 4 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 3, 2, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift<TSPTWFeasibleObjective>();

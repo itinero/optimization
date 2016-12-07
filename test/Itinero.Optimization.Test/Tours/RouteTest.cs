@@ -1,28 +1,28 @@
 ﻿using Itinero.Optimization.Algorithms.Random;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Itinero.Optimization.Test.Routes
+namespace Itinero.Optimization.Test.Tours
 {
     /// <summary>
-    /// Tests for route.
+    /// Tests for tour.
     /// </summary>
     [TestFixture]
-    public class RouteTest
+    public class TourTest
     {
         /// <summary>
-        /// Tests cloning a route.
+        /// Tests cloning a tour.
         /// </summary>
         [Test]
         public void TestClone()
         {
             var routeEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            var route = new Optimization.Routes.Route(routeEnumerable, 0);
-            var cloned = route.Clone() as Optimization.Routes.Route;
+            var route = new Optimization.Tours.Tour(routeEnumerable, 0);
+            var cloned = route.Clone() as Optimization.Tours.Tour;
 
             Assert.AreEqual(route.First, cloned.First);
             Assert.AreEqual(route.Last, cloned.Last);
@@ -31,8 +31,8 @@ namespace Itinero.Optimization.Test.Routes
             ExtraAssert.ItemsAreEqual(route, cloned);
 
             routeEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            route = new Optimization.Routes.Route(routeEnumerable, 4);
-            cloned = route.Clone() as Optimization.Routes.Route;
+            route = new Optimization.Tours.Tour(routeEnumerable, 4);
+            cloned = route.Clone() as Optimization.Tours.Tour;
 
             Assert.AreEqual(route.First, cloned.First);
             Assert.AreEqual(route.Last, cloned.Last);
@@ -41,8 +41,8 @@ namespace Itinero.Optimization.Test.Routes
             ExtraAssert.ItemsAreEqual(route, cloned);
 
             routeEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            route = new Optimization.Routes.Route(routeEnumerable, null);
-            cloned = route.Clone() as Optimization.Routes.Route;
+            route = new Optimization.Tours.Tour(routeEnumerable, null);
+            cloned = route.Clone() as Optimization.Tours.Tour;
 
             Assert.AreEqual(route.First, cloned.First);
             Assert.AreEqual(route.Last, cloned.Last);
@@ -58,7 +58,7 @@ namespace Itinero.Optimization.Test.Routes
         public void TestClear()
         {
             var routeEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            var route = new Optimization.Routes.Route(routeEnumerable, 0);
+            var route = new Optimization.Tours.Tour(routeEnumerable, 0);
 
             route.Clear();
 
@@ -74,7 +74,7 @@ namespace Itinero.Optimization.Test.Routes
         public void TestGetCustomerAt()
         {
             var routeEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            var route = new Optimization.Routes.Route(routeEnumerable, 0);
+            var route = new Optimization.Tours.Tour(routeEnumerable, 0);
 
             Assert.AreEqual(routeEnumerable[0], route.GetCustomerAt(0));
             Assert.AreEqual(routeEnumerable[1], route.GetCustomerAt(1));
@@ -99,7 +99,7 @@ namespace Itinero.Optimization.Test.Routes
         public void TestEnumerableConstructorClosed()
         {
             var routeEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            var route = new Optimization.Routes.Route(routeEnumerable, 0);
+            var route = new Optimization.Tours.Tour(routeEnumerable, 0);
 
             Assert.AreEqual(5, route.Count);
             Assert.AreEqual(0, route.First);
@@ -120,7 +120,7 @@ namespace Itinero.Optimization.Test.Routes
         public void TestEnumerableConstructorFixed()
         {
             var routeEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            var route = new Optimization.Routes.Route(routeEnumerable, 4);
+            var route = new Optimization.Tours.Tour(routeEnumerable, 4);
 
             Assert.AreEqual(5, route.Count);
             Assert.AreEqual(0, route.First);
@@ -141,7 +141,7 @@ namespace Itinero.Optimization.Test.Routes
         public void TestEnumerableConstructorOpen()
         {
             var routeEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            var route = new Optimization.Routes.Route(routeEnumerable, null);
+            var route = new Optimization.Tours.Tour(routeEnumerable, null);
 
             Assert.AreEqual(5, route.Count);
             Assert.AreEqual(0, route.First);
@@ -161,7 +161,7 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void TestCount()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0 }, 0);
             Assert.AreEqual(1, route.Count);
             route.InsertAfter(0, 1);
             Assert.AreEqual(2, route.Count);
@@ -171,7 +171,7 @@ namespace Itinero.Optimization.Test.Routes
             Assert.AreEqual(4, route.Count);
             route.InsertAfter(3, 4);
 
-            route = new Optimization.Routes.Route(new int[] { 0 }, null);
+            route = new Optimization.Tours.Tour(new int[] { 0 }, null);
             Assert.AreEqual(1, route.Count);
             route.InsertAfter(0, 1);
             Assert.AreEqual(2, route.Count);
@@ -188,14 +188,14 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void TestFirstAndLast()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0 }, 0);
             Assert.AreEqual(0, route.First);
             Assert.AreEqual(0, route.Last);
             route.InsertAfter(0, 1);
             Assert.AreEqual(0, route.First);
             Assert.AreEqual(0, route.Last);
 
-            route = new Optimization.Routes.Route(new int[] { 0 }, null);
+            route = new Optimization.Tours.Tour(new int[] { 0 }, null);
             Assert.AreEqual(0, route.First);
             Assert.AreEqual(null, route.Last);
             route.InsertAfter(0, 1);
@@ -203,17 +203,17 @@ namespace Itinero.Optimization.Test.Routes
             Assert.AreEqual(null, route.Last);
 
             var routeEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            route = new Optimization.Routes.Route(routeEnumerable, 4);
+            route = new Optimization.Tours.Tour(routeEnumerable, 4);
 
             Assert.AreEqual(0, route.First);
             Assert.AreEqual(4, route.Last);
 
-            route = new Optimization.Routes.Route(routeEnumerable, 0);
+            route = new Optimization.Tours.Tour(routeEnumerable, 0);
 
             Assert.AreEqual(0, route.First);
             Assert.AreEqual(0, route.Last);
 
-            route = new Optimization.Routes.Route(routeEnumerable, null);
+            route = new Optimization.Tours.Tour(routeEnumerable, null);
 
             Assert.AreEqual(0, route.First);
             Assert.AreEqual(null, route.Last);
@@ -226,7 +226,7 @@ namespace Itinero.Optimization.Test.Routes
         public void TestContainsClosed()
         {
             var routeEnumerable = new int[] { 0, 1, 2, 3, 4 };
-            var route = new Optimization.Routes.Route(routeEnumerable, 0);
+            var route = new Optimization.Tours.Tour(routeEnumerable, 0);
 
             Assert.IsFalse(route.Contains(10));
 
@@ -253,7 +253,7 @@ namespace Itinero.Optimization.Test.Routes
         public void TestContainsOpen()
         {
             var routeEnumerable = new int[] { 0, 1, 2, 3, 4 };
-            var route = new Optimization.Routes.Route(routeEnumerable, null);
+            var route = new Optimization.Tours.Tour(routeEnumerable, null);
 
             Assert.IsFalse(route.Contains(10));
 
@@ -280,7 +280,7 @@ namespace Itinero.Optimization.Test.Routes
         public void TestContainsFixed()
         {
             var routeEnumerable = new int[] { 0, 1, 2, 3, 4 };
-            var route = new Optimization.Routes.Route(routeEnumerable, 4);
+            var route = new Optimization.Tours.Tour(routeEnumerable, 4);
 
             Assert.IsFalse(route.Contains(10));
 
@@ -312,7 +312,7 @@ namespace Itinero.Optimization.Test.Routes
             while (count > 0)
             {
                 customers = new List<int>(new int[] { 0, 1, 2, 3, 4 });
-                var route = new Optimization.Routes.Route(customers, 0);
+                var route = new Optimization.Tours.Tour(customers, 0);
 
                 // test removing first.
                 Assert.Catch<InvalidOperationException>(() => { route.Remove(route.First); });
@@ -350,7 +350,7 @@ namespace Itinero.Optimization.Test.Routes
             while (count > 0)
             {
                 customers = new List<int>(new int[] { 0, 1, 2, 3, 4 });
-                var route = new Optimization.Routes.Route(customers, null);
+                var route = new Optimization.Tours.Tour(customers, null);
 
                 // test removing first.
                 Assert.Catch<InvalidOperationException>(() => { route.Remove(route.First); });
@@ -389,7 +389,7 @@ namespace Itinero.Optimization.Test.Routes
             while (count > 0)
             {
                 customers = new List<int>(new int[] { 0, 1, 2, 3, 4 });
-                var route = new Optimization.Routes.Route(customers, 4);
+                var route = new Optimization.Tours.Tour(customers, 4);
 
                 // test removing first.
                 Assert.Catch<InvalidOperationException>(() => { route.Remove(route.First); });
@@ -425,7 +425,7 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void TestInsertAfterOpen()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3 }, null);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3 }, null);
 
             // test arguments.
             Assert.Catch<ArgumentOutOfRangeException>(() =>
@@ -463,7 +463,7 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void TestInsertAfterFixed()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 100 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 100 }, 0);
 
             // test arguments.
             Assert.Catch<ArgumentOutOfRangeException>(() =>
@@ -497,7 +497,7 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void TestInsertAfterClose()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3 }, 0);
 
             // test arguments.
             Assert.Catch<ArgumentOutOfRangeException>(() =>
@@ -536,7 +536,7 @@ namespace Itinero.Optimization.Test.Routes
         public void TestEnumerateOpen()
         {
             var list = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var route = new Optimization.Routes.Route(list, null);
+            var route = new Optimization.Tours.Tour(list, null);
             var enumeratedRoute = new List<int>(route);
 
             Assert.AreEqual(list.ToArray(), enumeratedRoute);
@@ -580,7 +580,7 @@ namespace Itinero.Optimization.Test.Routes
         public void TestEnumerateClosed()
         {
             var list = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var route = new Optimization.Routes.Route(list, 0);
+            var route = new Optimization.Tours.Tour(list, 0);
             var enumeratedRoute = new List<int>(route);
 
             Assert.AreEqual(list, enumeratedRoute);
@@ -624,7 +624,7 @@ namespace Itinero.Optimization.Test.Routes
         public void TestEnumerateFixed()
         {
             var list = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var route = new Optimization.Routes.Route(list, 9);
+            var route = new Optimization.Tours.Tour(list, 9);
             var enumeratedRoute = new List<int>(route);
 
             Assert.AreEqual(list, enumeratedRoute);
@@ -667,7 +667,7 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void TestEnumerateBetweenOpen()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, null);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, null);
 
             for (var from = 0; from < route.Count; from++)
             {
@@ -693,7 +693,7 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void TestEnumerateBetweenClosed()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 0);
 
             for (var from = 0; from < route.Count; from++)
             {
@@ -732,7 +732,7 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void TestEnumerateBetweenFixed()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 9);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 9);
 
             for (var from = 0; from < route.Count; from++)
             {
@@ -760,7 +760,7 @@ namespace Itinero.Optimization.Test.Routes
         {
             var count = 10;
             var customers = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var route = new Optimization.Routes.Route(customers, null);
+            var route = new Optimization.Tours.Tour(customers, null);
 
             int neighbour = Constants.NOT_SET;
             for (int customer = 0; customer < count - 1; customer++)
@@ -780,7 +780,7 @@ namespace Itinero.Optimization.Test.Routes
         {
             var count = 10;
             var customers = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var route = new Optimization.Routes.Route(customers, 0);
+            var route = new Optimization.Tours.Tour(customers, 0);
 
             var neighbour = Constants.NOT_SET;
             for (int customer = 0; customer < count - 1; customer++)
@@ -803,7 +803,7 @@ namespace Itinero.Optimization.Test.Routes
             // create a new empty route.
             var testCount = 10;
             var customers = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var route = new Optimization.Routes.Route(customers, 9);
+            var route = new Optimization.Tours.Tour(customers, 9);
 
             // remove customers.
             int testIdx = 0;
@@ -858,7 +858,7 @@ namespace Itinero.Optimization.Test.Routes
             // create a new empty route.
             var testCount = 10;
             var customers = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var route = new Optimization.Routes.Route(customers, 0);
+            var route = new Optimization.Tours.Tour(customers, 0);
 
             // remove customers.
             int testIdx = 0;
@@ -912,7 +912,7 @@ namespace Itinero.Optimization.Test.Routes
             // create a new empty route.
             var testCount = 10;
             var customers = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var route = new Optimization.Routes.Route(customers, null);
+            var route = new Optimization.Tours.Tour(customers, null);
 
             // remove customers.
             int testIdx = 0;
@@ -963,7 +963,7 @@ namespace Itinero.Optimization.Test.Routes
         public void TestReplaceClosed()
         {
             var customers = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var route = new Optimization.Routes.Route(customers, 0);
+            var route = new Optimization.Tours.Tour(customers, 0);
 
             route.Replace(0, 10);
 

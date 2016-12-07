@@ -17,7 +17,7 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 
 namespace Itinero.Optimization.TSP.Solvers
@@ -25,7 +25,7 @@ namespace Itinero.Optimization.TSP.Solvers
     /// <summary>
     /// Implements a brute force solver by checking all possible combinations.
     /// </summary>
-    public sealed class BruteForceSolver : SolverBase<float, TSProblem, TSPObjective, Route, float>
+    public sealed class BruteForceSolver : SolverBase<float, TSProblem, TSPObjective, Tour, float>
     {
         /// <summary>
         /// Returns a new for this solver.
@@ -42,7 +42,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public sealed override Route Solve(TSProblem problem, TSPObjective objective, out float fitness)
+        public sealed override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
         {
             // initialize.
             var solution = new List<int>();
@@ -64,7 +64,7 @@ namespace Itinero.Optimization.TSP.Solvers
                 { // the special case of a fixed last customer.
                     withFirst.Add(problem.Last.Value);
                 }
-                var route = new Route(withFirst, problem.Last);
+                var route = new Tour(withFirst, problem.Last);
                 fitness = objective.Calculate(problem, route);
                 return route;
             }
@@ -73,7 +73,7 @@ namespace Itinero.Optimization.TSP.Solvers
             // have been considered.
             var enumerator = new PermutationEnumerable<int>(
                 solution.ToArray());
-            Route bestSolution = null;
+            Tour bestSolution = null;
             var bestFitness = float.MaxValue;
             foreach (var permutation in enumerator)
             {
@@ -84,7 +84,7 @@ namespace Itinero.Optimization.TSP.Solvers
                 { // the special case of a fixed last customer.
                     withFirst.Add(problem.Last.Value);
                 }
-                var localRoute = new Route(withFirst, problem.Last);
+                var localRoute = new Tour(withFirst, problem.Last);
 
                 // calculate fitness.
                 var localFitness = objective.Calculate(problem, localRoute);

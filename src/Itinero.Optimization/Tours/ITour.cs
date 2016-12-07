@@ -19,12 +19,12 @@
 using Itinero.Optimization.Algorithms;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Routes
+namespace Itinero.Optimization.Tours
 {
     /// <summary>
     /// Abstract representation of a route or a sequence of customers.
     /// </summary>
-    public interface IRoute : IEnumerable<int>, ISolution
+    public interface ITour : IEnumerable<int>, ISolution
     {
         /// <summary>
         /// Returns the amount of customers in the route.

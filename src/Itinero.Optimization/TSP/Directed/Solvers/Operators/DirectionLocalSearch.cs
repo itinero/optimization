@@ -19,15 +19,15 @@
 using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routes;
-using Itinero.Optimization.Routes.TurningWeights;
+using Itinero.Optimization.Tours;
+using Itinero.Optimization.Tours.TurningWeights;
 
 namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
 {
     /// <summary>
     /// A local search operator trying to improve the solution by switching directions.
     /// </summary>
-    public class DirectionLocalSearch : IOperator<float, TSProblem, TSPObjective, Route, float>
+    public class DirectionLocalSearch : IOperator<float, TSProblem, TSPObjective, Tour, float>
     {
         /// <summary>
         /// Gets the name of this operator.
@@ -53,7 +53,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
         /// <summary>
         /// Applies this operator.
         /// </summary>
-        public bool Apply(TSProblem problem, TSPObjective objective, Route solution, out float delta)
+        public bool Apply(TSProblem problem, TSPObjective objective, Tour solution, out float delta)
         {
             var weights = problem.Weights;
             delta = 0;

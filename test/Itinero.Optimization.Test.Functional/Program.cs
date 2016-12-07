@@ -1,15 +1,12 @@
 ﻿using System.IO;
-using Itinero.Routing.Optimization.TSP;
 using Itinero.LocalGeo;
 using System.Collections.Generic;
-using Itinero.Routing.Optimization.Directed;
 using System;
 using Itinero.Optimization.TSP.Directed;
 using Itinero.Algorithms.Weights;
 using Itinero.Algorithms;
 using NetTopologySuite.Features;
 using Itinero.Profiles;
-using Itinero.Routing.Optimization.STSP;
 
 namespace Itinero.Optimization.Test.Functional
 {

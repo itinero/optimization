@@ -17,9 +17,9 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using Itinero.Optimization.Algorithms.Random;
-using Itinero.Optimization.Routes.TurningWeights;
+using Itinero.Optimization.Tours.TurningWeights;
 using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Directed;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
     /// <summary>
     /// An operator that executes a cheapest insertion operation.
     /// </summary>
-    public class CheapestInsertionOperator : IOperator<float, TSProblem, TSPObjective, Route, float>
+    public class CheapestInsertionOperator : IOperator<float, TSProblem, TSPObjective, Tour, float>
     {
         private readonly int _n;
 
@@ -65,7 +65,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
         /// <summary>
         /// Applies this operator.
         /// </summary>
-        public bool Apply(TSProblem problem, TSPObjective objective, Route solution, out float delta)
+        public bool Apply(TSProblem problem, TSPObjective objective, Tour solution, out float delta)
         {
             var before = objective.Calculate(problem, solution);
             var weights = problem.Weights;

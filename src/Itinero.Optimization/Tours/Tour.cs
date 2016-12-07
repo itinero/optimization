@@ -22,12 +22,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Itinero.Optimization.Routes
+namespace Itinero.Optimization.Tours
 {
     /// <summary>
     /// a route or a sequence of customers.
     /// </summary>
-    public class Route : IRoute
+    public class Tour : ITour
     {
         private int[] _nextArray;
         private int _first;
@@ -36,7 +36,7 @@ namespace Itinero.Optimization.Routes
         /// <summary>
         /// Creates a new route based on the given array.
         /// </summary>
-        protected Route(int first, int[] nextArray, int? last)
+        protected Tour(int first, int[] nextArray, int? last)
         {
             _first = first;
             _last = last;
@@ -48,7 +48,7 @@ namespace Itinero.Optimization.Routes
         /// <summary>
         /// Creates a new closed route using a preexisting sequence.
         /// </summary>
-        public Route(IEnumerable<int> customers)
+        public Tour(IEnumerable<int> customers)
             : this(customers, customers.First())
         {
 
@@ -57,7 +57,7 @@ namespace Itinero.Optimization.Routes
         /// <summary>
         /// Creates a new route using a preexisting sequence.
         /// </summary>
-        public Route(IEnumerable<int> customers, int? last)
+        public Tour(IEnumerable<int> customers, int? last)
         {
             _nextArray = new int[0];
             var first = -1;
@@ -342,7 +342,7 @@ namespace Itinero.Optimization.Routes
         /// <returns></returns>
         public object Clone()
         {
-            return new Route(_first, _nextArray.Clone() as int[], _last);
+            return new Tour(_first, _nextArray.Clone() as int[], _last);
         }
 
         /// <summary>
@@ -350,7 +350,7 @@ namespace Itinero.Optimization.Routes
         /// </summary>
         public void CopyFrom(ISolution solution)
         {
-            var copy = (solution as Route);
+            var copy = (solution as Tour);
             if (copy != null)
             {
                 _first = copy._first;

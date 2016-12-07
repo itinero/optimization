@@ -39,7 +39,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows
 
             // calculate objective function.
             var objective = new TSPTWFeasibleObjective();
-            Assert.AreEqual(0, objective.Calculate(problem, new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 })));
+            Assert.AreEqual(0, objective.Calculate(problem, new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 })));
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows
 
             // calculate objective function.
             var objective = new TSPTWFeasibleObjective();
-            Assert.AreEqual(0, objective.Calculate(problem, new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 })));
+            Assert.AreEqual(0, objective.Calculate(problem, new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 })));
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows
 
             // calculate objective function.
             var objective = new TSPTWFeasibleObjective();
-            Assert.AreEqual(1, objective.Calculate(problem, new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 })));
+            Assert.AreEqual(1, objective.Calculate(problem, new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 })));
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows
 
             // calculate objective function.
             var objective = new TSPTWFeasibleObjective();
-            Assert.AreEqual(0, objective.Calculate(problem, new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 })));
+            Assert.AreEqual(0, objective.Calculate(problem, new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 })));
         }
     }
 }

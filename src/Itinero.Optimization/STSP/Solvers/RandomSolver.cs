@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,7 +28,7 @@ namespace Itinero.Optimization.STSP.Solvers
     /// <summary>
     /// A solver that generates random solutions.
     /// </summary>
-    public sealed class RandomSolver : SolverBase<float, STSProblem, STSPObjective, Route, STSPFitness>
+    public sealed class RandomSolver : SolverBase<float, STSProblem, STSPObjective, Tour, STSPFitness>
     {
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Itinero.Optimization.STSP.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public sealed override Route Solve(STSProblem problem, STSPObjective objective, out STSPFitness fitness)
+        public sealed override Tour Solve(STSProblem problem, STSPObjective objective, out STSPFitness fitness)
         {
             // generate random pool to select customers from.
             if (_randomPool == null || _randomPool.Size < problem.Weights.Length)
@@ -58,7 +58,7 @@ namespace Itinero.Optimization.STSP.Solvers
             }
 
             // keep adding customers until no more space is left or no more customers available.
-            var route = new Route(new int[] { problem.First });
+            var route = new Tour(new int[] { problem.First });
             fitness = new STSPFitness()
             {
                 Weight = 0,

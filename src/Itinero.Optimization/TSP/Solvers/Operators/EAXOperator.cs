@@ -19,8 +19,8 @@
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers.GA;
 using Itinero.Optimization.Logging;
-using Itinero.Optimization.Routes;
-using Itinero.Optimization.Routes.Cycles;
+using Itinero.Optimization.Tours;
+using Itinero.Optimization.Tours.Cycles;
 using System;
 using System.Collections.Generic;
 
@@ -29,7 +29,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
     /// <summary>
     /// An edge assembly crossover.
     /// </summary>
-    public sealed class EAXOperator : ICrossOverOperator<float, TSProblem, TSPObjective, Route, float>
+    public sealed class EAXOperator : ICrossOverOperator<float, TSProblem, TSPObjective, Tour, float>
     {
         private readonly int _maxOffspring;
         private readonly EdgeAssemblyCrossoverSelectionStrategyEnum _strategy;
@@ -135,7 +135,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
         /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
         /// <returns></returns>
-        public Route Apply(TSProblem problem, TSPObjective objective, Route solution1, Route solution2, out float fitness)
+        public Tour Apply(TSProblem problem, TSPObjective objective, Tour solution1, Tour solution2, out float fitness)
         {
             if (solution1.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
             if (solution2.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
@@ -149,8 +149,8 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
                     string.Format("EAX operator cannot be applied to 'open' TSP's: converting problem and routes to a closed equivalent."));
 
                 problem =  problem.ToClosed();
-                solution1 = new Route(solution1, 0);
-                solution2 = new Route(solution2, 0);
+                solution1 = new Tour(solution1, 0);
+                solution2 = new Tour(solution2, 0);
             }
             else if (problem.First != problem.Last)
             { // last is set but is not the same as first.
@@ -158,8 +158,8 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
                     string.Format("EAX operator cannot be applied to 'closed' TSP's with a fixed endpoint: converting problem and routes to a closed equivalent."));
 
                 problem = problem.ToClosed();
-                solution1 = new Route(solution1, 0);
-                solution2 = new Route(solution2, 0);
+                solution1 = new Tour(solution1, 0);
+                solution2 = new Tour(solution2, 0);
                 solution1.Remove(originalProblem.Last.Value);
                 solution2.Remove(originalProblem.Last.Value);
             }
@@ -199,7 +199,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
             var selectableCycles = new List<int>(cycles.Cycles.Keys);
 
             int generated = 0;
-            Route best = null;
+            Tour best = null;
             while (generated < _maxOffspring
                 && selectableCycles.Count > 0)
             {
@@ -336,7 +336,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
                     cycleCount--;
                 }
 
-                var newRoute = new Route(new int[] { problem.First }, problem.Last);
+                var newRoute = new Tour(new int[] { problem.First }, problem.Last);
                 var previous = problem.First;
                 var next = nextArrayA[problem.First];
                 do
@@ -369,7 +369,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
 
             if (best == null)
             {
-                best = new Route(new int[] { problem.First }, problem.Last);
+                best = new Tour(new int[] { problem.First }, problem.Last);
                 var previous = problem.First;
                 var next = e_a[problem.First];
                 do
@@ -390,13 +390,13 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
 
             if (!originalProblem.Last.HasValue)
             { // original problem as an 'open' problem, convert to an 'open' route.
-                best = new Route(best, null);
+                best = new Tour(best, null);
                 fitness = objective.Calculate(problem, best);
             }
             else if (originalProblem.First != originalProblem.Last)
             { // original problem was a problem with a fixed last point different from the first point.
                 best.InsertAfter(System.Linq.Enumerable.Last(best), originalProblem.Last.Value);
-                best = new Route(best, problem.Last.Value);
+                best = new Tour(best, problem.Last.Value);
                 fitness = objective.Calculate(originalProblem, best);
             }
             return best;

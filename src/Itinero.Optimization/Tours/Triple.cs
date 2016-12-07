@@ -16,22 +16,24 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-namespace Itinero.Optimization.Routes
+namespace Itinero.Optimization.Tours
 {
     /// <summary>
-    /// Represents a pair (or a connection between two adjacent customers).
+    /// Represents a triple (or a connection between three adjacent customers).
     /// </summary>
-    public struct Pair
+    public struct Triple
     {
         /// <summary>
-        /// Creates a new pair.
+        /// Creates a new triple.
         /// </summary>
         /// <param name="from"></param>
+        /// <param name="along"></param>
         /// <param name="to"></param>
-        public Pair(int from, int to)
+        public Triple(int from, int along, int to)
             : this()
         {
             this.From = from;
+            this.Along = along;
             this.To = to;
         }
 
@@ -39,6 +41,11 @@ namespace Itinero.Optimization.Routes
         /// Returns the from customer.
         /// </summary>
         public int From { get; set; }
+
+        /// <summary>
+        /// Returns the along customer.
+        /// </summary>
+        public int Along { get; set; }
 
         /// <summary>
         /// Returns the to customer.
@@ -51,7 +58,7 @@ namespace Itinero.Optimization.Routes
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("{0} -> {1}", this.From, this.To);
+            return string.Format("{0} -> {1} -> {2}", this.From, this.Along, this.To);
         }
 
         /// <summary>
@@ -61,6 +68,7 @@ namespace Itinero.Optimization.Routes
         public override int GetHashCode()
         {
             return this.From.GetHashCode() ^
+                this.Along.GetHashCode() ^
                 this.To.GetHashCode();
         }
 
@@ -71,10 +79,11 @@ namespace Itinero.Optimization.Routes
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj is Pair)
+            if (obj is Triple)
             {
-                return ((Pair)obj).From == this.From &&
-                    ((Pair)obj).To == this.To;
+                return ((Triple)obj).From == this.From &&
+                    ((Triple)obj).Along == this.Along &&
+                    ((Triple)obj).To == this.To;
             }
             return false;
         }

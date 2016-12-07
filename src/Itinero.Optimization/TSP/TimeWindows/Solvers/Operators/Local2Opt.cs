@@ -17,7 +17,7 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 
 namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
@@ -26,7 +26,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
     /// A local 2-Opt* search for the TSP-TW.
     /// </summary>
     /// <remarks>* 2-Opt: Removes two edges and reconnects the two resulting paths in a different way to obtain a new tour.</remarks>
-    public class Local2Opt : IOperator<float, TSPTWProblem, TSPTWObjective, Route, float>
+    public class Local2Opt : IOperator<float, TSPTWProblem, TSPTWObjective, Tour, float>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -49,15 +49,15 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(TSPTWProblem problem, TSPTWObjective objective, Route route, out float delta)
+        public bool Apply(TSPTWProblem problem, TSPTWObjective objective, Tour tour, out float delta)
         {
             delta = 0;
 
             var customers = new List<int>(problem.Times.Length + 1);
-            customers.AddRange(route);
-            if (route.Last == route.First)
+            customers.AddRange(tour);
+            if (tour.Last == tour.First)
             { // add last customer at the end if it's the same as the first one.
-                customers.Add(route.Last.Value);
+                customers.Add(tour.Last.Value);
             }
 
             var betweenForward = 0.0f;
@@ -128,12 +128,12 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
                         if (existing > potential)
                         { // we found an improvement.
                             delta = existing - potential;
-                            route.ReplaceEdgeFrom(edge11, edge21);
-                            route.ReplaceEdgeFrom(edge12, edge22);
+                            tour.ReplaceEdgeFrom(edge11, edge21);
+                            tour.ReplaceEdgeFrom(edge12, edge22);
                             // reverse intermediates.
                             for (var i = edge1 + 1; i < edge2; i++)
                             {
-                                route.ReplaceEdgeFrom(customers[i + 1], customers[i]);
+                                tour.ReplaceEdgeFrom(customers[i + 1], customers[i]);
                             }
                             return true;
                         }

@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
 {
@@ -27,8 +27,8 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
     /// An operator to execute n random 1-shift* relocations.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere.</remarks>
-    public class Random1Shift<TObjective> : IPerturber<float, TSPTWProblem, TObjective, Route, float>
-        where TObjective : ObjectiveBase<TSPTWProblem, Route, float>
+    public class Random1Shift<TObjective> : IPerturber<float, TSPTWProblem, TObjective, Tour, float>
+        where TObjective : ObjectiveBase<TSPTWProblem, Tour, float>
     {
         private readonly RandomGenerator _random = RandomGeneratorExtensions.GetRandom();
 
@@ -53,18 +53,18 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(TSPTWProblem problem, TObjective objective, Route route, out float difference)
+        public bool Apply(TSPTWProblem problem, TObjective objective, Tour tour, out float difference)
         {
-            return this.Apply(problem, objective, route, 1, out difference);
+            return this.Apply(problem, objective, tour, 1, out difference);
         }
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(TSPTWProblem problem, TObjective objective, Route route, int level, out float difference)
+        public bool Apply(TSPTWProblem problem, TObjective objective, Tour tour, int level, out float difference)
         {
-            var original = objective.Calculate(problem, route);
+            var original = objective.Calculate(problem, tour);
 
             difference = 0;
             while (level > 0)
@@ -78,8 +78,8 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
                 }
 
                 // shift after the next customer.
-                route.ShiftAfter(customer, insert);
-                var afterShift = objective.Calculate(problem, route);
+                tour.ShiftAfter(customer, insert);
+                var afterShift = objective.Calculate(problem, tour);
                 var shiftDiff = afterShift - original;
                 difference += shiftDiff;
 

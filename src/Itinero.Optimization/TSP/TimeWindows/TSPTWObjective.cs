@@ -17,14 +17,14 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Optimization.Algorithms.Solvers.Objective;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.TSP.TimeWindows
 {
     /// <summary>
     /// The TSP-TW objective.
     /// </summary>
-    public class TSPTWObjective : ObjectiveBase<TSPTWProblem, Route, float>
+    public class TSPTWObjective : ObjectiveBase<TSPTWProblem, Tour, float>
     {
         /// <summary>
         /// Gets the value that represents infinity.
@@ -81,7 +81,7 @@ namespace Itinero.Optimization.TSP.TimeWindows
         /// <summary>
         /// Calculates the fitness value of the given solution.
         /// </summary>
-        public sealed override float Calculate(TSPTWProblem problem, Route solution)
+        public sealed override float Calculate(TSPTWProblem problem, Tour solution)
         {
             var weights = problem.Times;
             var fitness = 0f;

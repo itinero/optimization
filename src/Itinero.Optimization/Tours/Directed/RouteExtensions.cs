@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms.Directed;
 using System;
 
-namespace Itinero.Optimization.Routes.TurningWeights
+namespace Itinero.Optimization.Tours.TurningWeights
 {
     /// <summary>
     /// Extensions methods for a route containing turns.
@@ -29,25 +29,25 @@ namespace Itinero.Optimization.Routes.TurningWeights
         /// <summary>
         /// Gets the directedId in the route for the given id. 
         /// </summary>
-        public static int GetDirectedId(this Route route, int id)
+        public static int GetDirectedId(this Tour tour, int id)
         {
             var directed = DirectedHelper.BuildDirectedId(id, 0);
-            if (route.Contains(directed))
+            if (tour.Contains(directed))
             {
                 return directed;
             }
             directed = DirectedHelper.BuildDirectedId(id, 1);
-            if (route.Contains(directed))
+            if (tour.Contains(directed))
             {
                 return directed;
             }
             directed = DirectedHelper.BuildDirectedId(id, 2);
-            if (route.Contains(directed))
+            if (tour.Contains(directed))
             {
                 return directed;
             }
             directed = DirectedHelper.BuildDirectedId(id, 3);
-            if (route.Contains(directed))
+            if (tour.Contains(directed))
             {
                 return directed;
             }

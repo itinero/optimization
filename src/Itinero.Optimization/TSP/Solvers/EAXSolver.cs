@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.GA;
 using Itinero.Optimization.Logging;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using Itinero.Optimization.TSP.Solvers.Operators;
 
 namespace Itinero.Optimization.TSP.Solvers
@@ -27,14 +27,14 @@ namespace Itinero.Optimization.TSP.Solvers
     /// <summary>
     /// A solver using a GA and the edge-assembly crossover.
     /// </summary> 
-    public class EAXSolver : GASolver<float, TSProblem, TSPObjective, Route, float>
+    public class EAXSolver : GASolver<float, TSProblem, TSPObjective, Tour, float>
     {
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
         public EAXSolver(GASettings settings)
             : base(new TSPObjective(), new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<TSProblem, Route, TSPObjective, float>(10, 0.5), new EmptyOperator<float, TSProblem, TSPObjective, Route, float>(), settings)
+            new TournamentSelectionOperator<TSProblem, Tour, TSPObjective, float>(10, 0.5), new EmptyOperator<float, TSProblem, TSPObjective, Tour, float>(), settings)
         {
 
         }
@@ -42,9 +42,9 @@ namespace Itinero.Optimization.TSP.Solvers
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
-        public EAXSolver(GASettings settings, IOperator<float, TSProblem, TSPObjective, Route, float> mutation)
+        public EAXSolver(GASettings settings, IOperator<float, TSProblem, TSPObjective, Tour, float> mutation)
             : base(new TSPObjective(), new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<TSProblem, Route, TSPObjective, float>(10, 0.5), mutation, settings)
+            new TournamentSelectionOperator<TSProblem, Tour, TSPObjective, float>(10, 0.5), mutation, settings)
         {
 
         }
@@ -53,7 +53,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override Route Solve(TSProblem problem, TSPObjective objective, out float fitness)
+        public override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
         {
             if (problem.Weights.Length < 5)
             { // use brute-force solver when problem is very small.
@@ -68,7 +68,7 @@ namespace Itinero.Optimization.TSP.Solvers
 
                 var convertedProblem = problem.ToClosed();
                 var solution = base.Solve(convertedProblem, objective, out fitness);
-                var route = new Route(solution, null);
+                var route = new Tour(solution, null);
                 fitness = 0;
                 foreach (var pair in route.Pairs())
                 {
@@ -84,7 +84,7 @@ namespace Itinero.Optimization.TSP.Solvers
                 var convertedProblem = problem.ToClosed();
                 var convertedRoute = base.Solve(convertedProblem, objective, out fitness);
                 convertedRoute.InsertAfter(System.Linq.Enumerable.Last(convertedRoute), problem.Last.Value);
-                var route = new Route(convertedRoute, problem.Last.Value);
+                var route = new Tour(convertedRoute, problem.Last.Value);
                 fitness = 0;
                 foreach (var pair in route.Pairs())
                 {

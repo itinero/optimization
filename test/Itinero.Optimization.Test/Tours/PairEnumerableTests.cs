@@ -16,11 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Test.Routes
+namespace Itinero.Optimization.Test.Tours
 {
     /// <summary>
     /// Tests for the pair enumerable.
@@ -34,7 +34,7 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void Test1NotClosed()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 }, null);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, null);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
@@ -86,7 +86,7 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void Test2Closed()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
@@ -144,13 +144,13 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void Test3Empty()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(0, pairs.Count);
 
-            route = new Optimization.Routes.Route(new int[] { 0 }, null);
+            route = new Optimization.Tours.Tour(new int[] { 0 }, null);
             pairEnumerable = new PairEnumerable(route);
             pairs = new List<Pair>(pairEnumerable);
 
@@ -163,7 +163,7 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void Test4Reset()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairEnumerator = pairEnumerable.GetEnumerator();
 
@@ -202,13 +202,13 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void Test5OneCustomer()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(0, pairs.Count);
 
-            route = new Optimization.Routes.Route(new int[] { 0 }, null);
+            route = new Optimization.Tours.Tour(new int[] { 0 }, null);
             pairEnumerable = new PairEnumerable(route);
             pairs = new List<Pair>(pairEnumerable);
 
@@ -221,13 +221,13 @@ namespace Itinero.Optimization.Test.Routes
         [Test]
         public void Test6TwoCustomers()
         {
-            var route = new Optimization.Routes.Route(new int[] { 0, 1 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 1 }, 0);
             var pairEnumerable = new PairEnumerable(route);
             var pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(2, pairs.Count);
 
-            route = new Optimization.Routes.Route(new int[] { 0, 1 }, null);
+            route = new Optimization.Tours.Tour(new int[] { 0, 1 }, null);
             pairEnumerable = new PairEnumerable(route);
             pairs = new List<Pair>(pairEnumerable);
 

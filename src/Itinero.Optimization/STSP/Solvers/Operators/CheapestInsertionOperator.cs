@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 
 namespace Itinero.Optimization.STSP.Solvers.Operators
@@ -27,7 +27,7 @@ namespace Itinero.Optimization.STSP.Solvers.Operators
     /// <summary>
     /// An operator that executes a cheapest insertion operation.
     /// </summary>
-    public class CheapestInsertionOperator : IOperator<float, STSProblem, STSPObjective, Route, STSPFitness>
+    public class CheapestInsertionOperator : IOperator<float, STSProblem, STSPObjective, Tour, STSPFitness>
     {
         private readonly int _n;
         private readonly bool _insertNew;
@@ -63,7 +63,7 @@ namespace Itinero.Optimization.STSP.Solvers.Operators
         /// <summary>
         /// Applies this operator.
         /// </summary>
-        public bool Apply(STSProblem problem, STSPObjective objective, Route solution, out STSPFitness delta)
+        public bool Apply(STSProblem problem, STSPObjective objective, Tour solution, out STSPFitness delta)
         {
             var before = objective.Calculate(problem, solution);
             var weights = problem.Weights;

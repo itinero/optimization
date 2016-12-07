@@ -18,22 +18,22 @@
 
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.VNS;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
 {
     /// <summary>
     /// A VND-operator/solver.
     /// </summary>
-    public class VNDOperator : VNSSolver<float, TSPTWProblem, TSPTWObjective, Route, float>
+    public class VNDOperator : VNSSolver<float, TSPTWProblem, TSPTWObjective, Tour, float>
     {
         /// <summary>
         /// Creates a new VND-operator/solver.
         /// </summary>
         public VNDOperator()
-            : base(new SolverObjectiveWrapper<float, TSPTWProblem, TSPTWObjective, TSPTWFeasibleObjective, Route, float>(
+            : base(new SolverObjectiveWrapper<float, TSPTWProblem, TSPTWObjective, TSPTWFeasibleObjective, Tour, float>(
                 new VNSConstructionSolver(), new TSPTWFeasibleObjective(), (p, o, s) => o.Calculate(p, s)),
-                new OperatorAsPerturber<float, TSPTWProblem, TSPTWObjective, Route, float>(
+                new OperatorAsPerturber<float, TSPTWProblem, TSPTWObjective, Tour, float>(
                     new Local1Shift<TSPTWObjective>(true)),
                     new Local2Opt(), (i, l, p, o, s) =>
                     {

@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using Itinero.Optimization.TimeWindows;
 
 namespace Itinero.Optimization.TSP.TimeWindows
@@ -165,7 +165,7 @@ namespace Itinero.Optimization.TSP.TimeWindows
         /// Solves this problim using a default solver.
         /// </summary>
         /// <returns></returns>
-        public Route Solve()
+        public Tour Solve()
         {
             return this.Solve(new Solvers.VNSSolver());
         }
@@ -173,7 +173,7 @@ namespace Itinero.Optimization.TSP.TimeWindows
         /// <summary>
         /// Solvers this problem using the given solver.
         /// </summary>
-        public Route Solve(Itinero.Optimization.Algorithms.Solvers.ISolver<float, TSPTWProblem, TSPTWObjective, Route, float> solver)
+        public Tour Solve(Itinero.Optimization.Algorithms.Solvers.ISolver<float, TSPTWProblem, TSPTWObjective, Tour, float> solver)
         {
             return solver.Solve(this, new TSPTWObjective());
         }

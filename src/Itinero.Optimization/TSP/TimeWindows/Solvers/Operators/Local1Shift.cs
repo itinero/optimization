@@ -18,7 +18,7 @@
 
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using System;
 using System.Collections.Generic;
 
@@ -27,8 +27,8 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
     /// <summary>
     /// A local search procedure to move around and improve the time window 'violations' in a solution.
     /// </summary>
-    public class Local1Shift<TObjective> : IOperator<float, TSPTWProblem, TObjective, Route, float>
-        where TObjective : ObjectiveBase<TSPTWProblem, Route, float>
+    public class Local1Shift<TObjective> : IOperator<float, TSPTWProblem, TObjective, Tour, float>
+        where TObjective : ObjectiveBase<TSPTWProblem, Tour, float>
     {
         private readonly bool _assumeFeasible;
 
@@ -69,7 +69,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(TSPTWProblem problem, TObjective objective, Route solution, out float delta)
+        public bool Apply(TSPTWProblem problem, TObjective objective, Tour solution, out float delta)
         {
             var before = float.MaxValue;
             if (objective.IsNonContinuous)
@@ -127,7 +127,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool MoveViolatedBackward(TSPTWProblem problem, TObjective objective, Route solution, out float delta)
+        public bool MoveViolatedBackward(TSPTWProblem problem, TObjective objective, Tour solution, out float delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();
@@ -227,7 +227,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool MoveNonViolatedForward(TSPTWProblem problem, TObjective objective, Route solution, out float delta)
+        public bool MoveNonViolatedForward(TSPTWProblem problem, TObjective objective, Tour solution, out float delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();
@@ -339,7 +339,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool MoveNonViolatedBackward(TSPTWProblem problem, TObjective objective, IRoute solution, out float delta)
+        public bool MoveNonViolatedBackward(TSPTWProblem problem, TObjective objective, Tour solution, out float delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();
@@ -447,7 +447,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool MoveViolatedForward(TSPTWProblem problem, TObjective objective, IRoute solution, out float delta)
+        public bool MoveViolatedForward(TSPTWProblem problem, TObjective objective, Tour solution, out float delta)
         {
             // search for invalid customers.
             var enumerator = solution.GetEnumerator();

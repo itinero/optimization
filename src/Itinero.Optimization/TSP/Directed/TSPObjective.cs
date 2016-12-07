@@ -18,14 +18,14 @@
 
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.Algorithms.Directed;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.TSP.Directed
 {
     /// <summary>
     /// The default TSP objective.
     /// </summary>
-    public sealed class TSPObjective : ObjectiveBase<TSProblem, Route, float>
+    public sealed class TSPObjective : ObjectiveBase<TSProblem, Tour, float>
     {
         /// <summary>
         /// Gets the value that represents infinity.
@@ -82,7 +82,7 @@ namespace Itinero.Optimization.TSP.Directed
         /// <summary>
         /// Calculates the fitness value of the given solution.
         /// </summary>
-        public sealed override float Calculate(TSProblem problem, Route solution)
+        public sealed override float Calculate(TSProblem problem, Tour solution)
         {
             var weights = problem.Weights;
 

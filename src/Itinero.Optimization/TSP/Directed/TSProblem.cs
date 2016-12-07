@@ -18,7 +18,7 @@
 
 using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using Itinero.Optimization.TSP.Directed.Solvers.Operators;
 using System.Collections.Generic;
 
@@ -108,9 +108,9 @@ namespace Itinero.Optimization.TSP.Directed
         /// Solves this TSP using a default solver.
         /// </summary>
         /// <returns></returns>
-        public Route Solve()
+        public Tour Solve()
         {
-            var solver = new IterativeSolver<float, TSProblem, TSPObjective, Route, float>(
+            var solver = new IterativeSolver<float, TSProblem, TSPObjective, Tour, float>(
                 new Solvers.HillClimbing3OptSolver(), 100, new CheapestInsertionOperator(2), new DirectionLocalSearch());
             return this.Solve(solver);
         }
@@ -118,7 +118,7 @@ namespace Itinero.Optimization.TSP.Directed
         /// <summary>
         /// Solvers this problem using the given solver.
         /// </summary>
-        public Route Solve(Algorithms.Solvers.ISolver<float, TSProblem, TSPObjective, Route, float> solver)
+        public Tour Solve(Algorithms.Solvers.ISolver<float, TSProblem, TSPObjective, Tour, float> solver)
         {
             return solver.Solve(this, new TSPObjective());
         }

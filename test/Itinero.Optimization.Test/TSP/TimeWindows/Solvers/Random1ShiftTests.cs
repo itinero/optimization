@@ -51,7 +51,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Random
             for (int i = 0; i < 1000; i++)
             {
                 // create solution.
-                var solution = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 });
+                var solution = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 });
                 var fitnessBefore = objective.Calculate(problem, solution);
 
                 // shift one customer.
@@ -123,7 +123,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Random
             for (int i = 0; i < 1000; i++)
             {
                 // create solution.
-                var solution = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 });
+                var solution = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 });
                 var fitnessBefore = objective.Calculate(problem, solution);
 
                 // shift one customer.
@@ -180,7 +180,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Random
             for (int i = 0; i < 1000; i++)
             {
                 // create solution.
-                var solution = new Optimization.Routes.Route(new int[] { 0, 1, 2, 3, 4 });
+                var solution = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 });
                 var fitnessBefore = objective.Calculate(problem, solution);
 
                 // shift one customer.

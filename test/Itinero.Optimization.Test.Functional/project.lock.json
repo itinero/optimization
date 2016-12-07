@@ -12,7 +12,7 @@
           "lib/net45/GeoAPI.dll": {}
         }
       },
-      "Itinero/0.31.5-rc1": {
+      "Itinero/0.31.9-rc1": {
         "type": "package",
         "dependencies": {
           "Reminiscence": "1.0.5"
@@ -96,25 +96,14 @@
       "Itinero.Optimization/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5",
-        "compile": {
-          "net45/Itinero.Optimization.dll": {}
-        },
-        "runtime": {
-          "net45/Itinero.Optimization.dll": {}
-        }
-      },
-      "Itinero.Routing.Optimization/1.0.0": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.5",
         "dependencies": {
-          "Itinero": "0.31.5-rc1",
-          "Itinero.Optimization": "1.0.0"
+          "Itinero": "0.31.9-rc1"
         },
         "compile": {
-          "net45/Itinero.Routing.Optimization.dll": {}
+          "net45/Itinero.Optimization.dll": {}
         },
         "runtime": {
-          "net45/Itinero.Routing.Optimization.dll": {}
+          "net45/Itinero.Optimization.dll": {}
         }
       }
     }
@@ -141,12 +130,12 @@
         "lib/portable-net403+sl5+netcore45+wpa81+wp8+MonoAndroid10+XamariniOS10+MonoTouch10/GeoAPI.xml"
       ]
     },
-    "Itinero/0.31.5-rc1": {
-      "sha512": "dZU55Qw8ZL/CDRTzjVLzLaalF7ZoKV/ibZU8C1LrvFkrFYliKV999/QLOAfsBVwajgMXKOelfEC1sRT17AEffQ==",
+    "Itinero/0.31.9-rc1": {
+      "sha512": "cA38z+mflZvVnObWRy3DrygzioAvYiEpPlddwyw7q+fUCZZFHWI+miaL4wRMOlu7O1q7Z2NbcwJGq1UgYaYNqw==",
       "type": "package",
-      "path": "Itinero/0.31.5-rc1",
+      "path": "Itinero/0.31.9-rc1",
       "files": [
-        "Itinero.0.31.5-rc1.nupkg.sha512",
+        "Itinero.0.31.9-rc1.nupkg.sha512",
         "Itinero.nuspec",
         "lib/net40/Itinero.dll",
         "lib/net45/Itinero.dll",
@@ -262,19 +251,13 @@
       "type": "project",
       "path": "../../src/Itinero.Optimization/project.json",
       "msbuildProject": "../../src/Itinero.Optimization/Itinero.Optimization.xproj"
-    },
-    "Itinero.Routing.Optimization/1.0.0": {
-      "type": "project",
-      "path": "../../src/Itinero.Routing.Optimization/project.json",
-      "msbuildProject": "../../src/Itinero.Routing.Optimization/Itinero.Routing.Optimization.xproj"
     }
   },
   "projectFileDependencyGroups": {
     "": [
-      "Itinero >= 0.31.5-rc1",
+      "Itinero >= 0.31.9-rc1",
       "Itinero.Geo >= 0.31.9-rc1",
       "Itinero.Optimization >= 1.0.0-*",
-      "Itinero.Routing.Optimization >= 1.0.0-*",
       "NetTopologySuite.IO.GeoJSON >= 1.14.0",
       "Newtonsoft.Json >= 9.0.1"
     ],

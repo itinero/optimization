@@ -18,48 +18,45 @@
 
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Routes
+namespace Itinero.Optimization.Tours
 {
     /// <summary>
-    /// Enumerates all pairs in an IRoute.
+    /// Enumerates all triples in an IRoute.
     /// </summary>
-    public class PairEnumerable : IEnumerable<Pair>
+    public class TripleEnumerable : IEnumerable<Triple>
     {
-        private readonly IRoute _route;
-        private readonly int _start;
+        /// <summary>
+        /// Holds the route being enumerated.
+        /// </summary>
+        private ITour _tour;
 
         /// <summary>
-        /// Creates a new pair enumerable.
+        /// Creates a new triple enumerable.
         /// </summary>
-        public PairEnumerable(IRoute route)
+        /// <param name="route"></param>
+        public TripleEnumerable(ITour tour)
         {
-            _route = route;
-            _start = _route.First;
+            _tour = tour;
         }
 
-        /// <summary>
-        /// Creates a new pair enumerable starting from the given customer.
-        /// </summary>
-        public PairEnumerable(IRoute route, int start)
+        private class TripleEnumerator : IEnumerator<Triple>
         {
-            _route = route;
-            _start = start;
-        }
+            private Triple _current;
 
-        private class PairEnumerator : IEnumerator<Pair>
-        {
-            private Pair _current;
             private int _first;
+
+            private int _second;
+
             private IEnumerator<int> _enumerator;
 
-            public PairEnumerator(IEnumerator<int> enumerator, int first)
+            public TripleEnumerator(IEnumerator<int> enumerator, int first)
             {
-                _current = new Pair(-1, -1);
+                _current = new Triple(-1, -1, -1);
                 _enumerator = enumerator;
                 _first = first;
             }
 
-            public Pair Current
+            public Triple Current
             {
                 get
                 {
@@ -80,7 +77,7 @@ namespace Itinero.Optimization.Routes
 
             public bool MoveNext()
             {
-                if (_current.From == -1 && _current.To == -1)
+                if (_current.From == -1 && _current.To == -1 && _current.Along == -1)
                 {
                     if (_enumerator.MoveNext())
                     {
@@ -93,29 +90,42 @@ namespace Itinero.Optimization.Routes
 
                     if (_enumerator.MoveNext())
                     {
-                        _current.To = _enumerator.Current;
+                        _current.Along = _enumerator.Current;
+                        _second = _current.Along;
                     }
-                    else if (_first >= 0 && _current.From != _first)
+                    else
                     {
-                        _current.To = _first;
-                        return true;
+                        return false;
+                    }
+
+                    if (_enumerator.MoveNext())
+                    {
+                        _current.To = _enumerator.Current;
                     }
                     else
                     {
                         return false;
                     }
                 }
-                else if (_current.To != _first && _current.From >= 0 && _current.To >= 0)
+                else if (_current.To != _second && _current.From >= 0 && _current.To >= 0)
                 {
                     if (_enumerator.MoveNext())
-                    {
-                        _current.From = _current.To;
+                    { // regular enumeration until the last customer.
+                        _current.From = _current.Along;
+                        _current.Along = _current.To;
                         _current.To = _enumerator.Current;
                     }
-                    else if (_first >= 0)
-                    {
-                        _current.From = _current.To;
+                    else if (_first >= 0 && _current.To != _first)
+                    { // last customer has been reach, include the first one as 'to'.
+                        _current.From = _current.Along;
+                        _current.Along = _current.To;
                         _current.To = _first;
+                    }
+                    else if (_first >= 0 && _current.To == _first)
+                    { // first customer is now to, it needs to become 'along'.
+                        _current.From = _current.Along;
+                        _current.Along = _current.To;
+                        _current.To = _second;
                     }
                     else
                     {
@@ -132,7 +142,7 @@ namespace Itinero.Optimization.Routes
             public void Reset()
             {
                 _enumerator.Reset();
-                _current = new Pair(-1, -1);
+                _current = new Triple(-1, -1, -1);
             }
         }
 
@@ -140,13 +150,13 @@ namespace Itinero.Optimization.Routes
         /// Returns an enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<Pair> GetEnumerator()
+        public IEnumerator<Triple> GetEnumerator()
         {
-            if (_route.First == _route.Last)
+            if (_tour.First == _tour.Last)
             {
-                return new PairEnumerator(_route.GetEnumerator(_start), _route.First);
+                return new TripleEnumerator(_tour.GetEnumerator(), _tour.First);
             }
-            return new PairEnumerator(_route.GetEnumerator(_start), -1);
+            return new TripleEnumerator(_tour.GetEnumerator(), -1);
         }
 
         /// <summary>

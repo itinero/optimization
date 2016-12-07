@@ -20,7 +20,7 @@ using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,7 +29,7 @@ namespace Itinero.Optimization.STSP.Directed.Solver
     /// <summary>
     /// A solver that generates random solutions.
     /// </summary>
-    public sealed class RandomSolver : SolverBase<float, STSProblem, STSPObjective, Route, STSPFitness>
+    public sealed class RandomSolver : SolverBase<float, STSProblem, STSPObjective, Tour, STSPFitness>
     {
         /// <summary>
         /// Returns the name of this solver.
@@ -45,7 +45,7 @@ namespace Itinero.Optimization.STSP.Directed.Solver
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public sealed override Route Solve(STSProblem problem, STSPObjective objective, out STSPFitness fitness)
+        public sealed override Tour Solve(STSProblem problem, STSPObjective objective, out STSPFitness fitness)
         {
             // generate random pool to select customers from.
             if (_randomPool == null || _randomPool.Size < problem.Weights.Length)
@@ -58,7 +58,7 @@ namespace Itinero.Optimization.STSP.Directed.Solver
             }
 
             // keep adding customers until no more space is left or no more customers available.
-            var route = new Route(new int[] { DirectedHelper.BuildDirectedId(problem.First, 0) });
+            var route = new Tour(new int[] { DirectedHelper.BuildDirectedId(problem.First, 0) });
             fitness = new STSPFitness()
             {
                 Weight = 0,

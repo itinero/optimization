@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.TimeWindows
 {
@@ -28,13 +28,13 @@ namespace Itinero.Optimization.TimeWindows
         /// <summary>
         /// Calculates the total minimum diff.
         /// </summary>
-        public static float TotalMinDiff<T>(this Route route, float[][] times, TimeWindow[] windows)
+        public static float TotalMinDiff<T>(this Tour tour, float[][] times, TimeWindow[] windows)
             where T : struct
         {
             var total = 0f;
             var seconds = 0f;
             var previous = Constants.NOT_SET;
-            var enumerator = route.GetEnumerator();
+            var enumerator = tour.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 var current = enumerator.Current;

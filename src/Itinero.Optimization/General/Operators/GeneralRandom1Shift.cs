@@ -18,8 +18,8 @@
 
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routes;
-using Itinero.Optimization.Routes.Operations;
+using Itinero.Optimization.Tours;
+using Itinero.Optimization.Tours.Operations;
 using System;
 
 namespace Itinero.Optimization.General.Operators
@@ -28,7 +28,7 @@ namespace Itinero.Optimization.General.Operators
     /// An operator to execute n random 1-shift* relocations.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere.</remarks>
-    public sealed class GeneralRandom1Shift<TProblem, TObjective> : IPerturber<float, TProblem, TObjective, Route, float>
+    public sealed class GeneralRandom1Shift<TProblem, TObjective> : IPerturber<float, TProblem, TObjective, Tour, float>
     {
         private readonly RandomGenerator _random = RandomGeneratorExtensions.GetRandom();
         private readonly Func<TProblem, float[][]> _getWeights;
@@ -62,16 +62,16 @@ namespace Itinero.Optimization.General.Operators
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(TProblem problem, TObjective objective, Route route, out float difference)
+        public bool Apply(TProblem problem, TObjective objective, Tour tour, out float difference)
         {
-            return this.Apply(problem, objective, route, 1, out difference);
+            return this.Apply(problem, objective, tour, 1, out difference);
         }
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(TProblem problem, TObjective objective, Route route, int level, out float difference)
+        public bool Apply(TProblem problem, TObjective objective, Tour tour, int level, out float difference)
         {
             var weights = _getWeights(problem);
 
@@ -87,10 +87,10 @@ namespace Itinero.Optimization.General.Operators
                 }
 
                 float shiftDiff;
-                if (!ShiftAfter.Do(weights, route, customer, insert, out shiftDiff))
+                if (!ShiftAfter.Do(weights, tour, customer, insert, out shiftDiff))
                 {
                     throw new Exception(
-                        string.Format("Failed to shift customer {0} after {1} in route {2}.", customer, insert, route.ToInvariantString()));
+                        string.Format("Failed to shift customer {0} after {1} in route {2}.", customer, insert, tour.ToInvariantString()));
                 }
                 difference += shiftDiff;
 

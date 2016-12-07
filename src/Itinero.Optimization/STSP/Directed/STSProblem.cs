@@ -18,7 +18,7 @@
 
 using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routes;
+using Itinero.Optimization.Tours;
 using Itinero.Optimization.STSP.Directed.Solvers.Operators;
 using System.Collections.Generic;
 
@@ -113,17 +113,17 @@ namespace Itinero.Optimization.STSP.Directed
         /// Solves this TSP using a default solver.
         /// </summary>
         /// <returns></returns>
-        public Route Solve()
+        public Tour Solve()
         {
-            var solver = new IterativeSolver<float, STSProblem, STSPObjective, Route, STSPFitness>(
-                new STSP.Directed.Solver.RandomSolver(), 100, new IterativeOperator<float, STSProblem, STSPObjective, Route, STSPFitness>(new CheapestInsertionOperator(3, 4), 250));
+            var solver = new IterativeSolver<float, STSProblem, STSPObjective, Tour, STSPFitness>(
+                new STSP.Directed.Solver.RandomSolver(), 100, new IterativeOperator<float, STSProblem, STSPObjective, Tour, STSPFitness>(new CheapestInsertionOperator(3, 4), 250));
             return this.Solve(solver);
         }
 
         /// <summary>
         /// Solvers this problem using the given solver.
         /// </summary>
-        public Route Solve(Algorithms.Solvers.ISolver<float, STSProblem, STSPObjective, Route, STSPFitness> solver)
+        public Tour Solve(Algorithms.Solvers.ISolver<float, STSProblem, STSPObjective, Tour, STSPFitness> solver)
         {
             return solver.Solve(this, new STSPObjective());
         }

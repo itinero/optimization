@@ -18,12 +18,12 @@
 
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Routes
+namespace Itinero.Optimization.Tours
 {
     /// <summary>
-    /// Contains route extensions.
+    /// Contains tour extensions.
     /// </summary>
-    public static class RouteExtensions
+    public static class TourExtensions
     {
         /// <summary>
         /// Puts the elements of the enumerator (back) in a list.
@@ -42,10 +42,10 @@ namespace Itinero.Optimization.Routes
         /// <summary>
         /// Returns true if the given route is closed.
         /// </summary>
-        public static bool IsClosed(this IRoute route)
+        public static bool IsClosed(this ITour tour)
         {
-            return route.Last.HasValue &&
-                route.Last.Value == route.First;
+            return tour.Last.HasValue &&
+                tour.Last.Value == tour.First;
         }
     }
 }

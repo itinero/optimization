@@ -44,7 +44,7 @@ namespace Itinero.Optimization.Test.TSP.Solvers.Operators
             problem.Weights[4][0] = 1;
 
             // create a route with one shift.
-            var route = new Optimization.Routes.Route(new int[] { 0, 2, 3, 1, 4 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 2, 3, 1, 4 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
@@ -71,7 +71,7 @@ namespace Itinero.Optimization.Test.TSP.Solvers.Operators
             problem.Weights[4][0] = 1;
 
             // create a route with one shift.
-            var route = new Optimization.Routes.Route(new int[] { 0, 2, 3, 1, 4 }, null);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 2, 3, 1, 4 }, null);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
@@ -98,7 +98,7 @@ namespace Itinero.Optimization.Test.TSP.Solvers.Operators
             problem.Weights[4][0] = 1;
 
             // create a route with one shift.
-            var route = new Optimization.Routes.Route(new int[] { 0, 2, 4, 1, 3 }, 0);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 2, 4, 1, 3 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
@@ -125,7 +125,7 @@ namespace Itinero.Optimization.Test.TSP.Solvers.Operators
             problem.Weights[4][0] = 1;
 
             // create a route with one shift.
-            var route = new Optimization.Routes.Route(new int[] { 0, 2, 4, 1, 3 }, null);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 2, 4, 1, 3 }, null);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new Local1Shift();
