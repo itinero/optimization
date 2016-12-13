@@ -42,12 +42,12 @@ namespace Itinero.Optimization.Test.Algorithms.Solvers.GA
         {
             if (solution1.Value < solution2.Value)
             {
-                fitness = solution1.Value + RandomGeneratorExtensions.GetRandom().Generate(
+                fitness = solution1.Value - RandomGeneratorExtensions.GetRandom().Generate(
                     solution2.Value - solution1.Value);
             }
             else
             {
-                fitness = solution2.Value + RandomGeneratorExtensions.GetRandom().Generate(
+                fitness = solution2.Value - RandomGeneratorExtensions.GetRandom().Generate(
                     solution1.Value - solution2.Value);
             }
             return new SolutionMock()
