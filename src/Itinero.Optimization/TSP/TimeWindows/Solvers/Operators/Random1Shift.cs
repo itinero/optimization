@@ -66,6 +66,12 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
         {
             var original = objective.Calculate(problem, tour);
 
+            if (problem.Times.Length == 1)
+            {
+                difference = 0;
+                return false;
+            }
+
             difference = 0;
             while (level > 0)
             {

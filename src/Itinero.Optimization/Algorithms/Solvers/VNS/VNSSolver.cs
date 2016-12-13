@@ -130,8 +130,17 @@ namespace Itinero.Optimization.Algorithms.Solvers.VNS
                 _localSearch.ApplyUntil(problem, objective, perturbedSolution, out localSearchDifference);
 
                 // calculate new fitness and compare.
-                var newFitness = objective.Subtract(problem, globalBestFitness, perturbedDifference);
-                newFitness = objective.Subtract(problem, newFitness, localSearchDifference);
+                TFitness newFitness = default(TFitness);
+                if (!objective.IsNonContinuous)
+                { // solution fitness can be updated by adding the differences.
+                    newFitness = objective.Add(problem, globalBestFitness, perturbedDifference);
+                    newFitness = objective.Add(problem, newFitness, localSearchDifference);
+                }
+                else
+                { // solution fitness needs to updated every time.
+                    newFitness = objective.Calculate(problem, perturbedSolution);
+                }
+
                 if (objective.IsBetterThan(problem, newFitness, globalBestFitness))
                 { // there was an improvement, keep new solution as global.
                     globalBestFitness = newFitness;

@@ -44,7 +44,7 @@ namespace Itinero.Optimization.TSP.TimeWindows
         {
             get
             {
-                return false;
+                return true;
             }
         }
 

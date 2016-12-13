@@ -58,18 +58,11 @@ namespace Itinero.Optimization.Test.Algorithms.Solvers
         /// <returns></returns>
         public bool Apply(ProblemMock problem, ObjectiveMock objective, SolutionMock solution, int level, out float delta)
         {
-            var fitnessBefore = problem.Max - solution.Value;
-            delta = RandomGeneratorExtensions.GetRandom().Generate(problem.Max / 100);
-            delta = delta - (problem.Max / (80 - level)); // mock approx 20% chance of a better solution at level 1 and decrease with levels.
-            solution.Value = solution.Value - delta;
-            if (delta < 0) // yes, I know this code can be shorter.
-            { // increase in fitness, mock a worse solution.
-                return false;
-            }
-            else
-            { // decrease in fitness, mock a better solution.
-                return true;
-            }
+            var before = solution.Value;
+            var after = RandomGeneratorExtensions.GetRandom().Generate(problem.Max);
+            solution.Value = after;
+            delta = after - before; // when improvement, after is lower, delta < 0
+            return delta < 0;
         }
     }
 }

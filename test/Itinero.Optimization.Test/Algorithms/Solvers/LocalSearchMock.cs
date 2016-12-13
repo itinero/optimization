@@ -63,8 +63,8 @@ namespace Itinero.Optimization.Test.Algorithms.Solvers
                 return true;
             }
             solution.Value = solution.Value - reduction;
-            delta = fitnessBefore - solution.Value;
-            return true;
+            delta = solution.Value - fitnessBefore; // when improvement, new is lower, delta < 0
+            return delta < 0;
         }
     }
 }
