@@ -5,6 +5,9 @@
     <version>1.0.0</version>
     <authors>Itinero.Optimization</authors>
     <owners>Itinero.Optimization</owners>
+    <licenseUrl>https://github.com/itinero/optimization/blob/develop/LICENSE.md</licenseUrl>
+    <projectUrl>http://www.itinero.tech/</projectUrl>
+    <iconUrl>http://www.itinero.tech/logos/itinero_logo_notext.svg.128.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Itinero.Optimization</description>
     <tags></tags>
