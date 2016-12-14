@@ -66,12 +66,19 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
             return true;
         }
 
+        private bool[] _validFlags;
+
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
         public bool Apply(TSPTWProblem problem, TObjective objective, Tour solution, out float delta)
         {
+            if (_validFlags == null)
+            {
+                _validFlags = new bool[problem.Times.Length / 2];
+            }
+
             delta = 0;
             var before = float.MaxValue;
             if (objective.IsNonContinuous)
@@ -84,17 +91,17 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
             // 2: try to move a non-violated customer forward.
             // 3: try to move a non-violated customer backward.
             // 4: try to move a violated customer forward.
-            if (!_assumeFeasible)
-            {
-                if (this.MoveViolatedBackward(problem, objective, solution, out delta))
-                { // success already, don't try anything else.
-                    if (objective.IsNonContinuous)
-                    {
-                        delta = before - objective.Calculate(problem, solution);
-                    }
-                    return delta > 0;
-                }
-            }
+            //if (!_assumeFeasible)
+            //{
+            //    if (this.MoveViolatedBackward(problem, objective, solution, out delta))
+            //    { // success already, don't try anything else.
+            //        if (objective.IsNonContinuous)
+            //        {
+            //            delta = before - objective.Calculate(problem, solution);
+            //        }
+            //        return delta > 0;
+            //    }
+            //}
             //if (this.MoveNonViolatedForward(problem, objective, solution, out delta))
             //{ // success already, don't try anything else.
             //    if (objective.IsNonContinuous)
@@ -125,110 +132,120 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
             return false;
         }
 
-        /// <summary>
-        /// Returns true if there was an improvement, false otherwise.
-        /// </summary>
-        public bool MoveViolatedBackward(TSPTWProblem problem, TObjective objective, Tour solution, out float delta)
-        {
-            // search for invalid customers.
-            var enumerator = solution.GetEnumerator();
-            var time = 0.0f;
-            var fitness = 0.0f;
-            var position = 0;
-            var invalids = new List<Tuple<int, int>>(); // al list of customer-position pairs.
-            var previous = Constants.NOT_SET;
-            while (enumerator.MoveNext())
-            {
-                var current = enumerator.Current;
-                int currentArrivalId, currentDepartureId, currentId, currentTurn;
-                DirectedHelper.ExtractAll(current, out currentArrivalId, out currentDepartureId, out currentId, out currentTurn);
-                if (previous != Constants.NOT_SET)
-                { // keep track of time.
-                    var previousDepartureId = DirectedHelper.ExtractDepartureId(previous);
-                    time += problem.Times[previousDepartureId][currentArrivalId];
-                }
-                var window = problem.Windows[enumerator.Current];
-                if (window.Max < time && position > 1)
-                { // ok, unfeasible and customer is not the first 'moveable' customer.
-                    fitness += time - window.Max;
-                    if (enumerator.Current != problem.Last)
-                    { // when the last customer is fixed, don't try to relocate.
-                        invalids.Add(new Tuple<int, int>(enumerator.Current, position));
-                    }
-                }
-                if (window.Min > time)
-                { // wait here!
-                    time = window.Min;
-                }
-                
-                // add turn penalty.
-                time += problem.TurnPenalties[currentTurn];
+        ///// <summary>
+        ///// Returns true if there was an improvement, false otherwise.
+        ///// </summary>
+        //public bool MoveViolatedBackward(TSPTWProblem problem, TObjective objective, Tour solution, out float delta)
+        //{
+        //    float time, waitTime, violatedTime;
+        //    var violated = problem.TimeAndViolations(solution, out time, out waitTime, out violatedTime, ref _validFlags);
 
-                // increase position.
-                position++;
-                previous = enumerator.Current;
-            }
+        //    // if no violated customer found return false.
+        //    if (violated == 0)
+        //    {
+        //        delta = 0;
+        //        return false;
+        //    }
 
-            // ... ok, if a customer was found, try to move it.
-            foreach (var invalid in invalids)
-            {
-                // ok try the new position.
-                for (var newPosition = 1; newPosition < invalid.Item2; newPosition++)
-                {
-                    var before = solution.GetCustomerAt(newPosition - 1);
+        //    // if a violated customer was found, try to move it.
+        //    var enumerator = solution.GetEnumerator();
+        //    var position = 0;
+        //    while(enumerator.MoveNext())
+        //    {
+        //        if (position == 0)
+        //        {
+        //            position++;
+        //            continue;
+        //        }
 
-                    // calculate new total min diff.
-                    var newFitness = 0.0f;
-                    previous = Constants.NOT_SET;
-                    time = 0;
-                    enumerator = solution.GetEnumerator();
-                    while (enumerator.MoveNext())
-                    {
-                        var current = enumerator.Current;
-                        if (current != invalid.Item1)
-                        { // ignore invalid, add it after 'before'.
-                            if (previous != Constants.NOT_SET)
-                            { // keep track if time.
-                                time += problem.Times[previous][current];
-                            }
-                            var window = problem.Windows[enumerator.Current];
-                            if (window.Max < time)
-                            { // ok, unfeasible and customer is not the first 'moveable' customer.
-                                newFitness += time - window.Max;
-                            }
-                            if (window.Min > time)
-                            { // wait here!
-                                time = window.Min;
-                            }
-                            previous = current;
-                            if (current == before)
-                            { // also add the before->invalid.
-                                time += problem.Times[current][invalid.Item1];
-                                window = problem.Windows[invalid.Item1];
-                                if (window.Max < time)
-                                { // ok, unfeasible and customer is not the first 'moveable' customer.
-                                    newFitness += time - window.Max;
-                                }
-                                if (window.Min > time)
-                                { // wait here!
-                                    time = window.Min;
-                                }
-                                previous = invalid.Item1;
-                            }
-                        }
-                    }
+        //        var current = enumerator.Current;
+        //        var id = DirectedHelper.ExtractId(current);
 
-                    if (newFitness < fitness)
-                    { // there is improvement!
-                        delta = fitness - newFitness;
-                        solution.ShiftAfter(invalid.Item1, before);
-                        return true;
-                    }
-                }
-            }
-            delta = 0;
-            return false;
-        }
+        //        var enumerator2 = solution.GetEnumerator();
+        //        var position2 = 0;
+        //        while(enumerator2.MoveNext())
+        //        {
+        //            var current2 = enumerator2.Current;
+                    
+
+        //        }
+
+        //        position++;
+        //    }
+        //    for (var i = 0; i < _validFlags.Length; i++)
+        //    {
+        //        if (_validFlags[i])
+        //        {
+        //            continue;
+        //        }
+
+        //        // ok try the new position.
+        //        for (var newPosition = 1; newPosition < i; newPosition++)
+        //        {
+
+        //        }
+        //    }
+            
+        //    // ... ok, if a customer was found, try to move it.
+        //    foreach (var invalid in invalids)
+        //    {
+        //        // ok try the new position.
+        //        for (var newPosition = 1; newPosition < invalid.Item2; newPosition++)
+        //        {
+        //            var before = solution.GetCustomerAt(newPosition - 1);
+
+        //            // calculate new total min diff.
+        //            var newFitness = 0.0f;
+        //            previous = Constants.NOT_SET;
+        //            time = 0;
+        //            enumerator = solution.GetEnumerator();
+        //            while (enumerator.MoveNext())
+        //            {
+        //                var current = enumerator.Current;
+        //                if (current != invalid.Item1)
+        //                { // ignore invalid, add it after 'before'.
+        //                    if (previous != Constants.NOT_SET)
+        //                    { // keep track if time.
+        //                        time += problem.Times[previous][current];
+        //                    }
+        //                    var window = problem.Windows[enumerator.Current];
+        //                    if (window.Max < time)
+        //                    { // ok, unfeasible and customer is not the first 'moveable' customer.
+        //                        newFitness += time - window.Max;
+        //                    }
+        //                    if (window.Min > time)
+        //                    { // wait here!
+        //                        time = window.Min;
+        //                    }
+        //                    previous = current;
+        //                    if (current == before)
+        //                    { // also add the before->invalid.
+        //                        time += problem.Times[current][invalid.Item1];
+        //                        window = problem.Windows[invalid.Item1];
+        //                        if (window.Max < time)
+        //                        { // ok, unfeasible and customer is not the first 'moveable' customer.
+        //                            newFitness += time - window.Max;
+        //                        }
+        //                        if (window.Min > time)
+        //                        { // wait here!
+        //                            time = window.Min;
+        //                        }
+        //                        previous = invalid.Item1;
+        //                    }
+        //                }
+        //            }
+
+        //            if (newFitness < fitness)
+        //            { // there is improvement!
+        //                delta = fitness - newFitness;
+        //                solution.ShiftAfter(invalid.Item1, before);
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //    delta = 0;
+        //    return false;
+        //}
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.

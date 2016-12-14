@@ -77,5 +77,24 @@ namespace Itinero.Optimization.Tours.Operations
                     + weights[before][customer]
                     + weights[customer][newAfter];
         }
+
+        /// <summary>
+        /// Pretends to shift the given customer to a new location and places it after the given 'before' customer.
+        /// </summary>
+        /// <param name="customer">The customer to shift.</param>
+        /// <param name="before">The new customer that will come right before.</param>
+        /// <returns>The enumerable that represents the new route.</returns>
+        /// <remarks>example:
+        /// route: 1->2->3->4->5->6
+        ///     customer:   2
+        ///     before:     4
+        ///     
+        /// new route: 1->3->4->2->5->6
+        /// </remarks>
+        /// <exception cref="System.ArgumentException">When customer equals before.</exception>
+        public static ShiftedAfterTour GetShiftedAfter(this ITour tour, int customer, int before)
+        {
+            return new ShiftedAfterTour(tour, customer, before);
+        }
     }
 }

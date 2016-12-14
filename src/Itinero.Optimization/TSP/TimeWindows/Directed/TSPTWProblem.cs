@@ -21,6 +21,7 @@ using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.TimeWindows;
 using Itinero.Optimization.Tours;
+using Itinero.Optimization.Tours.Operations;
 using System.Collections.Generic;
 
 namespace Itinero.Optimization.TSP.TimeWindows.Directed
@@ -346,6 +347,30 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
         /// <returns>The number of invalid customers.</returns>
         public int TimeAndViolations(Tour tour, out float time, out float waitTime, out float violatedTime, ref bool[] validFlags)
         {
+            return TimeAndViolations(tour as IEnumerable<int>, out time, out waitTime, out violatedTime, ref validFlags);
+        }
+
+        /// <summary>
+        /// Calculates total time and violations if the given id was moved after 'before'.
+        /// </summary>
+        /// <param name="before">The customer to move after.</param>
+        /// <param name="id">The customer to place.</param>
+        /// <param name="time">The total travel time without waittime.</param>
+        /// <param name="tour">The tour to calculate for.</param>
+        /// <param name="validFlags">Flags for each customer, a customer window is violated when false.</param>
+        /// <param name="violatedTime">The total time of violations.</param>
+        /// <param name="waitTime">The total waiting time.</param>
+        /// <returns></returns>
+        public int TimeAndViolationsIfMoveAfter(Tour tour, int before, int id, out float time, out float waitTime, out float violatedTime, ref bool[] validFlags)
+        {
+            return TimeAndViolations(tour.GetShiftedAfter(id, before), out time, out waitTime, out violatedTime, ref validFlags);
+        }
+
+        /// <summary>
+        /// Calculates total time and violations if the given id was moved after 'before'. Assumes the tour is closed.
+        /// </summary>
+        private int TimeAndViolations(IEnumerable<int> tour, out float time, out float waitTime, out float violatedTime, ref bool[] validFlags)
+        {
             var times = this.Times;
             var windows = this.Windows;
             var turnPenalties = this.TurnPenalties;
@@ -357,8 +382,14 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
             var violated = 0;
             var previousFrom = int.MaxValue;
             var firstTo = int.MaxValue;
+            var first = Constants.NOT_SET;
             foreach (var directedId in tour)
             {
+                if (first == Constants.NOT_SET)
+                {
+                    first = directedId;
+                }
+
                 // extract turns and stuff from directed id.
                 int arrivalId, departureId, id, turn;
                 DirectedHelper.ExtractAll(directedId, out arrivalId, out departureId, out id, out turn);
@@ -403,7 +434,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
                 time = time + times[previousFrom][firstTo];
 
                 // add turn penalty at first customer.
-                time += turnPenalties[DirectedHelper.ExtractTurn(tour.First)];
+                time += turnPenalties[DirectedHelper.ExtractTurn(first)];
             }
 
             return violated;
