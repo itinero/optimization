@@ -46,6 +46,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
             this.Last = null;
             this.Times = times;
             this.Windows = windows;
+
             this.TurnPenalties = new float[] {
                 0,
                 turnPenaltyInSeconds,
@@ -75,6 +76,13 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
             this.Times = weights;
             this.Windows = windows;
             
+            this.TurnPenalties = new float[] {
+                0,
+                turnPenaltyInSeconds,
+                turnPenaltyInSeconds,
+                0
+            };
+
             this.Times[first * 2 + 0][last * 2 + 0] = 0;
             this.Times[first * 2 + 1][last * 2 + 0] = 0;
             this.Times[first * 2 + 0][last * 2 + 1] = 0;

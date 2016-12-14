@@ -56,7 +56,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers
                     customers.Add(customer);
                 }
             }
-            customers.Shuffle<int>();
+            customers.Shuffle();
             customers.Insert(0, problem.First);
             if (problem.Last.HasValue && problem.First != problem.Last)
             { // the special case of a fixed last customer.
