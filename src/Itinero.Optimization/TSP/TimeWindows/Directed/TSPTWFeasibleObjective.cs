@@ -16,7 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.Tours;
 
@@ -103,63 +102,25 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
             }
         }
 
+        private bool[] _validFlags = null;
+
         /// <summary>
         /// Calculates the fitness of a TSP solution.
         /// </summary>
         /// <returns></returns>
         public sealed override float Calculate(TSPTWProblem problem, Tour solution)
         {
-            var times = problem.Times;
-
-            var infeasible = 0f;
-            var time = 0f;
-            var wait = 0f;
-            var previousFrom = int.MaxValue;
-            var firstTo = int.MaxValue;
-            foreach (var directedId in solution)
+            if (_validFlags == null)
             {
-                // extract turns and stuff from directed id.
-                int arrivalId, departureId, id, turn;
-                DirectedHelper.ExtractAll(directedId, out arrivalId, out departureId, out id, out turn);
-
-                // add the weight from the previous customer to the current one.
-                if (previousFrom != int.MaxValue)
-                {
-                    time = time + times[previousFrom][arrivalId];
-                }
-                else
-                {
-                    firstTo = arrivalId;
-                }
-
-                // check the windows (before turn-penalties).
-                var window = problem.Windows[id];
-                if (window.Max < (time + wait))
-                { // ok, unfeasible.
-                    infeasible += (time + wait) - window.Max;
-                }
-                if (window.Min > (time + wait))
-                { // wait here!
-                    wait += (window.Min - (time + wait));
-                }
-
-                // add turn penalty.
-                time += problem.TurnPenalties[turn];
-
-                previousFrom = departureId;
+                _validFlags = new bool[solution.Count];
             }
 
-            // add the weight between last and first.
-            if (previousFrom != int.MaxValue)
-            {
-                time = time + times[previousFrom][firstTo];
-            }
+            // calculate everything here.
+            float violatedTime, time, waitTime;
+            var violated = problem.TimeAndViolations(solution, out time, out waitTime, out violatedTime, ref _validFlags);
 
-            // TODO:there is need to seperate the violations, waiting time and weights.
-            //      expand the logistics library to allow for pareto-optimal or other 
-            //      more advanced weight comparisons.
-            //      => this may not be needed anymore for the TSP-TW but for other problems it may be useful.
-            return infeasible;
+            // there only violated time is usefull, this objective is built to only make a tour valid.
+            return violatedTime;
         }
     }
 }

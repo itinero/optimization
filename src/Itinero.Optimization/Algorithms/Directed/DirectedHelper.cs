@@ -248,5 +248,19 @@ namespace Itinero.Optimization.Algorithms.Directed
 
             return weights[departureId1][arrivalId2];
         }
+
+        /// <summary>
+        /// Sets the weights between two customers.
+        /// </summary>
+        public static void SetWeight(this float[][] weights, int id1, int id2,
+            float forward1forward2, float forward1backward2, float backward1forward1, float backward1backward2)
+        {
+            var c1Index = id1 * 2;
+            var c2Index = id2 * 2;
+            weights[c1Index + 0][c2Index + 0] = forward1forward2;
+            weights[c1Index + 0][c2Index + 1] = forward1backward2;
+            weights[c1Index + 1][c2Index + 0] = backward1forward1;
+            weights[c1Index + 1][c2Index + 1] = backward1backward2;
+        }
     }
 }

@@ -123,6 +123,40 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows
         /// <summary>
         /// Creates a directed TSP-TW.
         /// </summary>
+        public static Optimization.TSP.TimeWindows.Directed.TSPTWProblem CreateDirectedTSPTW(int first, int size, float defaultWeight, TimeWindow[] windows, float turnPenalities)
+        {
+            var weights = new float[size * 2][];
+            for (int x = 0; x < size * 2; x++)
+            {
+                weights[x] = new float[size * 2];
+                var xDirection = (x % 2);
+                for (int y = 0; y < size * 2; y++)
+                {
+                    var yDirection = (y % 2);
+                    if (x == y)
+                    {
+                        weights[x][y] = 0;
+                    }
+                    else
+                    {
+                        if (xDirection == yDirection)
+                        {
+                            weights[x][y] = defaultWeight;
+                        }
+                        else
+                        {
+                            weights[x][y] = defaultWeight;
+                        }
+                    }
+                }
+            }
+            return new Itinero.Optimization.TSP.TimeWindows.Directed.TSPTWProblem(0, weights, windows, turnPenalities);
+        }
+
+
+        /// <summary>
+        /// Creates a directed TSP-TW.
+        /// </summary>
         public static Optimization.TSP.TimeWindows.Directed.TSPTWProblem CreateDirectedTSPTW(int first, int size, float defaultWeight, float turnPenalities)
         {
             var windows = new TimeWindow[size];

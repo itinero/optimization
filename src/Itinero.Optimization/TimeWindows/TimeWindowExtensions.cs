@@ -16,7 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Tours;
+using System.Collections.Generic;
 
 namespace Itinero.Optimization.TimeWindows
 {

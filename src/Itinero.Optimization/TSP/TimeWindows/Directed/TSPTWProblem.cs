@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.TimeWindows;
@@ -332,6 +333,80 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
                 nearestNeighbours[id] = result;
             }
             return result;
+        }
+        
+        /// <summary>
+        /// Calculates total time and all violations.
+        /// </summary>
+        /// <param name="time">The total travel time without waittime.</param>
+        /// <param name="tour">The tour to calculate for.</param>
+        /// <param name="validFlags">Flags for each customer, a customer window is violated when false.</param>
+        /// <param name="violatedTime">The total time of violations.</param>
+        /// <param name="waitTime">The total waiting time.</param>
+        /// <returns>The number of invalid customers.</returns>
+        public int TimeAndViolations(Tour tour, out float time, out float waitTime, out float violatedTime, ref bool[] validFlags)
+        {
+            var times = this.Times;
+            var windows = this.Windows;
+            var turnPenalties = this.TurnPenalties;
+
+            time = 0f;
+            violatedTime = 0f;
+            waitTime = 0f;
+
+            var violated = 0;
+            var previousFrom = int.MaxValue;
+            var firstTo = int.MaxValue;
+            foreach (var directedId in tour)
+            {
+                // extract turns and stuff from directed id.
+                int arrivalId, departureId, id, turn;
+                DirectedHelper.ExtractAll(directedId, out arrivalId, out departureId, out id, out turn);
+
+                // add the weight from the previous customer to the current one.
+                var turnPenalty = 0f;
+                if (previousFrom != int.MaxValue)
+                { // there is a previous, add the travel time.
+                    time = time + times[previousFrom][arrivalId];
+
+                    // and keep the turn penalty.
+                    turnPenalty += turnPenalties[turn];
+                }
+                else
+                { // first customer.
+                    firstTo = arrivalId;
+                }
+
+                // check the windows (before turn-penalties).
+                var window = windows[id];
+                validFlags[id] = true;
+                if (window.Max < (time + waitTime))
+                { // ok, unfeasible.
+                    violatedTime += (time + waitTime) - window.Max;
+                    validFlags[id] = false;
+                    violated++;
+                }
+                if (window.Min > (time + waitTime))
+                { // wait here!
+                    waitTime += (window.Min - (time + waitTime));
+                }
+
+                // add the turn penalty.
+                time += turnPenalty;
+
+                previousFrom = departureId;
+            }
+
+            // add the weight between last and first.
+            if (previousFrom != int.MaxValue)
+            {
+                time = time + times[previousFrom][firstTo];
+
+                // add turn penalty at first customer.
+                time += turnPenalties[DirectedHelper.ExtractTurn(tour.First)];
+            }
+
+            return violated;
         }
     }
 }
