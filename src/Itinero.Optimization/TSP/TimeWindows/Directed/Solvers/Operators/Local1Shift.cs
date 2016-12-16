@@ -80,13 +80,6 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
                 _validFlags = new bool[problem.Times.Length / 2];
             }
 
-            delta = 0;
-            var before = float.MaxValue;
-            if (objective.IsNonContinuous)
-            {
-                before = objective.Calculate(problem, solution);
-            }
-
             // STRATEGY: 
             // 1: try to move a violated customer backwards.
             // 2: try to move a non-violated customer forward.
@@ -96,37 +89,21 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
             {
                 if (this.MoveViolatedBackward(problem, objective, solution, out delta))
                 { // success already, don't try anything else.
-                    if (objective.IsNonContinuous)
-                    {
-                        delta = before - objective.Calculate(problem, solution);
-                    }
                     return delta > 0;
                 }
             }
             if (this.MoveNonViolatedForward(problem, objective, solution, out delta))
             { // success already, don't try anything else.
-                if (objective.IsNonContinuous)
-                {
-                    delta = before - objective.Calculate(problem, solution);
-                }
                 return delta > 0;
             }
             if (this.MoveNonViolatedBackward(problem, objective, solution, out delta))
             { // success already, don't try anything else.
-                if (objective.IsNonContinuous)
-                {
-                    delta = before - objective.Calculate(problem, solution);
-                }
                 return delta > 0;
             }
             if (!_assumeFeasible)
             {
                 if (this.MoveViolatedForward(problem, objective, solution, out delta))
                 { // success already, don't try anything else.
-                    if (objective.IsNonContinuous)
-                    {
-                        delta = before - objective.Calculate(problem, solution);
-                    }
                     return delta > 0;
                 }
             }
@@ -169,6 +146,12 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
                 var current = enumerator.Current;
                 var id = DirectedHelper.ExtractId(current);
 
+                if (problem.Last == id)
+                { // don't place a fixed last customer.
+                    position++;
+                    continue;
+                }
+
                 // is this customer violated.
                 if (_validFlags[id])
                 { // no it's not, move on.
@@ -182,6 +165,13 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
                 while (enumerator2.MoveNext())
                 {
                     var current2 = enumerator2.Current;
+                    var id2 = DirectedHelper.ExtractId(current2);
+                    if (problem.Last == id2 &&
+                        problem.Last != problem.First)
+                    { // don't place a fixed last customer.
+                        position2++;
+                        continue;
+                    }
 
                     // test and check fitness.
                     // TODO: do best-placement? check best turn at 'current'.
@@ -245,6 +235,12 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
                 var current = enumerator.Current;
                 var id = DirectedHelper.ExtractId(current);
 
+                if (problem.Last == id)
+                { // don't place a fixed last customer.
+                    position++;
+                    continue;
+                }
+
                 // is this customer valid.
                 if (!_validFlags[id])
                 { // no it's not, move on.
@@ -264,6 +260,13 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
                     }
 
                     var current2 = enumerator2.Current;
+                    var id2 = DirectedHelper.ExtractId(current2);
+                    if (problem.Last == id2 &&
+                        problem.Last != problem.First)
+                    { // don't place a fixed last customer.
+                        position2++;
+                        continue;
+                    }
 
                     // test and check fitness.
                     // TODO: do best-placement? check best turn at 'current'.
@@ -324,6 +327,12 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
                 var current = enumerator.Current;
                 var id = DirectedHelper.ExtractId(current);
 
+                if (problem.Last == id)
+                { // don't place a fixed last customer.
+                    position++;
+                    continue;
+                }
+
                 // is this customer valid.
                 if (!_validFlags[id])
                 { // no it's not, move on.
@@ -337,6 +346,13 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
                 while (enumerator2.MoveNext())
                 {
                     var current2 = enumerator2.Current;
+                    var id2 = DirectedHelper.ExtractId(current2);
+                    if (problem.Last == id2 &&
+                        problem.Last != problem.First)
+                    { // don't place a fixed last customer.
+                        position2++;
+                        continue;
+                    }
 
                     // test and check fitness.
                     // TODO: do best-placement? check best turn at 'current'.
@@ -401,6 +417,12 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
                 var current = enumerator.Current;
                 var id = DirectedHelper.ExtractId(current);
 
+                if (problem.Last == id)
+                { // don't place a fixed last customer.
+                    position++;
+                    continue;
+                }
+
                 // is this customer violated.
                 if (_validFlags[id])
                 { // no it's not, move on.
@@ -420,6 +442,13 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
                     }
 
                     var current2 = enumerator2.Current;
+                    var id2 = DirectedHelper.ExtractId(current2);
+                    if (problem.Last == id2 &&
+                        problem.Last != problem.First)
+                    { // don't place a fixed last customer.
+                        position2++;
+                        continue;
+                    }
 
                     // test and check fitness.
                     // TODO: do best-placement? check best turn at 'current'.

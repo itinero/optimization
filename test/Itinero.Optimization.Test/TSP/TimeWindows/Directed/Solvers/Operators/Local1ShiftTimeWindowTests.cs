@@ -199,71 +199,71 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Directed.Solvers.Operators
             Assert.IsFalse(localSearch.MoveViolatedForward(problem, objective, route, out delta));
         }
 
-        ///// <summary>
-        ///// Tests the local1shift on an infeasible route where the last violated customer cannot be moved.
-        ///// </summary>
-        //[Test]
-        //public void TestFixedViolatedUnmovableCustomerValidForward()
-        //{
-        //    // create the problem and make sure 0->1->2->3->4 is the solution.
-        //    var objective = new TSPTWFeasibleObjective();
-        //    var problem = TSPTWHelper.CreateDirectedTSPTW(0, 4, 5, 10, 1);
-        //    problem.Times.SetWeight(0, 1, 2); //[0][1] = 2;
-        //    problem.Times.SetWeight(1, 2, 2); //[1][2] = 2;
-        //    problem.Times.SetWeight(2, 3, 2); //[2][3] = 2;
-        //    problem.Times.SetWeight(3, 4, 2); //[3][4] = 2;
-        //    problem.Times.SetWeight(4, 0, 2); //[4][0] = 2;
-        //    problem.Windows[4] = new TimeWindow()
-        //    {
-        //        Min = 7,
-        //        Max = 9
-        //    };
+        /// <summary>
+        /// Tests the local1shift on an infeasible route where the last violated customer cannot be moved.
+        /// </summary>
+        [Test]
+        public void TestFixedViolatedUnmovableCustomerValidForward()
+        {
+            // create the problem and make sure 0->1->2->3->4 is the solution.
+            var objective = new TSPTWFeasibleObjective();
+            var problem = TSPTWHelper.CreateDirectedTSPTW(0, 4, 5, 10, 1);
+            problem.Times.SetWeight(0, 1, 2); //[0][1] = 2;
+            problem.Times.SetWeight(1, 2, 2); //[1][2] = 2;
+            problem.Times.SetWeight(2, 3, 2); //[2][3] = 2;
+            problem.Times.SetWeight(3, 4, 2); //[3][4] = 2;
+            problem.Times.SetWeight(4, 0, 2); //[4][0] = 2;
+            problem.Windows[4] = new TimeWindow()
+            {
+                Min = 7,
+                Max = 9
+            };
 
-        //    // create a route with one shift.
-        //    var route = new Optimization.Tours.Tour(new int[] { 0, 4, 12, 8, 16 }, 0);
+            // create a route with one shift.
+            var route = new Optimization.Tours.Tour(new int[] { 0, 4, 12, 8, 16 }, 0);
 
-        //    // apply the 1-shift local search, it should find the customer to replocate.
-        //    var localSearch = new Local1Shift<TSPTWFeasibleObjective>();
-        //    var delta = 0.0f;
-        //    Assert.IsTrue(localSearch.Apply(problem, objective, route, out delta)); // shifts 12 after 8
+            // apply the 1-shift local search, it should find the customer to replocate.
+            var localSearch = new Local1Shift<TSPTWFeasibleObjective>();
+            var delta = 0.0f;
+            Assert.IsTrue(localSearch.Apply(problem, objective, route, out delta)); // shifts 12 after 8
 
-        //    // test result.
-        //    Assert.AreEqual(23, delta);
-        //    Assert.AreEqual(new int[] { 0, 4, 8, 12, 16 }, route.ToArray());
-        //}
+            // test result.
+            Assert.AreEqual(23, delta);
+            Assert.AreEqual(new int[] { 0, 4, 8, 12, 16 }, route.ToArray());
+        }
 
-        ///// <summary>
-        ///// Tests the local1shift on an infeasible route where the last violated customer cannot be moved.
-        ///// </summary>
-        //[Test]
-        //public void TestFixedViolatedUnmovableCustomerValidBackward()
-        //{
-        //    // create the problem and make sure 0->1->2->3->4 is the solution.
-        //    var objective = new TSPTWFeasibleObjective();
-        //    var problem = TSPTWHelper.CreateTSPTW(0, 4, 5, 10);
-        //    problem.Times[0][1] = 2;
-        //    problem.Times[1][2] = 2;
-        //    problem.Times[2][3] = 2;
-        //    problem.Times[3][4] = 2;
-        //    problem.Times[4][0] = 2;
-        //    problem.Windows[4] = new TimeWindow()
-        //    {
-        //        Min = 7,
-        //        Max = 9
-        //    };
+        /// <summary>
+        /// Tests the local1shift on an infeasible route where the last violated customer cannot be moved.
+        /// </summary>
+        [Test]
+        public void TestFixedViolatedUnmovableCustomerValidBackward()
+        {
+            // create the problem and make sure 0->1->2->3->4 is the solution.
+            var objective = new TSPTWFeasibleObjective();
+            var problem = TSPTWHelper.CreateDirectedTSPTW(0, 4, 5, 10, 1);
+            problem.Times.SetWeight(0, 1, 2); //[0][1] = 2;
+            problem.Times.SetWeight(1, 2, 2); //[1][2] = 2;
+            problem.Times.SetWeight(2, 3, 2); //[2][3] = 2;
+            problem.Times.SetWeight(3, 4, 2); //[3][4] = 2;
+            problem.Times.SetWeight(4, 0, 2); //[4][0] = 2;
+            problem.Windows[4] = new TimeWindow()
+            {
+                Min = 7,
+                Max = 9
+            };
 
-        //    // create a route with one shift.
-        //    var route = new Optimization.Tours.Tour(new int[] { 0, 1, 3, 2, 4 }, 0);
+            // create a route with one shift.
+            var route = new Optimization.Tours.Tour(new int[] { 0, 4, 12, 8, 16 }, 0);
 
-        //    // apply the 1-shift local search, it should find the customer to replocate.
-        //    var localSearch = new Local1Shift<TSPTWFeasibleObjective>();
-        //    var delta = 0.0f;
-        //    Assert.IsTrue(localSearch.MoveNonViolatedBackward(problem, objective, route, out delta)); // shifts 2 after 1
+            // apply the 1-shift local search, it should find the customer to replocate.
+            var localSearch = new Local1Shift<TSPTWFeasibleObjective>();
+            var delta = 0.0f;
+            Assert.IsTrue(localSearch.MoveNonViolatedBackward(problem, objective, route, out delta)); // shifts 8 after 4
 
-        //    // test result.
-        //    Assert.AreEqual(23, delta);
-        //    Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, route.ToArray());
-        //}
+            // test result.
+            Assert.AreEqual(23, delta);
+            Assert.AreEqual(new int[] { 0, 4, 8, 12, 16 }, route.ToArray());
+        }
 
         /// <summary>
         /// Cleans up for these tests.
