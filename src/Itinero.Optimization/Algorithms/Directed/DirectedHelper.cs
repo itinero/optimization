@@ -253,6 +253,15 @@ namespace Itinero.Optimization.Algorithms.Directed
         /// Sets the weights between two customers.
         /// </summary>
         public static void SetWeight(this float[][] weights, int id1, int id2,
+            float weight)
+        {
+            weights.SetWeight(id1, id2, weight, weight, weight, weight);
+        }
+
+        /// <summary>
+        /// Sets the weights between two customers.
+        /// </summary>
+        public static void SetWeight(this float[][] weights, int id1, int id2,
             float forward1forward2, float forward1backward2, float backward1forward1, float backward1backward2)
         {
             var c1Index = id1 * 2;
