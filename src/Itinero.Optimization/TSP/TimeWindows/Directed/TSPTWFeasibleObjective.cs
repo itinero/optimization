@@ -149,11 +149,6 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
         public override float Calculate(TSPTWProblem problem, IEnumerable<int> tour, out int violated, out float violatedTime, out float waitTime, out float time,
             ref bool[] validFlags)
         {
-            if (_validFlags == null)
-            {
-                _validFlags = new bool[problem.Times.Length / 2];
-            }
-
             // calculate everything here.
             violated = problem.TimeAndViolations(tour, out time, out waitTime, out violatedTime, ref validFlags);
 

@@ -138,6 +138,11 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
         /// </summary>
         public bool MoveViolatedBackward(TSPTWProblem problem, TObjective objective, Tour solution, out float delta)
         {
+            if (_validFlags == null)
+            {
+                _validFlags = new bool[problem.Times.Length / 2];
+            }
+
             float time, waitTime, violatedTime;
             int violated;
             var fitness = objective.Calculate(problem, solution, out violated, out violatedTime, out waitTime, out time, ref _validFlags);
