@@ -87,39 +87,39 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Directed.Solvers.Operators
             Assert.IsFalse(localSearch.MoveViolatedBackward(problem, objective, route, out delta));
         }
 
-        ///// <summary>
-        ///// Tests an infeasible route where a non-violated customer can be moved forward.
-        ///// </summary>
-        //[Test]
-        //public void TestOneShiftNonViolatedForward()
-        //{
-        //    // create the problem and make sure 0->1->2->3->4 is the solution.
-        //    var objective = new TSPTWFeasibleObjective();
-        //    var problem = TSPTWHelper.CreateTSPTW(0, 0, 5, 2);
-        //    problem.Windows[2] = new TimeWindow()
-        //    {
-        //        Min = 1,
-        //        Max = 3
-        //    };
+        /// <summary>
+        /// Tests an infeasible route where a non-violated customer can be moved forward.
+        /// </summary>
+        [Test]
+        public void TestOneShiftNonViolatedForward()
+        {
+            // create the problem and make sure 0->1->2->3->4 is the solution.
+            var objective = new TSPTWFeasibleObjective();
+            var problem = TSPTWHelper.CreateDirectedTSPTW(0, 0, 5, 2, 1);
+            problem.Windows[2] = new TimeWindow()
+            {
+                Min = 1,
+                Max = 3
+            };
 
-        //    // create a route with one shift.
-        //    var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
+            // create a route with one shift.
+            var route = new Optimization.Tours.Tour(new int[] { 0, 4, 8, 12, 16 }, 0);
 
-        //    // apply the 1-shift local search, it should find the customer to replocate.
-        //    var localSearch = new Local1Shift<TSPTWFeasibleObjective>();
-        //    var delta = 0.0f;
-        //    Assert.IsTrue(localSearch.MoveNonViolatedForward(problem, objective, route, out delta)); // shifts 1 after 2.
+            // apply the 1-shift local search, it should find the customer to replocate.
+            var localSearch = new Local1Shift<TSPTWFeasibleObjective>();
+            var delta = 0.0f;
+            Assert.IsTrue(localSearch.MoveNonViolatedForward(problem, objective, route, out delta)); // shifts 4 after 8.
 
-        //    // test result.
-        //    Assert.AreEqual(1, delta);
-        //    Assert.AreEqual(new int[] { 0, 2, 1, 3, 4 }, route.ToArray());
+            // test result.
+            Assert.AreEqual(1, delta);
+            Assert.AreEqual(new int[] { 0, 8, 4, 12, 16 }, route.ToArray());
 
-        //    // create a feasible route.
-        //    route = new Optimization.Tours.Tour(new int[] { 0, 2, 4, 1, 3 }, 0);
+            // create a feasible route.
+            route = new Optimization.Tours.Tour(new int[] { 0, 8, 16, 4, 12 }, 0);
 
-        //    // apply the 1-shift local search, it should find the customer to replocate.
-        //    Assert.IsFalse(localSearch.MoveNonViolatedForward(problem, objective, route, out delta));
-        //}
+            // apply the 1-shift local search, it should find the customer to replocate.
+            Assert.IsFalse(localSearch.MoveNonViolatedForward(problem, objective, route, out delta));
+        }
 
         ///// <summary>
         ///// Tests an infeasible route where a non-violated customer can be moved backward.
