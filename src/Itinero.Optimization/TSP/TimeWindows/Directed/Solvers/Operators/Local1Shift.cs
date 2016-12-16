@@ -20,6 +20,7 @@ using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.Tours;
+using Itinero.Optimization.Tours.Operations;
 using System;
 using System.Collections.Generic;
 
@@ -29,7 +30,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
     /// A local search procedure to move around and improve the time window 'violations' in a solution.
     /// </summary>
     public class Local1Shift<TObjective> : IOperator<float, TSPTWProblem, TObjective, Tour, float>
-        where TObjective : ObjectiveBase<TSPTWProblem, Tour, float>
+        where TObjective : TSPTWObjectiveBase
     {
         private readonly bool _assumeFeasible;
 
@@ -91,17 +92,17 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
             // 2: try to move a non-violated customer forward.
             // 3: try to move a non-violated customer backward.
             // 4: try to move a violated customer forward.
-            //if (!_assumeFeasible)
-            //{
-            //    if (this.MoveViolatedBackward(problem, objective, solution, out delta))
-            //    { // success already, don't try anything else.
-            //        if (objective.IsNonContinuous)
-            //        {
-            //            delta = before - objective.Calculate(problem, solution);
-            //        }
-            //        return delta > 0;
-            //    }
-            //}
+            if (!_assumeFeasible)
+            {
+                if (this.MoveViolatedBackward(problem, objective, solution, out delta))
+                { // success already, don't try anything else.
+                    if (objective.IsNonContinuous)
+                    {
+                        delta = before - objective.Calculate(problem, solution);
+                    }
+                    return delta > 0;
+                }
+            }
             //if (this.MoveNonViolatedForward(problem, objective, solution, out delta))
             //{ // success already, don't try anything else.
             //    if (objective.IsNonContinuous)
@@ -132,120 +133,74 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
             return false;
         }
 
-        ///// <summary>
-        ///// Returns true if there was an improvement, false otherwise.
-        ///// </summary>
-        //public bool MoveViolatedBackward(TSPTWProblem problem, TObjective objective, Tour solution, out float delta)
-        //{
-        //    float time, waitTime, violatedTime;
-        //    var violated = problem.TimeAndViolations(solution, out time, out waitTime, out violatedTime, ref _validFlags);
+        /// <summary>
+        /// Returns true if there was an improvement, false otherwise.
+        /// </summary>
+        public bool MoveViolatedBackward(TSPTWProblem problem, TObjective objective, Tour solution, out float delta)
+        {
+            float time, waitTime, violatedTime;
+            int violated;
+            var fitness = objective.Calculate(problem, solution, out violated, out violatedTime, out waitTime, out time, ref _validFlags);
 
-        //    // if no violated customer found return false.
-        //    if (violated == 0)
-        //    {
-        //        delta = 0;
-        //        return false;
-        //    }
+            // if no violated customer found return false.
+            if (violated == 0)
+            {
+                delta = 0;
+                return false;
+            }
 
-        //    // if a violated customer was found, try to move it.
-        //    var enumerator = solution.GetEnumerator();
-        //    var position = 0;
-        //    while(enumerator.MoveNext())
-        //    {
-        //        if (position == 0)
-        //        {
-        //            position++;
-        //            continue;
-        //        }
+            // loop over all customers.
+            var enumerator = solution.GetEnumerator();
+            var position = 0;
+            while (enumerator.MoveNext())
+            {
+                if (position == 0)
+                { // don't move the first customer.
+                    position++;
+                    continue;
+                }
 
-        //        var current = enumerator.Current;
-        //        var id = DirectedHelper.ExtractId(current);
+                // get the id of the current customer.
+                var current = enumerator.Current;
+                var id = DirectedHelper.ExtractId(current);
 
-        //        var enumerator2 = solution.GetEnumerator();
-        //        var position2 = 0;
-        //        while(enumerator2.MoveNext())
-        //        {
-        //            var current2 = enumerator2.Current;
-                    
+                // is this customer violated.
+                if (_validFlags[id])
+                { // no it's not, move on.
+                    position++;
+                    continue;
+                }
 
-        //        }
+                // move over all customers before the current position.
+                var enumerator2 = solution.GetEnumerator();
+                var position2 = 0;
+                while (enumerator2.MoveNext())
+                {
+                    var current2 = enumerator2.Current;
 
-        //        position++;
-        //    }
-        //    for (var i = 0; i < _validFlags.Length; i++)
-        //    {
-        //        if (_validFlags[i])
-        //        {
-        //            continue;
-        //        }
+                    // test and check fitness.
+                    var shiftedTour = solution.GetShiftedAfter(current, current2); // generates a tour as if current was placed right after current2.
+                    var newFitness = objective.Calculate(problem, shiftedTour);
 
-        //        // ok try the new position.
-        //        for (var newPosition = 1; newPosition < i; newPosition++)
-        //        {
+                    if (newFitness < fitness)
+                    { // there is improvement!
+                        delta = fitness - newFitness;
+                        solution.ShiftAfter(current, current2);
+                        return true;
+                    }
 
-        //        }
-        //    }
-            
-        //    // ... ok, if a customer was found, try to move it.
-        //    foreach (var invalid in invalids)
-        //    {
-        //        // ok try the new position.
-        //        for (var newPosition = 1; newPosition < invalid.Item2; newPosition++)
-        //        {
-        //            var before = solution.GetCustomerAt(newPosition - 1);
+                    position2++;
+                    if (position2 >= position)
+                    { // stop, we've reached the customer to place.
+                        break;
+                    }
+                }
 
-        //            // calculate new total min diff.
-        //            var newFitness = 0.0f;
-        //            previous = Constants.NOT_SET;
-        //            time = 0;
-        //            enumerator = solution.GetEnumerator();
-        //            while (enumerator.MoveNext())
-        //            {
-        //                var current = enumerator.Current;
-        //                if (current != invalid.Item1)
-        //                { // ignore invalid, add it after 'before'.
-        //                    if (previous != Constants.NOT_SET)
-        //                    { // keep track if time.
-        //                        time += problem.Times[previous][current];
-        //                    }
-        //                    var window = problem.Windows[enumerator.Current];
-        //                    if (window.Max < time)
-        //                    { // ok, unfeasible and customer is not the first 'moveable' customer.
-        //                        newFitness += time - window.Max;
-        //                    }
-        //                    if (window.Min > time)
-        //                    { // wait here!
-        //                        time = window.Min;
-        //                    }
-        //                    previous = current;
-        //                    if (current == before)
-        //                    { // also add the before->invalid.
-        //                        time += problem.Times[current][invalid.Item1];
-        //                        window = problem.Windows[invalid.Item1];
-        //                        if (window.Max < time)
-        //                        { // ok, unfeasible and customer is not the first 'moveable' customer.
-        //                            newFitness += time - window.Max;
-        //                        }
-        //                        if (window.Min > time)
-        //                        { // wait here!
-        //                            time = window.Min;
-        //                        }
-        //                        previous = invalid.Item1;
-        //                    }
-        //                }
-        //            }
-
-        //            if (newFitness < fitness)
-        //            { // there is improvement!
-        //                delta = fitness - newFitness;
-        //                solution.ShiftAfter(invalid.Item1, before);
-        //                return true;
-        //            }
-        //        }
-        //    }
-        //    delta = 0;
-        //    return false;
-        //}
+                position++;
+            }
+            delta = 0;
+            return false;
+        }
 
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.

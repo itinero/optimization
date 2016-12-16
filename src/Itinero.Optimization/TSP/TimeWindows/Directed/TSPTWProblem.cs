@@ -351,25 +351,9 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
         }
 
         /// <summary>
-        /// Calculates total time and violations if the given id was moved after 'before'.
-        /// </summary>
-        /// <param name="before">The customer to move after.</param>
-        /// <param name="id">The customer to place.</param>
-        /// <param name="time">The total travel time without waittime.</param>
-        /// <param name="tour">The tour to calculate for.</param>
-        /// <param name="validFlags">Flags for each customer, a customer window is violated when false.</param>
-        /// <param name="violatedTime">The total time of violations.</param>
-        /// <param name="waitTime">The total waiting time.</param>
-        /// <returns></returns>
-        public int TimeAndViolationsIfMoveAfter(Tour tour, int before, int id, out float time, out float waitTime, out float violatedTime, ref bool[] validFlags)
-        {
-            return TimeAndViolations(tour.GetShiftedAfter(id, before), out time, out waitTime, out violatedTime, ref validFlags);
-        }
-
-        /// <summary>
         /// Calculates total time and violations if the given id was moved after 'before'. Assumes the tour is closed.
         /// </summary>
-        private int TimeAndViolations(IEnumerable<int> tour, out float time, out float waitTime, out float violatedTime, ref bool[] validFlags)
+        public int TimeAndViolations(IEnumerable<int> tour, out float time, out float waitTime, out float violatedTime, ref bool[] validFlags)
         {
             var times = this.Times;
             var windows = this.Windows;

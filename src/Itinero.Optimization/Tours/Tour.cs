@@ -27,7 +27,7 @@ namespace Itinero.Optimization.Tours
     /// <summary>
     /// a route or a sequence of customers.
     /// </summary>
-    public class Tour : ITour
+    public sealed class Tour : ITour
     {
         private int[] _nextArray;
         private int _first;
@@ -36,7 +36,7 @@ namespace Itinero.Optimization.Tours
         /// <summary>
         /// Creates a new route based on the given array.
         /// </summary>
-        protected Tour(int first, int[] nextArray, int? last)
+        private Tour(int first, int[] nextArray, int? last)
         {
             _first = first;
             _last = last;
@@ -475,19 +475,9 @@ namespace Itinero.Optimization.Tours
         /// <returns></returns>
         public IEnumerable<Pair> Pairs()
         {
-            return new PairEnumerable(this);
+            return new PairEnumerable<Tour>(this, _first == _last);
         }
-
-        /// <summary>
-        /// Returns an enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a round the pair that contains last->first is also included.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Pair> Pairs(int customer)
-        {
-            //return new PairEnumerable(this);
-            throw new NotImplementedException();
-        }
-
+        
         /// <summary>
         /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2-3. If the route is a round the tuples that contain last->first are also included.
         /// </summary>

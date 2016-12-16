@@ -18,13 +18,14 @@
 
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.Tours;
+using System.Collections.Generic;
 
 namespace Itinero.Optimization.TSP.TimeWindows.Directed
 {
     /// <summary>
     /// An objective that leads to feasible solutions for the TSP with TW.
     /// </summary>
-    public class TSPTWFeasibleObjective : ObjectiveBase<TSPTWProblem, Tour, float>
+    public class TSPTWFeasibleObjective : TSPTWObjectiveBase
     {
         /// <summary>
         /// Gets the value that represents infinity.
@@ -119,7 +120,44 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
             float violatedTime, time, waitTime;
             var violated = problem.TimeAndViolations(solution, out time, out waitTime, out violatedTime, ref _validFlags);
 
-            // there only violated time is usefull, this objective is built to only make a tour valid.
+            // here only violated time is usefull, this objective is built to only make a tour valid.
+            return violatedTime;
+        }
+
+        /// <summary>
+        /// Calculates the fitness of a TSP solution.
+        /// </summary>
+        /// <returns></returns>
+        public sealed override float Calculate(TSPTWProblem problem, IEnumerable<int> solution)
+        {
+            if (_validFlags == null)
+            {
+                _validFlags = new bool[problem.Times.Length / 2];
+            }
+
+            // calculate everything here.
+            float violatedTime, time, waitTime;
+            var violated = problem.TimeAndViolations(solution, out time, out waitTime, out violatedTime, ref _validFlags);
+
+            // here only violated time is usefull, this objective is built to only make a tour valid.
+            return violatedTime;
+        }
+
+        /// <summary>
+        /// Calculates the fitness value of the given solution.
+        /// </summary>
+        public override float Calculate(TSPTWProblem problem, IEnumerable<int> tour, out int violated, out float violatedTime, out float waitTime, out float time,
+            ref bool[] validFlags)
+        {
+            if (_validFlags == null)
+            {
+                _validFlags = new bool[problem.Times.Length / 2];
+            }
+
+            // calculate everything here.
+            violated = problem.TimeAndViolations(tour, out time, out waitTime, out violatedTime, ref validFlags);
+
+            // here only violated time is usefull, this objective is built to only make a tour valid.
             return violatedTime;
         }
     }

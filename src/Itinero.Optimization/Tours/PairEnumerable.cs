@@ -23,41 +23,43 @@ namespace Itinero.Optimization.Tours
     /// <summary>
     /// Enumerates all pairs in an IRoute.
     /// </summary>
-    public class PairEnumerable : IEnumerable<Pair>
+    public sealed class PairEnumerable<T> : IEnumerable<Pair>
+        where T : IEnumerable<int>
     {
-        private readonly ITour _tour;
+        private readonly T _tour;
+        private readonly bool _isClosed;
         private readonly int _start;
-
-        /// <summary>
-        /// Creates a new pair enumerable.
-        /// </summary>
-        public PairEnumerable(ITour tour)
-        {
-            _tour = tour;
-            _start = _tour.First;
-        }
-
+        
         /// <summary>
         /// Creates a new pair enumerable starting from the given customer.
         /// </summary>
-        public PairEnumerable(ITour tour, int start)
+        public PairEnumerable(T tour, bool isClosed, int start = Constants.NOT_SET)
         {
-            _tour = tour;
             _start = start;
+            _tour = tour;
+            _isClosed = isClosed;
         }
 
-        private class PairEnumerator : IEnumerator<Pair>
+        private sealed class PairEnumerator : IEnumerator<Pair>
         {
+            private readonly bool _isClosed;
+            private readonly IEnumerator<int> _enumerator;
+            private readonly int _start;
+
+            public PairEnumerator(IEnumerator<int> enumerator, bool isClosed, int start = Constants.NOT_SET)
+            {
+                _enumerator = enumerator;
+                _isClosed = isClosed;
+                _start = start;
+
+                _current = new Pair(Constants.NOT_SET, Constants.NOT_SET);
+                _first = Constants.NOT_SET;
+                _startOk = false;
+            }
+
             private Pair _current;
             private int _first;
-            private IEnumerator<int> _enumerator;
-
-            public PairEnumerator(IEnumerator<int> enumerator, int first)
-            {
-                _current = new Pair(-1, -1);
-                _enumerator = enumerator;
-                _first = first;
-            }
+            private bool _startOk;
 
             public Pair Current
             {
@@ -70,7 +72,6 @@ namespace Itinero.Optimization.Tours
             public void Dispose()
             {
                 _enumerator.Dispose();
-                _enumerator = null;
             }
 
             object System.Collections.IEnumerator.Current
@@ -80,59 +81,80 @@ namespace Itinero.Optimization.Tours
 
             public bool MoveNext()
             {
-                if (_current.From == -1 && _current.To == -1)
+                if (_enumerator.MoveNext())
                 {
-                    if (_enumerator.MoveNext())
+                    if (_first == Constants.NOT_SET && _isClosed)
                     {
-                        _current.From = _enumerator.Current;
-                    }
-                    else
-                    {
-                        return false;
+                        _first = _enumerator.Current;
                     }
 
-                    if (_enumerator.MoveNext())
+                    // move to start first if it's set.
+                    if (!_startOk)
                     {
-                        _current.To = _enumerator.Current;
+                        while (_start != Constants.NOT_SET &&
+                            _enumerator.Current != _start)
+                        {
+                            if (!_enumerator.MoveNext())
+                            {
+                                return false;
+                            }
+                        }
                     }
-                    else if (_first >= 0 && _current.From != _first)
+                    _startOk = true;
+
+                    _current.From = _current.To;
+                    _current.To = _enumerator.Current;
+                    if (_current.From == Constants.NOT_SET)
                     {
-                        _current.To = _first;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else if (_current.To != _first && _current.From >= 0 && _current.To >= 0)
-                {
-                    if (_enumerator.MoveNext())
-                    {
+                        if (!_enumerator.MoveNext())
+                        {
+                            if (_first != Constants.NOT_SET)
+                            {
+                                if (_first == _current.To)
+                                {
+                                    _first = Constants.NOT_SET;
+                                    return false;
+                                }
+                                _current.From = _current.To;
+                                _current.To = _first;
+                                _first = Constants.NOT_SET;
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
                         _current.From = _current.To;
                         _current.To = _enumerator.Current;
                     }
-                    else if (_first >= 0)
-                    {
-                        _current.From = _current.To;
-                        _current.To = _first;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return true;
                 }
                 else
                 {
-                    return false;
+                    if (_first != Constants.NOT_SET)
+                    {
+                        if (_first == _current.To)
+                        {
+                            _first = Constants.NOT_SET;
+                            return false;
+                        }
+                        _current.From = _current.To;
+                        _current.To = _first;
+                        _first = Constants.NOT_SET;
+                        return true;
+                    }
                 }
-                return true;
+                return false;
             }
 
             public void Reset()
             {
                 _enumerator.Reset();
+
                 _current = new Pair(-1, -1);
+                _first = Constants.NOT_SET;
+                _startOk = false;
             }
         }
 
@@ -142,11 +164,7 @@ namespace Itinero.Optimization.Tours
         /// <returns></returns>
         public IEnumerator<Pair> GetEnumerator()
         {
-            if (_tour.First == _tour.Last)
-            {
-                return new PairEnumerator(_tour.GetEnumerator(_start), _tour.First);
-            }
-            return new PairEnumerator(_tour.GetEnumerator(_start), -1);
+            return new PairEnumerator(_tour.GetEnumerator(), _isClosed, _start);
         }
 
         /// <summary>

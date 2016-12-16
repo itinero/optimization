@@ -192,12 +192,6 @@ namespace Itinero.Optimization.Tours
         IEnumerable<Pair> Pairs();
 
         /// <summary>
-        /// Returns an enumerable that enumerates all customer pairs that occur in the route as 1->2 starting from the given customer. If the route is a tour the pair that contains last->first is also included.
-        /// </summary>
-        /// <returns>An enumerable that enumerates all customer pairs that occur in the route as 1->2 starting from the given customer. If the route is a tour the pair that contains last->first is also included.</returns>
-        IEnumerable<Pair> Pairs(int customer);
-
-        /// <summary>
         /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a tour the tuples that contain last->first are also included.
         /// </summary>
         /// <returns>An enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a tour the tuples that contain last->first are also included.</returns>

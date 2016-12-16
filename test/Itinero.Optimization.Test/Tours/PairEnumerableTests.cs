@@ -35,7 +35,7 @@ namespace Itinero.Optimization.Test.Tours
         public void Test1NotClosed()
         {
             var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, null);
-            var pairEnumerable = new PairEnumerable(route);
+            var pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed());
             var pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(4, pairs.Count);
@@ -44,7 +44,7 @@ namespace Itinero.Optimization.Test.Tours
             Assert.Contains(new Pair(2, 3), pairs);
             Assert.Contains(new Pair(3, 4), pairs);
 
-            pairEnumerable = new PairEnumerable(route, 0);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed(), 0);
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(4, pairs.Count);
@@ -53,7 +53,7 @@ namespace Itinero.Optimization.Test.Tours
             Assert.Contains(new Pair(2, 3), pairs);
             Assert.Contains(new Pair(3, 4), pairs);
 
-            pairEnumerable = new PairEnumerable(route, 1);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed(), 1);
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(3, pairs.Count);
@@ -61,20 +61,20 @@ namespace Itinero.Optimization.Test.Tours
             Assert.Contains(new Pair(2, 3), pairs);
             Assert.Contains(new Pair(3, 4), pairs);
 
-            pairEnumerable = new PairEnumerable(route, 2);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed(), 2);
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(2, pairs.Count);
             Assert.Contains(new Pair(2, 3), pairs);
             Assert.Contains(new Pair(3, 4), pairs);
 
-            pairEnumerable = new PairEnumerable(route, 3);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed(), 3);
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(1, pairs.Count);
             Assert.Contains(new Pair(3, 4), pairs);
 
-            pairEnumerable = new PairEnumerable(route, 4);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed(), 4);
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(0, pairs.Count);
@@ -87,7 +87,7 @@ namespace Itinero.Optimization.Test.Tours
         public void Test2Closed()
         {
             var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
-            var pairEnumerable = new PairEnumerable(route);
+            var pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed());
             var pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(5, pairs.Count);
@@ -97,7 +97,7 @@ namespace Itinero.Optimization.Test.Tours
             Assert.Contains(new Pair(3, 4), pairs);
             Assert.Contains(new Pair(4, 0), pairs);
 
-            pairEnumerable = new PairEnumerable(route, 0);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed(), 0);
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(5, pairs.Count);
@@ -107,7 +107,7 @@ namespace Itinero.Optimization.Test.Tours
             Assert.Contains(new Pair(3, 4), pairs);
             Assert.Contains(new Pair(4, 0), pairs);
 
-            pairEnumerable = new PairEnumerable(route, 1);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed(), 1);
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(4, pairs.Count);
@@ -116,7 +116,7 @@ namespace Itinero.Optimization.Test.Tours
             Assert.Contains(new Pair(3, 4), pairs);
             Assert.Contains(new Pair(4, 0), pairs);
 
-            pairEnumerable = new PairEnumerable(route, 2);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed(), 2);
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(3, pairs.Count);
@@ -124,14 +124,14 @@ namespace Itinero.Optimization.Test.Tours
             Assert.Contains(new Pair(3, 4), pairs);
             Assert.Contains(new Pair(4, 0), pairs);
 
-            pairEnumerable = new PairEnumerable(route, 3);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed(), 3);
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(2, pairs.Count);
             Assert.Contains(new Pair(3, 4), pairs);
             Assert.Contains(new Pair(4, 0), pairs);
 
-            pairEnumerable = new PairEnumerable(route, 4);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed(), 4);
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(1, pairs.Count);
@@ -145,13 +145,13 @@ namespace Itinero.Optimization.Test.Tours
         public void Test3Empty()
         {
             var route = new Optimization.Tours.Tour(new int[] { 0 }, 0);
-            var pairEnumerable = new PairEnumerable(route);
+            var pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed());
             var pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(0, pairs.Count);
 
             route = new Optimization.Tours.Tour(new int[] { 0 }, null);
-            pairEnumerable = new PairEnumerable(route);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed());
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(0, pairs.Count);
@@ -164,7 +164,7 @@ namespace Itinero.Optimization.Test.Tours
         public void Test4Reset()
         {
             var route = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
-            var pairEnumerable = new PairEnumerable(route);
+            var pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed());
             var pairEnumerator = pairEnumerable.GetEnumerator();
 
             var pairs = new List<Pair>();
@@ -203,13 +203,13 @@ namespace Itinero.Optimization.Test.Tours
         public void Test5OneCustomer()
         {
             var route = new Optimization.Tours.Tour(new int[] { 0 }, 0);
-            var pairEnumerable = new PairEnumerable(route);
+            var pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed());
             var pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(0, pairs.Count);
 
             route = new Optimization.Tours.Tour(new int[] { 0 }, null);
-            pairEnumerable = new PairEnumerable(route);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed());
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(0, pairs.Count);
@@ -222,13 +222,13 @@ namespace Itinero.Optimization.Test.Tours
         public void Test6TwoCustomers()
         {
             var route = new Optimization.Tours.Tour(new int[] { 0, 1 }, 0);
-            var pairEnumerable = new PairEnumerable(route);
+            var pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed());
             var pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(2, pairs.Count);
 
             route = new Optimization.Tours.Tour(new int[] { 0, 1 }, null);
-            pairEnumerable = new PairEnumerable(route);
+            pairEnumerable = new PairEnumerable<Tour>(route, route.IsClosed());
             pairs = new List<Pair>(pairEnumerable);
 
             Assert.AreEqual(1, pairs.Count);

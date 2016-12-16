@@ -47,5 +47,13 @@ namespace Itinero.Optimization.Tours
             return tour.Last.HasValue &&
                 tour.Last.Value == tour.First;
         }
+
+        /// <summary>
+        /// Generates pairs based on the given IEnumerable representing a tour.
+        /// </summary>
+        public static IEnumerable<Pair> Pairs(this IEnumerable<int> tour, bool isClosed)
+        {
+            return new PairEnumerable<IEnumerable<int>>(tour, isClosed);
+        }
     }
 }

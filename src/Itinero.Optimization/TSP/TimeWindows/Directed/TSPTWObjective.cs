@@ -18,13 +18,15 @@
 
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.Tours;
+using System.Collections.Generic;
+using System;
 
 namespace Itinero.Optimization.TSP.TimeWindows.Directed
 {
     /// <summary>
     /// The TSP-TW objective.
     /// </summary>
-    public class TSPTWObjective : ObjectiveBase<TSPTWProblem, Tour, float>
+    public class TSPTWObjective : TSPTWObjectiveBase
     {
         /// <summary>
         /// Gets the value that represents infinity.
@@ -93,6 +95,48 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
             // calculate everything here.
             float violatedTime, waitTime, time;
             var violated = problem.TimeAndViolations(solution, out time, out waitTime, out violatedTime, ref _validFlags);
+
+            // TODO:there is need to seperate the violations, waiting time and weights.
+            //      expand the logistics library to allow for pareto-optimal or other 
+            //      more advanced weight comparisons.
+            //      => this may not be needed anymore for the TSP-TW but for other problems it may be useful.
+            return time + violatedTime * 1000;
+        }
+
+        /// <summary>
+        /// Calculates the fitness value of the given solution.
+        /// </summary>
+        public sealed override float Calculate(TSPTWProblem problem, IEnumerable<int> solution)
+        {
+            if (_validFlags == null)
+            {
+                _validFlags = new bool[problem.Times.Length / 2];
+            }
+
+            // calculate everything here.
+            float violatedTime, waitTime, time;
+            var violated = problem.TimeAndViolations(solution, out time, out waitTime, out violatedTime, ref _validFlags);
+
+            // TODO:there is need to seperate the violations, waiting time and weights.
+            //      expand the logistics library to allow for pareto-optimal or other 
+            //      more advanced weight comparisons.
+            //      => this may not be needed anymore for the TSP-TW but for other problems it may be useful.
+            return time + violatedTime * 1000;
+        }
+
+        /// <summary>
+        /// Calculates the fitness value of the given solution.
+        /// </summary>
+        public override float Calculate(TSPTWProblem problem, IEnumerable<int> tour, out int violated, out float violatedTime, out float waitTime, out float time, 
+            ref bool[] validFlags)
+        {
+            if (_validFlags == null)
+            {
+                _validFlags = new bool[problem.Times.Length / 2];
+            }
+
+            // calculate everything here.
+            violated = problem.TimeAndViolations(tour, out time, out waitTime, out violatedTime, ref validFlags);
 
             // TODO:there is need to seperate the violations, waiting time and weights.
             //      expand the logistics library to allow for pareto-optimal or other 
