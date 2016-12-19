@@ -23,7 +23,7 @@ using Itinero.Optimization.TSP.TimeWindows.Solvers.Operators;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Test.TSP.TimeWindows.Random
+namespace Itinero.Optimization.Test.TSP.TimeWindows.Solvers.Operators
 {
     /// <summary>
     /// Containts tests for the Random1Shift perturber.

@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Optimization.Tours;
 using System;
 
 namespace Itinero.Optimization.Algorithms.Directed
@@ -216,7 +217,7 @@ namespace Itinero.Optimization.Algorithms.Directed
                 for(var ao3 = 0; ao3 < 2; ao3++)
                 {
                     var a3 = base3 + ao3;
-                    for (var t = 0; t < 3; t++)
+                    for (var t = 0; t < 4; t++)
                     {
                         int ao2, do2;
                         DirectedHelper.ExtractOffset(t, out ao2, out do2);
@@ -235,6 +236,37 @@ namespace Itinero.Optimization.Algorithms.Directed
                 }
             }
             return best;
+        }
+
+        /// <summary>
+        /// Shifts the directed customer aft er the given directed before with the best possible turns.
+        /// </summary>
+        public static float ShiftAfterBestTurns(this ITour tour, float[][] weights, float[] penalties, int directedCustomer, int directedBefore)
+        {
+            var before = DirectedHelper.ExtractId(directedBefore);
+            var customer = DirectedHelper.ExtractId(directedCustomer);
+            var directedAfter = tour.GetNeigbour(directedBefore);
+            if (directedAfter == Constants.NOT_SET)
+            { // TODO: figure out if this happens and if so how to calculate turns.
+                return 0;
+            }
+            var after = DirectedHelper.ExtractId(directedAfter);
+
+            // insert directed customer.
+            tour.ShiftAfter(directedCustomer, directedBefore);
+
+            // calculate best shift-after.
+            int departureOffset1, arrivalOffset3, turn2;
+            var cost = DirectedHelper.CheapestInsert(weights, penalties, before, customer, after, out departureOffset1, out arrivalOffset3, out turn2);
+            var newDirectedBefore = DirectedHelper.UpdateDepartureOffset(directedBefore, departureOffset1);
+            var newDirectedAfter = DirectedHelper.UpdateArrivalOffset(directedAfter, arrivalOffset3);
+            var newDirectedCustomer = DirectedHelper.BuildDirectedId(customer, turn2);
+
+            if (directedBefore != newDirectedBefore) { tour.Replace(directedBefore, newDirectedBefore); }
+            if (directedCustomer != newDirectedCustomer) { tour.Replace(directedCustomer, newDirectedCustomer); }
+            if (directedAfter != newDirectedAfter) { tour.Replace(directedAfter, newDirectedAfter); }
+
+            return cost;
         }
 
         /// <summary>
