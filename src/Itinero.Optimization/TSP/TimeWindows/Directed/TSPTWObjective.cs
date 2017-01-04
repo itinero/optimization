@@ -20,6 +20,7 @@ using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 using System;
+using Itinero.Optimization.Algorithms.Directed;
 
 namespace Itinero.Optimization.TSP.TimeWindows.Directed
 {
@@ -130,11 +131,6 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
         public override float Calculate(TSPTWProblem problem, IEnumerable<int> tour, out int violated, out float violatedTime, out float waitTime, out float time, 
             ref bool[] validFlags)
         {
-            if (_validFlags == null)
-            {
-                _validFlags = new bool[problem.Times.Length / 2];
-            }
-
             // calculate everything here.
             violated = problem.TimeAndViolations(tour, out time, out waitTime, out violatedTime, ref validFlags);
 
@@ -143,6 +139,31 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
             //      more advanced weight comparisons.
             //      => this may not be needed anymore for the TSP-TW but for other problems it may be useful.
             return time + violatedTime * 1000;
+        }
+
+        /// <summary>
+        /// Calculates the time for a part of the tour including the turns at first and last position.
+        /// </summary>
+        public float CalculateTimeForPart(TSPTWProblem problem, IEnumerable<int> part, float timeBefore, out int violated, out float violatedTime, out float waitTime)
+        {
+            if (_validFlags == null)
+            {
+                _validFlags = new bool[problem.Times.Length / 2];
+            }
+
+            return this.CalculateTimeForPart(problem, part, timeBefore, out violated, out violatedTime, out waitTime, ref _validFlags);
+        }
+
+        /// <summary>
+        /// Calculates the time for a part of the tour including the turns at first and last position.
+        /// </summary>
+        public float CalculateTimeForPart(TSPTWProblem problem, IEnumerable<int> part, float timeBefore, out int violated, out float violatedTime, out float waitTime, 
+            ref bool[] validFlags)
+        {
+            // calculate everything here.
+            float time;
+            violated = problem.TimeAndViolationsForPart(part, timeBefore, out time, out waitTime, out violatedTime, ref validFlags);
+            return time;
         }
 
         /// <summary>

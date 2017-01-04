@@ -157,6 +157,18 @@ namespace Itinero.Optimization.Algorithms.Directed
         }
 
         /// <summary>
+        /// Switches the departure offset.
+        /// </summary>
+        public static int SwitchDepartureOffset(int directedId)
+        {
+            int turn;
+            var id = DirectedHelper.ExtractId(directedId, out turn);
+            int arrivalOffset, departureOffset;
+            DirectedHelper.ExtractOffset(turn, out arrivalOffset, out departureOffset);
+            return DirectedHelper.BuildDirectedId(id, DirectedHelper.BuildTurn(arrivalOffset, 1 - departureOffset));
+        }
+
+        /// <summary>
         /// Updates the arrival offset.
         /// </summary>
         public static int UpdateArrivalOffset(int directedId, int arrivalOffset)
@@ -166,6 +178,18 @@ namespace Itinero.Optimization.Algorithms.Directed
             int oldArrivalOffset, oldDepartureOffset;
             DirectedHelper.ExtractOffset(turn, out oldArrivalOffset, out oldDepartureOffset);
             return DirectedHelper.BuildDirectedId(id, DirectedHelper.BuildTurn(arrivalOffset, oldDepartureOffset));
+        }
+
+        /// <summary>
+        /// Switches the arrival offset.
+        /// </summary>
+        public static int SwitchArrivalOffset(int directedId)
+        {
+            int turn;
+            var id = DirectedHelper.ExtractId(directedId, out turn);
+            int arrivalOffset, oldDepartureOffset;
+            DirectedHelper.ExtractOffset(turn, out arrivalOffset, out oldDepartureOffset);
+            return DirectedHelper.BuildDirectedId(id, DirectedHelper.BuildTurn(1 - arrivalOffset, oldDepartureOffset));
         }
 
         /// <summary>

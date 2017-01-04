@@ -364,5 +364,68 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
 
             return violated;
         }
+
+        /// <summary>
+        /// Calculates the weight for a part of the tour including the turns at first and last position.
+        /// </summary>
+        /// <param name="part">The part to calculate for.</param>
+        /// <param name="timeBefore">The time when arriving at the first customer, excluding the turn at that first customer.</param>
+        public int TimeAndViolationsForPart(IEnumerable<int> part, float timeBefore, out float time, out float waitTime, out float violatedTime, ref bool[] validFlags)
+        {
+            var times = this.Times;
+            var windows = this.Windows;
+            var turnPenalties = this.TurnPenalties;
+
+            time = timeBefore;
+            violatedTime = 0f;
+            waitTime = 0f;
+
+            var violated = 0;
+            var previousFrom = int.MaxValue;
+            foreach (var directedId in part)
+            {
+                // extract turns and stuff from directed id.
+                int arrivalId, departureId, id, turn;
+                DirectedHelper.ExtractAll(directedId, out arrivalId, out departureId, out id, out turn);
+
+                // add the weight from the previous customer to the current one.
+                var turnPenalty = 0f;
+                if (previousFrom != int.MaxValue)
+                { // there is a previous, add the travel time.
+                    time = time + times[previousFrom][arrivalId];
+
+                    // and keep the turn penalty.
+                    turnPenalty += turnPenalties[turn];
+                }
+                else
+                { // first customer.
+                    // add turn penalty at first customer.
+                    time += turnPenalties[DirectedHelper.ExtractTurn(directedId)];
+                }
+
+                // check the windows (before turn-penalties).
+                var window = windows[id];
+                validFlags[id] = true;
+                if (window.Max < (time + waitTime))
+                { // ok, unfeasible.
+                    violatedTime += (time + waitTime) - window.Max;
+                    validFlags[id] = false;
+                    violated++;
+                }
+                if (window.Min > (time + waitTime))
+                { // wait here!
+                    waitTime += (window.Min - (time + waitTime));
+                }
+
+                // add the turn penalty.
+                time += turnPenalty;
+
+                previousFrom = departureId;
+            }
+
+            time = time - timeBefore; // correct the time again, the time returned is the time of only this part.
+
+            return violated;
+        }
     }
 }
