@@ -1,5 +1,5 @@
 ﻿// Itinero.Optimization - Route optimization for .NET
-// Copyright (C) 2016 Abelshausen Ben
+// Copyright (C) 2017 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -18,5 +18,5 @@
 
 using System.Reflection;
 
-[assembly: AssemblyVersion("0.8.8")]
-[assembly: AssemblyInformationalVersion("0.8.8-alpha")]
+[assembly: AssemblyVersion("0.8.9")]
+[assembly: AssemblyInformationalVersion("0.8.9-alpha")]

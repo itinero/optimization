@@ -72,6 +72,7 @@ namespace Itinero.Optimization
         {
             return router.TryCalculateTSPDirected(profile, locations, turnPenaltyInSeconds, first, last).Value;
         }
+
         /// <summary>
         /// Calculates TSP.
         /// </summary>
@@ -92,6 +93,28 @@ namespace Itinero.Optimization
         public static Route CalculateTSPTW(this RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, int first = 0, int? last = null)
         {
             return router.TryCalculateTSPTW(profile, locations, windows, first, last).Value;
+        }
+
+        /// <summary>
+        /// Calculates TSP.
+        /// </summary>
+        public static Result<Route> TryCalculateTSPTWDirected(this Router router, Profile profile, Coordinate[] locations, TimeWindow[] windows, float turnPenaltyInSeconds, int first = 0, int? last = null)
+        {
+            var tspRouter = new TSP.TimeWindows.Directed.TSPTWRouter(router, profile, router.Resolve(profile, locations), windows, turnPenaltyInSeconds, first, last, null);
+            tspRouter.Run();
+            if (!tspRouter.HasSucceeded)
+            {
+                return new Result<Route>(tspRouter.ErrorMessage);
+            }
+            return new Result<Route>(tspRouter.BuildRoute());
+        }
+
+        /// <summary>
+        /// Calculates TSP.
+        /// </summary>
+        public static Route CalculateTSPTWDirected(this Router router, Profile profile, Coordinate[] locations, TimeWindow[] windows, float turnPenaltyInSeconds, int first = 0, int? last = null)
+        {
+            return router.TryCalculateTSPTWDirected(profile, locations, windows, turnPenaltyInSeconds, first, last).Value;
         }
 
         /// <summary>

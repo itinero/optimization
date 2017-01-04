@@ -41,8 +41,25 @@ namespace Itinero.Optimization.Test.Functional
                 new Coordinate(51.256248149311716f, 4.788386821746826f),
                 new Coordinate(51.270054481615624f, 4.799646735191345f)
             });
+            var windows = new TimeWindows.TimeWindow[]
+            {
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default
+            };
 
-            var route = router.CalculateSTSPDirected(car.Fastest(), locations.ToArray(), 100, 60 * 20);
+            var route = router.CalculateTSPTWDirected(car.Fastest(), locations.ToArray(),windows, 100, 0, 0);
             var json = route.ToGeoJson();
 
             ////var route = router.CalculateTSP(car.Fastest(), locations.ToArray(), 0, 0);
