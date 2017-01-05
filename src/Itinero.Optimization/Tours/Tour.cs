@@ -172,6 +172,10 @@ namespace Itinero.Optimization.Tours
         /// </summary>
         public void Replace(int oldCustomer, int newCustomer)
         {
+            if (oldCustomer == newCustomer)
+            {
+                return;
+            }
             if (newCustomer >= _nextArray.Length)
             {
                 this.Resize(newCustomer);

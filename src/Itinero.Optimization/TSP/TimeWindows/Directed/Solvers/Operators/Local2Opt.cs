@@ -65,9 +65,9 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
 
             // select two edges with at least one edge between them at both sides of the tour.
             var weightBefore = 0f;
-            if (problem.Windows[customers[0]].Min > weightBefore)
+            if (problem.Windows[DirectedHelper.ExtractId(customers[0])].Min > weightBefore)
             { // wait here!
-                weightBefore = problem.Windows[customers[0]].Min;
+                weightBefore = problem.Windows[DirectedHelper.ExtractId(customers[0])].Min;
             }
             for (var edge1 = 0; edge1 < customers.Count - 3; edge1++)
             { // iterate over all from-edges.
@@ -146,7 +146,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers.Operators
                 weightBefore += problem.TurnPenalties[edge11turn];
                 if (problem.Windows[DirectedHelper.ExtractId(customers[edge1])].Min > weightBefore)
                 { // wait here!
-                    weightBefore = problem.Windows[customers[0]].Min;
+                    weightBefore = problem.Windows[DirectedHelper.ExtractId(customers[edge1])].Min;
                 }
             }
 
