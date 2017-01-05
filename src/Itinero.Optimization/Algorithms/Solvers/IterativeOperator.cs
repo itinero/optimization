@@ -30,14 +30,16 @@ namespace Itinero.Optimization.Algorithms.Solvers
     {
         private readonly IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> _operator;
         private readonly int _n;
+        private readonly bool _stopAtFail;
 
         /// <summary>
         /// Creates a new iterative operator.
         /// </summary>
-        public IterativeOperator(IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> op, int n)
+        public IterativeOperator(IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> op, int n, bool stopAtFail = false)
         {
             _operator = op;
             _n = n;
+            _stopAtFail = stopAtFail;
         }
 
         /// <summary>
@@ -75,8 +77,12 @@ namespace Itinero.Optimization.Algorithms.Solvers
                 if (_operator.Apply(problem, objective, solution, out localDelta))
                 {
                     delta = objective.Add(problem, delta, localDelta);
-                    bestFitness = objective.Add(problem, bestFitness, localDelta);
+                    bestFitness = objective.Subtract(problem, bestFitness, localDelta);
                     success = true;
+                }
+                else if(_stopAtFail)
+                { // stop at first fail.
+                    break;
                 }
             }
             return success;

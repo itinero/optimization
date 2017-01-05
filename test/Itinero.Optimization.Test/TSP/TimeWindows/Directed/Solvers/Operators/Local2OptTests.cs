@@ -56,7 +56,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Directed.Solvers.Operators
 
             // test result.
             Assert.AreEqual(42, delta);
-            Assert.AreEqual(new int[] { 0, 1, 2, 3, 4 }, route.ToArray());
+            Assert.AreEqual(new int[] { 0, 4, 8, 12, 17 }, route.ToArray());
         }
 
         /// <summary>

@@ -269,7 +269,7 @@ namespace Itinero.Optimization.Algorithms.Directed
         {
             var before = DirectedHelper.ExtractId(directedBefore);
             var customer = DirectedHelper.ExtractId(directedCustomer);
-            var directedAfter = tour.GetNeigbour(directedBefore);
+            var directedAfter = tour.GetNeigbour(directedCustomer);
             if (directedAfter == Constants.NOT_SET)
             { // TODO: figure out if this happens and if so how to calculate turns.
                 return 0;
@@ -326,6 +326,65 @@ namespace Itinero.Optimization.Algorithms.Directed
             weights[c1Index + 0][c2Index + 1] = forward1backward2;
             weights[c1Index + 1][c2Index + 0] = backward1forward1;
             weights[c1Index + 1][c2Index + 1] = backward1backward2;
+        }
+
+        /// <summary>
+        /// Switches the given directed id to the best turn given the before and after directed id's.
+        /// </summary>
+        public static bool SwitchToBestTurn(int directedId, int beforeDirectedId, int afterDirectedId, float[][] weights, float[] turnPenalties,
+            out int betterDirectedId, out bool departureIdSwitched, out bool arrivalIdSwitched, out float delta)
+        {
+            int arrivalId, departureId, turn, id, beforeDepartureOffset, afterArrivalOffset, temp;
+            DirectedHelper.ExtractOffset(DirectedHelper.ExtractTurn(beforeDirectedId), out temp, out beforeDepartureOffset);
+            DirectedHelper.ExtractOffset(DirectedHelper.ExtractTurn(afterDirectedId), out afterArrivalOffset, out temp);
+            DirectedHelper.ExtractAll(directedId, out arrivalId, out departureId, out id, out turn);
+
+            var bestWeight = float.MaxValue;
+            var bestDirectedId = -1;
+            var previousWeight = float.MaxValue;
+            departureIdSwitched = false;
+            arrivalIdSwitched = false;
+            for (var newBeforeDepartureOffset = 0; newBeforeDepartureOffset < 2; newBeforeDepartureOffset++)
+            {
+                for (var newAfterArrivalOffset = 0; newAfterArrivalOffset < 2; newAfterArrivalOffset++)
+                {
+                    for (var i = 0; i < 4; i++)
+                    {
+                        var newDirectedId = DirectedHelper.BuildDirectedId(id, i);
+                        int localTurn;
+                        DirectedHelper.ExtractAll(newDirectedId, out arrivalId, out departureId, out id, out localTurn);
+                        var newBeforeDirectedId = DirectedHelper.UpdateDepartureOffset(beforeDirectedId, newBeforeDepartureOffset);
+                        var newAfterDirectedId = DirectedHelper.UpdateArrivalOffset(afterDirectedId, newAfterArrivalOffset);
+                        var newBeforeDepartureId = DirectedHelper.ExtractDepartureId(newBeforeDirectedId);
+                        var newAfterArrivalId = DirectedHelper.ExtractArrivalId(newAfterDirectedId);
+                        var newBeforeTurn = DirectedHelper.ExtractTurn(newBeforeDirectedId);
+                        var newAfterTurn = DirectedHelper.ExtractTurn(newAfterDirectedId);
+
+                        var newWeight = turnPenalties[localTurn];
+                        newWeight += weights[newBeforeDepartureId][arrivalId];
+                        newWeight += weights[departureId][newAfterArrivalId];
+                        newWeight += turnPenalties[newBeforeTurn];
+                        newWeight += turnPenalties[newAfterTurn];
+
+                        if (i == turn && newBeforeDepartureOffset == beforeDepartureOffset &&
+                            newAfterArrivalOffset == afterArrivalOffset)
+                        {
+                            previousWeight = newWeight;
+                        }
+
+                        if (bestWeight > newWeight)
+                        {
+                            bestWeight = newWeight;
+                            bestDirectedId = newDirectedId;
+                            departureIdSwitched = newBeforeDepartureOffset != beforeDepartureOffset;
+                            arrivalIdSwitched = newAfterArrivalOffset != afterArrivalOffset;
+                        }
+                    }
+                }
+            }
+            delta = previousWeight - bestWeight;
+            betterDirectedId = bestDirectedId;
+            return betterDirectedId != directedId;
         }
     }
 }

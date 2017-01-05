@@ -61,8 +61,8 @@ namespace Itinero.Optimization.Test.Algorithms.Solvers
             var before = solution.Value;
             var after = RandomGeneratorExtensions.GetRandom().Generate(problem.Max);
             solution.Value = after;
-            delta = after - before; // when improvement, after is lower, delta < 0
-            return delta < 0;
+            delta = before - after; // when improvement, after is lower, delta > 0
+            return delta > 0;
         }
     }
 }

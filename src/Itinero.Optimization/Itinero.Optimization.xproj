@@ -17,6 +17,7 @@
   </PropertyGroup>
   <ItemGroup>
     <DnxInvisibleFolder Include="TSP\Directed\Solvers\Operators\" />
+    <DnxInvisibleFolder Include="TSP\TimeWindows\Directed\Solvers\Operators\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>
