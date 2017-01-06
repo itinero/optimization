@@ -84,11 +84,18 @@ namespace Itinero.Optimization.TSP.Directed
         /// </summary>
         public sealed override float Calculate(TSProblem problem, Tour solution)
         {
-            var weights = problem.Weights;
+            if (solution.Count == 1)
+            {
+                return 0;
+            }
 
+            var isLoop = solution.Last == solution.First;
+
+            var weights = problem.Weights;
             var weight = 0f;
             var previousFrom = int.MaxValue;
             var firstTo = int.MaxValue;
+            var lastTurn = 0f;
             foreach (var directedId in solution)
             {
                 // extract turns and stuff from directed id.
@@ -106,13 +113,23 @@ namespace Itinero.Optimization.TSP.Directed
                 }
 
                 // add turn penalty.
-                weight += problem.TurnPenalties[turn];
+                if (isLoop || id != problem.First)
+                {
+                    lastTurn = problem.TurnPenalties[turn];
+                    weight += lastTurn;
+                }
 
                 previousFrom = departureId;
             }
 
+            if (solution.Last == null)
+            {
+                weight -= lastTurn;
+            }
+
             // add the weight between last and first.
-            if (previousFrom != int.MaxValue)
+            if (previousFrom != int.MaxValue &&
+                isLoop)
             {
                 weight = weight + weights[previousFrom][firstTo];
             }

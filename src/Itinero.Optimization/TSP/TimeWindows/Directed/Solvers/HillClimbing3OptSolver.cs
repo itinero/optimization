@@ -1,5 +1,5 @@
 ﻿// Itinero.Optimization - Route optimization for .NET
-// Copyright (C) 2016 Abelshausen Ben
+// Copyright (C) 2017 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -92,7 +92,12 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers
         /// <returns></returns>
         public override Tour Solve(TSPTWProblem problem, TSPTWObjective objective, out float fitness)
         {
-            if (!problem.Last.HasValue) { throw new ArgumentException("OPT3 cannot be used on open TSP-problems."); }
+            var wasClosed = false;
+            if (!problem.Last.HasValue)
+            { // convert to closed problem.
+                wasClosed = true;
+                problem = new TSPTWProblem(problem.First, problem.First, problem.Times, problem.Windows, problem.TurnPenalties[1]);
+            }
 
             // generate some route first.
             var route = _generator.Solve(problem, objective);
@@ -105,6 +110,12 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers
             if (this.Apply(problem, objective, route, out difference))
             { // improvement!
                 fitness = fitness + difference;
+            }
+
+            if (wasClosed)
+            { // convert the route back to an 'open' route.
+                route = new Tour(route, null);
+                fitness = objective.Calculate(problem, route);
             }
 
             return route;

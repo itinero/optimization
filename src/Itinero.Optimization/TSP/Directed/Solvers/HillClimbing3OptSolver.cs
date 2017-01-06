@@ -1,5 +1,5 @@
 ﻿// Itinero.Optimization - Route optimization for .NET
-// Copyright (C) 2016 Abelshausen Ben
+// Copyright (C) 2017 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -92,7 +92,12 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
         /// <returns></returns>
         public override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
         {
-            if (!problem.Last.HasValue) { throw new ArgumentException("OPT3 cannot be used on open TSP-problems."); }
+            var wasClosed = false;
+            if (!problem.Last.HasValue)
+            { // convert to closed problem.
+                wasClosed = true;
+                problem = new TSProblem(problem.First, problem.First, problem.Weights, problem.TurnPenalties[1]);
+            }
 
             // generate some route first.
             var route = _generator.Solve(problem, objective);
@@ -105,6 +110,12 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
             if (this.Apply(problem, objective, route, out difference))
             { // improvement!
                 fitness = fitness + difference;
+            }
+
+            if (wasClosed)
+            { // convert the route back to an 'open' route.
+                route = new Tour(route, null);
+                fitness = objective.Calculate(problem, route);
             }
 
             return route;
@@ -208,27 +219,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
             delta = 0;
             return false;
         }
-
-        ///// <summary>
-        ///// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
-        ///// </summary>
-        ///// <returns></returns>
-        //public bool Try3OptMoves(TSProblem problem, float[][] weights, Route route,
-        //    int v1, int v2, float weightV1V2,
-        //    int v3, out float delta)
-        //{
-        //    // get v_4.
-        //    var v4 = route.GetNeigbour(v3);
-        //    var weightV1V2PlusV3V4 = weightV1V2 + weights[v3][v4];
-        //    var weightV1V4 = weights[v1][v4];
-        //    if (v4 == problem.First && !problem.Last.HasValue)
-        //    { // set to zero if not closed.
-        //        weightV1V4 = 0;
-        //    }
-        //    var weightsV3 = weights[v3];
-        //    return this.Try3OptMoves(problem, weights, route, v1, v2, v3, weightsV3, v4, weightV1V2PlusV3V4, weightV1V4, out delta);
-        //}
-
+        
         /// <summary>
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>

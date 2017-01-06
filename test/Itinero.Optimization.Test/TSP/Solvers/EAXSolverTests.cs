@@ -1,5 +1,5 @@
 ﻿// Itinero.Optimization - Route optimization for .NET
-// Copyright (C) 2016 Abelshausen Ben
+// Copyright (C) 2017 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -22,7 +22,6 @@ using Itinero.Optimization.TSP;
 using Itinero.Optimization.TSP.Solvers;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Itinero.Optimization.Test.TSP.Solvers
 {
@@ -118,7 +117,7 @@ namespace Itinero.Optimization.Test.TSP.Solvers
             RandomGeneratorExtensions.GetGetNewRandom = () => new RandomGenerator(4541247);
 
             // create problem.
-            var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
+            var problem = TSPHelper.CreateTSP(0, 5, 10);
             problem.Weights[0][1] = 1;
             problem.Weights[1][2] = 1;
             problem.Weights[2][3] = 1;
@@ -192,6 +191,7 @@ namespace Itinero.Optimization.Test.TSP.Solvers
                 Assert.AreEqual(4, fitness);
                 var solutionList = new List<int>(solution);
                 Assert.AreEqual(0, solutionList[0]);
+                Assert.AreEqual(4, solutionList[4]);
                 Assert.IsTrue(solutionList.Remove(0));
                 Assert.IsTrue(solutionList.Remove(1));
                 Assert.IsTrue(solutionList.Remove(2));
