@@ -104,6 +104,66 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Directed.Solvers
         }
 
         /// <summary>
+        /// Tests the solver.
+        /// </summary>
+        [Test]
+        public void TestSolution5ClosedFixed()
+        {
+            // create problem.
+            var problem = TSPTWHelper.CreateDirectedTSPTW(0, 4, 5, 10, 1);
+            problem.Windows[1] = new TimeWindow()
+            {
+                Min = 5,
+                Max = 15
+            };
+            problem.Windows[2] = new TimeWindow()
+            {
+                Min = 15,
+                Max = 25
+            };
+            problem.Windows[3] = new TimeWindow()
+            {
+                Min = 25,
+                Max = 35
+            };
+            problem.Windows[4] = new TimeWindow()
+            {
+                Min = 35,
+                Max = 45
+            };
+
+            // create the solver.
+            var solver = new VNSConstructionSolver();
+            solver.IntermidiateResult += (x) =>
+            {
+                var fitness = (new TSPTWFeasibleObjective()).Calculate(problem, x);
+                fitness = fitness + 0;
+            };
+            for (int i = 0; i < 10; i++)
+            {
+                // generate solution.
+                float fitness;
+                var solution = solver.Solve(problem, new TSPTWFeasibleObjective(), out fitness);
+
+                // test contents.
+                Assert.AreEqual(0, fitness);
+                var solutionList = new List<int>();
+                foreach (var directed in solution)
+                {
+                    solutionList.Add(DirectedHelper.ExtractId(directed));
+                }
+                Assert.AreEqual(0, solutionList[0]);
+                Assert.AreEqual(4, solutionList[4]);
+                Assert.IsTrue(solutionList.Remove(0));
+                Assert.IsTrue(solutionList.Remove(1));
+                Assert.IsTrue(solutionList.Remove(2));
+                Assert.IsTrue(solutionList.Remove(3));
+                Assert.IsTrue(solutionList.Remove(4));
+                Assert.AreEqual(0, solutionList.Count);
+            }
+        }
+
+        /// <summary>
         /// Cleans up for these tests.
         /// </summary>
         [OneTimeTearDown]
