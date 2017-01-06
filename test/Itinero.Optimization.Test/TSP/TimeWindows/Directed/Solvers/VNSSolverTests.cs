@@ -109,40 +109,51 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows.Directed.Solvers
             }
         }
 
-        ///// <summary>
-        ///// Tests the solver.
-        ///// </summary>
-        //[Test]
-        //public void TestSolution5ClosedFixed()
-        //{
-        //    // create problem.
-        //    var problem = TSPTWHelper.CreateDirectedTSPTW(0, 4, 5, 10, 1);
-        //    problem.Times.SetWeight(0, 1, 2);
-        //    problem.Times.SetWeight(1, 2, 2);
-        //    problem.Times.SetWeight(2, 3, 2);
-        //    problem.Times.SetWeight(3, 4, 2);
-        //    problem.Times.SetWeight(4, 0, 2);
-        //    problem.Windows[4] = new TimeWindow()
-        //    {
-        //        Min = 7,
-        //        Max = 9
-        //    };
-        //    var objective = new TSPTWObjective();
+        /// <summary>
+        /// Tests the solver.
+        /// </summary>
+        [Test]
+        public void TestSolution5ClosedFixed()
+        {
+            // create problem.
+            var problem = TSPTWHelper.CreateDirectedTSPTW(0, 4, 5, 10, 1);
+            problem.Times.SetWeight(0, 1, 2);
+            problem.Times.SetWeight(1, 2, 2);
+            problem.Times.SetWeight(2, 3, 2);
+            problem.Times.SetWeight(3, 4, 2);
+            problem.Times.SetWeight(4, 0, 2);
+            problem.Windows[2] = new TimeWindow()
+            {
+                Min = 3,
+                Max = 5
+            };
+            problem.Windows[4] = new TimeWindow()
+            {
+                Min = 7,
+                Max = 9
+            };
+            var objective = new TSPTWObjective();
 
-        //    // create the solver.
-        //    var solver = new VNSSolver();
-        //    for (int i = 0; i < 10; i++)
-        //    {
-        //        // generate solution.
-        //        float fitness;
-        //        var solution = solver.Solve(problem, objective, out fitness);
+            // create the solver.
+            var solver = new VNSSolver();
+            for (int i = 0; i < 10; i++)
+            {
+                // generate solution.
+                float fitness;
+                var solution = solver.Solve(problem, objective, out fitness);
 
-        //        // test contents.
-        //        Assert.AreEqual(8, fitness);
-        //        var solutionList = new List<int>(solution);
-        //        Assert.AreEqual(5, solutionList.Count);
-        //    }
-        //}
+                // test contents.
+                Assert.IsTrue(fitness <= 12);
+                var solutionList = new List<int>();
+                foreach (var directed in solution)
+                {
+                    solutionList.Add(DirectedHelper.ExtractId(directed));
+                }
+                Assert.AreEqual(5, solutionList.Count);
+                Assert.AreEqual(0, solutionList[0]);
+                Assert.AreEqual(4, solutionList[4]);
+            }
+        }
 
         /// <summary>
         /// Cleans up for these tests.
