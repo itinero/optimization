@@ -20,11 +20,16 @@ namespace Itinero.Optimization.Test.Functional
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", origin, level, message));
             };
 
-            var routerDb = RouterDb.Deserialize(File.OpenRead(@"C:\work\data\routing\belgium.c.cf-e.routerdb"));
-            var car = routerDb.GetSupportedVehicle("car");
+            // STEP 0: staging, download and build a routerdb to test with.
+            // download belgium.
+            Staging.Download.DownloadBelgiumAll();
+
+            // build routerdb and save the result.
+            var routerDb = Staging.RouterDbBuilder.BuildBelgium();
             var router = new Router(routerDb);
 
-            var locations = new List<Coordinate>(new Coordinate[]
+            // calculate TSP.
+            var locations = new Coordinate[]
             {
                 new Coordinate(51.270453873703080f, 4.8008108139038080f),
                 new Coordinate(51.264197451065370f, 4.8017120361328125f),
@@ -40,69 +45,43 @@ namespace Itinero.Optimization.Test.Functional
                 new Coordinate(51.257040455587656f, 4.780147075653076f),
                 new Coordinate(51.256248149311716f, 4.788386821746826f),
                 new Coordinate(51.270054481615624f, 4.799646735191345f)
-            });
-            var windows = new TimeWindows.TimeWindow[]
-            {
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default
             };
+            var route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, 0);
+            // TODO: doesn't end at last coordinate.
+            //route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, locations.Length - 1);
+            route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, null);
 
-            var route = router.CalculateTSPTWDirected(car.Fastest(), locations.ToArray(),windows, 100, 0, 0);
-            var json = route.ToGeoJson();
+            // calculate Directed TSP.
+            route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, 0);
+            // TODO: fix this option!
+            //route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, locations.Length - 1);
+            // TODO: fix this option!
+            //route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, null);
 
-            ////var route = router.CalculateTSP(car.Fastest(), locations.ToArray(), 0, 0);
+            // calculate STSP
+            route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, 0);
+            //// TODO: fix this option!
+            //route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, locations.Length - 1);
+            //// TODO: fix this option!
+            //route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, null);
 
-            ////var routeWithTurnPenalty000 = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 0, 0, 0);
-            ////var routeWithTurnPenalty020 = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 20, 0, 0);
-            ////var routeWithTurnPenalty040 = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 40, 0, 0);
-            ////var routeWithTurnPenalty060 = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 60, 0, 0);
-            ////var routeWithTurnPenalty100 = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 100, 0, 0);
-            //var routeWithTurnPenalty1000 = router.CalculateTSPDirected(car.Fastest(), locations.ToArray(), 1000, 0, 0);
-
-            ////var features = routerDb.GetFeaturesIn(new Coordinate(51.25691959619085f, 4.781885147094727f),
-            ////    new Coordinate(51.274937566783876f, 4.8088788986206055f), true, true);
-            ////var featuresJson = ToJson(features);
-
-            ////// test directed calculations.
-            ////var profile = car.Fastest();
-            ////var weightHandler = profile.DefaultWeightHandler(router);
-            ////for (var i = 0; i < locations.Count - 1; i++)
-            ////{
-            ////    var routerpoint1 = router.Resolve(profile, locations[i]);
-            ////    var routerpoint2 = router.Resolve(profile, locations[i + 1]);
-
-            ////    //var rawRoute = router.TryCalculateRaw(profile, weightHandler, routerpoint1.EdgeId + 1, routerpoint2.EdgeId + 1, null).Value;
-            ////    //rawRoute.StripSource();
-            ////    //rawRoute.StripTarget();
-            ////    //var route = router.BuildRoute(profile, weightHandler, routerpoint1, routerpoint2, rawRoute);
-
-            ////    //rawRoute = router.TryCalculateRaw(profile, weightHandler, routerpoint1.EdgeId + 1, -(routerpoint2.EdgeId + 1), null).Value;
-            ////    //rawRoute.StripSource();
-            ////    //rawRoute.StripTarget();
-            ////    //route = router.BuildRoute(profile, weightHandler, routerpoint1, routerpoint2, rawRoute);
-
-            ////    //rawRoute = router.TryCalculateRaw(profile, weightHandler, -(routerpoint1.EdgeId + 1), routerpoint2.EdgeId + 1, null).Value;
-            ////    //rawRoute.StripSource();
-            ////    //rawRoute.StripTarget();
-            ////    //route = router.BuildRoute(profile, weightHandler, routerpoint1, routerpoint2, rawRoute);
-
-            ////    var rawRoute = router.TryCalculateRaw(profile, weightHandler, -(routerpoint1.EdgeId + 1), -(routerpoint2.EdgeId + 1), null).Value;
-            ////    rawRoute.StripSource();
-            ////    rawRoute.StripTarget();
-            ////    var route = router.BuildRoute(profile, weightHandler, routerpoint1, routerpoint2, rawRoute);
-            ////}
+            //var windows = new TimeWindows.TimeWindow[]
+            //{
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default,
+            //    TimeWindows.TimeWindow.Default
+            //};
         }
 
         private static string ToJson(FeatureCollection featureCollection)

@@ -12,7 +12,7 @@
           "lib/net45/GeoAPI.dll": {}
         }
       },
-      "Itinero/0.31.9-rc1": {
+      "Itinero/0.35.2-rc1": {
         "type": "package",
         "dependencies": {
           "Reminiscence": "1.0.5"
@@ -27,11 +27,11 @@
           "lib/net45/Itinero.dll": {}
         }
       },
-      "Itinero.Geo/0.31.9-rc1": {
+      "Itinero.Geo/0.35.2-rc1": {
         "type": "package",
         "dependencies": {
           "GeoAPI": "[1.7.4, 2.0.0)",
-          "Itinero": "0.31.9-rc1",
+          "Itinero": "0.35.2-rc1",
           "NetTopologySuite": "[1.14.0, 2.0.0)"
         },
         "compile": {
@@ -39,6 +39,19 @@
         },
         "runtime": {
           "lib/net45/Itinero.Geo.dll": {}
+        }
+      },
+      "Itinero.IO.Osm/0.35.2-rc1": {
+        "type": "package",
+        "dependencies": {
+          "Itinero": "0.35.2-rc1",
+          "OsmSharp": "[5.0.6, 6.0.0)"
+        },
+        "compile": {
+          "lib/net45/Itinero.IO.Osm.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Itinero.IO.Osm.dll": {}
         }
       },
       "NetTopologySuite/1.14.0": {
@@ -82,6 +95,27 @@
         },
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      },
+      "OsmSharp/5.0.6": {
+        "type": "package",
+        "dependencies": {
+          "protobuf-net": "2.0.0.668"
+        },
+        "compile": {
+          "lib/net45/OsmSharp.dll": {}
+        },
+        "runtime": {
+          "lib/net45/OsmSharp.dll": {}
+        }
+      },
+      "protobuf-net/2.0.0.668": {
+        "type": "package",
+        "compile": {
+          "lib/net40/protobuf-net.dll": {}
+        },
+        "runtime": {
+          "lib/net40/protobuf-net.dll": {}
         }
       },
       "Reminiscence/1.0.5": {
@@ -130,12 +164,12 @@
         "lib/portable-net403+sl5+netcore45+wpa81+wp8+MonoAndroid10+XamariniOS10+MonoTouch10/GeoAPI.xml"
       ]
     },
-    "Itinero/0.31.9-rc1": {
-      "sha512": "cA38z+mflZvVnObWRy3DrygzioAvYiEpPlddwyw7q+fUCZZFHWI+miaL4wRMOlu7O1q7Z2NbcwJGq1UgYaYNqw==",
+    "Itinero/0.35.2-rc1": {
+      "sha512": "G+r7f9ryK2rA8Dc1tyvsUV0VC0oSdrJRrHz372PsWDTeXiIvXL8jNRcCv8a8LOOuw7DhYVzsbrGh1NGeBLhJdg==",
       "type": "package",
-      "path": "Itinero/0.31.9-rc1",
+      "path": "Itinero/0.35.2-rc1",
       "files": [
-        "Itinero.0.31.9-rc1.nupkg.sha512",
+        "Itinero.0.35.2-rc1.nupkg.sha512",
         "Itinero.nuspec",
         "lib/net40/Itinero.dll",
         "lib/net45/Itinero.dll",
@@ -143,16 +177,29 @@
         "lib/portable-net40+sl4+win8+wp7/Itinero.dll"
       ]
     },
-    "Itinero.Geo/0.31.9-rc1": {
-      "sha512": "6Dti+wUmuHq4vu2YdVcThSQUOzR9NS4wl2A42ovtInT0bd42Yy3xmQrr+iK/M4WeLjBPZtvOq9SW7cbyg/5JUA==",
+    "Itinero.Geo/0.35.2-rc1": {
+      "sha512": "JMIk0vJHTiYEswmY6HTAczPrS906bSaO9BVhCieB/sNSIgkb2Hn33hJXRngmF5n+4gn3Gns4sKQPZVIwaMZjEQ==",
       "type": "package",
-      "path": "Itinero.Geo/0.31.9-rc1",
+      "path": "Itinero.Geo/0.35.2-rc1",
       "files": [
-        "Itinero.Geo.0.31.9-rc1.nupkg.sha512",
+        "Itinero.Geo.0.35.2-rc1.nupkg.sha512",
         "Itinero.Geo.nuspec",
         "lib/net40/Itinero.Geo.dll",
         "lib/net45/Itinero.Geo.dll",
         "lib/portable-net40+sl4+win8+wp7/Itinero.Geo.dll"
+      ]
+    },
+    "Itinero.IO.Osm/0.35.2-rc1": {
+      "sha512": "7Qr5s+IpsppFnI3BFW+2lh2j3MzC4U+i1zNfp7gubVtSHTvct84NIC8i30tFXI4CEmljjSvcBRCaqsBMLZUc1A==",
+      "type": "package",
+      "path": "Itinero.IO.Osm/0.35.2-rc1",
+      "files": [
+        "Itinero.IO.Osm.0.35.2-rc1.nupkg.sha512",
+        "Itinero.IO.Osm.nuspec",
+        "lib/net40/Itinero.IO.Osm.dll",
+        "lib/net45/Itinero.IO.Osm.dll",
+        "lib/netstandard1.6/Itinero.IO.Osm.dll",
+        "lib/portable-net40+sl4+win8+wp7/Itinero.IO.Osm.dll"
       ]
     },
     "NetTopologySuite/1.14.0": {
@@ -233,6 +280,68 @@
         "tools/install.ps1"
       ]
     },
+    "OsmSharp/5.0.6": {
+      "sha512": "jGOuKEInoRgI1jsPnNCzDJCOzAqwmqUBsQhGf7oJZm3H+4R8rEUS3+mA4qUf2gb0qNs/Esb4jM1+c3bXWZajhA==",
+      "type": "package",
+      "path": "OsmSharp/5.0.6",
+      "files": [
+        "OsmSharp.5.0.6.nupkg.sha512",
+        "OsmSharp.nuspec",
+        "lib/net40/OsmSharp.dll",
+        "lib/net45/OsmSharp.dll",
+        "lib/netstandard1.3/OsmSharp.dll",
+        "lib/portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10/OsmSharp.dll"
+      ]
+    },
+    "protobuf-net/2.0.0.668": {
+      "sha512": "Lgj+Kf1+RV0utKxX9u1WEcymPGrbWrj/AwFmFADFLLa/LLdc1ji2MIGcecFRAGUu6UO8BRbdjZAIYWvLlN1B/A==",
+      "type": "package",
+      "path": "protobuf-net/2.0.0.668",
+      "files": [
+        "lib/net20-cf/protobuf-net.dll",
+        "lib/net20-cf/protobuf-net.pdb",
+        "lib/net20-cf/protobuf-net.xml",
+        "lib/net20/protobuf-net.dll",
+        "lib/net20/protobuf-net.pdb",
+        "lib/net20/protobuf-net.xml",
+        "lib/net30/protobuf-net.dll",
+        "lib/net30/protobuf-net.pdb",
+        "lib/net30/protobuf-net.xml",
+        "lib/net35-cf/protobuf-net.dll",
+        "lib/net35-cf/protobuf-net.pdb",
+        "lib/net35-cf/protobuf-net.xml",
+        "lib/net35/protobuf-net.dll",
+        "lib/net35/protobuf-net.pdb",
+        "lib/net35/protobuf-net.xml",
+        "lib/net40-cf/protobuf-net.dll",
+        "lib/net40-cf/protobuf-net.pdb",
+        "lib/net40-cf/protobuf-net.xml",
+        "lib/net40/protobuf-net.dll",
+        "lib/net40/protobuf-net.pdb",
+        "lib/net40/protobuf-net.xml",
+        "lib/netcore45/protobuf-net.XML",
+        "lib/netcore45/protobuf-net.dll",
+        "lib/netcore45/protobuf-net.pdb",
+        "lib/netcore45/protobuf-net.pri",
+        "lib/portable-sl4+net40+wp7+windows8/protobuf-net.dll",
+        "lib/portable-sl4+net40+wp7+windows8/protobuf-net.pdb",
+        "lib/portable-sl4+net40+wp7+windows8/protobuf-net.xml",
+        "lib/sl3-wp/protobuf-net.dll",
+        "lib/sl3-wp/protobuf-net.pdb",
+        "lib/sl3-wp/protobuf-net.xml",
+        "lib/sl4-windowsphone71/protobuf-net.dll",
+        "lib/sl4-windowsphone71/protobuf-net.pdb",
+        "lib/sl4-windowsphone71/protobuf-net.xml",
+        "lib/sl4/protobuf-net.dll",
+        "lib/sl4/protobuf-net.pdb",
+        "lib/sl4/protobuf-net.xml",
+        "lib/windowsphone8/protobuf-net.dll",
+        "lib/windowsphone8/protobuf-net.pdb",
+        "lib/windowsphone8/protobuf-net.xml",
+        "protobuf-net.2.0.0.668.nupkg.sha512",
+        "protobuf-net.nuspec"
+      ]
+    },
     "Reminiscence/1.0.5": {
       "sha512": "PrjrLzIAT1fWIQLv7Bz3KDrQ3fvsqqafOPtiSpQ5K3UVMjvmO8c2T/yFpqO85SV97RH8XTc9f8V/KtTj+Sgsvw==",
       "type": "package",
@@ -255,8 +364,9 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Itinero >= 0.31.9-rc1",
-      "Itinero.Geo >= 0.31.9-rc1",
+      "Itinero >= 0.35.2-rc1",
+      "Itinero.Geo >= 0.35.2-rc1",
+      "Itinero.IO.Osm >= 0.35.2-rc1",
       "Itinero.Optimization >= 1.0.0-*",
       "NetTopologySuite.IO.GeoJSON >= 1.14.0",
       "Newtonsoft.Json >= 9.0.1"
