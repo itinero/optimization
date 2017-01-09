@@ -18,7 +18,7 @@
           "lib/net451/dotnet-test-nunit.exe": {}
         }
       },
-      "Itinero/0.31.9-rc1": {
+      "Itinero/0.35.3-rc1": {
         "type": "package",
         "dependencies": {
           "Reminiscence": "1.0.5"
@@ -349,7 +349,7 @@
         "type": "project",
         "framework": ".NETFramework,Version=v4.5",
         "dependencies": {
-          "Itinero": "0.31.9-rc1"
+          "Itinero": "0.35.3-rc1"
         },
         "compile": {
           "net45/Itinero.Optimization.dll": {}
@@ -373,12 +373,12 @@
         "lib/netcoreapp1.0/dotnet-test-nunit.runtimeconfig.json"
       ]
     },
-    "Itinero/0.31.9-rc1": {
-      "sha512": "cA38z+mflZvVnObWRy3DrygzioAvYiEpPlddwyw7q+fUCZZFHWI+miaL4wRMOlu7O1q7Z2NbcwJGq1UgYaYNqw==",
+    "Itinero/0.35.3-rc1": {
+      "sha512": "1k+J2aeudb6/2asrCcm9T+y+ww/zwkn12Aum4N7UnTwbpYSUabUCgLPFOLqjBhSYjLZeT0YBfUbuTn8JGW7ysQ==",
       "type": "package",
-      "path": "Itinero/0.31.9-rc1",
+      "path": "Itinero/0.35.3-rc1",
       "files": [
-        "Itinero.0.31.9-rc1.nupkg.sha512",
+        "Itinero.0.35.3-rc1.nupkg.sha512",
         "Itinero.nuspec",
         "lib/net40/Itinero.dll",
         "lib/net45/Itinero.dll",
@@ -923,7 +923,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Itinero >= 0.31.9-rc1",
+      "Itinero >= 0.35.3-rc1",
       "Itinero.Optimization >= 1.0.0-*",
       "NUnit >= 3.4.1",
       "dotnet-test-nunit >= 3.4.0-beta-3"
