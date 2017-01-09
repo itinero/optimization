@@ -41,7 +41,7 @@ namespace Itinero.Optimization.Algorithms.Solvers
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <param name="delta">The difference between the fitness value before and after the operation.</param>
+        /// <param name="delta">The difference between the fitness value before and after the operation. The new fitness value can be calculated by subtracting the delta value from the old fitness value. This means a delta > 0 means an improvement in fitness when lower is better.</param>
         /// <returns></returns>
         bool Apply(TProblem problem, TObjective objective, TSolution solution, out TFitness delta);
     }

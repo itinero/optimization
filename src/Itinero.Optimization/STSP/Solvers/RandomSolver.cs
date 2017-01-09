@@ -1,5 +1,5 @@
 ﻿// Itinero.Optimization - Route optimization for .NET
-// Copyright (C) 2015 Abelshausen Ben
+// Copyright (C) 2017 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -20,8 +20,6 @@ using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Itinero.Optimization.STSP.Solvers
 {
@@ -30,7 +28,6 @@ namespace Itinero.Optimization.STSP.Solvers
     /// </summary>
     public sealed class RandomSolver : SolverBase<float, STSProblem, STSPObjective, Tour, STSPFitness>
     {
-
         /// <summary>
         /// Returns the name of this solver.
         /// </summary>
@@ -58,7 +55,7 @@ namespace Itinero.Optimization.STSP.Solvers
             }
 
             // keep adding customers until no more space is left or no more customers available.
-            var route = new Tour(new int[] { problem.First });
+            var route = new Tour(new int[] { problem.First }, problem.Last);
             fitness = new STSPFitness()
             {
                 Weight = 0,
@@ -67,7 +64,8 @@ namespace Itinero.Optimization.STSP.Solvers
             while(_randomPool.MoveNext())
             {
                 var customer = _randomPool.Current;
-                if (customer == problem.First)
+                if (customer == problem.First ||
+                    customer == problem.Last)
                 {
                     continue;
                 }

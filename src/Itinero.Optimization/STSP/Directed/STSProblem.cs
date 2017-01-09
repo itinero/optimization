@@ -21,6 +21,7 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 using Itinero.Optimization.STSP.Directed.Solvers.Operators;
 using System.Collections.Generic;
+using Itinero.Optimization.STSP.Directed.Solver.Operators;
 
 namespace Itinero.Optimization.STSP.Directed
 {
@@ -116,7 +117,8 @@ namespace Itinero.Optimization.STSP.Directed
         public Tour Solve()
         {
             var solver = new IterativeSolver<float, STSProblem, STSPObjective, Tour, STSPFitness>(
-                new STSP.Directed.Solver.RandomSolver(), 100, new IterativeOperator<float, STSProblem, STSPObjective, Tour, STSPFitness>(new CheapestInsertionOperator(3, 4), 250));
+                new STSP.Directed.Solver.RandomSolver(), 100, new IterativeOperator<float, STSProblem, STSPObjective, Tour, STSPFitness>(
+                    new CheapestInsertionOperator(3, 4), 250), new DirectionLocalSearch());
             return this.Solve(solver);
         }
 

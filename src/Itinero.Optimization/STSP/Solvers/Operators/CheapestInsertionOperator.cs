@@ -81,6 +81,7 @@ namespace Itinero.Optimization.STSP.Solvers.Operators
                     if (current != Constants.NOT_SET)
                     {
                         if (current != solution.First &&
+                            current != solution.Last &&
                             solution.Remove(current))
                         {
                             toInsert.Add(current);
@@ -97,6 +98,7 @@ namespace Itinero.Optimization.STSP.Solvers.Operators
                     if (!solution.Contains(current))
                     {
                         if (current != solution.First &&
+                            current != solution.Last &&
                             solution.Remove(current))
                         {
                             toInsert.Add(current);
