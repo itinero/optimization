@@ -120,7 +120,7 @@ namespace Itinero.Optimization.STSP.Directed
         {
             var solver = new IterativeSolver<float, STSProblem, STSPObjective, Tour, STSPFitness>(
                 new STSP.Directed.Solver.RandomSolver(), 100, new IterativeOperator<float, STSProblem, STSPObjective, Tour, STSPFitness>(
-                    new CheapestInsertionOperator(3, 4), 250), new DirectionLocalSearch());
+                    new CheapestInsertionOperator(3, 4), 250), new DirectionLocalSearchOperator());
             return this.Solve(solver);
         }
 

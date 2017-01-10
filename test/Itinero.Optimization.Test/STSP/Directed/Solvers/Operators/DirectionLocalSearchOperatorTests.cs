@@ -19,17 +19,16 @@
 using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.STSP.Directed;
-using Itinero.Optimization.STSP.Directed.Solvers.Operators;
+using Itinero.Optimization.STSP.Directed.Solver.Operators;
 using NUnit.Framework;
-using System.Linq;
 
 namespace Itinero.Optimization.Test.STSP.Directed.Solvers.Operators
 {
     /// <summary>
-    /// Cheapest insertion operator.
+    /// Tests the direction local search operator.
     /// </summary>
     [TestFixture]
-    public class CheapestInsertionOperatorTests
+    public class DirectionLocalSearchOperatorTests
     {
         /// <summary>
         /// Tests an 'open' route where cheapest insertion can help.
@@ -41,17 +40,12 @@ namespace Itinero.Optimization.Test.STSP.Directed.Solvers.Operators
 
             // create the problem and make sure 0->1->2->3->4 is the solution.
             var problem = STSPHelper.CreateDirectedSTSP(0, 5, 10, 1, 40);
-            problem.Weights.SetWeight(0, 1, 1);
-            problem.Weights.SetWeight(1, 2, 1);
-            problem.Weights.SetWeight(2, 3, 1);
-            problem.Weights.SetWeight(3, 4, 1);
-            problem.Weights.SetWeight(4, 0, 1);
 
             // create a route with one shift.
-            var route = new Optimization.Tours.Tour(new int[] { 0, 8, 12, 16 }, null);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 4, 9, 12, 16 }, null);
 
             // apply the operator.
-            var localSearch = new CheapestInsertionOperator(4, 10);
+            var localSearch = new DirectionLocalSearchOperator();
             STSPFitness delta;
             Assert.IsTrue(localSearch.Apply(problem, new STSPObjective(), route, out delta));
         }
@@ -66,17 +60,12 @@ namespace Itinero.Optimization.Test.STSP.Directed.Solvers.Operators
 
             // create the problem and make sure 0->1->2->3->4 is the solution.
             var problem = STSPHelper.CreateDirectedSTSP(0, 4, 5, 10, 1, 40);
-            problem.Weights.SetWeight(0, 1, 1);
-            problem.Weights.SetWeight(1, 2, 1);
-            problem.Weights.SetWeight(2, 3, 1);
-            problem.Weights.SetWeight(3, 4, 1);
-            problem.Weights.SetWeight(4, 0, 1);
 
             // create a route with one shift.
-            var route = new Optimization.Tours.Tour(new int[] { 0, 12, 4, 16 }, 16);
+            var route = new Optimization.Tours.Tour(new int[] { 0, 4, 9, 12, 16 }, 16);
 
             // apply the operator.
-            var localSearch = new CheapestInsertionOperator(4, 10);
+            var localSearch = new DirectionLocalSearchOperator();
             STSPFitness delta;
             Assert.IsTrue(localSearch.Apply(problem, new STSPObjective(), route, out delta));
         }
@@ -91,17 +80,12 @@ namespace Itinero.Optimization.Test.STSP.Directed.Solvers.Operators
 
             // create the problem and make sure 0->1->2->3->4 is the solution.
             var problem = STSPHelper.CreateDirectedSTSP(0, 0, 5, 10, 1, 40);
-            problem.Weights.SetWeight(0, 1, 1);
-            problem.Weights.SetWeight(1, 2, 1);
-            problem.Weights.SetWeight(2, 3, 1);
-            problem.Weights.SetWeight(3, 4, 1);
-            problem.Weights.SetWeight(4, 0, 1);
+
+            // create a route with one shift.
+            var route = new Optimization.Tours.Tour(new int[] { 0, 4, 9, 12, 16 }, 0);
 
             // apply the operator.
-            var route = new Optimization.Tours.Tour(new int[] { 0, 12, 4, 16 }, 0);
-
-            // apply the 1-shift local search, it should find the customer to replocate.
-            var localSearch = new CheapestInsertionOperator(4, 10);
+            var localSearch = new DirectionLocalSearchOperator();
             STSPFitness delta;
             Assert.IsTrue(localSearch.Apply(problem, new STSPObjective(), route, out delta));
         }

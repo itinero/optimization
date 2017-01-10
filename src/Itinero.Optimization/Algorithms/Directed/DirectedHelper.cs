@@ -421,4 +421,104 @@ namespace Itinero.Optimization.Algorithms.Directed
             return betterDirectedId != directedId;
         }
     }
+
+    /// <summary>
+    /// A data structure with all the info about one directed id.
+    /// </summary>
+    public struct DirectedIdInfo
+    {
+        /// <summary>
+        /// Creates a new directed id info.
+        /// </summary>
+        public DirectedIdInfo(int directedId)
+        {
+            this.DirectedId = directedId;
+        }
+
+        /// <summary>
+        /// Gets the directed id.
+        /// </summary>
+        public int DirectedId { get; set; }
+
+        /// <summary>
+        /// Gets the id.
+        /// </summary>
+        public int Id
+        {
+            get
+            {
+                return DirectedHelper.ExtractId(this.DirectedId);
+            }
+        }
+
+        /// <summary>
+        /// Gets the arrival id.
+        /// </summary>
+        public int ArrivalId
+        {
+            get
+            {
+                return DirectedHelper.ExtractArrivalId(this.DirectedId);
+            }
+        }
+
+        /// <summary>
+        /// Gets the departure id.
+        /// </summary>
+        public int DepartureId
+        {
+            get
+            {
+                return DirectedHelper.ExtractDepartureId(this.DirectedId);
+            }
+        }
+
+        /// <summary>
+        /// Gets the turn.
+        /// </summary>
+        public int Turn
+        {
+            get
+            {
+                return DirectedHelper.ExtractTurn(this.DirectedId);
+            }
+        }
+
+        /// <summary>
+        /// Gets the arrival offset.
+        /// </summary>
+        public int ArrivalOffset
+        {
+            get
+            {
+                int nothing, offset;
+                DirectedHelper.ExtractOffset(this.Turn, out offset, out nothing);
+                return offset;
+            }
+        }
+
+        /// <summary>
+        /// Gets the departure offset.
+        /// </summary>
+        public int DepartureOffset
+        {
+            get
+            {
+                int nothing, offset;
+                DirectedHelper.ExtractOffset(this.Turn, out nothing, out offset);
+                return offset;
+            }
+        }
+
+        /// <summary>
+        /// Returns a description of the data this directed id represents.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("[{0}] {1}({4}) -> {2} -> {3}({5})",
+                this.DirectedId, this.ArrivalId, this.Turn, this.DepartureId, 
+                    this.ArrivalOffset, this.DepartureOffset);
+        }
+    }
 }

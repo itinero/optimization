@@ -93,20 +93,41 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
                 if (tour.First == tour.Last)
                 { // there is one customer but it's both the start and the end.
                     var firstId = DirectedHelper.ExtractId(tour.First);
-                    var lastId = firstId;
 
-                    int departureOffset1, arrivalOffset3, turn2;
-                    var cost = DirectedHelper.CheapestInsert(weights, turnPenalties,
-                        firstId, customer, lastId, out departureOffset1, out arrivalOffset3, out turn2);
-                    if (cost <= max)
+                    var bestCost = float.MaxValue;
+                    var bestDirected1Id = int.MaxValue;
+                    var bestDirected2Id = int.MaxValue;
+                    for (var turn1 = 0; turn1 < 4; turn1++)
                     {
-                        var newFirst = DirectedHelper.UpdateDepartureOffset(
-                        DirectedHelper.UpdateArrivalOffset(tour.First, arrivalOffset3), departureOffset1);
-                        tour.Replace(tour.First, newFirst);
-                        var customerDirectedId = DirectedHelper.BuildDirectedId(customer, turn2);
+                        var firstDirectedId = DirectedHelper.BuildDirectedId(firstId, turn1);
+                        var firstArrivalId = DirectedHelper.ExtractArrivalId(firstDirectedId);
+                        var firstDepartureId = DirectedHelper.ExtractDepartureId(firstDirectedId);
+                        for (var turn2 = 0; turn2 < 4; turn2++)
+                        {
+                            var customerDirectedId = DirectedHelper.BuildDirectedId(customer, turn2);
+                            var customerArrivalId = DirectedHelper.ExtractArrivalId(customerDirectedId);
+                            var customerDepartureId = DirectedHelper.ExtractDepartureId(customerDirectedId);
 
-                        tour.InsertAfter(tour.First, customerDirectedId);
-                        return cost;
+                            var weight = turnPenalties[turn1];
+                            weight += turnPenalties[turn2];
+                            weight += weights[firstDepartureId][customerArrivalId];
+                            weight += weights[customerDepartureId][firstArrivalId];
+
+                            if (bestCost > weight)
+                            {
+                                bestDirected1Id = firstDirectedId;
+                                bestDirected2Id = customerDirectedId;
+                                bestCost = weight;
+                            }
+                        }
+                    }
+
+                    if (bestCost <= max)
+                    {
+                        tour.Replace(tour.First, bestDirected1Id);
+                        tour.InsertAfter(tour.First, bestDirected2Id);
+
+                        return bestCost;
                     }
                 }
                 else

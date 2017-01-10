@@ -26,7 +26,7 @@ namespace Itinero.Optimization.STSP.Directed.Solver.Operators
     /// <summary>
     /// A local search operator trying to improve the solution by switching directions.
     /// </summary>
-    public class DirectionLocalSearch : IOperator<float, STSProblem, STSPObjective, Tour, STSPFitness>
+    public class DirectionLocalSearchOperator : IOperator<float, STSProblem, STSPObjective, Tour, STSPFitness>
     {
         /// <summary>
         /// Gets the name of this operator.

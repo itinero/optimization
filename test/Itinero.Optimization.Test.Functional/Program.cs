@@ -17,6 +17,7 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.LocalGeo;
+using Itinero.Optimization.Algorithms.Random;
 using NetTopologySuite.Features;
 using System;
 using System.IO;
@@ -77,6 +78,7 @@ namespace Itinero.Optimization.Test.Functional
             //route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, null);
 
             // calculate directed TSP.
+            RandomGeneratorExtensions.GetGetNewRandom = () => new RandomGenerator(4541247);
             var route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 180, 800, 0, 0);
             //// TODO: double check if this is correct.
             //route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, locations.Length - 1);
