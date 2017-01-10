@@ -1,5 +1,5 @@
 ﻿// Itinero.Optimization - Route optimization for .NET
-// Copyright (C) 2016 Abelshausen Ben
+// Copyright (C) 2017 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -24,7 +24,7 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
     /// <summary>
     /// Contains extension methods to do cheapest insertion.
     /// </summary>
-    public static class CheapestInsertion
+    public static class CheapestInsertionHelper
     {
         /// <summary>
         /// Inserts the given customer at the best location.
@@ -79,31 +79,70 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
         }
 
         /// <summary>
-        /// Inserts the given customer at the best location.
+        /// Inserts the given customer at the best location if possible.
         /// </summary>
-        public static float InsertCheapestDirected(this Tour tour, float[][] weights, float[] turnPenalties, int customer)
+        /// <param name="tour">The tour to insert into.</param>
+        /// <param name="weights">The directed weights.</param>
+        /// <param name="turnPenalties">The turn pentalties.</param>
+        /// <param name="customer">The customer to insert.</param>
+        /// <param name="max">The maximum allowed cost of the insertion.</param>
+        public static float InsertCheapestDirected(this Tour tour, float[][] weights, float[] turnPenalties, int customer, float max = float.MaxValue)
         {
-            Pair bestLocation;
-            int departureOffsetFrom, arrivalOffsetTo, turn;
-            var cost = tour.CalculateCheapestDirected(weights, turnPenalties, customer, out bestLocation, out departureOffsetFrom, out arrivalOffsetTo, out turn);
-            if (cost < float.MaxValue)
-            {
-                var directedId = DirectedHelper.BuildDirectedId(customer, turn);
-                tour.InsertAfter(bestLocation.From, directedId);
+            if (tour.Count == 1)
+            { // there is only one customer, the first one in the route.
+                if (tour.First == tour.Last)
+                { // there is one customer but it's both the start and the end.
+                    var firstId = DirectedHelper.ExtractId(tour.First);
+                    var lastId = firstId;
 
-                // update departure offset at from.
-                var newFromId = DirectedHelper.UpdateDepartureOffset(bestLocation.From, departureOffsetFrom);
-                if (bestLocation.From != newFromId)
-                {
-                    tour.Replace(bestLocation.From, newFromId);
+                    int departureOffset1, arrivalOffset3, turn2;
+                    var cost = DirectedHelper.CheapestInsert(weights, turnPenalties,
+                        firstId, customer, lastId, out departureOffset1, out arrivalOffset3, out turn2);
+                    if (cost <= max)
+                    {
+                        var newFirst = DirectedHelper.UpdateDepartureOffset(
+                        DirectedHelper.UpdateArrivalOffset(tour.First, arrivalOffset3), departureOffset1);
+                        tour.Replace(tour.First, newFirst);
+                        var customerDirectedId = DirectedHelper.BuildDirectedId(customer, turn2);
+
+                        tour.InsertAfter(tour.First, customerDirectedId);
+                        return cost;
+                    }
                 }
-                var newToId = DirectedHelper.UpdateArrivalOffset(bestLocation.To, arrivalOffsetTo);
-                if (bestLocation.To != newToId)
-                {
-                    tour.Replace(bestLocation.To, newToId);
+                else
+                { // there is one customer, the last one is not set.
+                    var firstId = DirectedHelper.ExtractId(tour.First);
+
+                    int departureOffset1, arrivalOffset2;
+                    var cost = DirectedHelper.CheapestInsert(weights, turnPenalties,
+                        firstId, customer, out departureOffset1, out arrivalOffset2);
+                    if (cost  <= max)
+                    {
+                        var newFirst = DirectedHelper.UpdateDepartureOffset(
+                            DirectedHelper.BuildDirectedId(tour.First, 0), departureOffset1);
+                        var customerDirectedId = DirectedHelper.UpdateArrivalOffset(
+                            DirectedHelper.BuildDirectedId(customer, 0), arrivalOffset2);
+
+                        tour.InsertAfter(tour.First, customerDirectedId);
+
+                        return cost;
+                    }
                 }
             }
-            return cost;
+            else
+            { // at least 2 customers already exist, insert a new one in between.
+                Pair location;
+                int departureOffsetFrom, arrivalOffsetTo, turn;
+                var cost = CheapestInsertionHelper.CalculateCheapestDirected(tour, weights, turnPenalties, customer, out location,
+                    out departureOffsetFrom, out arrivalOffsetTo, out turn);
+                if (cost <= max)
+                {
+                    tour.InsertDirected(customer, location, departureOffsetFrom, arrivalOffsetTo, turn);
+
+                    return cost;
+                }
+            }
+            return 0; // insert failed, probably costs are too high (above given max parameter).
         }
 
         /// <summary>

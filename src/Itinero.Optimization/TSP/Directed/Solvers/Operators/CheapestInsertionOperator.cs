@@ -1,5 +1,5 @@
 ﻿// Itinero.Optimization - Route optimization for .NET
-// Copyright (C) 2016 Abelshausen Ben
+// Copyright (C) 2017 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -101,8 +101,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
 
             foreach(var current in toInsert)
             {
-                // insert new.
-                CheapestInsertion.InsertCheapestDirected(solution, weights, turnPenalties, 
+                CheapestInsertionHelper.InsertCheapestDirected(solution, weights, turnPenalties, 
                     DirectedHelper.ExtractId(current));
             }
 

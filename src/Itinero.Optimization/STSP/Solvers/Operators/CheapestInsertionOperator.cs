@@ -112,7 +112,7 @@ namespace Itinero.Optimization.STSP.Solvers.Operators
             {
                 // insert new.
                 Pair position;
-                var cost = CheapestInsertion.CalculateCheapest(solution, weights, current, out position);
+                var cost = CheapestInsertionHelper.CalculateCheapest(solution, weights, current, out position);
                 if (cost + fitness.Weight < problem.Max)
                 {
                     solution.InsertAfter(position.From, current);

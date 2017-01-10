@@ -22,7 +22,7 @@ using Itinero.Optimization.STSP.Directed;
 using Itinero.Optimization.STSP.Directed.Solver;
 using NUnit.Framework;
 
-namespace Itinero.Optimization.Test.STSP.Directed
+namespace Itinero.Optimization.Test.STSP.Directed.Solvers
 {
     /// <summary>
     /// Contains tests for the random STSP solver.

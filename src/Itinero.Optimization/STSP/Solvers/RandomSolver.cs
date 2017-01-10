@@ -71,7 +71,7 @@ namespace Itinero.Optimization.STSP.Solvers
                 }
 
                 Pair location;
-                var cost = CheapestInsertion.CalculateCheapest(route, problem.Weights, customer, out location);
+                var cost = CheapestInsertionHelper.CalculateCheapest(route, problem.Weights, customer, out location);
                 if (cost + fitness.Weight < problem.Max)
                 {
                     route.InsertAfter(location.From, customer);

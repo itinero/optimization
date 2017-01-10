@@ -71,57 +71,61 @@ namespace Itinero.Optimization.STSP.Directed.Solvers.Operators
             var weights = problem.Weights;
             delta = objective.Zero;
 
+            // select random new customers to insert.
             var toInsert = new List<int>();
             if (solution.Count < problem.Weights.Length &&
                 _toInsert > 0)
-            { // select random new customer to insert.
+            { 
                 var i = _toInsert;
                 while (solution.Count > 1 && i > 0)
                 {
                     i--;
                     var current = RandomGeneratorExtensions.GetRandom().Generate(problem.Weights.Length / 2);
                     var directedId = solution.GetDirectedId(current);
-                    if (directedId == Constants.NOT_SET)
+                    if (directedId == Constants.NOT_SET &&
+                        !toInsert.Contains(current))
                     {
                         toInsert.Add(current);
                     }
                 }
             }
 
+            // select existing customers, to reinsert.
             if (_toRemove > 0)
-            { // select existing customers, to reinsert.
+            { 
                 var i = _toRemove;
                 while (solution.Count > 1 && i > 0)
                 {
                     i--;
                     var index = RandomGeneratorExtensions.GetRandom().Generate(solution.Count);
-                    var current = solution.GetCustomerAt(index);
-                    if (current != Constants.NOT_SET)
+                    var directedId = solution.GetCustomerAt(index);
+                    if (directedId != Constants.NOT_SET)
                     {
-                        if (current != solution.First &&
-                            solution.Remove(current))
+                        var current = DirectedHelper.ExtractId(directedId);
+                        if (directedId != solution.First &&
+                            directedId != solution.Last &&
+                            solution.Remove(directedId) &&
+                            !toInsert.Contains(current))
                         {
-                            toInsert.Add(DirectedHelper.ExtractId(current));
+                            toInsert.Add(current);
                         }
                     }
                 }
             }
 
+            // shuffle the customers to insert.
             toInsert.Shuffle();
 
+            // insert all customers without exceeding max.
             var fitness = objective.Calculate(problem, solution);
             foreach (var current in toInsert)
             {
-                Pair location;
-                int departureOffsetFrom, arrivalOffsetTo, turn;
-                var cost = CheapestInsertion.CalculateCheapestDirected(solution, problem.Weights, problem.TurnPenalties, current, out location,
-                    out departureOffsetFrom, out arrivalOffsetTo, out turn);
-                if (cost + fitness.Weight < problem.Max)
+                var cost = solution.InsertCheapestDirected(problem.Weights, problem.TurnPenalties, current,
+                    problem.Max - fitness.Weight);
+                if (cost > 0)
                 {
-                    solution.InsertDirected(current, location, departureOffsetFrom, arrivalOffsetTo, turn);
-
-                    fitness.Weight = fitness.Weight + cost;
-                    fitness.Customers = fitness.Customers + 1;
+                    fitness.Weight += cost;
+                    fitness.Customers++;
                 }
             }
 
