@@ -58,7 +58,12 @@ namespace Itinero.Optimization.STSP.Directed.Solver
             }
 
             // keep adding customers until no more space is left or no more customers available.
-            var route = new Tour(new int[] { DirectedHelper.BuildDirectedId(problem.First, 0) });
+            var last = problem.Last;
+            if (last.HasValue)
+            {
+                last = DirectedHelper.BuildDirectedId(last.Value, 0);
+            }
+            var route = new Tour(new int[] { DirectedHelper.BuildDirectedId(problem.First, 0) }, last);
             fitness = new STSPFitness()
             {
                 Weight = 0,
@@ -73,16 +78,51 @@ namespace Itinero.Optimization.STSP.Directed.Solver
                 }
 
                 if (route.Count == 1)
-                {
-                    route.InsertAfter(route.First, DirectedHelper.BuildDirectedId(customer, 0));
+                { // there is only one customer, the first one in the route.
+                    if (problem.First == problem.Last)
+                    { // there is one customer but it's both the start and the end.
+                        int departureOffset1, arrivalOffset3, turn2;
+                        var cost = DirectedHelper.CheapestInsert(problem.Weights, problem.TurnPenalties,
+                            problem.First, customer, problem.Last.Value, out departureOffset1, out arrivalOffset3, out turn2);
+                        if (cost + fitness.Weight <= problem.Max)
+                        {
+                            var newFirst = DirectedHelper.UpdateDepartureOffset(
+                            DirectedHelper.UpdateArrivalOffset(route.First, arrivalOffset3), departureOffset1);
+                            route.Replace(route.First, newFirst);
+                            var customerDirectedId = DirectedHelper.BuildDirectedId(customer, turn2);
+
+                            route.InsertAfter(route.First, customerDirectedId);
+
+                            fitness.Customers++;
+                            fitness.Weight += cost;
+                        }
+                    }
+                    else
+                    { // there is one customer, the last one is not set.
+                        int departureOffset1, arrivalOffset2;
+                        var cost = DirectedHelper.CheapestInsert(problem.Weights, problem.TurnPenalties,
+                            problem.First, customer, out departureOffset1, out arrivalOffset2);
+                        if (cost + fitness.Weight <= problem.Max)
+                        {
+                            var newFirst = DirectedHelper.UpdateDepartureOffset(
+                                DirectedHelper.BuildDirectedId(route.First, 0), departureOffset1);
+                            var customerDirectedId = DirectedHelper.UpdateArrivalOffset(
+                                DirectedHelper.BuildDirectedId(customer, 0), arrivalOffset2);
+
+                            route.InsertAfter(route.First, customerDirectedId);
+
+                            fitness.Customers++;
+                            fitness.Weight += cost;
+                        }
+                    }
                 }
                 else
-                {
+                { // at least 2 customers already exist, insert a new one in between.
                     Pair location;
                     int departureOffsetFrom, arrivalOffsetTo, turn;
                     var cost = CheapestInsertion.CalculateCheapestDirected(route, problem.Weights, problem.TurnPenalties, customer, out location,
                         out departureOffsetFrom, out arrivalOffsetTo, out turn);
-                    if (cost + fitness.Weight < problem.Max)
+                    if (cost + fitness.Weight <= problem.Max)
                     {
                         route.InsertDirected(customer, location, departureOffsetFrom, arrivalOffsetTo, turn);
 

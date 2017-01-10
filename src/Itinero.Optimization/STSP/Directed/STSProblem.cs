@@ -46,6 +46,7 @@ namespace Itinero.Optimization.STSP.Directed
             this.First = first;
             this.Last = null;
             this.Weights = weights;
+            this.Max = max;
             this.TurnPenalties = new float[] {
                 0,
                 turnPenalty,
@@ -68,6 +69,7 @@ namespace Itinero.Optimization.STSP.Directed
             this.First = first;
             this.Last = last;
             this.Weights = weights;
+            this.Max = max;
             this.TurnPenalties = new float[] {
                 0,
                 turnPenalty,

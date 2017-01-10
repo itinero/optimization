@@ -78,5 +78,71 @@ namespace Itinero.Optimization.Test.STSP
         {
             return new Optimization.STSP.STSProblem(first, last, weights, max);
         }
+
+        /// <summary>
+        /// Creates a directed STSP.
+        /// </summary>
+        public static Optimization.STSP.Directed.STSProblem CreateDirectedSTSP(int first, int size, float defaultWeight, float turnPenalities, float max)
+        {
+            var weights = new float[size * 2][];
+            for (int x = 0; x < size * 2; x++)
+            {
+                weights[x] = new float[size * 2];
+                var xDirection = (x % 2);
+                for (int y = 0; y < size * 2; y++)
+                {
+                    var yDirection = (y % 2);
+                    if (x == y)
+                    {
+                        weights[x][y] = 0;
+                    }
+                    else
+                    {
+                        if (xDirection == yDirection)
+                        {
+                            weights[x][y] = defaultWeight;
+                        }
+                        else
+                        {
+                            weights[x][y] = defaultWeight + (int)(defaultWeight * 0.1);
+                        }
+                    }
+                }
+            }
+            return new Itinero.Optimization.STSP.Directed.STSProblem(0, weights, turnPenalities, max);
+        }
+
+        /// <summary>
+        /// Creates a new directed STSP.
+        /// </summary>
+        public static Optimization.STSP.Directed.STSProblem CreateDirectedSTSP(int first, int last, int size, float defaultWeight, float turnPenalities, float max)
+        {
+            var weights = new float[size * 2][];
+            for (int x = 0; x < size * 2; x++)
+            {
+                weights[x] = new float[size * 2];
+                var xDirection = (x % 2);
+                for (int y = 0; y < size * 2; y++)
+                {
+                    var yDirection = (y % 2);
+                    if (x == y)
+                    {
+                        weights[x][y] = 0;
+                    }
+                    else
+                    {
+                        if (xDirection == yDirection)
+                        {
+                            weights[x][y] = defaultWeight;
+                        }
+                        else
+                        {
+                            weights[x][y] = defaultWeight + (int)(defaultWeight * 0.1);
+                        }
+                    }
+                }
+            }
+            return new Optimization.STSP.Directed.STSProblem(first, last, weights, turnPenalities, max);
+        }
     }
 }

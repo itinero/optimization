@@ -222,7 +222,41 @@ namespace Itinero.Optimization.Algorithms.Directed
         }
 
         /// <summary>
-        /// Gets the minimum weight from customer1 -> customer3 while inserting customer3 and the best direction and turns to use.
+        /// Gets the minimum weight from customer1 -> customer2 while inserting customer2. Outputs the best departure and arrival offsets.
+        /// </summary>
+        public static float CheapestInsert(this float[][] weights, float[] penalties, int id1, int id2,
+            out int departureOffset1, out int arrivalOffset2)
+        {
+            var best = float.MaxValue;
+            var base1 = id1 * 2;
+            var base2 = id2 * 2;
+
+            departureOffset1 = -1;
+            arrivalOffset2 = -1;
+
+            for (var do1 = 0; do1 < 2; do1++)
+            {
+                var departureId1 = base1 + do1;
+                for (var ao2 = 0; ao2 < 2; ao2++)
+                {
+                    var arrivalId2 = base2 + ao2;
+
+                    var weight = weights[departureId1][arrivalId2];
+
+                    if (weight < best)
+                    {
+                        departureOffset1 = do1;
+                        arrivalOffset2 = ao2;
+
+                        best = weight;
+                    }
+                }
+            }
+            return best;
+        }
+
+        /// <summary>
+        /// Gets the minimum weight from customer1 -> customer3 while inserting customer2 and the best direction and turns to use.
         /// </summary>
         public static float CheapestInsert(this float[][] weights, float[] penalties, int id1, int id2, int id3,
             out int departureOffset1, out int arrivalOffset3, out int turn2)

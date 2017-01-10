@@ -129,7 +129,8 @@ namespace Itinero.Optimization.STSP.Directed
             }
 
             // add the weight between last and first.
-            if (previousFrom != int.MaxValue)
+            if (previousFrom != int.MaxValue &&
+                solution.First == solution.Last)
             {
                 weight = weight + weights[previousFrom][firstTo];
             }
