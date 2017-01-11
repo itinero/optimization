@@ -108,7 +108,7 @@ namespace Itinero.Optimization.Test.Functional
             route = router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, locations.Length - 1);
             route = router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, null);
 
-            calculate directed TSP - TW.
+            // calculate directed TSP - TW.
             route = router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, 0);
             // TODO: fix or add a solver capable of handling this.
             route = router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, locations.Length - 1);
