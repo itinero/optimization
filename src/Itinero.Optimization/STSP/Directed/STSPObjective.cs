@@ -96,6 +96,7 @@ namespace Itinero.Optimization.STSP.Directed
         /// </summary>
         public sealed override STSPFitness Calculate(STSProblem problem, Tour solution)
         {
+            // TODO: unittest this stuff!
             var fitness = new STSPFitness()
             {
                 Customers = solution.Count,

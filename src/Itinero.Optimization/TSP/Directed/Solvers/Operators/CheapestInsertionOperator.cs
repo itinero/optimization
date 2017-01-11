@@ -101,7 +101,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
 
             foreach(var current in toInsert)
             {
-                CheapestInsertionHelper.InsertCheapestDirected(solution, weights, turnPenalties, 
+                CheapestInsertionDirectedHelper.InsertCheapestDirected(solution, weights, turnPenalties, 
                     DirectedHelper.ExtractId(current));
             }
 
