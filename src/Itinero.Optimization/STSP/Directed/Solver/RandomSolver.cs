@@ -1,5 +1,5 @@
 ﻿// Itinero.Optimization - Route optimization for .NET
-// Copyright (C) 2016 Abelshausen Ben
+// Copyright (C) 2017 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -21,8 +21,6 @@ using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Itinero.Optimization.STSP.Directed.Solver
 {
@@ -53,12 +51,7 @@ namespace Itinero.Optimization.STSP.Directed.Solver
         public sealed override Tour Solve(STSProblem problem, STSPObjective objective, out STSPFitness fitness)
         {
             // generate empty route based on problem definition.
-            var last = problem.Last;
-            if (last.HasValue)
-            {
-                last = DirectedHelper.BuildDirectedId(last.Value, 0);
-            }
-            var route = new Tour(new int[] { DirectedHelper.BuildDirectedId(problem.First, 0) }, last);
+            var route = problem.CreateEmptyTour();
             fitness = new STSPFitness()
             {
                 Weight = 0,
@@ -79,13 +72,13 @@ namespace Itinero.Optimization.STSP.Directed.Solver
             while (_randomPool.MoveNext())
             {
                 var customer = _randomPool.Current;
-                if (customer == DirectedHelper.ExtractId(problem.First) ||
-                    (problem.Last.HasValue && customer == DirectedHelper.ExtractId(problem.Last.Value)))
+                if (customer == DirectedHelper.ExtractId(route.First) ||
+                    (route.Last.HasValue && customer == DirectedHelper.ExtractId(route.Last.Value)))
                 { // customer is first or last.
                     continue;
                 }
                 
-                var cost = CheapestInsertionHelper.InsertCheapestDirected(route, problem.Weights, problem.TurnPenalties,
+                var cost = CheapestInsertionDirectedHelper.InsertCheapestDirected(route, problem.Weights, problem.TurnPenalties,
                     customer, problem.Max - fitness.Weight);
                 if (cost > 0)
                 {

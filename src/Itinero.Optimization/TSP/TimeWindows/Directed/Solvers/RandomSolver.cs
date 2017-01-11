@@ -44,6 +44,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers
         /// <returns></returns>
         public sealed override Tour Solve(TSPTWProblem problem, TObjective objective, out float fitness)
         {
+            // TODO: convert this to a cheapest-insertion scheme similar to STSP.
             var random = RandomGeneratorExtensions.GetRandom();
 
             // generate random solution.
@@ -69,22 +70,24 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers
                 customers[i] = Algorithms.Directed.DirectedHelper.BuildDirectedId(customers[i],
                     random.Generate(4));
             }
-            int? directedLast = null;
+
+            // build the route.
+            Tour route = null;
             if (problem.Last.HasValue)
             {
                 if (problem.Last == problem.First)
                 {
-                    directedLast = customers[0];
+                    route = new Tours.Tour(customers, customers[0]);
                 }
                 else
                 {
-                    directedLast = Algorithms.Directed.DirectedHelper.BuildDirectedId(problem.Last.Value,
-                        random.Generate(4));
+                    route = new Tours.Tour(customers, customers[customers.Count - 1]);
                 }
             }
-
-            // build the route.
-            var route = new Tour(customers, directedLast);
+            else
+            {
+                route = new Tours.Tour(customers, null);
+            }
 
             // calculate fitness.
             fitness = objective.Calculate(problem, route);

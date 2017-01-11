@@ -55,7 +55,7 @@ namespace Itinero.Optimization.STSP.Solvers
             }
 
             // keep adding customers until no more space is left or no more customers available.
-            var route = new Tour(new int[] { problem.First }, problem.Last);
+            var tour = problem.CreateEmptyTour();
             fitness = new STSPFitness()
             {
                 Weight = 0,
@@ -71,10 +71,10 @@ namespace Itinero.Optimization.STSP.Solvers
                 }
 
                 Pair location;
-                var cost = CheapestInsertionHelper.CalculateCheapest(route, problem.Weights, customer, out location);
+                var cost = CheapestInsertionHelper.CalculateCheapest(tour, problem.Weights, customer, out location);
                 if (cost + fitness.Weight < problem.Max)
                 {
-                    route.InsertAfter(location.From, customer);
+                    tour.InsertAfter(location.From, customer);
 
                     fitness.Weight = fitness.Weight + cost;
                     fitness.Customers = fitness.Customers + 1;
@@ -82,8 +82,8 @@ namespace Itinero.Optimization.STSP.Solvers
             }
 
             // calculate fitness.
-            fitness = objective.Calculate(problem, route);
-            return route;
+            fitness = objective.Calculate(problem, tour);
+            return tour;
         }
     }
 }

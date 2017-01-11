@@ -224,5 +224,25 @@ namespace Itinero.Optimization.STSP
         {
             return solver.Solve(this, new STSPObjective());
         }
+
+        /// <summary>
+        /// Creates an initial empty tour, add fixed first and/or last customer.
+        /// </summary>
+        /// <returns></returns>
+        public Tour CreateEmptyTour()
+        {
+            if (!this.Last.HasValue)
+            {
+                return new Tours.Tour(new int[] { this.First }, null);
+            }
+            else
+            {
+                if (this.Last == this.First)
+                {
+                    return new Tours.Tour(new int[] { this.First }, this.First);
+                }
+                return new Tour(new int[] { this.First, this.Last.Value }, this.Last);
+            }
+        }
     }
 }
