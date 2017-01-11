@@ -340,6 +340,59 @@ namespace Itinero.Optimization.Algorithms.Directed
         }
 
         /// <summary>
+        /// Calculates the weight of the given tour.
+        /// </summary>
+        public static float Weight(this Tour tour, float[][] weights, float[] turnPenalties)
+        {
+            var weight = 0f;
+            var previousFrom = int.MaxValue;
+            var firstTo = int.MaxValue;
+            var lastTurn = int.MaxValue;
+            foreach (var directedId in tour)
+            {
+                // extract turns and stuff from directed id.
+                int arrivalId, departureId, id, turn;
+                DirectedHelper.ExtractAll(directedId, out arrivalId, out departureId, out id, out turn);
+
+                // add the weight from the previous customer to the current one.
+                if (previousFrom != int.MaxValue)
+                {
+                    weight = weight + weights[previousFrom][arrivalId];
+                }
+                else
+                {
+                    firstTo = arrivalId;
+                }
+
+                // add turn penalty.
+                if ((tour.First != directedId && 
+                     tour.Last != directedId) ||
+                    tour.Last == tour.First)
+                { // never count turn @ first customer.
+                    // don't count turn @ last customer if it's different from first.
+                    weight += turnPenalties[turn];
+                }
+
+                previousFrom = departureId;
+                lastTurn = turn;
+            }
+
+            // remove the last turn penalty if it's an open non-fixed tour.
+            if (tour.Last == null)
+            {
+                weight -= turnPenalties[lastTurn];
+            }
+
+            // add the weight between last and first.
+            if (previousFrom != int.MaxValue &&
+                tour.First == tour.Last)
+            {
+                weight = weight + weights[previousFrom][firstTo];
+            }
+            return weight;
+        }
+
+        /// <summary>
         /// Sets the weights between two customers.
         /// </summary>
         public static void SetWeight(this float[][] weights, int id1, int id2,
