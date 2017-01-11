@@ -62,6 +62,8 @@ namespace Itinero.Optimization.Tours
             _nextArray = new int[0];
             var first = -1;
             var previous = -1;
+
+            var lastOk = (!last.HasValue);
             foreach (var customer in customers)
             {
                 // resize the array if needed.
@@ -80,7 +82,17 @@ namespace Itinero.Optimization.Tours
                     _nextArray[previous] = customer;
                 }
 
+                if (!lastOk)
+                {
+                    lastOk = customer == last;
+                }
+
                 previous = customer;
+            }
+
+            if (!lastOk)
+            {
+                throw new ArgumentException("There is a fixed last customer defined but it's not in the initial customers set.");
             }
 
             _nextArray[previous] = Constants.END;
@@ -732,6 +744,11 @@ namespace Itinero.Optimization.Tours
                     result.Append(customer);
                 }
                 previous = customer;
+            }
+
+            if (this.Last.HasValue)
+            {
+                result.Append(string.Format(" ({0})", this.Last.Value));
             }
             return result.ToString();
         }
