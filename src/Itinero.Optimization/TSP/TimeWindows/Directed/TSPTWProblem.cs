@@ -427,5 +427,27 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
 
             return violated;
         }
+
+        /// <summary>
+        /// Creates an initial empty tour, add fixed first and/or last customer.
+        /// </summary>
+        /// <returns></returns>
+        public Tour CreateEmptyTour()
+        {
+            var firstDirectedId = DirectedHelper.BuildDirectedId(this.First, 0);
+            if (!this.Last.HasValue)
+            {
+                return new Tours.Tour(new int[] { firstDirectedId }, null);
+            }
+            else
+            {
+                if (this.Last == this.First)
+                {
+                    return new Tours.Tour(new int[] { firstDirectedId }, firstDirectedId);
+                }
+                var lastDirectedId = DirectedHelper.BuildDirectedId(this.Last.Value, 0);
+                return new Tour(new int[] { firstDirectedId, lastDirectedId }, lastDirectedId);
+            }
+        }
     }
 }

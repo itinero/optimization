@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
@@ -241,6 +242,28 @@ namespace Itinero.Optimization.TSP.Directed
                 nearestNeighbours[id] = result;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Creates an initial empty tour, add fixed first and/or last customer.
+        /// </summary>
+        /// <returns></returns>
+        public Tour CreateEmptyTour()
+        {
+            var firstDirectedId = DirectedHelper.BuildDirectedId(this.First, 0);
+            if (!this.Last.HasValue)
+            {
+                return new Tours.Tour(new int[] { firstDirectedId }, null);
+            }
+            else
+            {
+                if (this.Last == this.First)
+                {
+                    return new Tours.Tour(new int[] { firstDirectedId }, firstDirectedId);
+                }
+                var lastDirectedId = DirectedHelper.BuildDirectedId(this.Last.Value, 0);
+                return new Tour(new int[] { firstDirectedId, lastDirectedId }, lastDirectedId);
+            }
         }
     }
 }

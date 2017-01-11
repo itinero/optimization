@@ -1,5 +1,5 @@
 ﻿// Itinero.Optimization - Route optimization for .NET
-// Copyright (C) 2016 Abelshausen Ben
+// Copyright (C) 2017 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
@@ -42,9 +43,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
         /// <returns></returns>
         public sealed override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
         {
-            var random = RandomGeneratorExtensions.GetRandom();
-
-            // generate random solution.
+            // generate random order for unplaced customers.
             var customers = new List<int>();
             for (var customer = 0; customer < problem.Weights.Length / 2; customer++)
             {
@@ -55,34 +54,16 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
                 }
             }
             customers.Shuffle<int>();
-            customers.Insert(0, problem.First);
-            if (problem.Last.HasValue && problem.First != problem.Last)
-            { // the special case of a fixed last customer.
-                customers.Add(problem.Last.Value);
-            }
 
-            // convert customers to directed customer id's.
+            // generate empty route based on problem definition.
+            var route = problem.CreateEmptyTour();
+
+            // add all customers by using cheapest insertion.
             for (var i = 0; i < customers.Count; i++)
             {
-                customers[i] = Algorithms.Directed.DirectedHelper.BuildDirectedId(customers[i],
-                    random.Generate(4));
+                CheapestInsertionDirectedHelper.InsertCheapestDirected(route, problem.Weights, problem.TurnPenalties,
+                    customers[i], float.MaxValue);
             }
-            int? directedLast = null;
-            if (problem.Last.HasValue)
-            {
-                if (problem.Last == problem.First)
-                {
-                    directedLast = customers[0];
-                }
-                else
-                {
-                    directedLast = Algorithms.Directed.DirectedHelper.BuildDirectedId(problem.Last.Value,
-                        random.Generate(4));
-                }
-            }
-
-            // build the route.
-            var route = new Tour(customers, directedLast);
 
             // calculate fitness.
             fitness = objective.Calculate(problem, route);

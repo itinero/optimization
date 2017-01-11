@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
@@ -44,10 +45,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers
         /// <returns></returns>
         public sealed override Tour Solve(TSPTWProblem problem, TObjective objective, out float fitness)
         {
-            // TODO: convert this to a cheapest-insertion scheme similar to STSP.
-            var random = RandomGeneratorExtensions.GetRandom();
-
-            // generate random solution.
+            // generate random order for unplaced customers.
             var customers = new List<int>();
             for (var customer = 0; customer < problem.Times.Length / 2; customer++)
             {
@@ -57,36 +55,16 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed.Solvers
                     customers.Add(customer);
                 }
             }
-            customers.Shuffle();
-            customers.Insert(0, problem.First);
-            if (problem.Last.HasValue && problem.First != problem.Last)
-            { // the special case of a fixed last customer.
-                customers.Add(problem.Last.Value);
-            }
+            customers.Shuffle<int>();
 
-            // convert customers to directed customer id's.
+            // generate empty route based on problem definition.
+            var route = problem.CreateEmptyTour();
+
+            // add all customers by using cheapest insertion.
             for (var i = 0; i < customers.Count; i++)
             {
-                customers[i] = Algorithms.Directed.DirectedHelper.BuildDirectedId(customers[i],
-                    random.Generate(4));
-            }
-
-            // build the route.
-            Tour route = null;
-            if (problem.Last.HasValue)
-            {
-                if (problem.Last == problem.First)
-                {
-                    route = new Tours.Tour(customers, customers[0]);
-                }
-                else
-                {
-                    route = new Tours.Tour(customers, customers[customers.Count - 1]);
-                }
-            }
-            else
-            {
-                route = new Tours.Tour(customers, null);
+                CheapestInsertionDirectedHelper.InsertCheapestDirected(route, problem.Times, problem.TurnPenalties,
+                    customers[i], float.MaxValue);
             }
 
             // calculate fitness.

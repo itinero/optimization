@@ -67,10 +67,11 @@ namespace Itinero.Optimization.Test.Functional
             route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, locations.Length - 1);
             route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, null);
 
-            //// calculate Directed TSP.
-            //route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, 0);
-            //route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, locations.Length - 1);
-            //route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, null);
+            // calculate Directed TSP.
+            route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, 0);
+            // TODO: fix or add a solver capable of handling this.
+            route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, locations.Length - 1);
+            route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, null);
 
             // calculate STSP
             route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, 0);
@@ -82,35 +83,36 @@ namespace Itinero.Optimization.Test.Functional
             route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, locations.Length - 1);
             route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, null);
 
-            //// define some time windows, all max.
-            //var windows = new TimeWindows.TimeWindow[]
-            //{
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default,
-            //    TimeWindows.TimeWindow.Default
-            //};
+            // define some time windows, all max.
+            var windows = new TimeWindows.TimeWindow[]
+            {
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default,
+                TimeWindows.TimeWindow.Default
+            };
 
-            //// calculate TSP-TW.
-            //route = router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, 0);
-            //route = router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, locations.Length - 1);
-            //route = router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, null);
+            // calculate TSP-TW.
+            route = router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, 0);
+            route = router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, locations.Length - 1);
+            route = router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, null);
 
-            //// calculate directed TSP-TW.
-            //route = router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, 0);
-            //// TODO: fix this or build another solver.
-            ////route = router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, locations.Length - 1);
-            //route = router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, null);
+            calculate directed TSP - TW.
+            route = router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, 0);
+            // TODO: fix or add a solver capable of handling this.
+            route = router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, locations.Length - 1);
+            route = router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, null);
 
         }
 
