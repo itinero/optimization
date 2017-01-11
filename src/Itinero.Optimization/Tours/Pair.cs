@@ -26,8 +26,6 @@ namespace Itinero.Optimization.Tours
         /// <summary>
         /// Creates a new pair.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
         public Pair(int from, int to)
             : this()
         {
@@ -51,7 +49,11 @@ namespace Itinero.Optimization.Tours
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("{0} -> {1}", this.From, this.To);
+            var stringBuilder = new System.Text.StringBuilder();
+            stringBuilder.Append(this.From.ToInvariantString());
+            stringBuilder.Append("->");
+            stringBuilder.Append(this.To.ToInvariantString());
+            return stringBuilder.ToString();
         }
 
         /// <summary>

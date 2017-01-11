@@ -58,32 +58,29 @@ namespace Itinero.Optimization.Test.Functional
                 new Coordinate(51.259820134021695f, 4.7985148429870605f),
                 new Coordinate(51.257040455587656f, 4.780147075653076f),
                 new Coordinate(51.256248149311716f, 4.788386821746826f),
-                new Coordinate(51.270054481615624f, 4.799646735191345f)
+                new Coordinate(51.270054481615624f, 4.799646735191345f),
+                new Coordinate(51.252984777835955f,  4.776681661605835f)
             };
 
-            //// calculate TSP.
-            //var route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, 0);
-            //route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, locations.Length - 1);
-            //route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, null);
+            // calculate TSP.
+            var route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, 0);
+            route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, locations.Length - 1);
+            route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, null);
 
             //// calculate Directed TSP.
             //route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, 0);
-            //// TODO: fix this option, see also todo in unittests.
-            ////route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, locations.Length - 1);
+            //route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, locations.Length - 1);
             //route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, null);
 
-            //// calculate STSP
-            //route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, 0);
-            //route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, locations.Length - 1);
-            //route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, null);
+            // calculate STSP
+            route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, 0);
+            route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, locations.Length - 1);
+            route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, null);
 
             // calculate directed TSP.
-            RandomGeneratorExtensions.GetGetNewRandom = () => new RandomGenerator(4541247);
-            var route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 180, 800, 0, 0);
-            //// TODO: double check if this is correct.
-            //route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, locations.Length - 1);
-            //// TODO: double check if this is correct.
-            //route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, null);
+            route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, 0);
+            route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, locations.Length - 1);
+            route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, null);
 
             //// define some time windows, all max.
             //var windows = new TimeWindows.TimeWindow[]

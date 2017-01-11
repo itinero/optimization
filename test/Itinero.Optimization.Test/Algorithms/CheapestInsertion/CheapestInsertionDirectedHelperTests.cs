@@ -75,7 +75,7 @@ namespace Itinero.Optimization.Test.Algorithms.CheapestInsertion
 
             tour = new Tour(new int[] { 0, 10 }, 10);
             cost = tour.InsertCheapestDirected(weights, turnPenalties, 1);
-            Assert.AreEqual(9, cost);
+            Assert.AreEqual(10, cost);
             Assert.AreEqual(new int[] { 0, 4, 8 }, tour);
         }
 
@@ -116,28 +116,32 @@ namespace Itinero.Optimization.Test.Algorithms.CheapestInsertion
         public void TestTurnCostHandling()
         {
             var weights = WeightsHelper.CreateDirected(5, 10);
+            weights.SetWeight(0, 1, 5);
+            weights.SetWeight(1, 2, 5);
+            weights.SetWeight(2, 3, 5);
+            weights.SetWeight(3, 4, 5);
             var turnPenalties = new float[] { 0, 2, 2, 0 };
 
-            var tour = new Tour(new int[] { 1, 5, 9 }, null);
+            var tour = new Tour(new int[] { 1, 5, 13 }, null);
             var weight = tour.Weight(weights, turnPenalties);
-            //var cost = tour.InsertCheapestDirected(weights, turnPenalties, 1);
-            //Assert.AreEqual(20, cost);
-            //Assert.AreEqual(new int[] { 0, 4 }, tour);
+            var cost = tour.InsertCheapestDirected(weights, turnPenalties, 2);
+            Assert.AreEqual(-2, cost);
+            Assert.AreEqual(weight + cost, tour.Weight(weights, turnPenalties));
+            Assert.AreEqual(new int[] { 1, 4, 8, 13 }, tour);
 
-            //tour = new Tour(new int[] { 1 }, 1);
-            //cost = tour.InsertCheapestDirected(weights, turnPenalties, 1);
-            //Assert.AreEqual(20, cost);
-            //Assert.AreEqual(new int[] { 0, 4 }, tour);
+            tour = new Tour(new int[] { 1, 5, 13 }, 13);
+            weight = tour.Weight(weights, turnPenalties);
+            cost = tour.InsertCheapestDirected(weights, turnPenalties, 2);
+            Assert.AreEqual(-2, cost);
+            Assert.AreEqual(weight + cost, tour.Weight(weights, turnPenalties));
+            Assert.AreEqual(new int[] { 1, 4, 8, 13 }, tour);
 
-            //tour = new Tour(new int[] { 2 }, 2);
-            //cost = tour.InsertCheapestDirected(weights, turnPenalties, 1);
-            //Assert.AreEqual(20, cost);
-            //Assert.AreEqual(new int[] { 0, 4 }, tour);
-
-            //tour = new Tour(new int[] { 3 }, 3);
-            //cost = tour.InsertCheapestDirected(weights, turnPenalties, 1);
-            //Assert.AreEqual(20, cost);
-            //Assert.AreEqual(new int[] { 0, 4 }, tour);
+            tour = new Tour(new int[] { 1, 5, 13 }, 1);
+            weight = tour.Weight(weights, turnPenalties);
+            cost = tour.InsertCheapestDirected(weights, turnPenalties, 2);
+            Assert.AreEqual(-4, cost);
+            Assert.AreEqual(weight + cost, tour.Weight(weights, turnPenalties));
+            Assert.AreEqual(new int[] { 1, 4, 8, 15 }, tour);
         }
     }
 }

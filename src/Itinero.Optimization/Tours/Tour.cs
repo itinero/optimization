@@ -407,10 +407,9 @@ namespace Itinero.Optimization.Tours
 
         private class Enumerator : IEnumerator<int>
         {
-            private int _first;
-            private int _start;
+            private readonly int _first;
+            private readonly int _start;
             private int[] _nextArray;
-            private int _current = -1;
 
             public Enumerator(int first, int[] nextArray)
             {
@@ -425,6 +424,8 @@ namespace Itinero.Optimization.Tours
                 _start = start;
                 _nextArray = nextArray;
             }
+
+            private int _current = -1;
 
             public int Current
             {
@@ -646,6 +647,30 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
+        /// Returns true if the given customer is the first one.
+        /// </summary>
+        public bool IsFirst(int customer)
+        {
+            if (this.First == this.Last)
+            { // no customer is first, this tour is a loop.
+                return false;
+            }
+            return this.First == customer;
+        }
+
+        /// <summary>
+        /// Returns true if the given customer is the last one.
+        /// </summary>
+        public bool IsLast(int customer)
+        {
+            if (this.First == this.Last)
+            { // no customer is last, this tour is a loop.
+                return false;
+            }
+            return _nextArray[customer] == Constants.END;
+        }
+
+        /// <summary>
         /// Returns the first customer in this route.
         /// </summary>
         public int First
@@ -731,14 +756,16 @@ namespace Itinero.Optimization.Tours
         public override string ToString()
         {
             int previous = -1;
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
             foreach (int customer in this)
             {
                 if (previous < 0)
                 {
+                    result.Append('[');
                     result.Append(customer);
+                    result.Append(']');
                 }
-                else
+                else if(customer != this.Last)
                 {
                     result.Append("->");
                     result.Append(customer);
@@ -746,9 +773,11 @@ namespace Itinero.Optimization.Tours
                 previous = customer;
             }
 
-            if (this.Last.HasValue)
+            if (this.Last.HasValue && this.Count > 1)
             {
-                result.Append(string.Format(" ({0})", this.Last.Value));
+                result.Append("->[");
+                result.Append(this.Last.Value);
+                result.Append("]");
             }
             return result.ToString();
         }

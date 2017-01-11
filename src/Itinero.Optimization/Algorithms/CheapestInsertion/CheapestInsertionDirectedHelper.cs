@@ -27,6 +27,80 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
     public static class CheapestInsertionDirectedHelper
     {
         /// <summary>
+        /// Gets the minimum weight from customer1 -> customer3 while inserting customer2 and the best direction and turns to use.
+        /// </summary>
+        public static float CalculateCheapestInsert(this float[][] weights, float[] penalties, int directedId1, int id2, int directedId3,
+            bool includeTurn1, bool includeTurn3, out int departureOffset1, out int arrivalOffset3, out int turn2)
+        {
+            // extract existing data.
+            int id1, turn1, arrivalId1, departureId1, arrivalOffset1, temp;
+            DirectedHelper.ExtractAll(directedId1, out arrivalId1, out departureId1, out id1, out turn1);
+            DirectedHelper.ExtractOffset(turn1, out arrivalOffset1, out temp);
+            int id3, turn3, arrivalId3, departureId3, departureOffset3;
+            DirectedHelper.ExtractAll(directedId3, out arrivalId3, out departureId3, out id3, out turn3);
+            DirectedHelper.ExtractOffset(turn3, out temp, out departureOffset3);
+
+            // calculate current weight.
+            var weightBefore = weights[departureId1][arrivalId3];
+            if (includeTurn1)
+            {
+                weightBefore += penalties[turn1];
+            }
+            if (includeTurn3)
+            {
+                weightBefore += penalties[turn3];
+            }
+
+            // evaluate all possibilities.
+            var best = float.MaxValue;
+            var base1 = id1 * 2;
+            var base2 = id2 * 2;
+            var base3 = id3 * 2;
+            departureOffset1 = Constants.NOT_SET;
+            arrivalOffset3 = Constants.NOT_SET;
+            turn2 = Constants.NOT_SET;
+            for (var do1 = 0; do1 < 2; do1++)
+            {
+                var d1 = base1 + do1;
+                var turn1Weight = 0f;
+                if (includeTurn1)
+                {
+                    turn1 = DirectedHelper.BuildTurn(arrivalOffset1, do1);
+                    turn1Weight = penalties[turn1];
+                }
+                for (var ao3 = 0; ao3 < 2; ao3++)
+                {
+                    var a3 = base3 + ao3;
+                    var turn3Weight = 0f;
+                    if (includeTurn3)
+                    {
+                        turn3 = DirectedHelper.BuildTurn(departureOffset3, ao3);
+                        turn3Weight = penalties[turn3];
+                    }
+                    for (var t = 0; t < 4; t++)
+                    {
+                        int ao2, do2;
+                        DirectedHelper.ExtractOffset(t, out ao2, out do2);
+
+                        var weight = weights[d1][base2 + ao2] +
+                            weights[base2 + do2][a3] +
+                            penalties[t] + turn1Weight +
+                            turn3Weight;
+
+                        if (weight < best)
+                        {
+                            best = weight;
+                            departureOffset1 = do1;
+                            arrivalOffset3 = ao3;
+                            turn2 = t;
+                        }
+                    }
+                }
+            }
+            return best - weightBefore;
+        }
+
+        /// <summary>
         /// Inserts the given customer at the best location if possible.
         /// </summary>
         /// <param name="tour">The tour to insert into.</param>
@@ -110,12 +184,10 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
                 foreach (var pair in tour.Pairs())
                 {
                     int departureOffset1, arrivalOffset3, turn2;
-                    var fromId = DirectedHelper.ExtractId(pair.From);
-                    var toId = DirectedHelper.ExtractId(pair.To);
-                    var localCost = DirectedHelper.WeightWithoutTurns(weights, pair.From, pair.To);
-                    var ciCost = DirectedHelper.CheapestInsert(weights, turnPenalties, fromId, customer, toId, out departureOffset1,
-                            out arrivalOffset3, out turn2);
-                    localCost = ciCost - localCost;
+                    var fromIsFirst = tour.IsFirst(pair.From);
+                    var toIsLast = tour.IsLast(pair.To);
+                    var localCost = CheapestInsertionDirectedHelper.CalculateCheapestInsert(weights, turnPenalties, pair.From, customer, pair.To,
+                        !fromIsFirst, !toIsLast, out departureOffset1, out arrivalOffset3, out turn2);
                     if (localCost < cost)
                     {
                         cost = localCost;

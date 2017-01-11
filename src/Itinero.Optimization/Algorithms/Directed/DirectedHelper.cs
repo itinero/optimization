@@ -256,66 +256,24 @@ namespace Itinero.Optimization.Algorithms.Directed
         }
 
         /// <summary>
-        /// Gets the minimum weight from customer1 -> customer3 while inserting customer2 and the best direction and turns to use.
-        /// </summary>
-        public static float CheapestInsert(this float[][] weights, float[] penalties, int id1, int id2, int id3,
-            out int departureOffset1, out int arrivalOffset3, out int turn2)
-        {
-            var best = float.MaxValue;
-            var base1 = id1 * 2;
-            var base2 = id2 * 2;
-            var base3 = id3 * 2;
-
-            departureOffset1 = Constants.NOT_SET;
-            arrivalOffset3 = Constants.NOT_SET;
-            turn2 = Constants.NOT_SET;
-            for (var do1 = 0; do1 < 2; do1++)
-            {
-                var d1 = base1 + do1;
-                for(var ao3 = 0; ao3 < 2; ao3++)
-                {
-                    var a3 = base3 + ao3;
-                    for (var t = 0; t < 4; t++)
-                    {
-                        int ao2, do2;
-                        DirectedHelper.ExtractOffset(t, out ao2, out do2);
-
-                        var weight = weights[d1][base2 + ao2] +
-                            weights[base2 + do2][a3] +
-                            penalties[t];
-                        if (weight < best)
-                        {
-                            best = weight;
-                            departureOffset1 = do1;
-                            arrivalOffset3 = ao3;
-                            turn2 = t;
-                        }
-                    }
-                }
-            }
-            return best;
-        }
-
-        /// <summary>
         /// Shifts the directed customer aft er the given directed before with the best possible turns.
         /// </summary>
-        public static float ShiftAfterBestTurns(this ITour tour, float[][] weights, float[] penalties, int directedCustomer, int directedBefore)
+        public static float ShiftAfterBestTurns(this Tour tour, float[][] weights, float[] penalties, int directedCustomer, int directedBefore)
         {
-            var before = DirectedHelper.ExtractId(directedBefore);
             var customer = DirectedHelper.ExtractId(directedCustomer);
             var directedAfter = tour.GetNeigbour(directedCustomer);
             if (directedAfter == Constants.NOT_SET)
             { // TODO: figure out if this happens and if so how to calculate turns.
                 return 0;
             }
-            var after = DirectedHelper.ExtractId(directedAfter);
 
             // insert directed customer.
             tour.ShiftAfter(directedCustomer, directedBefore);
 
             // calculate best shift-after.
             int departureOffset1, arrivalOffset3, turn2;
-            var cost = DirectedHelper.CheapestInsert(weights, penalties, before, customer, after, out departureOffset1, out arrivalOffset3, out turn2);
+            var cost = CheapestInsertion.CheapestInsertionDirectedHelper.CalculateCheapestInsert(weights, penalties, directedBefore, customer, directedAfter, 
+                !tour.IsFirst(directedBefore), !tour.IsLast(directedAfter), out departureOffset1, out arrivalOffset3, out turn2);
             var newDirectedBefore = DirectedHelper.UpdateDepartureOffset(directedBefore, departureOffset1);
             var newDirectedAfter = DirectedHelper.UpdateArrivalOffset(directedAfter, arrivalOffset3);
             var newDirectedCustomer = DirectedHelper.BuildDirectedId(customer, turn2);

@@ -114,6 +114,9 @@ namespace Itinero.Optimization.Algorithms.Solvers
                                 this.ReportIntermidiateResult(best);
                             }
                         }
+
+                        // always apply to best.
+                        nextSolution = (TSolution)best.Clone();
                     }
                 }
 
