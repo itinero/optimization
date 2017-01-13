@@ -1,5 +1,5 @@
 ﻿// Itinero.Optimization - Route optimization for .NET
-// Copyright (C) 2016 Abelshausen Ben
+// Copyright (C) 2017 Abelshausen Ben
 // 
 // This file is part of Itinero.
 // 
@@ -16,8 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Algorithms.Matrices;
 using Itinero.LocalGeo;
-using Itinero.Optimization.Routing.Directed.STSP;
+using Itinero.Optimization.Routing;
+using Itinero.Optimization.STSP;
 using Itinero.Optimization.TimeWindows;
 using Itinero.Optimization.TSP;
 using Itinero.Profiles;
@@ -34,13 +36,13 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateTSP(this RouterBase router, Profile profile, Coordinate[] locations, int first = 0, int? last = null)
         {
-            var tspRouter = new TSPRouter(router, profile, locations, first, last);
+            var tspRouter = new TSPRouter(new WeightMatrixAlgorithm(router, profile, locations), first, last);
             tspRouter.Run();
             if (!tspRouter.HasSucceeded)
             {
                 return new Result<Route>(tspRouter.ErrorMessage);
             }
-            return new Result<Route>(tspRouter.BuildRoute());
+            return new Result<Route>(tspRouter.WeightMatrix.BuildRoute(tspRouter.Tour));
         }
 
         /// <summary>
@@ -56,13 +58,13 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, int first = 0, int? last = null)
         {
-            var tspRouter = new TSP.Directed.TSPRouter(router, profile, router.Resolve(profile, locations), turnPenaltyInSeconds, first, last);
+            var tspRouter = new TSP.Directed.TSPRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), turnPenaltyInSeconds, first, last);
             tspRouter.Run();
             if (!tspRouter.HasSucceeded)
             {
                 return new Result<Route>(tspRouter.ErrorMessage);
             }
-            return new Result<Route>(tspRouter.BuildRoute());
+            return new Result<Route>(tspRouter.WeightMatrix.BuildRoute(tspRouter.Tour));
         }
 
         /// <summary>
@@ -78,13 +80,13 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateTSPTW(this RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, int first = 0, int? last = null)
         {
-            var tspRouter = new TSP.TimeWindows.TSPTWRouter(router, profile, locations, windows, first, last);
+            var tspRouter = new TSP.TimeWindows.TSPTWRouter(new WeightMatrixAlgorithm(router, profile, locations), windows, first, last);
             tspRouter.Run();
             if (!tspRouter.HasSucceeded)
             {
                 return new Result<Route>(tspRouter.ErrorMessage);
             }
-            return new Result<Route>(tspRouter.BuildRoute());
+            return new Result<Route>(tspRouter.WeightMatrix.BuildRoute(tspRouter.Tour));
         }
 
         /// <summary>
@@ -100,13 +102,13 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateTSPTWDirected(this Router router, Profile profile, Coordinate[] locations, TimeWindow[] windows, float turnPenaltyInSeconds, int first = 0, int? last = null)
         {
-            var tspRouter = new TSP.TimeWindows.Directed.TSPTWRouter(router, profile, router.Resolve(profile, locations), windows, turnPenaltyInSeconds, first, last, null);
+            var tspRouter = new TSP.TimeWindows.Directed.TSPTWRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), windows, turnPenaltyInSeconds, first, last, null);
             tspRouter.Run();
             if (!tspRouter.HasSucceeded)
             {
                 return new Result<Route>(tspRouter.ErrorMessage);
             }
-            return new Result<Route>(tspRouter.BuildRoute());
+            return new Result<Route>(tspRouter.WeightMatrix.BuildRoute(tspRouter.Tour));
         }
 
         /// <summary>
@@ -122,13 +124,13 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateSTSP(this RouterBase router, Profile profile, Coordinate[] locations, float max, int first = 0, int? last = null)
         {
-            var tspRouter = new STSPRouter(router, profile, locations, max, first, last);
+            var tspRouter = new STSPRouter(new WeightMatrixAlgorithm(router, profile, locations), max, first, last);
             tspRouter.Run();
             if (!tspRouter.HasSucceeded)
             {
                 return new Result<Route>(tspRouter.ErrorMessage);
             }
-            return new Result<Route>(tspRouter.BuildRoute());
+            return new Result<Route>(tspRouter.WeightMatrix.BuildRoute(tspRouter.Tour));
         }
 
         /// <summary>
@@ -144,13 +146,13 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateSTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, float max, int first = 0, int? last = null)
         {
-            var tspRouter = new Itinero.Optimization.STSP.Directed.STSPRouter(router, profile, router.Resolve(profile, locations), turnPenaltyInSeconds, max, first, last);
+            var tspRouter = new Itinero.Optimization.STSP.Directed.STSPRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), turnPenaltyInSeconds, max, first, last);
             tspRouter.Run();
             if (!tspRouter.HasSucceeded)
             {
                 return new Result<Route>(tspRouter.ErrorMessage);
             }
-            return new Result<Route>(tspRouter.BuildRoute());
+            return new Result<Route>(tspRouter.WeightMatrix.BuildRoute(tspRouter.Tour));
         }
 
         /// <summary>

@@ -3,7 +3,6 @@
 
   "dependencies": {
     "dotnet-test-nunit": "3.4.0-beta-3",
-    "Itinero": "0.35.3-rc1",
     "Itinero.Optimization": "1.0.0-*",
     "NUnit": "3.4.1"
   },
