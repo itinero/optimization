@@ -17,16 +17,10 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Algorithms;
-using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
-using Itinero.Algorithms.Weights;
-using Itinero.Data.Network;
-using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Solvers;
+using Itinero.Optimization.Routing.Matrices;
 using Itinero.Optimization.Tours;
-using Itinero.Profiles;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Itinero.Optimization.STSP.Directed
 {
@@ -35,7 +29,7 @@ namespace Itinero.Optimization.STSP.Directed
     /// </summary>
     public sealed class STSPRouter : AlgorithmBase
     {
-        private readonly DirectedWeightMatrixAlgorithm _weightMatrixAlgorithm;
+        private readonly IDirectedWeightMatrixAlgorithm _weightMatrixAlgorithm;
         private readonly int _first;
         private readonly int? _last;
         private readonly float _max;
@@ -45,7 +39,7 @@ namespace Itinero.Optimization.STSP.Directed
         /// <summary>
         /// Creates a new TSP router.
         /// </summary>
-        public STSPRouter(DirectedWeightMatrixAlgorithm weightMatrixAlgorithm, float turnPenalty, float max, int first, int? last = null,
+        public STSPRouter(IDirectedWeightMatrixAlgorithm weightMatrixAlgorithm, float turnPenalty, float max, int first, int? last = null,
             SolverBase<float, STSProblem, STSPObjective, Tour, STSPFitness> solver = null)
         {
             _turnPenalty = turnPenalty;
@@ -120,7 +114,7 @@ namespace Itinero.Optimization.STSP.Directed
         /// <summary>
         /// Gets the weight matrix.
         /// </summary>
-        public DirectedWeightMatrixAlgorithm WeightMatrix
+        public IDirectedWeightMatrixAlgorithm WeightMatrix
         {
             get
             {

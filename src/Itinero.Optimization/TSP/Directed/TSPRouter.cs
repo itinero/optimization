@@ -17,9 +17,9 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Algorithms;
-using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.Optimization.Algorithms.Solvers;
+using Itinero.Optimization.Routing.Matrices;
 using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.TSP.Directed
@@ -33,12 +33,12 @@ namespace Itinero.Optimization.TSP.Directed
         private readonly int? _last;
         private readonly float _turnPenalty;
         private readonly Itinero.Optimization.Algorithms.Solvers.ISolver<float, TSProblem, TSPObjective, Tour, float> _solver;
-        private readonly DirectedWeightMatrixAlgorithm _weightMatrixAlgorithm;
+        private readonly IDirectedWeightMatrixAlgorithm _weightMatrixAlgorithm;
 
         /// <summary>
         /// Creates a new TSP router.
         /// </summary>
-        public TSPRouter(DirectedWeightMatrixAlgorithm weightMatrixAlgorithm, float turnPenalty, int first, int? last = null,
+        public TSPRouter(IDirectedWeightMatrixAlgorithm weightMatrixAlgorithm, float turnPenalty, int first, int? last = null,
             SolverBase<float, TSProblem, TSPObjective, Itinero.Optimization.Tours.Tour, float> solver = null)
         {
             _turnPenalty = turnPenalty;
@@ -111,7 +111,7 @@ namespace Itinero.Optimization.TSP.Directed
         /// <summary>
         /// Gets the weight matrix.
         /// </summary>
-        public DirectedWeightMatrixAlgorithm WeightMatrix
+        public IDirectedWeightMatrixAlgorithm WeightMatrix
         {
             get
             {
