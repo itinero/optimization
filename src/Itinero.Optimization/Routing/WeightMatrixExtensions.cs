@@ -18,7 +18,6 @@
 
 using Itinero.Algorithms;
 using Itinero.Algorithms.Matrices;
-using Itinero.Algorithms.Search;
 using Itinero.Algorithms.Weights;
 using Itinero.Data.Network;
 using Itinero.Optimization.Algorithms.Directed;
@@ -34,22 +33,6 @@ namespace Itinero.Optimization.Routing
     /// </summary>
     public static class WeightMatrixExtensions
     {
-        /// <summary>
-        /// Converts a customer index to a location index.
-        /// </summary>
-        public static int OriginalLocationIndexOf(this IWeightMatrixAlgorithm<float> algorithm, int id)
-        {
-            return algorithm.MassResolver.LocationIndexOf(algorithm.OriginalIndexOf(id));
-        }
-
-        /// <summary>
-        /// Converts a location index to a customer index.
-        /// </summary>
-        public static int OriginalIndexOf(this IWeightMatrixAlgorithm<float> algorithm, int id)
-        {
-            return algorithm.IndexOf(algorithm.MassResolver.IndexOf(id));
-        }
-        
         /// <summary>
         /// Builds a route from a given tour.
         /// </summary>
@@ -110,28 +93,6 @@ namespace Itinero.Optimization.Routing
                 routes.Add(result.Value);
             }
             return routes;
-        }
-
-        /// <summary>
-        /// Converts a directed customer index to a directed location index.
-        /// </summary>
-        public static int DirectedOriginalLocationIndexOf(this IDirectedWeightMatrixAlgorithm<float> algorithm, int directedId)
-        {
-            int arrivalId, departuredId, id, turn;
-            DirectedHelper.ExtractAll(directedId, out arrivalId, out departuredId, out id, out turn);
-            var index = algorithm.MassResolver.LocationIndexOf(algorithm.OriginalIndexOf(id));
-            return DirectedHelper.BuildDirectedId(index, turn);
-        }
-
-        /// <summary>
-        /// Converts a directed location index to a directed customer index.
-        /// </summary>
-        public static int DirectedOriginalIndexOf(this IDirectedWeightMatrixAlgorithm<float> algorithm, int directedId)
-        {
-            int arrivalId, departuredId, id, turn;
-            DirectedHelper.ExtractAll(directedId, out arrivalId, out departuredId, out id, out turn);
-            var index = algorithm.IndexOf(algorithm.MassResolver.IndexOf(id));
-            return DirectedHelper.BuildDirectedId(index, turn);
         }
         
         /// <summary>
@@ -247,67 +208,6 @@ namespace Itinero.Optimization.Routing
                 routes.Add(localRoute.Value);
             }
             return routes;
-        }
-
-
-        /// <summary>
-        /// Returns true if the point at the given original location index is in error.
-        /// </summary>
-        public static bool IsInError(this IWeightMatrixAlgorithm<float> algorithm, int originalLocationIndex)
-        {
-            LocationError le;
-            RouterPointError rpe;
-            return algorithm.TryGetError(originalLocationIndex, out le, out rpe);
-        }
-
-        /// <summary>
-        /// Tries to get an error for the given original location index.
-        /// </summary>
-        public static bool TryGetError(this IWeightMatrixAlgorithm<float> algorithm, int originalLocationIndex, out LocationError locationError,
-            out RouterPointError routerPointError)
-        {
-            locationError = null;
-            routerPointError = null;
-            if (algorithm.MassResolver.Errors.TryGetValue(originalLocationIndex, out locationError))
-            {
-                return true;
-            }
-            var routerPointIndex = algorithm.MassResolver.IndexOf(originalLocationIndex);
-            if (algorithm.Errors.TryGetValue(routerPointIndex, out routerPointError))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Returns true if the point at the given original location index is in error.
-        /// </summary>
-        public static bool IsInError(this IDirectedWeightMatrixAlgorithm<float> algorithm, int originalLocationIndex)
-        {
-            LocationError le;
-            RouterPointError rpe;
-            return algorithm.TryGetError(originalLocationIndex, out le, out rpe);
-        }
-
-        /// <summary>
-        /// Tries to get an error for the given original location index.
-        /// </summary>
-        public static bool TryGetError(this IDirectedWeightMatrixAlgorithm<float> algorithm, int originalLocationIndex, out LocationError locationError,
-            out RouterPointError routerPointError)
-        {
-            locationError = null;
-            routerPointError = null;
-            if (algorithm.MassResolver.Errors.TryGetValue(originalLocationIndex, out locationError))
-            {
-                return true;
-            }
-            var routerPointIndex = algorithm.MassResolver.IndexOf(originalLocationIndex);
-            if (algorithm.Errors.TryGetValue(routerPointIndex, out routerPointError))
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

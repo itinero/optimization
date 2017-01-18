@@ -67,11 +67,24 @@ namespace Itinero.Optimization.TSP.Directed
                 return;
             }
 
-            LocationError error;
-            if (_weightMatrixAlgorithm.MassResolver.Errors.TryGetValue(_first, out error))
-            { // if the first location could not be resolved everything fails.
-                this.ErrorMessage = string.Format("Could resolve first location: {0}",
-                    error);
+            LocationError le;
+            RouterPointError rpe;
+            if (_weightMatrixAlgorithm.TryGetError(_first, out le, out rpe))
+            { // if the last location is set and it could not be resolved everything fails.
+                if (le != null)
+                {
+                    this.ErrorMessage = string.Format("Could resolve first location: {0}",
+                        le);
+                }
+                else if (rpe != null)
+                {
+                    this.ErrorMessage = string.Format("Could route to/from first location: {0}",
+                        rpe);
+                }
+                else
+                {
+                    this.ErrorMessage = string.Format("First location was in error list.");
+                }
                 return;
             }
 
@@ -80,19 +93,31 @@ namespace Itinero.Optimization.TSP.Directed
             TSProblem problem = null;
             if (_last.HasValue)
             { // the last customer was set.
-                if (_weightMatrixAlgorithm.MassResolver.Errors.TryGetValue(_last.Value, out error))
+                if (_weightMatrixAlgorithm.TryGetError(_last.Value, out le, out rpe))
                 { // if the last location is set and it could not be resolved everything fails.
-                    this.ErrorMessage = string.Format("Could resolve last location: {0}",
-                        error);
+                    if (le != null)
+                    {
+                        this.ErrorMessage = string.Format("Could resolve last location: {0}",
+                            le);
+                    }
+                    else if (rpe != null)
+                    {
+                        this.ErrorMessage = string.Format("Could route to/from last location: {0}",
+                            rpe);
+                    }
+                    else
+                    {
+                        this.ErrorMessage = string.Format("Last location was in error list.");
+                    }
                     return;
                 }
 
-                problem = new TSProblem(_weightMatrixAlgorithm.IndexOf(first), _weightMatrixAlgorithm.IndexOf(_last.Value),
+                problem = new TSProblem(_weightMatrixAlgorithm.WeightIndex(first), _weightMatrixAlgorithm.WeightIndex(_last.Value),
                     _weightMatrixAlgorithm.Weights, _turnPenalty);
             }
             else
             { // the last customer was not set.
-                problem = new TSProblem(_weightMatrixAlgorithm.IndexOf(first), _weightMatrixAlgorithm.Weights, _turnPenalty);
+                problem = new TSProblem(_weightMatrixAlgorithm.WeightIndex(first), _weightMatrixAlgorithm.Weights, _turnPenalty);
             }
 
             // execute the solver.
