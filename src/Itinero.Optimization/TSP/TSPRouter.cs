@@ -20,7 +20,6 @@ using Itinero.Algorithms;
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routing.Matrices;
 using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.TSP
@@ -30,14 +29,14 @@ namespace Itinero.Optimization.TSP
     /// </summary>
     public sealed class TSPRouter : AlgorithmBase
     {
-        private readonly IWeightMatrixAlgorithm _weightMatrixAlgorithm;
+        private readonly IWeightMatrixAlgorithm<float> _weightMatrixAlgorithm;
         private readonly int _first;
         private readonly int? _last;
 
         /// <summary>
         /// Creates a new TSP router.
         /// </summary>
-        public TSPRouter(IWeightMatrixAlgorithm weightMatrixAlgorithm, int first = 0, int? last = null, 
+        public TSPRouter(IWeightMatrixAlgorithm<float> weightMatrixAlgorithm, int first = 0, int? last = null, 
             SolverBase<float, TSProblem, TSPObjective, Itinero.Optimization.Tours.Tour, float> solver = null)
         {
             _first = first;
@@ -110,7 +109,7 @@ namespace Itinero.Optimization.TSP
         /// <summary>
         /// Gets the weight matrix.
         /// </summary>
-        public IWeightMatrixAlgorithm WeightMatrix
+        public IWeightMatrixAlgorithm<float> WeightMatrix
         {
             get
             {

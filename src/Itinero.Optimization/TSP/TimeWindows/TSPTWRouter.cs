@@ -20,7 +20,6 @@ using Itinero.Algorithms;
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routing.Matrices;
 using Itinero.Optimization.TimeWindows;
 using Itinero.Optimization.Tours;
 using System.Collections.Generic;
@@ -32,7 +31,7 @@ namespace Itinero.Optimization.TSP.TimeWindows
     /// </summary>
     public sealed class TSPTWRouter : AlgorithmBase
     {
-        private readonly IWeightMatrixAlgorithm _weightMatrixAlgorithm;
+        private readonly IWeightMatrixAlgorithm<float> _weightMatrixAlgorithm;
         private readonly TimeWindow[] _windows;
         private readonly SolverBase<float, TSPTWProblem, TSPTWObjective, Itinero.Optimization.Tours.Tour, float> _solver;
         private readonly int _first;
@@ -41,7 +40,7 @@ namespace Itinero.Optimization.TSP.TimeWindows
         /// <summary>
         /// Creates a new TSP router.
         /// </summary>
-        public TSPTWRouter(IWeightMatrixAlgorithm weightMatrixAlgorithm, TimeWindow[] windows, int first = 0, int? last = null,
+        public TSPTWRouter(IWeightMatrixAlgorithm<float> weightMatrixAlgorithm, TimeWindow[] windows, int first = 0, int? last = null,
             SolverBase<float, TSPTWProblem, TSPTWObjective, Itinero.Optimization.Tours.Tour, float> solver = null)
         {
             _weightMatrixAlgorithm = weightMatrixAlgorithm;
@@ -138,7 +137,7 @@ namespace Itinero.Optimization.TSP.TimeWindows
         /// <summary>
         /// Gets the weight matrix.
         /// </summary>
-        public IWeightMatrixAlgorithm WeightMatrix
+        public IWeightMatrixAlgorithm<float> WeightMatrix
         {
             get
             {

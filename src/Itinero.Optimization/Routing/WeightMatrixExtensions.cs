@@ -22,7 +22,6 @@ using Itinero.Algorithms.Search;
 using Itinero.Algorithms.Weights;
 using Itinero.Data.Network;
 using Itinero.Optimization.Algorithms.Directed;
-using Itinero.Optimization.Routing.Matrices;
 using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +37,7 @@ namespace Itinero.Optimization.Routing
         /// <summary>
         /// Converts a customer index to a location index.
         /// </summary>
-        public static int OriginalLocationIndexOf(this IWeightMatrixAlgorithm algorithm, int id)
+        public static int OriginalLocationIndexOf(this IWeightMatrixAlgorithm<float> algorithm, int id)
         {
             return algorithm.MassResolver.LocationIndexOf(algorithm.OriginalIndexOf(id));
         }
@@ -46,7 +45,7 @@ namespace Itinero.Optimization.Routing
         /// <summary>
         /// Converts a location index to a customer index.
         /// </summary>
-        public static int OriginalIndexOf(this IWeightMatrixAlgorithm algorithm, int id)
+        public static int OriginalIndexOf(this IWeightMatrixAlgorithm<float> algorithm, int id)
         {
             return algorithm.IndexOf(algorithm.MassResolver.IndexOf(id));
         }
@@ -55,7 +54,7 @@ namespace Itinero.Optimization.Routing
         /// Builds a route from a given tour.
         /// </summary>
         /// <returns></returns>
-        public static Route BuildRoute(this IWeightMatrixAlgorithm algorithm, Tour tour)
+        public static Route BuildRoute(this IWeightMatrixAlgorithm<float> algorithm, Tour tour)
         {
             Route route = null;
             foreach (var pair in tour.Pairs())
@@ -78,7 +77,7 @@ namespace Itinero.Optimization.Routing
         /// Builds the routes in segments divided by routes between customers in the given tour.
         /// </summary>
         /// <returns></returns>
-        public static List<Result<Route>> TryBuildRoutes(this IWeightMatrixAlgorithm algorithm, Tour tour)
+        public static List<Result<Route>> TryBuildRoutes(this IWeightMatrixAlgorithm<float> algorithm, Tour tour)
         {
             var routes = new List<Result<Route>>();
             foreach (var pair in tour.Pairs())
@@ -93,7 +92,7 @@ namespace Itinero.Optimization.Routing
         /// Builds the result route in segments divided by routes between customers.
         /// </summary>
         /// <returns></returns>
-        public static List<Route> BuildRoutes(this IWeightMatrixAlgorithm algorithm, Tour tour)
+        public static List<Route> BuildRoutes(this IWeightMatrixAlgorithm<float> algorithm, Tour tour)
         {
             var routes = new List<Route>();
             foreach (var pair in tour.Pairs())
@@ -116,7 +115,7 @@ namespace Itinero.Optimization.Routing
         /// <summary>
         /// Converts a directed customer index to a directed location index.
         /// </summary>
-        public static int DirectedOriginalLocationIndexOf(this IDirectedWeightMatrixAlgorithm algorithm, int directedId)
+        public static int DirectedOriginalLocationIndexOf(this IDirectedWeightMatrixAlgorithm<float> algorithm, int directedId)
         {
             int arrivalId, departuredId, id, turn;
             DirectedHelper.ExtractAll(directedId, out arrivalId, out departuredId, out id, out turn);
@@ -127,7 +126,7 @@ namespace Itinero.Optimization.Routing
         /// <summary>
         /// Converts a directed location index to a directed customer index.
         /// </summary>
-        public static int DirectedOriginalIndexOf(this IDirectedWeightMatrixAlgorithm algorithm, int directedId)
+        public static int DirectedOriginalIndexOf(this IDirectedWeightMatrixAlgorithm<float> algorithm, int directedId)
         {
             int arrivalId, departuredId, id, turn;
             DirectedHelper.ExtractAll(directedId, out arrivalId, out departuredId, out id, out turn);
@@ -139,7 +138,7 @@ namespace Itinero.Optimization.Routing
         /// Builds the resulting route.
         /// </summary>
         /// <returns></returns>
-        public static Route BuildRoute(this IDirectedWeightMatrixAlgorithm algorithm, Tour tour)
+        public static Route BuildRoute(this IDirectedWeightMatrixAlgorithm<float> algorithm, Tour tour)
         {
             Route route = null;
             // TODO: check what to do here, use the cached version or not?
@@ -180,7 +179,7 @@ namespace Itinero.Optimization.Routing
         /// Builds the result route in segments divided by routes between customers.
         /// </summary>
         /// <returns></returns>
-        public static List<Result<Route>> TryBuildRoutes(this IDirectedWeightMatrixAlgorithm algorithm, Tour tour)
+        public static List<Result<Route>> TryBuildRoutes(this IDirectedWeightMatrixAlgorithm<float> algorithm, Tour tour)
         {
             var routes = new List<Result<Route>>();
             // TODO: check what to do here, use the cached version or not?
@@ -214,7 +213,7 @@ namespace Itinero.Optimization.Routing
         /// Builds the result route in segments divided by routes between customers.
         /// </summary>
         /// <returns></returns>
-        public static List<Route> BuildRoutes(this IDirectedWeightMatrixAlgorithm algorithm, Tour tour)
+        public static List<Route> BuildRoutes(this IDirectedWeightMatrixAlgorithm<float> algorithm, Tour tour)
         {
             var routes = new List<Route>();
             // TODO: check what to do here, use the cached version or not?
@@ -254,7 +253,7 @@ namespace Itinero.Optimization.Routing
         /// <summary>
         /// Returns true if the point at the given original location index is in error.
         /// </summary>
-        public static bool IsInError(this IWeightMatrixAlgorithm algorithm, int originalLocationIndex)
+        public static bool IsInError(this IWeightMatrixAlgorithm<float> algorithm, int originalLocationIndex)
         {
             LocationError le;
             RouterPointError rpe;
@@ -264,7 +263,7 @@ namespace Itinero.Optimization.Routing
         /// <summary>
         /// Tries to get an error for the given original location index.
         /// </summary>
-        public static bool TryGetError(this IWeightMatrixAlgorithm algorithm, int originalLocationIndex, out LocationError locationError,
+        public static bool TryGetError(this IWeightMatrixAlgorithm<float> algorithm, int originalLocationIndex, out LocationError locationError,
             out RouterPointError routerPointError)
         {
             locationError = null;
@@ -284,7 +283,7 @@ namespace Itinero.Optimization.Routing
         /// <summary>
         /// Returns true if the point at the given original location index is in error.
         /// </summary>
-        public static bool IsInError(this IDirectedWeightMatrixAlgorithm algorithm, int originalLocationIndex)
+        public static bool IsInError(this IDirectedWeightMatrixAlgorithm<float> algorithm, int originalLocationIndex)
         {
             LocationError le;
             RouterPointError rpe;
@@ -294,7 +293,7 @@ namespace Itinero.Optimization.Routing
         /// <summary>
         /// Tries to get an error for the given original location index.
         /// </summary>
-        public static bool TryGetError(this IDirectedWeightMatrixAlgorithm algorithm, int originalLocationIndex, out LocationError locationError,
+        public static bool TryGetError(this IDirectedWeightMatrixAlgorithm<float> algorithm, int originalLocationIndex, out LocationError locationError,
             out RouterPointError routerPointError)
         {
             locationError = null;

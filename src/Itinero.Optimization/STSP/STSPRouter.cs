@@ -17,9 +17,9 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.Algorithms;
+using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Routing.Matrices;
 using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.STSP
@@ -29,7 +29,7 @@ namespace Itinero.Optimization.STSP
     /// </summary>
     public sealed class STSPRouter : AlgorithmBase
     {
-        private readonly IWeightMatrixAlgorithm _weightMatrixAlgorithm;
+        private readonly IWeightMatrixAlgorithm<float> _weightMatrixAlgorithm;
         private readonly int _first;
         private readonly int? _last;
         private readonly float _max;
@@ -37,7 +37,7 @@ namespace Itinero.Optimization.STSP
         /// <summary>
         /// Creates a new TSP router.
         /// </summary>
-        public STSPRouter(IWeightMatrixAlgorithm weightMatrixAlgorithm, float max, int first = 0, int? last = null, 
+        public STSPRouter(IWeightMatrixAlgorithm<float> weightMatrixAlgorithm, float max, int first = 0, int? last = null, 
             SolverBase<float, STSProblem, STSPObjective, Tour, STSPFitness> solver = null)
         {
             _first = first;
@@ -111,7 +111,7 @@ namespace Itinero.Optimization.STSP
         /// <summary>
         /// Gets the weight matrix.
         /// </summary>
-        public IWeightMatrixAlgorithm WeightMatrix
+        public IWeightMatrixAlgorithm<float> WeightMatrix
         {
             get
             {
