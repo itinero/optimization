@@ -127,8 +127,21 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
         /// <returns></returns>
         public bool Apply(TSProblem problem, TSPObjective objective, Tour solution, out float delta)
         {
-            if (!problem.Last.HasValue) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
-            if (solution.First != solution.Last) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
+            if (!problem.Last.HasValue)
+            {
+                Itinero.Optimization.Logging.Logger.Log(this.Name, Logging.TraceEventType.Warning,
+                    "Cannot apply this operator to an open problem, skipping.");
+                delta = 0;
+                return false;
+            }
+            if (solution.First != solution.Last)
+            {
+                Itinero.Optimization.Logging.Logger.Log(this.Name, Logging.TraceEventType.Warning,
+                    "Cannot apply this operator to an open fixed end problem, skipping.");
+                delta = 0;
+                return false;
+                throw new ArgumentException("3OPT operator cannot be used on open TSP-problems.");
+            }
             if ((solution.First == solution.Last) != problem.Last.HasValue) { throw new ArgumentException("Route and problem have to be both closed."); }
 
             _dontLookBits = new bool[problem.Weights.Length / 2];

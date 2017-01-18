@@ -91,22 +91,20 @@ namespace Itinero.Optimization.TSP.Solvers
         /// <returns></returns>
         public override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
         {
-            if (!problem.Last.HasValue) { throw new ArgumentException("OPT3 cannot be used on open TSP-problems."); }
-
             // generate some route first.
-            var route = _generator.Solve(problem, objective);
+            var tour = _generator.Solve(problem, objective);
 
             // calculate fitness.
-            fitness = objective.Calculate(problem, route);
+            fitness = objective.Calculate(problem, tour);
 
             // improve the existing solution.
             float difference;
-            if (this.Apply(problem, objective, route, out difference))
+            if (this.Apply(problem, objective, tour, out difference))
             { // improvement!
                 fitness = fitness + difference;
             }
 
-            return route;
+            return tour;
         }
 
         /// <summary>
@@ -115,8 +113,21 @@ namespace Itinero.Optimization.TSP.Solvers
         /// <returns></returns>
         public bool Apply(TSProblem problem, TSPObjective objective, Tour solution, out float delta)
         {
-            if (!problem.Last.HasValue) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
-            if (solution.First != solution.Last) { throw new ArgumentException("3OPT operator cannot be used on open TSP-problems."); }
+            if (!problem.Last.HasValue)
+            {
+                Itinero.Optimization.Logging.Logger.Log(this.Name, Logging.TraceEventType.Warning,
+                    "Cannot apply this operator to an open problem, skipping.");
+                delta = 0;
+                return false;
+            }
+            if (solution.First != solution.Last)
+            {
+                Itinero.Optimization.Logging.Logger.Log(this.Name, Logging.TraceEventType.Warning,
+                    "Cannot apply this operator to an open fixed end problem, skipping.");
+                delta = 0;
+                return false;
+                throw new ArgumentException("3OPT operator cannot be used on open TSP-problems.");
+            }
             if ((solution.First == solution.Last) != problem.Last.HasValue) { throw new ArgumentException("Route and problem have to be both closed."); }
 
             _dontLookBits = new bool[problem.Weights.Length];

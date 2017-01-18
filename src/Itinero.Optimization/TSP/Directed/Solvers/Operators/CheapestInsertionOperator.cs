@@ -92,6 +92,7 @@ namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
                 if (current != Constants.NOT_SET)
                 {
                     if (current != solution.First &&
+                        current != solution.Last &&
                         solution.Remove(current))
                     {
                         toInsert.Add(current);

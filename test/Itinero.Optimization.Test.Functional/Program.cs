@@ -63,25 +63,36 @@ namespace Itinero.Optimization.Test.Functional
             };
 
             // calculate TSP.
-            var route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, 0);
-            route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, locations.Length - 1);
-            route = router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, null);
+            var func = new Func<Route>(() => router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, 0));
+            var route = func.TestPerf("Testing TSP (0->0)");
+            func = new Func<Route>(() => router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, locations.Length - 1));
+            route = func.TestPerf("Testing TSP (0->last)");
+            func = new Func<Route>(() => router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, null));
+            route = func.TestPerf("Testing TSP (0->...)");
 
             // calculate Directed TSP.
-            route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, 0);
-            // TODO: fix or add a solver capable of handling this.
-            //route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, locations.Length - 1);
-            route = router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, null);
+            func = new Func<Route>(() => router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, 0));
+            route = func.TestPerf("Testing Directed TSP (0->0)");
+            func = new Func<Route>(() => router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, locations.Length - 1));
+            route = func.TestPerf("Testing Directed TSP (0->last)");
+            func = new Func<Route>(() => router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, null));
+            route = func.TestPerf("Testing Directed TSP (0->...)");
 
             // calculate STSP
-            route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, 0);
-            route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, locations.Length - 1);
-            route = router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, null);
+            func = new Func<Route>(() => router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, 0));
+            route = func.TestPerf("Testing STSP (0->0)");
+            func = new Func<Route>(() => router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, locations.Length - 1));
+            route = func.TestPerf("Testing STSP (0->last)");
+            func = new Func<Route>(() => router.CalculateSTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 600, 0, null));
+            route = func.TestPerf("Testing STSP (0->...)");
 
             // calculate directed TSP.
-            route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, 0);
-            route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, locations.Length - 1);
-            route = router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, null);
+            func = new Func<Route>(() => router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, 0));
+            route = func.TestPerf("Testing Directed STSP (0->0)");
+            func = new Func<Route>(() => router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, locations.Length - 1));
+            route = func.TestPerf("Testing Directed STSP (0->last)");
+            func = new Func<Route>(() => router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, null));
+            route = func.TestPerf("Testing Directed STSP (0->...)");
 
             // define some time windows, all max.
             var windows = new TimeWindows.TimeWindow[]
@@ -104,15 +115,20 @@ namespace Itinero.Optimization.Test.Functional
             };
 
             // calculate TSP-TW.
-            route = router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, 0);
-            route = router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, locations.Length - 1);
-            route = router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, null);
+            func = new Func<Route>(() => router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, 0));
+            route = func.TestPerf("Testing TSP-TW (0->0)");
+            func = new Func<Route>(() => router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, locations.Length - 1));
+            route = func.TestPerf("Testing TSP-TW (0->last)");
+            func = new Func<Route>(() => router.CalculateTSPTW(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 0, null));
+            route = func.TestPerf("Testing TSP-TW (0->...)");
 
             // calculate directed TSP - TW.
-            route = router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, 0);
-            // TODO: fix or add a solver capable of handling this.
-            //route = router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, locations.Length - 1);
-            route = router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, null);
+            func = new Func<Route>(() => router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, 0));
+            route = func.TestPerf("Testing Directed TSP-TW (0->0)");
+            func = new Func<Route>(() => router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, locations.Length - 1));
+            route = func.TestPerf("Testing Directed TSP-TW (0->last)");
+            func = new Func<Route>(() => router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, null));
+            route = func.TestPerf("Testing Directed TSP-TW (0->...)");
         }
 
         private static string ToJson(FeatureCollection featureCollection)
