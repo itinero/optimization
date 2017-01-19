@@ -5,9 +5,9 @@
   },
 
   "dependencies": {
-    "Itinero": "0.38.0-rc1",
-    "Itinero.Geo": "0.38.0-rc1",
-    "Itinero.IO.Osm": "0.37.2-rc1",
+    "Itinero": "0.38.3-rc1",
+    "Itinero.Geo": "0.38.3-rc1",
+    "Itinero.IO.Osm": "0.38.3-rc1",
     "Itinero.Optimization": "1.0.0-*",
     "NetTopologySuite.IO.GeoJSON": "1.14.0",
     "Newtonsoft.Json": "9.0.1"

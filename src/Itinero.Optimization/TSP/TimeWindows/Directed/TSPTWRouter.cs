@@ -138,12 +138,12 @@ namespace Itinero.Optimization.TSP.TimeWindows.Directed
                     return;
                 }
 
-                problem = new TSPTWProblem(_weightMatrixAlgorithm.OriginalIndexOf(first), _weightMatrixAlgorithm.OriginalIndexOf(_last.Value),
+                problem = new TSPTWProblem(_weightMatrixAlgorithm.WeightIndex(first), _weightMatrixAlgorithm.WeightIndex(_last.Value),
                     _weightMatrixAlgorithm.Weights, windows, _turnPenalty);
             }
             else
             { // the last customer was not set.
-                problem = new TSPTWProblem(_weightMatrixAlgorithm.OriginalIndexOf(first), _weightMatrixAlgorithm.Weights, windows, _turnPenalty);
+                problem = new TSPTWProblem(_weightMatrixAlgorithm.WeightIndex(first), _weightMatrixAlgorithm.Weights, windows, _turnPenalty);
             }
 
             // execute the solver.
