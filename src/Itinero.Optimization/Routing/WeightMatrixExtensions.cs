@@ -37,7 +37,7 @@ namespace Itinero.Optimization.Routing
         /// Builds a route from a given tour.
         /// </summary>
         /// <returns></returns>
-        public static Route BuildRoute(this IWeightMatrixAlgorithm<float> algorithm, Tour tour)
+        public static Route BuildRoute<T>(this IWeightMatrixAlgorithm<T> algorithm, Tour tour)
         {
             Route route = null;
             foreach (var pair in tour.Pairs())
@@ -60,7 +60,7 @@ namespace Itinero.Optimization.Routing
         /// Builds the routes in segments divided by routes between customers in the given tour.
         /// </summary>
         /// <returns></returns>
-        public static List<Result<Route>> TryBuildRoutes(this IWeightMatrixAlgorithm<float> algorithm, Tour tour)
+        public static List<Result<Route>> TryBuildRoutes<T>(this IWeightMatrixAlgorithm<T> algorithm, Tour tour)
         {
             var routes = new List<Result<Route>>();
             foreach (var pair in tour.Pairs())
@@ -75,7 +75,7 @@ namespace Itinero.Optimization.Routing
         /// Builds the result route in segments divided by routes between customers.
         /// </summary>
         /// <returns></returns>
-        public static List<Route> BuildRoutes(this IWeightMatrixAlgorithm<float> algorithm, Tour tour)
+        public static List<Route> BuildRoutes<T>(this IWeightMatrixAlgorithm<T> algorithm, Tour tour)
         {
             var routes = new List<Route>();
             foreach (var pair in tour.Pairs())
@@ -99,7 +99,7 @@ namespace Itinero.Optimization.Routing
         /// Builds the resulting route.
         /// </summary>
         /// <returns></returns>
-        public static Route BuildRoute(this IDirectedWeightMatrixAlgorithm<float> algorithm, Tour tour)
+        public static Route BuildRoute<T>(this IDirectedWeightMatrixAlgorithm<T> algorithm, Tour tour)
         {
             Route route = null;
             // TODO: check what to do here, use the cached version or not?
@@ -140,7 +140,7 @@ namespace Itinero.Optimization.Routing
         /// Builds the result route in segments divided by routes between customers.
         /// </summary>
         /// <returns></returns>
-        public static List<Result<Route>> TryBuildRoutes(this IDirectedWeightMatrixAlgorithm<float> algorithm, Tour tour)
+        public static List<Result<Route>> TryBuildRoutes<T>(this IDirectedWeightMatrixAlgorithm<T> algorithm, Tour tour)
         {
             var routes = new List<Result<Route>>();
             // TODO: check what to do here, use the cached version or not?
@@ -174,7 +174,7 @@ namespace Itinero.Optimization.Routing
         /// Builds the result route in segments divided by routes between customers.
         /// </summary>
         /// <returns></returns>
-        public static List<Route> BuildRoutes(this IDirectedWeightMatrixAlgorithm<float> algorithm, Tour tour)
+        public static List<Route> BuildRoutes<T>(this IDirectedWeightMatrixAlgorithm<T> algorithm, Tour tour)
         {
             var routes = new List<Route>();
             // TODO: check what to do here, use the cached version or not?

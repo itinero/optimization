@@ -16,7 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Algorithms.Weights;
 using Itinero.Optimization.Tours;
+using Itinero.Profiles;
 using System;
 
 namespace Itinero.Optimization.Algorithms.Directed
@@ -244,6 +246,40 @@ namespace Itinero.Optimization.Algorithms.Directed
                     var weight = weights[departureId1][arrivalId2];
 
                     if (weight < best)
+                    {
+                        departureOffset1 = do1;
+                        arrivalOffset2 = ao2;
+
+                        best = weight;
+                    }
+                }
+            }
+            return best;
+        }
+
+        /// <summary>
+        /// Gets the minimum weight from customer1 -> customer2 while inserting customer2. Outputs the best departure and arrival offsets.
+        /// </summary>
+        public static Weight CheapestInsert(this Weight[][] weights, Weight[] penalties, int id1, int id2, ProfileMetric metric,
+            out int departureOffset1, out int arrivalOffset2)
+        {
+            var best = Itinero.Algorithms.Weights.Weight.MaxValue;
+            var base1 = id1 * 2;
+            var base2 = id2 * 2;
+
+            departureOffset1 = -1;
+            arrivalOffset2 = -1;
+
+            for (var do1 = 0; do1 < 2; do1++)
+            {
+                var departureId1 = base1 + do1;
+                for (var ao2 = 0; ao2 < 2; ao2++)
+                {
+                    var arrivalId2 = base2 + ao2;
+
+                    var weight = weights[departureId1][arrivalId2];
+
+                    if (weight.GetForMetric(metric) < best.GetForMetric(metric))
                     {
                         departureOffset1 = do1;
                         arrivalOffset2 = ao2;
