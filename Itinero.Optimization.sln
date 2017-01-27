@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2DE1C6AF-9DB9-46BB-B01B-411F030E0D1D}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		SharedAssemblyVersion.cs = SharedAssemblyVersion.cs
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Itinero.Optimization", "src\Itinero.Optimization\Itinero.Optimization.xproj", "{02B899AC-8791-4906-92A0-71E232A3D0D9}"
@@ -17,6 +18,11 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Itinero.Optimization.Test.Functional", "test\Itinero.Optimization.Test.Functional\Itinero.Optimization.Test.Functional.xproj", "{FC2AEFFA-E55F-46B0-8A3B-3099F64FF38F}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Itinero.Optimization.Test", "test\Itinero.Optimization.Test\Itinero.Optimization.Test.xproj", "{AF0B251E-C7FE-4C3A-B84A-DBFC5C82CD92}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspec", "nuspec", "{71FF5F75-98E5-472C-82C1-FA0DA5DEB8F8}"
+	ProjectSection(SolutionItems) = preProject
+		nuspec\Itinero.Optimization.nuspec = nuspec\Itinero.Optimization.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

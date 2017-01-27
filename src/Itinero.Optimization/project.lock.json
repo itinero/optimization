@@ -3,7 +3,7 @@
   "version": 2,
   "targets": {
     ".NETFramework,Version=v4.0": {
-      "Itinero/0.38.10-rc1": {
+      "Itinero/0.38.12-rc1": {
         "type": "package",
         "dependencies": {
           "Reminiscence": "1.0.5"
@@ -29,7 +29,7 @@
       }
     },
     ".NETFramework,Version=v4.5": {
-      "Itinero/0.38.10-rc1": {
+      "Itinero/0.38.12-rc1": {
         "type": "package",
         "dependencies": {
           "Reminiscence": "1.0.5"
@@ -55,7 +55,7 @@
       }
     },
     ".NETPortable,Version=v4.0,Profile=Profile147": {
-      "Itinero/0.38.10-rc1": {
+      "Itinero/0.38.12-rc1": {
         "type": "package",
         "dependencies": {
           "Reminiscence": "1.0.5"
@@ -83,7 +83,7 @@
       }
     },
     ".NETStandard,Version=v1.3": {
-      "Itinero/0.38.10-rc1": {
+      "Itinero/0.38.12-rc1": {
         "type": "package",
         "dependencies": {
           "NETStandard.Library": "1.6.0",
@@ -986,12 +986,12 @@
     }
   },
   "libraries": {
-    "Itinero/0.38.10-rc1": {
-      "sha512": "MKrYaS7irac9ytQ3LrodFH/V26nUPfL9i2FvEA7JEO3rcPAM3YOZK4QbsymbRdxdJlB/TR0zUCfWBInaP5y6Dg==",
+    "Itinero/0.38.12-rc1": {
+      "sha512": "noBMain3dtrO3UtL83o53gC7sCjcgXJwpcwlob2+us9qcOMEXGwjwCwZx4ZSnygX/4Z1hALOVpnHu3BSivfFTg==",
       "type": "package",
-      "path": "Itinero/0.38.10-rc1",
+      "path": "Itinero/0.38.12-rc1",
       "files": [
-        "Itinero.0.38.10-rc1.nupkg.sha512",
+        "Itinero.0.38.12-rc1.nupkg.sha512",
         "Itinero.nuspec",
         "lib/net40/Itinero.dll",
         "lib/net45/Itinero.dll",
@@ -3913,7 +3913,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Itinero >= 0.38.10-rc1"
+      "Itinero >= 0.38.12-rc1"
     ],
     ".NETFramework,Version=v4.0": [],
     ".NETFramework,Version=v4.5": [],

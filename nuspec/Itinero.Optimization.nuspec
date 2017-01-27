@@ -13,19 +13,19 @@
     <tags></tags>
     <dependencies>
       <group targetFramework=".NETFramework4.0">
-        <dependency id="Itinero" version="[0.38.3-rc1, )" />
+        <dependency id="Itinero" version="[0.38.12-rc1, )" />
       </group>
       <group targetFramework=".NETFramework4.5">
-        <dependency id="Itinero" version="[0.38.3-rc1, )" />
+        <dependency id="Itinero" version="[0.38.12-rc1, )" />
       </group>
       <group targetFramework=".NETPortable4.0-Profile147">
-        <dependency id="Itinero" version="[0.38.3-rc1, )" />
+        <dependency id="Itinero" version="[0.38.12-rc1, )" />
       </group>
       <group targetFramework=".NETStandard1.3">
         <dependency id="NETStandard.Library" version="[1.6.0, )" />
         <dependency id="System.Diagnostics.Debug" version="[4.3.0, )" />
         <dependency id="System.Runtime" version="[4.3.0, )" />
-        <dependency id="Itinero" version="[0.38.3-rc1, )" />
+        <dependency id="Itinero" version="[0.38.12-rc1, )" />
       </group>
     </dependencies>
     <frameworkAssemblies>
