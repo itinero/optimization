@@ -2,7 +2,7 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "Itinero": "0.38.12-rc1"
+    "Itinero": "0.38.17-rc1"
   },
 
   "frameworks": {
