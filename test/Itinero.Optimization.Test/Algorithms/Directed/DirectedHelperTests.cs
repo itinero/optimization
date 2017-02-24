@@ -55,5 +55,49 @@ namespace Itinero.Optimization.Test.Algorithms.Directed
             Assert.AreEqual(36, (new Tour(new int[] { 1, 5, 9 }, 1)).Weight(
                 weights, turnPenalties));
         }
+
+        /// <summary>
+        /// Tests average weights.
+        /// </summary>
+        [Test]
+        public void TestAverageWeight()
+        {
+            var weights = new float[][]
+            {
+                new float[]
+                {
+                    10,
+                    100,
+                    20,
+                    200
+                },
+                new float[]
+                {
+                    1000,
+                    10000,
+                    2000,
+                    20000
+                },
+                new float[]
+                {
+                    10000,
+                    100000,
+                    20000,
+                    200000
+                },
+                new float[]
+                {
+                    100000,
+                    1000000,
+                    200000,
+                    2000000
+                }
+            };
+
+            var average = weights.AverageWeight(0, 1);
+            Assert.AreEqual(5555, average);
+            average = weights.AverageWeight(1, 0);
+            Assert.AreEqual(302500, average);
+        }
     }
 }

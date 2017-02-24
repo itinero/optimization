@@ -224,6 +224,48 @@ namespace Itinero.Optimization.Algorithms.Directed
         }
 
         /// <summary>
+        /// Gets the average weight from customer1 -> customer2.
+        /// </summary>
+        /// <returns></returns>
+        public static float AverageWeight(this float[][] weights, int id1, int id2)
+        {
+            var c1Index = id1 * 2;
+            var c2Index = id2 * 2;
+            var weight00 = weights[c1Index + 0][c2Index + 0];
+            var weight01 = weights[c1Index + 0][c2Index + 1];
+            var weight10 = weights[c1Index + 1][c2Index + 0];
+            var weight11 = weights[c1Index + 1][c2Index + 1];
+
+            var samples = 0;
+            var weight = 0f;
+            if (weight01 != float.MaxValue)
+            {
+                weight += weight01;
+                samples++;
+            }
+            if (weight10 != float.MaxValue)
+            {
+                weight += weight10;
+                samples++;
+            }
+            if (weight11 != float.MaxValue)
+            {
+                weight += weight11;
+                samples++;
+            }
+            if (weight00 != float.MaxValue)
+            {
+                weight += weight00;
+                samples++;
+            }
+            if (samples == 0)
+            {
+                return float.MaxValue;
+            }
+            return weight / samples;
+        }
+
+        /// <summary>
         /// Gets the minimum weight from customer1 -> customer2 while inserting customer2. Outputs the best departure and arrival offsets.
         /// </summary>
         public static float CheapestInsert(this float[][] weights, float[] penalties, int id1, int id2,
