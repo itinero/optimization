@@ -51,10 +51,11 @@ namespace Itinero.Optimization.Sequence.Directed.Solver
         /// <returns></returns>
         public override Tour Solve(SequenceDirectedProblem problem, SequenceDirectedObjective objective, out float fitness)
         {
-            var tour = new Tour(problem.Sequence, problem.Sequence[problem.Sequence.Length - 1]);
-            fitness = objective.Calculate(problem, tour);
+            //var tour = new Tour(problem.Sequence, problem.Sequence[problem.Sequence.Length - 1]);
+            //fitness = objective.Calculate(problem, tour);
 
-
+            fitness = 0;
+            return null;
         }
     }
 }
