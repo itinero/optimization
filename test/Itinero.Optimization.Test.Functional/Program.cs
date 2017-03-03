@@ -43,22 +43,6 @@ namespace Itinero.Optimization.Test.Functional
             var router = new Router(routerDb);
 
             // define test locations.
-            //// ANTWERPEN-NOORD
-            //var locations = new Coordinate[]
-            //{
-            //    new Coordinate(51.218644911468550f, 4.433176517486572f),
-            //    new Coordinate(51.217878824149580f, 4.433691501617432f),
-            //    new Coordinate(51.219142189396116f, 4.432237744331360f),
-            //    new Coordinate(51.219955294434854f, 4.430692791938782f),
-            //    new Coordinate(51.220788544202456f, 4.428203701972961f),
-            //    new Coordinate(51.219904895779710f, 4.428101778030395f),
-            //    new Coordinate(51.219558823524130f, 4.427565336227417f),
-            //    new Coordinate(51.218577711336620f, 4.428439736366271f),
-            //    new Coordinate(51.218234989137960f, 4.429646730422974f),
-            //    new Coordinate(51.219431145724300f, 4.434539079666138f),
-            //    new Coordinate(51.218786031426326f, 4.426513910293579f),
-            //    new Coordinate(51.221211883064340f, 4.429571628570557f)
-            //};
             // WECHELDERZANDE
             var locations = new Coordinate[]
             {
@@ -79,9 +63,15 @@ namespace Itinero.Optimization.Test.Functional
                 new Coordinate(51.252984777835955f, 4.776681661605835f)
             };
 
+            // calculate directed sequence.
+            var func = new Func<Route>(() => router.CalculateDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, 0));
+            var route = func.TestPerf("Testing Directed Sequence (0->0)");
+            func = new Func<Route>(() => router.CalculateDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, locations.Length - 1));
+            route = func.TestPerf("Testing Directed Sequence (0->last)");
+
             // calculate TSP.
-            var func = new Func<Route>(() => router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, 0));
-            var route = func.TestPerf("Testing TSP (0->0)");
+            func = new Func<Route>(() => router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, 0));
+            route = func.TestPerf("Testing TSP (0->0)");
             func = new Func<Route>(() => router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, locations.Length - 1));
             route = func.TestPerf("Testing TSP (0->last)");
             func = new Func<Route>(() => router.CalculateTSP(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 0, null));
