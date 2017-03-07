@@ -16,9 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
+using Itinero.Optimization.Algorithms.Directed;
 
 namespace Itinero.Optimization.Sequence.Directed.Solver
 {
@@ -27,16 +27,6 @@ namespace Itinero.Optimization.Sequence.Directed.Solver
     /// </summary>
     public sealed class ConstructionSolver : SolverBase<float, SequenceDirectedProblem, SequenceDirectedObjective, Tour, float>
     {
-        private readonly SequenceDirectedProblem _problem;
-
-        /// <summary>
-        /// Creates a new solver.
-        /// </summary>
-        public ConstructionSolver(SequenceDirectedProblem problem)
-        {
-            _problem = problem;
-        }
-
         /// <summary>
         /// Returns the name of this solver.
         /// </summary>
@@ -51,11 +41,18 @@ namespace Itinero.Optimization.Sequence.Directed.Solver
         /// <returns></returns>
         public override Tour Solve(SequenceDirectedProblem problem, SequenceDirectedObjective objective, out float fitness)
         {
-            //var tour = new Tour(problem.Sequence, problem.Sequence[problem.Sequence.Length - 1]);
-            //fitness = objective.Calculate(problem, tour);
+            var directedTour = new int[problem.Sequence.Count];
+            var i = 0;
+            foreach(var c in problem.Sequence)
+            {
+                directedTour[i] = DirectedHelper.BuildDirectedId(c, 0);
+                i++;
+            }
 
-            fitness = 0;
-            return null;
+            var tour = new Tour(directedTour, DirectedHelper.BuildDirectedId(problem.Sequence.Last.Value, 0));
+            fitness = objective.Calculate(problem, tour);
+
+            return tour;
         }
     }
 }

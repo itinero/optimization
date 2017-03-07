@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Optimization.Tours;
+
 namespace Itinero.Optimization.Sequence.Directed
 {
     /// <summary>
@@ -27,11 +29,15 @@ namespace Itinero.Optimization.Sequence.Directed
         /// Creates a new problem.
         /// </summary>
         /// <param name="sequence">The sequence to optimize.</param>
-        /// <param name="closed">Also count the turn at the source and if first and last are different also the route between the two.</param>
         /// <param name="turnPenalty">The turn penalty.</param>
         /// <param name="weights">The directed weights.</param>
-        public SequenceDirectedProblem(int[] sequence, bool closed, float[][] weights, float turnPenalty)
+        public SequenceDirectedProblem(Tour sequence, float[][] weights, float turnPenalty)
         {
+            if (sequence.Last == null)
+            {
+                throw new System.Exception("Sequence directed problem can only apply to tours with a fixed end customer.");
+            }
+
             this.Weights = weights;
             this.Sequence = sequence;
             this.TurnPenalties = new float[] {
@@ -40,7 +46,6 @@ namespace Itinero.Optimization.Sequence.Directed
                 turnPenalty,
                 0
             };
-            this.Closed = closed;
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace Itinero.Optimization.Sequence.Directed
         /// <summary>
         /// Gets or sets the sequence.
         /// </summary>
-        public int[] Sequence { get; set; }
+        public Tour Sequence { get; set; }
 
         /// <summary>
         /// Gets or sets the turn penalties per type of turn.
