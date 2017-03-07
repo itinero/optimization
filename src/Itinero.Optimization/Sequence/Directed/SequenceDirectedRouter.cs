@@ -18,6 +18,7 @@
 
 using Itinero.Algorithms;
 using Itinero.Algorithms.Matrices;
+using Itinero.Algorithms.Search;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 
@@ -26,24 +27,22 @@ namespace Itinero.Optimization.Sequence.Directed
     /// <summary>
     /// An algorithm to calculate u-turn aware sequences solutions.
     /// </summary>
-    public sealed class STSPRouter : AlgorithmBase
+    public sealed class SequenceDirectedRouter : AlgorithmBase
     {
         private readonly IDirectedWeightMatrixAlgorithm<float> _weightMatrixAlgorithm;
-        private readonly int[] _sequence;
-        private readonly bool _isClosed;
+        private readonly Tour _sequence;
         private readonly float _turnPenalty;
         private readonly SolverBase<float, SequenceDirectedProblem, SequenceDirectedObjective, Tour, float> _solver;
 
         /// <summary>
         /// Creates a new router.
         /// </summary>
-        public STSPRouter(IDirectedWeightMatrixAlgorithm<float> weightMatrixAlgorithm, float turnPenalty, int[] sequence, bool isClosed = false,
+        public SequenceDirectedRouter(IDirectedWeightMatrixAlgorithm<float> weightMatrixAlgorithm, float turnPenalty, Tour sequence, 
             SolverBase<float, SequenceDirectedProblem, SequenceDirectedObjective, Tour, float> solver = null)
         {
             _turnPenalty = turnPenalty;
             _sequence = sequence;
             _weightMatrixAlgorithm = weightMatrixAlgorithm;
-            _isClosed = isClosed;
             _solver = solver;
         }
 
@@ -66,69 +65,44 @@ namespace Itinero.Optimization.Sequence.Directed
                 return;
             }
 
-            //LocationError le;
-            //RouterPointError rpe;
-            //if (_weightMatrixAlgorithm.TryGetError(_first, out le, out rpe))
-            //{ // if the last location is set and it could not be resolved everything fails.
-            //    if (le != null)
-            //    {
-            //        this.ErrorMessage = string.Format("Could resolve first location: {0}",
-            //            le);
-            //    }
-            //    else if (rpe != null)
-            //    {
-            //        this.ErrorMessage = string.Format("Could route to/from first location: {0}",
-            //            rpe);
-            //    }
-            //    else
-            //    {
-            //        this.ErrorMessage = string.Format("First location was in error list.");
-            //    }
-            //    return;
-            //}
+            // check if an entry in the sequence was not found.
+            foreach(var c in _sequence)
+            {
+                LocationError locationError;
+                RouterPointError routerPointError;
+                if (_weightMatrixAlgorithm.TryGetError(c, out locationError, out routerPointError))
+                {
+                    if (locationError != null)
+                    {
+                        this.ErrorMessage = string.Format("The location at index {0} is in error: {1}", c,
+                            locationError.ToInvariantString());
+                    }
+                    else if (routerPointError != null)
+                    {
+                        this.ErrorMessage = string.Format("The location at index {0} is in error: {1}", c,
+                            routerPointError.ToInvariantString());
+                    }
+                    else
+                    {
+                        this.ErrorMessage = string.Format("The location at index {0} is in error.", c);
+                    }
+                    this.HasSucceeded = false;
+                    return;
+                }
+            }
 
-            //// build problem.
-            //var first = _first;
-            //SequenceDirectedProblem problem = null;
-            //if (_last.HasValue)
-            //{ // the last customer was set.
-            //    if (_weightMatrixAlgorithm.TryGetError(_last.Value, out le, out rpe))
-            //    { // if the last location is set and it could not be resolved everything fails.
-            //        if (le != null)
-            //        {
-            //            this.ErrorMessage = string.Format("Could resolve last location: {0}",
-            //                le);
-            //        }
-            //        else if (rpe != null)
-            //        {
-            //            this.ErrorMessage = string.Format("Could route to/from last location: {0}",
-            //                rpe);
-            //        }
-            //        else
-            //        {
-            //            this.ErrorMessage = string.Format("Last location was in error list.");
-            //        }
-            //        return;
-            //    }
+            // build problem.
+            var problem = new SequenceDirectedProblem(_sequence, _weightMatrixAlgorithm.Weights, _turnPenalty);
 
-            //    problem = new SequenceDirectedProblem(_weightMatrixAlgorithm.WeightIndex(first), _weightMatrixAlgorithm.WeightIndex(_last.Value),
-            //        _weightMatrixAlgorithm.Weights, _turnPenalty, _max);
-            //}
-            //else
-            //{ // the last customer was not set.
-            //    problem = new SequenceDirectedProblem(_weightMatrixAlgorithm.WeightIndex(first), _weightMatrixAlgorithm.Weights, _turnPenalty,
-            //        _max);
-            //}
-
-            //// execute the solver.
-            //if (_solver == null)
-            //{
-            //    _tour = problem.Solve();
-            //}
-            //else
-            //{
-            //    _tour = problem.Solve(_solver);
-            //}
+            // execute the solver.
+            if (_solver == null)
+            {
+                _tour = problem.Solve();
+            }
+            else
+            {
+                _tour = problem.Solve(_solver);
+            }
 
             this.HasSucceeded = true;
         }

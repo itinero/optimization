@@ -19,8 +19,10 @@
 using Itinero.Algorithms.Matrices;
 using Itinero.LocalGeo;
 using Itinero.Optimization.Routing;
+using Itinero.Optimization.Sequence.Directed;
 using Itinero.Optimization.STSP;
 using Itinero.Optimization.TimeWindows;
+using Itinero.Optimization.Tours;
 using Itinero.Optimization.TSP;
 using Itinero.Profiles;
 
@@ -31,6 +33,28 @@ namespace Itinero.Optimization
     /// </summary>
     public static class RouterExtensions
     {
+        /// <summary>
+        /// Calculates a directed sequence of the given sequence of locations.
+        /// </summary>
+        public static Route CalculateDirected(this RouterBase router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, Tour sequence)
+        {
+            return router.TryCalculateDirected(profile, locations, turnPenaltyInSeconds, sequence).Value;
+        }
+
+        /// <summary>
+        /// Calculates a directed sequence of the given sequence of locations.
+        /// </summary>
+        public static Result<Route> TryCalculateDirected(this RouterBase router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, Tour sequence)
+        {
+            var directedRouter = new SequenceDirectedRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), turnPenaltyInSeconds, sequence);
+            directedRouter.Run();
+            if (!directedRouter.HasSucceeded)
+            {
+                return new Result<Route>(directedRouter.ErrorMessage);
+            }
+            return new Result<Route>(directedRouter.WeightMatrix.BuildRoute(directedRouter.Tour));
+        }
+
         /// <summary>
         /// Calculates TSP.
         /// </summary>

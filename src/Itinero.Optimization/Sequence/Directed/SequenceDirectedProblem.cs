@@ -16,6 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
+using Itinero.Optimization.Algorithms.Solvers;
+using Itinero.Optimization.Sequence.Directed.Solver;
+using Itinero.Optimization.Sequence.Directed.Solver.Operators;
 using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.Sequence.Directed
@@ -71,5 +74,23 @@ namespace Itinero.Optimization.Sequence.Directed
         /// 3: backward, backward.
         /// </summary>
         public float[] TurnPenalties { get; set; }
+        
+        /// <summary>
+        /// Solves this TSP using a default solver.
+        /// </summary>
+        /// <returns></returns>
+        public Tour Solve()
+        {
+            return this.Solve(new IterativeSolver<float, SequenceDirectedProblem, SequenceDirectedObjective, Tour, float>(
+                new ConstructionSolver(), 10, new DirectionLocalSearchOperator()));
+        }
+
+        /// <summary>
+        /// Solvers this problem using the given solver.
+        /// </summary>
+        public Tour Solve(Itinero.Optimization.Algorithms.Solvers.ISolver<float, SequenceDirectedProblem, SequenceDirectedObjective, Tour, float> solver)
+        {
+            return solver.Solve(this, new SequenceDirectedObjective());
+        }
     }
 }
