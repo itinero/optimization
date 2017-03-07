@@ -18,7 +18,9 @@
 
 using Itinero.Optimization.Sequence.Directed;
 using Itinero.Optimization.Sequence.Directed.Solver;
+using Itinero.Optimization.Tours;
 using NUnit.Framework;
+using System.Linq;
 
 namespace Itinero.Optimization.Test.Sequence.Directed.Solvers
 {
@@ -29,18 +31,43 @@ namespace Itinero.Optimization.Test.Sequence.Directed.Solvers
     public class ConstructionSolverTests
     {
         /// <summary>
-        /// 
+        /// Tests with a fixed sequence.
+        /// </summary>
+        [Test]
+        public void TestFixed()
+        {
+            var problem = SequenceProblemHelper.Create(new Tour(new int[] { 0, 1, 2, 3 }, 3), 4, 60, 360);
+
+            var solver = new ConstructionSolver();
+            var result = solver.Solve(problem, new SequenceDirectedObjective());
+            
+            Assert.IsNotNull(result);
+            var arr = result.ToArray();
+            Assert.AreEqual(arr.Length, 4);
+            Assert.AreEqual(0, arr[0]);
+            Assert.AreEqual(4, arr[1]);
+            Assert.AreEqual(8, arr[2]);
+            Assert.AreEqual(12, arr[3]);
+        }
+
+        /// <summary>
+        /// Tests with a closed sequence.
         /// </summary>
         [Test]
         public void TestClosed()
         {
-            var problem = SequenceProblemHelper.Create(new int[] { 0, 1, 2, 3 }, 4, true, 60, 360);
+            var problem = SequenceProblemHelper.Create(new Tour(new int[] { 0, 1, 2, 3 }, 0), 4, 60, 360);
 
             var solver = new ConstructionSolver();
             var result = solver.Solve(problem, new SequenceDirectedObjective());
 
-
+            Assert.IsNotNull(result);
+            var arr = result.ToArray();
+            Assert.AreEqual(arr.Length, 4);
+            Assert.AreEqual(0, arr[0]);
+            Assert.AreEqual(4, arr[1]);
+            Assert.AreEqual(8, arr[2]);
+            Assert.AreEqual(12, arr[3]);
         }
-
     }
 }

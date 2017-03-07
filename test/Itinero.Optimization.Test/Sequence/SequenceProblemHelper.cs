@@ -1,11 +1,13 @@
-﻿namespace Itinero.Optimization.Test.Sequence
+﻿using Itinero.Optimization.Tours;
+
+namespace Itinero.Optimization.Test.Sequence
 {
     public static class SequenceProblemHelper
     {
         /// <summary>
         /// Creates a new STSP.
         /// </summary>
-        public static Optimization.Sequence.Directed.SequenceDirectedProblem Create(int[] sequence, int size, bool closed, float turnPenalty, float defaultWeight)
+        public static Optimization.Sequence.Directed.SequenceDirectedProblem Create(Tour sequence, int size, float turnPenalty, float defaultWeight)
         {
             var weights = new float[size * 2][];
             for (int x = 0; x < size * 2; x++)
@@ -32,7 +34,7 @@
                     }
                 }
             }
-            return new Optimization.Sequence.Directed.SequenceDirectedProblem(sequence, closed, weights, turnPenalty);
+            return new Optimization.Sequence.Directed.SequenceDirectedProblem(sequence, weights, turnPenalty);
         }
     }
 }

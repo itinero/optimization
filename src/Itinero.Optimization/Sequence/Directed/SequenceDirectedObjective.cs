@@ -124,11 +124,7 @@ namespace Itinero.Optimization.Sequence.Directed
         /// </summary>
         public sealed override int CompareTo(SequenceDirectedProblem problem, float fitness1, float fitness2)
         {
-            if (fitness1 == fitness2)
-            {
-                return fitness1.CompareTo(fitness2);
-            }
-            return fitness2.CompareTo(fitness1);
+            return fitness1.CompareTo(fitness2);
         }
 
         /// <summary>
