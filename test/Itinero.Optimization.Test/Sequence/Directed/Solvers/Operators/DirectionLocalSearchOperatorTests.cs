@@ -41,15 +41,15 @@ namespace Itinero.Optimization.Test.Sequence.Directed.Solvers.Operators
             Assert.IsFalse(op.Apply(problem, new Optimization.Sequence.Directed.SequenceDirectedObjective(), tour, out delta));
             Assert.AreEqual(0, delta);
 
-            tour = new Tour(new int[] { 0, 5, 8, 12 }, 12);
+            tour = new Tour(new int[] { 0, 5, 8, 12 }, 0);
             Assert.IsTrue(op.Apply(problem, new Optimization.Sequence.Directed.SequenceDirectedObjective(), tour, out delta));
             Assert.AreEqual(96, delta);
 
-            tour = new Tour(new int[] { 0, 4, 9, 12 }, 12);
+            tour = new Tour(new int[] { 0, 4, 9, 12 }, 0);
             Assert.IsTrue(op.Apply(problem, new Optimization.Sequence.Directed.SequenceDirectedObjective(), tour, out delta));
             Assert.AreEqual(96, delta);
 
-            tour = new Tour(new int[] { 0, 4, 8, 13 }, 13);
+            tour = new Tour(new int[] { 0, 4, 8, 13 }, 0);
             Assert.IsTrue(op.Apply(problem, new Optimization.Sequence.Directed.SequenceDirectedObjective(), tour, out delta));
             Assert.AreEqual(96, delta);
         }
