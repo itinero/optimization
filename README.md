@@ -14,6 +14,8 @@ Current we have the following problems supported:
 - STSP: The selective travelling salesman problem, generates routes with as much locations as possible with a maxium travel time.
 - DirectedSTSP: Identical to the STSP but with u-turn prevention.
 
+![Solutions](solutions.gif)
+
 ### Usage
 
 Install the following package via Nuget:
@@ -59,4 +61,6 @@ Then immidiately some extension methods are available on top the default Itinero
   - max: The maximum travel time of a tour.
   - first: The location to start at.
   - last (option): The location to end up at, when last=first the route will be a loop.
+  
+
   
