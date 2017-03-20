@@ -17,9 +17,7 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using Itinero.LocalGeo;
-using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Tours;
-using NetTopologySuite.Features;
 using System;
 using System.IO;
 
@@ -139,15 +137,6 @@ namespace Itinero.Optimization.Test.Functional
             route = func.TestPerf("Testing Directed TSP-TW (0->last)");
             func = new Func<Route>(() => router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, null));
             route = func.TestPerf("Testing Directed TSP-TW (0->...)");
-        }
-
-        private static string ToJson(FeatureCollection featureCollection)
-        {
-            var jsonSerializer = new NetTopologySuite.IO.GeoJsonSerializer();
-            var jsonStream = new StringWriter();
-            jsonSerializer.Serialize(jsonStream, featureCollection);
-            var json = jsonStream.ToInvariantString();
-            return json;
         }
     }
 }

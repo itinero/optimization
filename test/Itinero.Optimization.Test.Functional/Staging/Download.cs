@@ -17,7 +17,7 @@
 // along with Itinero. If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
-using System.Net;
+using System.Net.Http;
 
 namespace Itinero.Optimization.Test.Functional.Staging
 {
@@ -37,9 +37,24 @@ namespace Itinero.Optimization.Test.Functional.Staging
         {
             if (!File.Exists(Download.BelgiumLocal))
             {
-                var client = new WebClient();
-                client.DownloadFile(Download.BelgiumPBF,
+                ToFile(Download.BelgiumPBF,
                     Download.BelgiumLocal);
+            }
+        }
+
+        /// <summary>
+        /// Downloads a file if it doesn't exist yet.
+        /// </summary>
+        public static void ToFile(string url, string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                var client = new HttpClient();
+                using (var stream = client.GetStreamAsync(url).GetAwaiter().GetResult())
+                using (var outputStream = File.OpenWrite(filename))
+                {
+                    stream.CopyTo(outputStream);
+                }
             }
         }
     }

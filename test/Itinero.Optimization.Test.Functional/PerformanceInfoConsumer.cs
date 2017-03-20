@@ -164,7 +164,7 @@ namespace Itinero.Optimization.Test.Functional
                         {
                             Itinero.Logging.Logger.Log("PF:" + _name, Itinero.Logging.TraceEventType.Information,
                                 string.Format("Ended at at {0}, spent {1}s and {2}MB of memory diff with {3}MB max used.",
-                                    new DateTime(_ticks.Value).ToShortTimeString(),
+                                    new DateTime(_ticks.Value).ToInvariantString(),
                                     seconds, memoryDiff, max));
                         }
                     }
@@ -174,7 +174,7 @@ namespace Itinero.Optimization.Test.Functional
                         {
                             Itinero.Logging.Logger.Log("PF:" + _name, Itinero.Logging.TraceEventType.Information,
                             string.Format("Ended at at {0}, spent {1}s and {2}MB of memory diff.",
-                                new DateTime(_ticks.Value).ToShortTimeString(),
+                                new DateTime(_ticks.Value).ToInvariantString(),
                                 seconds, memoryDiff));
                         }
                     }

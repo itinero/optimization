@@ -8,8 +8,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2DE1C6AF-9DB9-46BB-B01B-411F030E0D1D}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		build.bat = build.bat
+		build.sh = build.sh
 		SharedAssemblyVersion.cs = SharedAssemblyVersion.cs
 		solutions.gif = solutions.gif
+		test.bat = test.bat
+		test.sh = test.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{FBF85364-B991-4A8A-8809-307DD02BC641}"
