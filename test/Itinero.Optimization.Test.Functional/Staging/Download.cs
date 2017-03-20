@@ -27,7 +27,7 @@ namespace Itinero.Optimization.Test.Functional.Staging
     /// </summary>
     public static class Download
     {
-        public static string BelgiumPBF = "ftp://build.osmsharp.com/data/OSM/planet/europe/belgium-latest.osm.pbf";
+        public static string BelgiumPBF = "http://files.itinero.tech/data/OSM/planet/europe/belgium-latest.osm.pbf";
         public static string BelgiumLocal = "belgium-latest.osm.pbf";
 
         /// <summary>
