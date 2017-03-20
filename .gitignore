@@ -38,3 +38,4 @@ packages/*
 
 *.routerdb
 *.osm.pbf
+TestResult*.xml

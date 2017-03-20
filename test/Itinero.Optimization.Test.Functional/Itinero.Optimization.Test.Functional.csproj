@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net451</TargetFramework>
+    <AssemblyName>Itinero.Optimization.Test.Functional</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>Itinero.Optimization.Test.Functional</PackageId>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Itinero.Optimization\Itinero.Optimization.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Itinero" Version="0.38.17-rc1" />
+    <PackageReference Include="Itinero.Geo" Version="0.38.17-rc1" />
+    <PackageReference Include="Itinero.IO.Osm" Version="0.38.17-rc1" />
+    <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.14.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+    <Reference Include="System.Xml" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>
