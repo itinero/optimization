@@ -1,6 +1,3 @@
-dotnet restore
-dotnet build
-
 cd ./test/Itinero.Optimization.Test.Runner
 dotnet run -c release
 cd ../..
