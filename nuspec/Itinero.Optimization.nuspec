@@ -3,29 +3,41 @@
   <metadata>
     <id>Itinero.Optimization</id>
     <version>$version$</version>
-    <authors>Itinero.Optimization</authors>
-    <owners>Itinero.Optimization</owners>
+    <authors>Ben Abelshausen</authors>
+    <owners>Itinero</owners>
     <licenseUrl>https://github.com/itinero/optimization/blob/develop/LICENSE.md</licenseUrl>
     <projectUrl>http://www.itinero.tech/</projectUrl>
     <iconUrl>http://www.itinero.tech/logos/itinero_logo_notext.svg.128.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Itinero.Optimization</description>
+    <description>An route optimization library on top of Itinero.</description>
+    <releaseNotes>
+      This is the first stable release of this optimization library. In this first release a few basic optimization problems are supported:
+      
+      - TSP: The default travelling salesman problem.
+      - Directed TSP: The TSP with costs for turns.
+      - TSP-TW: The TSP with time window constraints.
+      - Directed TSP-TW: The TSP-TW with costs for turns.
+      - STSP: The selective travelling salesman problem, generates routes with as much locations as possible with a maxium travel time.
+      - DirectedSTSP: Identical to the STSP but with u-turn prevention.
+      
+      For more information check the Itinero website or the github repo.
+    </releaseNotes>
     <tags></tags>
     <dependencies>
       <group targetFramework=".NETFramework4.0">
-        <dependency id="Itinero" version="[0.38.17-rc1, )" />
+        <dependency id="Itinero" version="[1.1.0, )" />
       </group>
       <group targetFramework=".NETFramework4.5">
-        <dependency id="Itinero" version="[0.38.17-rc1, )" />
+        <dependency id="Itinero" version="[1.1.0, )" />
       </group>
       <group targetFramework=".NETPortable4.0-Profile147">
-        <dependency id="Itinero" version="[0.38.17-rc1, )" />
+        <dependency id="Itinero" version="[1.1.0, )" />
       </group>
       <group targetFramework=".NETStandard1.3">
         <dependency id="NETStandard.Library" version="[1.6.0, )" />
         <dependency id="System.Diagnostics.Debug" version="[4.3.0, )" />
         <dependency id="System.Runtime" version="[4.3.0, )" />
-        <dependency id="Itinero" version="[0.38.17-rc1, )" />
+        <dependency id="Itinero" version="[1.1.0, )" />
       </group>
     </dependencies>
     <frameworkAssemblies>
