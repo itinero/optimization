@@ -1,0 +1,13 @@
+Itinero.Optimization 1.0 Release Notes
+--------------------------------------
+
+This is the first stable release of this optimization library. In this first release a few basic optimization problems are supported:
+      
+- TSP: The default travelling salesman problem.
+- Directed TSP: The TSP with costs for turns.
+- TSP-TW: The TSP with time window constraints.
+- Directed TSP-TW: The TSP-TW with costs for turns.
+- STSP: The selective travelling salesman problem, generates routes with as much locations as possible with a maxium travel time.µ
+- DirectedSTSP: Identical to the STSP but with u-turn prevention.
+      
+For more information check the Itinero website or the github repo.
