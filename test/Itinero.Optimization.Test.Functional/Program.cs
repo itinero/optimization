@@ -62,6 +62,8 @@ namespace Itinero.Optimization.Test.Functional
                 new Coordinate(51.252984777835955f, 4.776681661605835f)
             };
 
+            var json = router.Db.GetGeoJsonAround(51.264197451065370f, 4.8017120361328125f, 1000);
+
             // calculate directed sequence.
             var func = new Func<Route>(() => router.CalculateDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60,
                 new Tour(new int[] { 0, 1, 2, 3, 4 }, 4)));

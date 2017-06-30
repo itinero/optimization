@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Itinero" Version="1.1.1" />
     <PackageReference Include="NUnit" Version="3.6.1" />
   </ItemGroup>
 

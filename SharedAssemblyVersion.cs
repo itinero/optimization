@@ -19,4 +19,4 @@
 using System.Reflection;
 
 [assembly: AssemblyVersion("0.14.0")]
-[assembly: AssemblyInformationalVersion("0.14.0-beta")]
+[assembly: AssemblyInformationalVersion("0.14.0")]
