@@ -89,7 +89,7 @@ namespace Itinero.Optimization.Sequence.Directed
                     {
                         this.ErrorMessage += string.Format("The location at index {0} is in error.", c);
                     }
-
+                    
                     toRemove.Add(c);
                 }
             }

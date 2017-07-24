@@ -50,15 +50,16 @@ namespace Itinero.Optimization.Test.Functional
                 new Coordinate(51.267446600889850f, 4.7830009460449220f),
                 new Coordinate(51.260733228426076f, 4.7796106338500980f),
                 new Coordinate(51.256489871317920f, 4.7884941101074220f),
-                new Coordinate(4.7884941101074220f, 51.256489871317920f), // add another invalid location.
+                new Coordinate(4.7884941101074220f, 51.256489871317920f), // non-resolvable location.
                 new Coordinate(51.270964016530680f, 4.7894811630249020f),
                 new Coordinate(51.26216325894976f, 4.779932498931885f),
                 new Coordinate(51.26579184564325f, 4.777781367301941f),
-                new Coordinate(4.779181480407715f, 51.26855085674035f), // add another invalid location.
+                new Coordinate(4.779181480407715f, 51.26855085674035f), // non-resolvable location.
                 new Coordinate(51.26855085674035f, 4.779181480407715f),
                 new Coordinate(51.26906437701784f, 4.7879791259765625f),
                 new Coordinate(51.259820134021695f, 4.7985148429870605f),
                 new Coordinate(51.257040455587656f, 4.780147075653076f),
+                new Coordinate(51.299771179035815f, 4.7829365730285645f), // non-routable location.
                 new Coordinate(51.256248149311716f, 4.788386821746826f),
                 new Coordinate(51.270054481615624f, 4.799646735191345f),
                 new Coordinate(51.252984777835955f, 4.776681661605835f)
@@ -68,10 +69,10 @@ namespace Itinero.Optimization.Test.Functional
 
             // calculate directed sequence.
             var func = new Func<Route>(() => router.CalculateDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60,
-                new Tour(new int[] { 0, 1, 2, 3, 5, 4 }, 4)));
+                new Tour(new int[] { 0, 1, 2, 14, 3, 5, 4 }, 4)));
             var route = func.TestPerf("Testing Directed Sequence 1");
             func = new Func<Route>(() => router.CalculateDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60,
-                 new Tour(new int[] { 0, 1, 2, 3, 4 }, 0)));
+                 new Tour(new int[] { 0, 1, 2, 14, 3, 4 }, 0)));
             route = func.TestPerf("Testing Directed Sequence 2");
 
             // calculate TSP.
@@ -109,6 +110,7 @@ namespace Itinero.Optimization.Test.Functional
             // define some time windows, all max.
             var windows = new TimeWindows.TimeWindow[]
             {
+                TimeWindows.TimeWindow.Default,
                 TimeWindows.TimeWindow.Default,
                 TimeWindows.TimeWindow.Default,
                 TimeWindows.TimeWindow.Default,
