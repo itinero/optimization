@@ -19,6 +19,7 @@
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 using Itinero.Optimization.Algorithms.Directed;
+using Itinero.Optimization.Algorithms.Random;
 
 namespace Itinero.Optimization.Sequence.Directed.Solver
 {
@@ -45,11 +46,20 @@ namespace Itinero.Optimization.Sequence.Directed.Solver
             var i = 0;
             foreach(var c in problem.Sequence)
             {
-                directedTour[i] = DirectedHelper.BuildDirectedId(c, 0);
+                directedTour[i] = DirectedHelper.BuildDirectedId(c,
+                    RandomGeneratorExtensions.GetRandom().Generate(4));
                 i++;
             }
 
-            var tour = new Tour(directedTour, DirectedHelper.BuildDirectedId(problem.Sequence.Last.Value, 0));
+            Tour tour = null;
+            if (problem.Sequence.First == problem.Sequence.Last)
+            {
+                tour = new Tour(directedTour, directedTour[0]);
+            }
+            else
+            {
+                tour = new Tour(directedTour, directedTour[directedTour.Length - 1]);
+            }
             fitness = objective.Calculate(problem, tour);
 
             return tour;

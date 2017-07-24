@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Sequence.Directed;
 using Itinero.Optimization.Sequence.Directed.Solver;
 using Itinero.Optimization.Tours;
@@ -44,10 +45,10 @@ namespace Itinero.Optimization.Test.Sequence.Directed.Solvers
             Assert.IsNotNull(result);
             var arr = result.ToArray();
             Assert.AreEqual(arr.Length, 4);
-            Assert.AreEqual(0, arr[0]);
-            Assert.AreEqual(4, arr[1]);
-            Assert.AreEqual(8, arr[2]);
-            Assert.AreEqual(12, arr[3]);
+            Assert.AreEqual(0, DirectedHelper.ExtractId(arr[0]));
+            Assert.AreEqual(1, DirectedHelper.ExtractId(arr[1]));
+            Assert.AreEqual(2, DirectedHelper.ExtractId(arr[2]));
+            Assert.AreEqual(3, DirectedHelper.ExtractId(arr[3]));
         }
 
         /// <summary>
@@ -64,10 +65,10 @@ namespace Itinero.Optimization.Test.Sequence.Directed.Solvers
             Assert.IsNotNull(result);
             var arr = result.ToArray();
             Assert.AreEqual(arr.Length, 4);
-            Assert.AreEqual(0, arr[0]);
-            Assert.AreEqual(4, arr[1]);
-            Assert.AreEqual(8, arr[2]);
-            Assert.AreEqual(12, arr[3]);
+            Assert.AreEqual(0, DirectedHelper.ExtractId(arr[0]));
+            Assert.AreEqual(1, DirectedHelper.ExtractId(arr[1]));
+            Assert.AreEqual(2, DirectedHelper.ExtractId(arr[2]));
+            Assert.AreEqual(3, DirectedHelper.ExtractId(arr[3]));
         }
     }
 }
