@@ -21,6 +21,7 @@ using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
+using System.Collections.Generic;
 
 namespace Itinero.Optimization.Sequence.Directed
 {
@@ -66,7 +67,9 @@ namespace Itinero.Optimization.Sequence.Directed
             }
 
             // check if an entry in the sequence was not found.
-            foreach(var c in _sequence)
+            this.ErrorMessage = string.Empty;
+            var toRemove = new HashSet<int>();
+            foreach (var c in _sequence)
             {
                 LocationError locationError;
                 RouterPointError routerPointError;
@@ -74,25 +77,32 @@ namespace Itinero.Optimization.Sequence.Directed
                 {
                     if (locationError != null)
                     {
-                        this.ErrorMessage = string.Format("The location at index {0} is in error: {1}", c,
+                        this.ErrorMessage += string.Format("The location at index {0} is in error: {1}", c,
                             locationError.ToInvariantString());
                     }
                     else if (routerPointError != null)
                     {
-                        this.ErrorMessage = string.Format("The location at index {0} is in error: {1}", c,
+                        this.ErrorMessage += string.Format("The location at index {0} is in error: {1}", c,
                             routerPointError.ToInvariantString());
                     }
                     else
                     {
-                        this.ErrorMessage = string.Format("The location at index {0} is in error.", c);
+                        this.ErrorMessage += string.Format("The location at index {0} is in error.", c);
                     }
-                    this.HasSucceeded = false;
-                    return;
+
+                    toRemove.Add(c);
                 }
             }
 
+            // remove all invalids.
+            var validRoute = _sequence.Clone() as Tour;
+            foreach (var invalid in toRemove)
+            {
+                validRoute.Remove(invalid);
+            }
+
             // build problem.
-            var problem = new SequenceDirectedProblem(_sequence, _weightMatrixAlgorithm.Weights, _turnPenalty);
+            var problem = new SequenceDirectedProblem(validRoute, _weightMatrixAlgorithm.Weights, _turnPenalty);
 
             // execute the solver.
             if (_solver == null)

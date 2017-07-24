@@ -73,7 +73,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Itinero" Version="1.1.1" />
+    <PackageReference Include="Itinero" Version="1.2.0-pre06" />
   </ItemGroup>
 
 </Project>
