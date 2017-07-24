@@ -43,6 +43,12 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
         /// <returns></returns>
         public sealed override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
         {
+            if (problem.Weights.Length <= 2)
+            {
+                fitness = 0;
+                return new Tour(new int[] { problem.First });
+            }
+
             // generate random order for unplaced customers.
             var customers = new List<int>();
             for (var customer = 0; customer < problem.Weights.Length / 2; customer++)

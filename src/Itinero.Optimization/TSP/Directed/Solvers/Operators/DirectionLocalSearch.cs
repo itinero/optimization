@@ -21,6 +21,7 @@ using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 using Itinero.Optimization.Tours.TurningWeights;
+using System;
 
 namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
 {
@@ -55,6 +56,12 @@ namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
         /// </summary>
         public bool Apply(TSProblem problem, TSPObjective objective, Tour solution, out float delta)
         {
+            if (problem.Weights.Length <= 2)
+            {
+                delta = 0;
+                return false;
+            }
+
             var weights = problem.Weights;
             delta = 0;
 

@@ -92,6 +92,12 @@ namespace Itinero.Optimization.TSP.Directed.Solvers
         /// <returns></returns>
         public override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
         {
+            if (problem.Weights.Length <= 2)
+            {
+                fitness = 0;
+                return new Tour(new int[] { problem.First });
+            }
+
             var wasClosed = false;
             if (!problem.Last.HasValue)
             { // convert to closed problem.

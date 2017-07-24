@@ -23,6 +23,7 @@ using Itinero.Optimization.Tours.TurningWeights;
 using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Directed;
 using System.Collections.Generic;
+using System;
 
 namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
 {
@@ -67,6 +68,12 @@ namespace Itinero.Optimization.TSP.Directed.Solvers.Operators
         /// </summary>
         public bool Apply(TSProblem problem, TSPObjective objective, Tour solution, out float delta)
         {
+            if (problem.Weights.Length <= 2)
+            {
+                delta = 0;
+                return false;
+            }
+
             var before = objective.Calculate(problem, solution);
             var weights = problem.Weights;
             var turnPenalties = problem.TurnPenalties;
