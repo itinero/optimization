@@ -27,30 +27,31 @@ namespace Itinero.Optimization.Test.Functional.Staging
     /// </summary>
     public static class Download
     {
-        public static string BelgiumPBF = "http://files.itinero.tech/data/OSM/planet/europe/belgium-latest.osm.pbf";
-        public static string BelgiumLocal = "belgium-latest.osm.pbf";
+        public static string DataLocal = "overpass.osm";
 
         /// <summary>
-        /// Downloads the belgium data.
+        /// Downloads the data.
         /// </summary>
-        public static void DownloadBelgiumAll()
+        public static void DownloadAll()
         {
-            if (!File.Exists(Download.BelgiumLocal))
+            if (!File.Exists(Download.DataLocal))
             {
-                ToFile(Download.BelgiumPBF,
-                    Download.BelgiumLocal);
+                ToFile(Download.DataLocal);
             }
         }
 
         /// <summary>
         /// Downloads a file if it doesn't exist yet.
         /// </summary>
-        public static void ToFile(string url, string filename)
+        public static void ToFile(string filename)
         {
             if (!File.Exists(filename))
             {
                 var client = new HttpClient();
-                using (var stream = client.GetStreamAsync(url).GetAwaiter().GetResult())
+                var content = new StringContent("data=<osm-script>\r\n  <union>\r\n    <query type=\"way\">\r\n      <has-kv k=\"highway\"/>\r\n      <polygon-query bounds=\"51.336388 4.777371 51.330221 4.763638 51.324000 4.765956 51.322444 4.780118 51.324000 4.794280 51.333385 4.793421  51.336388 4.777371\"/>\r\n    </query>\r\n    <query type=\"way\">\r\n      <has-kv k=\"highway\"/>\r\n      <polygon-query bounds=\"51.268989 4.761492 51.249545 4.757673 51.246993 4.770376 51.245650 4.786941 51.246885 4.802863 51.255024 4.816338 51.261604 4.817583 51.269338 4.815137 51.278010 4.799944 51.278735 4.777714 51.268989 4.761492\"/>\r\n    </query>\r\n  </union>\r\n  <print mode=\"body\"/>\r\n  <recurse type=\"down\"/>\r\n  <print mode=\"skeleton\"/>\r\n</osm-script>");
+
+                var response = client.PostAsync(@"http://overpass-api.de/api/interpreter", content);
+                using (var stream = response.GetAwaiter().GetResult().Content.ReadAsStreamAsync().GetAwaiter().GetResult())
                 using (var outputStream = File.OpenWrite(filename))
                 {
                     stream.CopyTo(outputStream);

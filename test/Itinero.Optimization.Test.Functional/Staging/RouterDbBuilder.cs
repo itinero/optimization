@@ -18,6 +18,7 @@
 
 using Itinero.IO.Osm;
 using System;
+using System.Linq;
 using System.IO;
 
 namespace Itinero.Optimization.Test.Functional.Staging
@@ -33,12 +34,12 @@ namespace Itinero.Optimization.Test.Functional.Staging
         /// Builds a routerdb.
         /// </summary>
         /// <returns></returns>
-        public static RouterDb BuildBelgium()
+        public static RouterDb Build()
         {
             RouterDb routerDb = null;
-            if (!File.Exists(Download.BelgiumLocal))
+            if (!File.Exists(Download.DataLocal))
             {
-                throw new Exception("No location belgium OSM file found!");
+                throw new Exception("No location OSM file found!");
             }
 
             if (File.Exists(RouterDbBuilder.BelgiumRouterDbLocation))
@@ -60,10 +61,32 @@ namespace Itinero.Optimization.Test.Functional.Staging
             if (routerDb == null)
             {
                 Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "No existing RouterDb file found, creating now.");
-                using (var stream = File.OpenRead(Download.BelgiumLocal))
+                using (var stream = File.OpenRead(Download.DataLocal))
                 {
+                    var xmlStream = new OsmSharp.Streams.XmlOsmStreamSource(stream);
+                    var sortedData = xmlStream.ToList();
+                    sortedData.Sort((x, y) =>
+                    {
+                        if (x.Type == y.Type)
+                        {
+                            return x.Id.Value.CompareTo(y.Id.Value);
+                        }
+                        if (x.Type == OsmSharp.OsmGeoType.Node)
+                        {
+                            return -1;
+                        }
+                        else if(x.Type == OsmSharp.OsmGeoType.Way)
+                        {
+                            if (y.Type == OsmSharp.OsmGeoType.Node)
+                            {
+                                return 1;
+                            }
+                            return -1;
+                        }
+                        return 1;
+                    });
                     routerDb = new RouterDb();
-                    routerDb.LoadOsmData(stream, Itinero.Osm.Vehicles.Vehicle.Car);
+                    routerDb.LoadOsmData(sortedData, Itinero.Osm.Vehicles.Vehicle.Car);
                 }
 
                 using (var stream = File.Open(RouterDbBuilder.BelgiumRouterDbLocation, FileMode.Create))
@@ -78,7 +101,7 @@ namespace Itinero.Optimization.Test.Functional.Staging
                 if (!routerDb.HasContractedFor(Itinero.Osm.Vehicles.Vehicle.Car.Fastest()))
                 {
                     Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "No contracted graph found for the 'car' profile, building now...");
-                    routerDb.AddContracted(Itinero.Osm.Vehicles.Vehicle.Car.Fastest());
+                    routerDb.AddContracted(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), true);
 
                     using (var stream = File.Open(RouterDbBuilder.BelgiumRouterDbLocation, FileMode.Create))
                     {

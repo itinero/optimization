@@ -35,10 +35,10 @@ namespace Itinero.Optimization.Test.Functional
 
             // STEP 0: staging, download and build a routerdb to test with.
             // download belgium.
-            Staging.Download.DownloadBelgiumAll();
+            Staging.Download.DownloadAll();
 
             // build routerdb and save the result.
-            var routerDb = Staging.RouterDbBuilder.BuildBelgium();
+            var routerDb = Staging.RouterDbBuilder.Build();
             var router = new Router(routerDb);
 
             // define test locations.
