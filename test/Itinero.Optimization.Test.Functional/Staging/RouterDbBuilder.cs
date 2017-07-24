@@ -20,6 +20,7 @@ using Itinero.IO.Osm;
 using System;
 using System.Linq;
 using System.IO;
+using Itinero.Profiles;
 
 namespace Itinero.Optimization.Test.Functional.Staging
 {
@@ -28,86 +29,62 @@ namespace Itinero.Optimization.Test.Functional.Staging
     /// </summary>
     public static class RouterDbBuilder
     {
-        public static string BelgiumRouterDbLocation = "belgium.routerdb";
+        /// <summary>
+        /// Builds a routerdb.
+        /// </summary>
+        /// <returns></returns>
+        public static RouterDb Build(string queryName)
+        {
+            return Build(queryName, Itinero.Osm.Vehicles.Vehicle.Car);
+        }
 
         /// <summary>
         /// Builds a routerdb.
         /// </summary>
         /// <returns></returns>
-        public static RouterDb Build()
+        public static RouterDb Build(string queryName, Vehicle vehicle)
         {
+            Download.ToFile(queryName);
+
+            var fileName = queryName + ".osm";
+
             RouterDb routerDb = null;
-            if (!File.Exists(Download.DataLocal))
+            Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "No existing RouterDb file found, creating now.");
+            using (var stream = File.OpenRead(fileName))
             {
-                throw new Exception("No location OSM file found!");
-            }
-
-            if (File.Exists(RouterDbBuilder.BelgiumRouterDbLocation))
-            {
-                try
+                var xmlStream = new OsmSharp.Streams.XmlOsmStreamSource(stream);
+                var sortedData = xmlStream.ToList();
+                sortedData.Sort((x, y) =>
                 {
-                    using (var stream = File.OpenRead(RouterDbBuilder.BelgiumRouterDbLocation))
+                    if (x.Type == y.Type)
                     {
-                        routerDb = RouterDb.Deserialize(stream);
+                        return x.Id.Value.CompareTo(y.Id.Value);
                     }
-                }
-                catch
-                {
-                    Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Warning, "Invalid existing RouterDb file, could not load file.");
-                    routerDb = null;
-                }
-            }
-
-            if (routerDb == null)
-            {
-                Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "No existing RouterDb file found, creating now.");
-                using (var stream = File.OpenRead(Download.DataLocal))
-                {
-                    var xmlStream = new OsmSharp.Streams.XmlOsmStreamSource(stream);
-                    var sortedData = xmlStream.ToList();
-                    sortedData.Sort((x, y) =>
+                    if (x.Type == OsmSharp.OsmGeoType.Node)
                     {
-                        if (x.Type == y.Type)
-                        {
-                            return x.Id.Value.CompareTo(y.Id.Value);
-                        }
-                        if (x.Type == OsmSharp.OsmGeoType.Node)
-                        {
-                            return -1;
-                        }
-                        else if(x.Type == OsmSharp.OsmGeoType.Way)
-                        {
-                            if (y.Type == OsmSharp.OsmGeoType.Node)
-                            {
-                                return 1;
-                            }
-                            return -1;
-                        }
-                        return 1;
-                    });
-                    routerDb = new RouterDb();
-                    routerDb.LoadOsmData(sortedData, Itinero.Osm.Vehicles.Vehicle.Car);
-                }
-
-                using (var stream = File.Open(RouterDbBuilder.BelgiumRouterDbLocation, FileMode.Create))
-                {
-                    routerDb.Serialize(stream);
-                }
-                Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "RouterDb file created.");
-            }
-
-            if (routerDb != null)
-            {
-                if (!routerDb.HasContractedFor(Itinero.Osm.Vehicles.Vehicle.Car.Fastest()))
-                {
-                    Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "No contracted graph found for the 'car' profile, building now...");
-                    routerDb.AddContracted(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), true);
-
-                    using (var stream = File.Open(RouterDbBuilder.BelgiumRouterDbLocation, FileMode.Create))
-                    {
-                        routerDb.Serialize(stream);
+                        return -1;
                     }
-                }
+                    else if (x.Type == OsmSharp.OsmGeoType.Way)
+                    {
+                        if (y.Type == OsmSharp.OsmGeoType.Node)
+                        {
+                            return 1;
+                        }
+                        return -1;
+                    }
+                    return 1;
+                });
+                
+                routerDb = new RouterDb();
+                routerDb.LoadOsmData(sortedData, vehicle);
+            }
+            
+            Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "RouterDb file created.");
+
+            if (!routerDb.HasContractedFor(vehicle.Fastest()))
+            {
+                Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "No contracted graph found for the 'car' profile, building now...");
+                routerDb.AddContracted(vehicle.Fastest(), true);
             }
             return routerDb;
         }

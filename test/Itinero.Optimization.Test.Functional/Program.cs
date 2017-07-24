@@ -33,16 +33,12 @@ namespace Itinero.Optimization.Test.Functional
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", origin, level, message));
             };
 
-            // STEP 0: staging, download and build a routerdb to test with.
-            // download belgium.
-            Staging.Download.DownloadAll();
-
+            // WECHELDERZANDE
             // build routerdb and save the result.
-            var routerDb = Staging.RouterDbBuilder.Build();
-            var router = new Router(routerDb);
+            var wechelderzande = Staging.RouterDbBuilder.Build("query1");
+            var router = new Router(wechelderzande);
 
             // define test locations.
-            // WECHELDERZANDE
             var locations = new Coordinate[]
             {
                 new Coordinate(51.270453873703080f, 4.8008108139038080f),
@@ -145,6 +141,35 @@ namespace Itinero.Optimization.Test.Functional
             route = func.TestPerf("Testing Directed TSP-TW (0->last)");
             func = new Func<Route>(() => router.CalculateTSPTWDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, windows, 60, 0, null));
             route = func.TestPerf("Testing Directed TSP-TW (0->...)");
+
+            // HENGELO
+            // build routerdb and save the result.
+            var hengelo = Staging.RouterDbBuilder.Build("query2");
+            var vehicle = hengelo.GetSupportedVehicle("car");
+            router = new Router(hengelo);
+
+            locations = new Coordinate[]
+            {
+                new Coordinate(52.286143714914566f, 6.776547431945801f),
+                new Coordinate(52.2790550797244f, 6.791224479675293f),
+                new Coordinate(52.270363390765176f, 6.796717643737792f),
+                new Coordinate(52.265294640450435f, 6.777276992797852f),
+                new Coordinate(52.25807132666112f, 6.78380012512207f),
+                new Coordinate(52.25851789290645f, 6.7974042892456055f),
+                new Coordinate(52.26810484821601f, 6.8122100830078125f),
+                new Coordinate(52.261433597272266f, 6.819033622741699f),
+                new Coordinate(52.25318507282242f, 6.798820495605469f),
+                new Coordinate(52.24934924915677f, 6.809506416320801f),
+                new Coordinate(52.2905013499346f, 6.760196685791016f)
+            };
+
+            // calculate Directed TSP.
+            func = new Func<Route>(() => router.CalculateTSPDirected(vehicle.Fastest(), locations, 60, 0, 0));
+            route = func.TestPerf("Testing Directed TSP (0->0)");
+            func = new Func<Route>(() => router.CalculateTSPDirected(vehicle.Fastest(), locations, 60, 0, locations.Length - 1));
+            route = func.TestPerf("Testing Directed TSP (0->last)");
+            func = new Func<Route>(() => router.CalculateTSPDirected(vehicle.Fastest(), locations, 60, 0, null));
+            route = func.TestPerf("Testing Directed TSP (0->...)");
         }
     }
 }
