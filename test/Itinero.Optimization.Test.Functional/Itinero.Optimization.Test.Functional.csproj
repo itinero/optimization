@@ -22,4 +22,13 @@
     <ProjectReference Include="..\..\src\Itinero.Optimization\Itinero.Optimization.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Staging\query1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Staging\query2.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
