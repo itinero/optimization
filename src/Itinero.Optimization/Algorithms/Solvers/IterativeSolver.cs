@@ -87,7 +87,8 @@ namespace Itinero.Optimization.Algorithms.Solvers
 
                 // execute solver.
                 var nextSolution = _solver.Solve(problem, objective, out nextFitness);
-                if (objective.IsBetterThan(problem, nextFitness, bestFitness))
+                if (objective.IsBetterThan(problem, nextFitness, bestFitness) ||
+                    best == null)
                 { // yep, found a better solution!
                     best = (TSolution)nextSolution.Clone();
                     bestFitness = nextFitness;
