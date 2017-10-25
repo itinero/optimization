@@ -15,7 +15,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -29,14 +30,14 @@ namespace Itinero.Optimization.Tours.Typed
         where T : struct
     {
         private readonly IEnumerable<Triple> _enumerable;
-        private readonly Tour<T> _tour;
+        private readonly Func<int, T> _getVisit;
 
         /// <summary>
         /// Creates anew triple enumerable.
         /// </summary>
-        public TripleEnumerable(Tour<T> tour, IEnumerable<Triple> enumerable)
+        public TripleEnumerable(Func<int, T> getVisit, IEnumerable<Triple> enumerable)
         {
-            _tour = tour;
+            _getVisit = getVisit;
             _enumerable = enumerable;
         }
 
@@ -46,7 +47,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <returns></returns>
         public IEnumerator<Triple<T>> GetEnumerator()
         {
-            return new TripleEnumerator<T>(_tour,
+            return new TripleEnumerator<T>(_getVisit,
                 _enumerable.GetEnumerator());
         }
 
@@ -56,7 +57,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return new TripleEnumerator<T>(_tour,
+            return new TripleEnumerator<T>(_getVisit,
                 _enumerable.GetEnumerator());
         }
     }
@@ -69,14 +70,14 @@ namespace Itinero.Optimization.Tours.Typed
         where T : struct
     {
         private readonly IEnumerator<Triple> _enumerator;
-        private readonly Tour<T> _tour;
+        private readonly Func<int, T> _getVisit;
 
         /// <summary>
         /// Creates anew triple enumerator.
         /// </summary>
-        public TripleEnumerator(Tour<T> tour, IEnumerator<Triple> enumerator)
+        public TripleEnumerator(Func<int, T> getVisit, IEnumerator<Triple> enumerator)
         {
-            _tour = tour;
+            _getVisit = getVisit;
             _enumerator = enumerator;
         }
 
@@ -89,9 +90,9 @@ namespace Itinero.Optimization.Tours.Typed
             {
                 var current = _enumerator.Current;
                 return new Triple<T>(
-                    _tour.GetVisit(current.From),
-                    _tour.GetVisit(current.Along),
-                    _tour.GetVisit(current.To));
+                    _getVisit(current.From),
+                    _getVisit(current.Along),
+                    _getVisit(current.To));
             }
         }
 

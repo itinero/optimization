@@ -27,10 +27,12 @@ namespace Itinero.Optimization.Tours.Typed
     /// <summary>
     /// a route or a sequence of customers.
     /// </summary>
-    public abstract class Tour<T> : ITour<T>
+    public class Tour<T> : ITour<T>
         where T : struct
     {
         private readonly Tour _tour;
+        private readonly Func<T, int> _getId;
+        private readonly Func<int, T> _getVisit;
 
         protected Tour(Tour tour)
         {
@@ -42,7 +44,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// </summary>
         public Tour(IEnumerable<T> customers)
         {
-            _tour = new Tour(customers.Select(x => this.GetId(x)));
+            _tour = new Tour(customers.Select(x => _getId(x)));
         }
 
         /// <summary>
@@ -53,20 +55,10 @@ namespace Itinero.Optimization.Tours.Typed
             int? lastId = null;
             if (last.HasValue)
             {
-                lastId = this.GetId(last.Value);
+                lastId = _getId(last.Value);
             }
-            _tour = new Tour(customers.Select(x => this.GetId(x)), lastId);
+            _tour = new Tour(customers.Select(x => _getId(x)), lastId);
         }
-
-        /// <summary>
-        /// Gets the visit for the given id.
-        /// </summary>
-        public abstract T GetVisit(int id);
-
-        /// <summary>
-        /// Gets the id for the given visit.
-        /// </summary>
-        public abstract int GetId(T visit);
 
         /// <summary>
         /// Returns the amount of customers in the route.
@@ -76,7 +68,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <summary>
         /// Returns the first customer.
         /// </summary>
-        public T First => this.GetVisit(_tour.First);
+        public T First => _getVisit(_tour.First);
 
         /// <summary>
         /// Returns the last customer.
@@ -89,7 +81,7 @@ namespace Itinero.Optimization.Tours.Typed
                 {
                     return null;
                 }
-                return this.GetVisit(_tour.Last.Value);
+                return _getVisit(_tour.Last.Value);
             }
         }
 
@@ -102,8 +94,8 @@ namespace Itinero.Optimization.Tours.Typed
         /// <exception cref="System.ArgumentException">When from equals to.</exception>
         public bool Contains(T from, T to)
         {
-            var fromId = this.GetId(from);
-            var toId = this.GetId(to);
+            var fromId = _getId(from);
+            var toId = _getId(to);
             return _tour.Contains(fromId, toId);
         }
 
@@ -114,7 +106,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <returns>True if the customer occurs in this route.</returns>
         public bool Contains(T customer)
         {
-            var customerId = this.GetId(customer);
+            var customerId = _getId(customer);
             return _tour.Contains(customerId);
         }
 
@@ -126,7 +118,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <exception cref="System.InvalidOperationException">When attempting to remove the first customer.</exception>
         public bool Remove(T customer)
         {
-            var customerId = this.GetId(customer);
+            var customerId = _getId(customer);
             return _tour.Remove(customerId);
         }
 
@@ -140,7 +132,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <exception cref="System.InvalidOperationException">When attempting to remove the first customer.</exception>
         public bool Remove(T customer, out T before, out T after)
         {
-            var customerId = this.GetId(customer);
+            var customerId = _getId(customer);
             int beforeId, afterId;
             if (!_tour.Remove(customerId, out beforeId, out afterId))
             {
@@ -148,8 +140,8 @@ namespace Itinero.Optimization.Tours.Typed
                 after = default(T);
                 return false;
             }
-            before = this.GetVisit(beforeId);
-            after = this.GetVisit(afterId);
+            before = _getVisit(beforeId);
+            after = _getVisit(afterId);
             return true;
         }
 
@@ -169,8 +161,8 @@ namespace Itinero.Optimization.Tours.Typed
         /// <exception cref="System.ArgumentException">When customer equals before.</exception>
         public bool ShiftAfter(T customer, T before)
         {
-            var customerId = this.GetId(customer);
-            var beforeId = this.GetId(before);
+            var customerId = _getId(customer);
+            var beforeId = _getId(before);
             return _tour.ShiftAfter(customerId, beforeId);
         }
 
@@ -196,8 +188,8 @@ namespace Itinero.Optimization.Tours.Typed
         /// <exception cref="System.ArgumentException">When customer equals before.</exception>
         public bool ShiftAfter(T customer, T before, out T oldBefore, out T oldAfter, out T newAfter)
         {
-            var customerId = this.GetId(customer);
-            var beforeId = this.GetId(before);
+            var customerId = _getId(customer);
+            var beforeId = _getId(before);
             int oldBeforeId, oldAfterId, newAfterId;
             if (!_tour.ShiftAfter(customerId, beforeId, out oldBeforeId, out oldAfterId, out newAfterId))
             {
@@ -206,9 +198,9 @@ namespace Itinero.Optimization.Tours.Typed
                 newAfter = default(T);
                 return false;
             }
-            oldBefore = this.GetVisit(oldBeforeId);
-            oldAfter = this.GetVisit(oldAfterId);
-            newAfter = this.GetVisit(newAfterId);
+            oldBefore = _getVisit(oldBeforeId);
+            oldAfter = _getVisit(oldAfterId);
+            newAfter = _getVisit(newAfterId);
             return true;
         }
 
@@ -221,8 +213,8 @@ namespace Itinero.Optimization.Tours.Typed
         /// <exception cref="System.ArgumentException">When from equals equals to.</exception>
         public void ReplaceEdgeFrom(T from, T to)
         {
-            var fromId = this.GetId(from);
-            var toId = this.GetId(to);
+            var fromId = _getId(from);
+            var toId = _getId(to);
             _tour.ReplaceEdgeFrom(fromId, toId);
         }
 
@@ -231,8 +223,8 @@ namespace Itinero.Optimization.Tours.Typed
         /// </summary>
         public void Replace(T oldCustomer, T newCustomer)
         {
-            var oldCustomerId = this.GetId(oldCustomer);
-            var newCustomerId = this.GetId(newCustomer);
+            var oldCustomerId = _getId(oldCustomer);
+            var newCustomerId = _getId(newCustomer);
             _tour.ReplaceEdgeFrom(oldCustomerId, newCustomerId);
         }
 
@@ -246,8 +238,8 @@ namespace Itinero.Optimization.Tours.Typed
         /// <example>Route 0 after InsertAfter(0, 1) becomes 0->1.</example>
         public void InsertAfter(T from, T to)
         {
-            var fromId = this.GetId(from);
-            var toId = this.GetId(to);
+            var fromId = _getId(from);
+            var toId = _getId(to);
             _tour.InsertAfter(fromId, toId);
         }
 
@@ -259,8 +251,8 @@ namespace Itinero.Optimization.Tours.Typed
         /// <exception cref="System.ArgumentOutOfRangeException">When the customer does not exist.</exception>
         public T GetNeigbour(T customer)
         {
-            var customerId = this.GetId(customer);
-            return this.GetVisit(_tour.GetNeigbour(customerId));
+            var customerId = _getId(customer);
+            return _getVisit(_tour.GetNeigbour(customerId));
         }
 
         /// <summary>
@@ -271,7 +263,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <exception cref="System.ArgumentOutOfRangeException">When the customer does not exist.</exception>
         public int GetIndexOf(T customer)
         {
-            var customerId = this.GetId(customer);
+            var customerId = _getId(customer);
             return _tour.GetIndexOf(customerId);
         }
 
@@ -282,7 +274,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <exception cref="System.ArgumentOutOfRangeException">When the index is out of range.</exception>
         public T GetCustomerAt(int index)
         {
-            return this.GetVisit(_tour.GetCustomerAt(index));
+            return _getVisit(_tour.GetCustomerAt(index));
         }
 
         /// <summary>
@@ -294,7 +286,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <exception cref="System.ArgumentException">When from equals equals to.</exception>
         public IEnumerable<T> Between(T from, T to)
         {
-            return _tour.Between(this.GetId(from), this.GetId(to)).Select(x => this.GetVisit(x));
+            return _tour.Between(_getId(from), _getId(to)).Select(x => _getVisit(x));
         }
 
         /// <summary>
@@ -303,7 +295,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <returns></returns>
         public IEnumerator<T> GetEnumerator(T customer)
         {
-            return new Enumerator<T>(this, _tour.GetEnumerator(this.GetId(customer)));
+            return new Enumerator<T>(_getVisit, _tour.GetEnumerator(_getId(customer)));
         }
 
         /// <summary>
@@ -312,7 +304,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <returns>An enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a tour the pair that contains last->first is also included.</returns>
         public IEnumerable<Pair<T>> Pairs()
         {
-            return new PairEnumerable<T>(this, _tour.Pairs());
+            return new PairEnumerable<T>(_getVisit, _tour.Pairs());
         }
 
         /// <summary>
@@ -321,7 +313,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <returns>An enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a tour the tuples that contain last->first are also included.</returns>
         public IEnumerable<Triple<T>> Triples()
         {
-            return new TripleEnumerable<T>(this, _tour.Triples());
+            return new TripleEnumerable<T>(_getVisit, _tour.Triples());
         }
 
         /// <summary>
@@ -338,7 +330,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            return new Enumerator<T>(this, _tour.GetEnumerator());
+            return new Enumerator<T>(_getVisit, _tour.GetEnumerator());
         }
 
         /// <summary>
@@ -347,14 +339,17 @@ namespace Itinero.Optimization.Tours.Typed
         /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return new Enumerator<T>(this, _tour.GetEnumerator());
+            return new Enumerator<T>(_getVisit, _tour.GetEnumerator());
         }
 
         /// <summary>
         /// Creates an exact deep-copy of this route.
         /// </summary>
         /// <returns></returns>
-        public abstract object Clone();
+        public object Clone()
+        {
+            return new Tour<T>(_tour);
+        }
 
         /// <summary>
         /// Copies the given solution into this solution.

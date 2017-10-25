@@ -15,7 +15,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -29,14 +30,14 @@ namespace Itinero.Optimization.Tours.Typed
         where T : struct
     {
         private readonly IEnumerable<Pair> _enumerable;
-        private readonly Tour<T> _tour;
+        private readonly Func<int, T> _getVisit;
 
         /// <summary>
         /// Creates anew pair enumerable.
         /// </summary>
-        public PairEnumerable(Tour<T> tour, IEnumerable<Pair> enumerable)
+        public PairEnumerable(Func<int, T> getVisit, IEnumerable<Pair> enumerable)
         {
-            _tour = tour;
+            _getVisit = getVisit;
             _enumerable = enumerable;
         }
 
@@ -46,7 +47,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <returns></returns>
         public IEnumerator<Pair<T>> GetEnumerator()
         {
-            return new PairEnumerator<T>(_tour,
+            return new PairEnumerator<T>(_getVisit,
                 _enumerable.GetEnumerator());
         }
 
@@ -56,7 +57,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return new PairEnumerator<T>(_tour,
+            return new PairEnumerator<T>(_getVisit,
                 _enumerable.GetEnumerator());
         }
     }
@@ -69,14 +70,14 @@ namespace Itinero.Optimization.Tours.Typed
         where T : struct
     {
         private readonly IEnumerator<Pair> _enumerator;
-        private readonly Tour<T> _tour;
+        private readonly Func<int, T> _getVisit;
 
         /// <summary>
         /// Creates anew pair enumerator.
         /// </summary>
-        public PairEnumerator(Tour<T> tour, IEnumerator<Pair> enumerator)
+        public PairEnumerator(Func<int, T> getVisit, IEnumerator<Pair> enumerator)
         {
-            _tour = tour;
+            _getVisit = getVisit;
             _enumerator = enumerator;
         }
 
@@ -89,8 +90,8 @@ namespace Itinero.Optimization.Tours.Typed
             {
                 var current = _enumerator.Current;
                 return new Pair<T>(
-                    _tour.GetVisit(current.From),
-                    _tour.GetVisit(current.To));
+                    _getVisit(current.From),
+                    _getVisit(current.To));
             }
         }
 

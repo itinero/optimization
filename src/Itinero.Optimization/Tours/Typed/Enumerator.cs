@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -29,12 +30,12 @@ namespace Itinero.Optimization.Tours.Typed
         where T : struct
     {
         private readonly IEnumerator<int> _enumerator;
-        private readonly Tour<T> _tour;
+        private readonly Func<int, T> _getVisit;
 
-        public Enumerator(Tour<T> tour, IEnumerator<int> enumerator)
+        public Enumerator(Func<int, T> getVisit, IEnumerator<int> enumerator)
         {
             _enumerator = enumerator;
-            _tour = tour;
+            _getVisit = getVisit;
         }
 
         /// <summary>
@@ -44,7 +45,7 @@ namespace Itinero.Optimization.Tours.Typed
         {
             get
             {
-                return _tour.GetVisit(_enumerator.Current);
+                return _getVisit(_enumerator.Current);
             }
         }
 
