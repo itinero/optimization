@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Itinero.Optimization.Algorithms;
+using System.Text;
 
 namespace Itinero.Optimization.Tours.Typed
 {
@@ -34,24 +35,33 @@ namespace Itinero.Optimization.Tours.Typed
         private readonly Func<T, int> _getId;
         private readonly Func<int, T> _getVisit;
 
-        protected Tour(Tour tour)
+        protected Tour(Func<T, int> getId, Func<int, T> getVisit, Tour tour)
         {
+            _getId = getId;
+            _getVisit = getVisit;
+
             _tour = tour;
         }
 
         /// <summary>
         /// Creates a new route based on the given array.
         /// </summary>
-        public Tour(IEnumerable<T> customers)
+        public Tour(Func<T, int> getId, Func<int, T> getVisit, IEnumerable<T> customers)
         {
+            _getId = getId;
+            _getVisit = getVisit;
+
             _tour = new Tour(customers.Select(x => _getId(x)));
         }
 
         /// <summary>
         /// Creates a new route based on the given array.
         /// </summary>
-        public Tour(IEnumerable<T> customers, T? last)
+        public Tour(Func<T, int> getId, Func<int, T> getVisit, IEnumerable<T> customers, T? last)
         {
+            _getId = getId;
+            _getVisit = getVisit;
+
             int? lastId = null;
             if (last.HasValue)
             {
@@ -348,7 +358,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// <returns></returns>
         public object Clone()
         {
-            return new Tour<T>(_tour);
+            return new Tour<T>(_getId, _getVisit, _tour);
         }
 
         /// <summary>
@@ -361,6 +371,39 @@ namespace Itinero.Optimization.Tours.Typed
             {
                 _tour.CopyFrom(typedCopy._tour);
             }
+        }
+
+        /// <summary>
+        /// Returns a description of this route.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            T? previous = null;
+            var result = new StringBuilder();
+            foreach (var customer in this)
+            {
+                if (previous == null)
+                {
+                    result.Append('[');
+                    result.Append(customer);
+                    result.Append(']');
+                }
+                else if (!this.Last.HasValue || _getId(customer) != _getId(this.Last.Value))
+                {
+                    result.Append("->");
+                    result.Append(customer);
+                }
+                previous = customer;
+            }
+
+            if (this.Last.HasValue && this.Count > 1)
+            {
+                result.Append("->[");
+                result.Append(this.Last.Value);
+                result.Append("]");
+            }
+            return result.ToString();
         }
     }
 }
