@@ -50,6 +50,17 @@ namespace Itinero.Optimization.TSP.Solvers
         }
 
         /// <summary>
+        /// Creates a new EAX-solver.
+        /// </summary>
+        public EAXSolver(GASettings settings, ISolver<float, TSProblem, TSPObjective, Tour, float> generator, 
+            IOperator<float, TSProblem, TSPObjective, Tour, float> mutation)
+            : base(new TSPObjective(), generator, new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
+            new TournamentSelectionOperator<TSProblem, Tour, TSPObjective, float>(10, 0.5), mutation, settings)
+        {
+
+        }
+
+        /// <summary>
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
