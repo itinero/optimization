@@ -25,7 +25,7 @@ namespace Itinero.Optimization.TSP
     /// <summary>
     /// The default TSP profile definition.
     /// </summary>
-    public sealed class TSProblem
+    public sealed class TSProblem : ITSProblem
     {
         /// <summary>
         /// An empty constructor used just to clone stuff.
@@ -43,7 +43,8 @@ namespace Itinero.Optimization.TSP
             this.First = first;
             this.Last = null;
             this.Weights = weights;
-
+            this.Count = weights.Length;
+            
             for (var x = 0; x < this.Weights.Length; x++)
             {
                 this.Weights[x][first] = 0;
@@ -58,14 +59,23 @@ namespace Itinero.Optimization.TSP
             this.First = first;
             this.Last = last;
             this.Weights = weights;
+            this.Count = weights.Length;
 
             this.Weights[first][last] = 0;
+        }
+        
+        /// <summary>
+        /// Gets the weight between the two given visits.
+        /// </summary>
+        public float Weight(int from, int to)
+        {
+            return this.Weights[from][to];
         }
 
         /// <summary>
         /// Gets the weights.
         /// </summary>
-        public float[][] Weights { get; set; }
+        private float[][] Weights { get; set; }
 
         /// <summary>
         /// Gets the first customer.
@@ -76,12 +86,17 @@ namespace Itinero.Optimization.TSP
         /// Gets the last customer if the problem is closed.
         /// </summary>
         public int? Last { get; set; }
+
+        /// <summary>
+        /// Gets the number of visits.
+        /// </summary>
+        public int Count { get; private set; }
         
         /// <summary>
         /// Converts this problem to it's closed equivalent.
         /// </summary>
         /// <returns></returns>
-        public TSProblem ToClosed()
+        public ITSProblem ToClosed()
         {
             if (this.Last == null)
             { // 'open' problem, just set weights to first to 0.
@@ -268,7 +283,7 @@ namespace Itinero.Optimization.TSP
         /// <summary>
         /// Solvers this problem using the given solver.
         /// </summary>
-        public Tour Solve(Itinero.Optimization.Algorithms.Solvers.ISolver<float, TSProblem, TSPObjective, Tour, float> solver)
+        public Tour Solve(Itinero.Optimization.Algorithms.Solvers.ISolver<float, ITSProblem, TSPObjective, Tour, float> solver)
         {
             return solver.Solve(this, new TSPObjective());
         }

@@ -25,7 +25,7 @@ namespace Itinero.Optimization.TSP.Solvers
     /// <summary>
     /// Implements a brute force solver by checking all possible combinations.
     /// </summary>
-    public sealed class BruteForceSolver : SolverBase<float, TSProblem, TSPObjective, Tour, float>
+    public sealed class BruteForceSolver : SolverBase<float, ITSProblem, TSPObjective, Tour, float>
     {
         /// <summary>
         /// Returns a new for this solver.
@@ -42,23 +42,23 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public sealed override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
+        public sealed override Tour Solve(ITSProblem problem, TSPObjective objective, out float fitness)
         {
             // initialize.
-            var solution = new List<int>();
-            for (int customer = 0; customer < problem.Weights.Length; customer++)
-            { // add each customer again.
-                if (customer != problem.First &&
-                    customer != problem.Last)
+            var visits = new List<int>();
+            for (var visit = 0; visit < problem.Count; visit++)
+            {
+                if (visit != problem.First &&
+                    visit != problem.Last)
                 {
-                    solution.Add(customer);
+                    visits.Add(visit);
                 }
             }
 
-            if (solution.Count < 2)
+            if (visits.Count < 2)
             { // a tiny problem.
                 // build route.
-                var withFirst = new List<int>(solution);
+                var withFirst = new List<int>(visits);
                 withFirst.Insert(0, problem.First);
                 if (problem.Last.HasValue && problem.First != problem.Last)
                 { // the special case of a fixed last customer.
@@ -72,7 +72,7 @@ namespace Itinero.Optimization.TSP.Solvers
             // keep on looping until all the permutations 
             // have been considered.
             var enumerator = new PermutationEnumerable<int>(
-                solution.ToArray());
+                visits.ToArray());
             Tour bestSolution = null;
             var bestFitness = float.MaxValue;
             foreach (var permutation in enumerator)

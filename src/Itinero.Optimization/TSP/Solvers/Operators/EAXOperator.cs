@@ -29,7 +29,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
     /// <summary>
     /// An edge assembly crossover.
     /// </summary>
-    public sealed class EAXOperator : ICrossOverOperator<float, TSProblem, TSPObjective, Tour, float>
+    public sealed class EAXOperator : ICrossOverOperator<float, ITSProblem, TSPObjective, Tour, float>
     {
         private readonly int _maxOffspring;
         private readonly EdgeAssemblyCrossoverSelectionStrategyEnum _strategy;
@@ -135,7 +135,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
         /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
         /// <returns></returns>
-        public Tour Apply(TSProblem problem, TSPObjective objective, Tour solution1, Tour solution2, out float fitness)
+        public Tour Apply(ITSProblem problem, TSPObjective objective, Tour solution1, Tour solution2, out float fitness)
         {
             if (solution1.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
             if (solution2.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
@@ -164,7 +164,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
                 solution2.Remove(originalProblem.Last.Value);
             }
             fitness = float.MaxValue;
-            var weights = problem.Weights;
+            //var weights = problem.Weights;
 
             // first create E_a
             var e_a = new AsymmetricCycles(solution1.Count);
@@ -274,7 +274,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
 
                         from = currentTour.Key;
                         to = nextArrayA[from];
-                        var weightFromTo = weights[from][to];
+                        var weightFromTo = problem.Weight(from, to); // weights[from][to];
                         do
                         {
                             // check the nearest neighbours of from
@@ -286,9 +286,12 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
                                     !ignoreList[nn] &&
                                     !ignoreList[nnTo])
                                 {
-                                    float mergeWeight =
-                                        (weights[from][nnTo] + weights[nn][to]) -
-                                        (weightFromTo + weights[nn][nnTo]);
+                                    //float mergeWeight =
+                                    //    (weights[from][nnTo] + weights[nn][to]) -
+                                    //    (weightFromTo + weights[nn][nnTo]);
+                                    var mergeWeight =
+                                        (problem.Weight(from, nnTo) + problem.Weight(nn, to)) +
+                                        (weightFromTo + problem.Weight(nn, nnTo));
                                     if (weight > mergeWeight)
                                     {
                                         weight = mergeWeight;
@@ -315,9 +318,12 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
                             if (!ignoreList[customer] &&
                                 !ignoreList[customerTo])
                             {
+                                //var mergeWeight =
+                                //    (weights[from][customerTo] + weights[customer][to]) -
+                                //    (weights[from][to] + weights[customer][customerTo]);
                                 var mergeWeight =
-                                    (weights[from][customerTo] + weights[customer][to]) -
-                                    (weights[from][to] + weights[customer][customerTo]);
+                                    (problem.Weight(from, customerTo) + problem.Weight(customer, to)) -
+                                    (problem.Weight(from, to) + problem.Weight(customer, customerTo));
                                 if (weight > mergeWeight)
                                 {
                                     weight = mergeWeight;
@@ -351,7 +357,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
                 var newFitness = 0.0f;
                 foreach (var edge in newRoute.Pairs())
                 {
-                    newFitness = newFitness + weights[edge.From][edge.To];
+                    newFitness = newFitness + problem.Weight(edge.From, edge.To);
                 }
 
                 if (newRoute.Count == solution1.Count)
@@ -384,7 +390,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
                 fitness = 0.0f;
                 foreach (var edge in best.Pairs())
                 {
-                    fitness = fitness + weights[edge.From][edge.To];
+                    fitness = fitness + problem.Weight(edge.From, edge.To);
                 }
             }
 

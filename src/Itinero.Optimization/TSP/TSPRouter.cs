@@ -37,7 +37,7 @@ namespace Itinero.Optimization.TSP
         /// Creates a new TSP router.
         /// </summary>
         public TSPRouter(IWeightMatrixAlgorithm<float> weightMatrixAlgorithm, int first = 0, int? last = null, 
-            SolverBase<float, TSProblem, TSPObjective, Itinero.Optimization.Tours.Tour, float> solver = null)
+            SolverBase<float, ITSProblem, TSPObjective, Itinero.Optimization.Tours.Tour, float> solver = null)
         {
             _first = first;
             _last = last;
@@ -46,7 +46,7 @@ namespace Itinero.Optimization.TSP
         }
 
         private Tour _tour = null;
-        private SolverBase<float, TSProblem, TSPObjective, Itinero.Optimization.Tours.Tour, float> _solver;
+        private SolverBase<float, ITSProblem, TSPObjective, Itinero.Optimization.Tours.Tour, float> _solver;
 
         /// <summary>
         /// Excutes the actual algorithm.

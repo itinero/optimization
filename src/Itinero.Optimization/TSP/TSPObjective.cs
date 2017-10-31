@@ -24,7 +24,7 @@ namespace Itinero.Optimization.TSP
     /// <summary>
     /// The default TSP objective.
     /// </summary>
-    public sealed class TSPObjective : ObjectiveBase<TSProblem, Tour, float>
+    public sealed class TSPObjective : ObjectiveBase<ITSProblem, Tour, float>
     {
         /// <summary>
         /// Gets the value that represents infinity.
@@ -73,7 +73,7 @@ namespace Itinero.Optimization.TSP
         /// <summary>
         /// Adds the two given fitness values.
         /// </summary>
-        public sealed override float Add(TSProblem problem, float fitness1, float fitness2)
+        public sealed override float Add(ITSProblem problem, float fitness1, float fitness2)
         {
             return fitness1 + fitness2;
         }
@@ -81,13 +81,12 @@ namespace Itinero.Optimization.TSP
         /// <summary>
         /// Calculates the fitness value of the given solution.
         /// </summary>
-        public sealed override float Calculate(TSProblem problem, Tour solution)
+        public sealed override float Calculate(ITSProblem problem, Tour solution)
         {
-            var weights = problem.Weights;
             var fitness = 0f;
             foreach (var pair in solution.Pairs())
             {
-                fitness = fitness + weights[pair.From][pair.To];
+                fitness = fitness + problem.Weight(pair.From, pair.To);
             }
             return fitness;
         }
@@ -95,7 +94,7 @@ namespace Itinero.Optimization.TSP
         /// <summary>
         /// Compares the two fitness values.
         /// </summary>
-        public sealed override int CompareTo(TSProblem problem, float fitness1, float fitness2)
+        public sealed override int CompareTo(ITSProblem problem, float fitness1, float fitness2)
         {
             return fitness1.CompareTo(fitness2);
         }
@@ -103,7 +102,7 @@ namespace Itinero.Optimization.TSP
         /// <summary>
         /// Returns true if the given fitness value is zero.
         /// </summary>
-        public sealed override bool IsZero(TSProblem problem, float fitness)
+        public sealed override bool IsZero(ITSProblem problem, float fitness)
         {
             return fitness == 0;
         }
@@ -111,7 +110,7 @@ namespace Itinero.Optimization.TSP
         /// <summary>
         /// Subtracts the given fitness values.
         /// </summary>
-        public sealed override float Subtract(TSProblem problem, float fitness1, float fitness2)
+        public sealed override float Subtract(ITSProblem problem, float fitness1, float fitness2)
         {
             return fitness1 - fitness2;
         }

@@ -27,14 +27,14 @@ namespace Itinero.Optimization.TSP.Solvers
     /// <summary>
     /// A solver using a GA and the edge-assembly crossover.
     /// </summary> 
-    public class EAXSolver : GASolver<float, TSProblem, TSPObjective, Tour, float>
+    public class EAXSolver : GASolver<float, ITSProblem, TSPObjective, Tour, float>
     {
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
         public EAXSolver(GASettings settings)
             : base(new TSPObjective(), new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<TSProblem, Tour, TSPObjective, float>(10, 0.5), new EmptyOperator<float, TSProblem, TSPObjective, Tour, float>(), settings)
+            new TournamentSelectionOperator<ITSProblem, Tour, TSPObjective, float>(10, 0.5), new EmptyOperator<float, ITSProblem, TSPObjective, Tour, float>(), settings)
         {
 
         }
@@ -42,9 +42,9 @@ namespace Itinero.Optimization.TSP.Solvers
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
-        public EAXSolver(GASettings settings, IOperator<float, TSProblem, TSPObjective, Tour, float> mutation)
+        public EAXSolver(GASettings settings, IOperator<float, ITSProblem, TSPObjective, Tour, float> mutation)
             : base(new TSPObjective(), new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<TSProblem, Tour, TSPObjective, float>(10, 0.5), mutation, settings)
+            new TournamentSelectionOperator<ITSProblem, Tour, TSPObjective, float>(10, 0.5), mutation, settings)
         {
 
         }
@@ -52,10 +52,10 @@ namespace Itinero.Optimization.TSP.Solvers
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
-        public EAXSolver(GASettings settings, ISolver<float, TSProblem, TSPObjective, Tour, float> generator, 
-            IOperator<float, TSProblem, TSPObjective, Tour, float> mutation)
+        public EAXSolver(GASettings settings, ISolver<float, ITSProblem, TSPObjective, Tour, float> generator, 
+            IOperator<float, ITSProblem, TSPObjective, Tour, float> mutation)
             : base(new TSPObjective(), generator, new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<TSProblem, Tour, TSPObjective, float>(10, 0.5), mutation, settings)
+            new TournamentSelectionOperator<ITSProblem, Tour, TSPObjective, float>(10, 0.5), mutation, settings)
         {
 
         }
@@ -64,9 +64,9 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
+        public override Tour Solve(ITSProblem problem, TSPObjective objective, out float fitness)
         {
-            if (problem.Weights.Length < 5)
+            if (problem.Count < 5)
             { // use brute-force solver when problem is very small.
                 var bruteForceSolver = new BruteForceSolver();
                 return bruteForceSolver.Solve(problem, objective, out fitness);
@@ -83,7 +83,7 @@ namespace Itinero.Optimization.TSP.Solvers
                 fitness = 0;
                 foreach (var pair in route.Pairs())
                 {
-                    fitness = fitness + problem.Weights[pair.From][pair.To];
+                    fitness = fitness + problem.Weight(pair.From, pair.To);
                 }
                 return route;
             }
@@ -99,7 +99,7 @@ namespace Itinero.Optimization.TSP.Solvers
                 fitness = 0;
                 foreach (var pair in route.Pairs())
                 {
-                    fitness = fitness + problem.Weights[pair.From][pair.To];
+                    fitness = fitness + problem.Weight(pair.From, pair.To);
                 }
                 return route;
             }

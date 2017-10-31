@@ -26,7 +26,7 @@ namespace Itinero.Optimization.TSP.Solvers
     /// <summary>
     /// A solver that generates random solutions.
     /// </summary>
-    public sealed class RandomSolver : SolverBase<float, TSProblem, TSPObjective, Tour, float>
+    public sealed class RandomSolver : SolverBase<float, ITSProblem, TSPObjective, Tour, float>
     {
         /// <summary>
         /// Returns the name of this solver.
@@ -40,25 +40,26 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public sealed override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
+        public sealed override Tour Solve(ITSProblem problem, TSPObjective objective, out float fitness)
         {
             // generate random solution.
-            var customers = new List<int>();
-            for (var customer = 0; customer < problem.Weights.Length; customer++)
+            var visits = new List<int>();
+            for (var visit = 0; visit < problem.Count; visit++)
             {
-                if (customer != problem.First &&
-                    customer != problem.Last)
+                if (visit != problem.First &&
+                    visit != problem.Last)
                 {
-                    customers.Add(customer);
+                    visits.Add(visit);
                 }
             }
-            customers.Shuffle<int>();
-            customers.Insert(0, problem.First);
+
+            visits.Shuffle<int>();
+            visits.Insert(0, problem.First);
             if (problem.Last.HasValue && problem.First != problem.Last)
             { // the special case of a fixed last customer.
-                customers.Add(problem.Last.Value);
+                visits.Add(problem.Last.Value);
             }
-            var route = new Tour(customers, problem.Last);
+            var route = new Tour(visits, problem.Last);
 
             // calculate fitness.
             fitness = objective.Calculate(problem, route);

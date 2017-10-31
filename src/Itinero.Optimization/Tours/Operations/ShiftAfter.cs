@@ -16,6 +16,8 @@
  *  limitations under the License.
  */
 
+using Itinero.Optimization.TSP;
+
 namespace Itinero.Optimization.Tours.Operations
 {
     /// <summary>
@@ -53,6 +55,29 @@ namespace Itinero.Optimization.Tours.Operations
                     + weights[before][customer]
                     + weights[customer][newAfter];
             return true;
+        }
+
+        /// <summary>
+        /// Returns the difference in fitness 'if' the shift-after would be executed with the given settings.
+        /// </summary>
+        /// <returns></returns>
+        public static float If(ITSProblem problem, Tours.ITour tour, int customer, int before, int oldBefore, int oldAfter, int newAfter)
+        {
+            if (oldAfter == Constants.END)
+            {
+                oldAfter = tour.First;
+            }
+            if (newAfter == Constants.END)
+            {
+                newAfter = tour.First;
+            }
+
+            return -problem.Weight(oldBefore, customer)
+                    - problem.Weight(customer,oldAfter)
+                    + problem.Weight(oldBefore,oldAfter)
+                    - problem.Weight(before,newAfter)
+                    + problem.Weight(before,customer)
+                    + problem.Weight(customer,newAfter);
         }
 
         /// <summary>

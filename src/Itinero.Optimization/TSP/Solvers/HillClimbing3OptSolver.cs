@@ -26,13 +26,13 @@ namespace Itinero.Optimization.TSP.Solvers
     /// <summary>
     /// A 3-opt solver.
     /// </summary>
-    public sealed class HillClimbing3OptSolver : SolverBase<float, TSProblem, TSPObjective, Tour, float>, IOperator<float, TSProblem, TSPObjective, Tour, float>
+    public sealed class HillClimbing3OptSolver : SolverBase<float, ITSProblem, TSPObjective, Tour, float>, 
+        IOperator<float, ITSProblem, TSPObjective, Tour, float>
     {
-        private readonly ISolver<float, TSProblem, TSPObjective, Tour, float> _generator;
+        private readonly ISolver<float, ITSProblem, TSPObjective, Tour, float> _generator;
         private readonly bool _nearestNeighbours = false;
         private readonly bool _dontLook = false;
         private readonly double _epsilon = 0.001f;
-        private bool[] _dontLookBits;
 
         /// <summary>
         /// Creates a new solver.
@@ -46,7 +46,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public HillClimbing3OptSolver(ISolver<float, TSProblem, TSPObjective, Tour, float> generator, bool nearestNeighbours, bool dontLook)
+        public HillClimbing3OptSolver(ISolver<float, ITSProblem, TSPObjective, Tour, float> generator, bool nearestNeighbours, bool dontLook)
         {
             _generator = generator;
             _dontLook = dontLook;
@@ -89,7 +89,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override Tour Solve(TSProblem problem, TSPObjective objective, out float fitness)
+        public override Tour Solve(ITSProblem problem, TSPObjective objective, out float fitness)
         {
             // generate some route first.
             var tour = _generator.Solve(problem, objective);
@@ -111,7 +111,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(TSProblem problem, TSPObjective objective, Tour solution, out float delta)
+        public bool Apply(ITSProblem problem, TSPObjective objective, Tour solution, out float delta)
         {
             if (!problem.Last.HasValue)
             {
@@ -129,9 +129,8 @@ namespace Itinero.Optimization.TSP.Solvers
                 throw new ArgumentException("3OPT operator cannot be used on open TSP-problems.");
             }
             if ((solution.First == solution.Last) != problem.Last.HasValue) { throw new ArgumentException("Route and problem have to be both closed."); }
-
-            _dontLookBits = new bool[problem.Weights.Length];
-            var weights = problem.Weights;
+            
+            _dontLookBits = new bool[problem.Count];
 
             // loop over all customers.
             bool anyImprovement = false;
@@ -145,7 +144,7 @@ namespace Itinero.Optimization.TSP.Solvers
                 {
                     if (!this.Check(problem, v1))
                     {
-                        if (this.Try3OptMoves(problem, weights, solution, v1, out moveDelta))
+                        if (this.Try3OptMoves(problem, solution, v1, out moveDelta))
                         {
                             anyImprovement = true;
                             improvement = true;
@@ -163,7 +162,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Tries all 3Opt Moves for the neighbourhood of v1.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(TSProblem problem, float[][] weights, Tour tour, int v1, out float delta)
+        public bool Try3OptMoves(ITSProblem problem, Tour tour, int v1, out float delta)
         {
             // get v_2.
             var v2 = tour.GetNeigbour(v1);
@@ -174,7 +173,7 @@ namespace Itinero.Optimization.TSP.Solvers
             }
 
             var betweenV2V1 = tour.Between(v2, v1);
-            var weightV1V2 = weights[v1][v2];
+            var weightV1V2 = problem.Weight(v1, v2); // weights[v1][v2];
             if (v2 == problem.First && !problem.Last.HasValue)
             { // set to zero if not closed.
                 weightV1V2 = 0;
@@ -193,16 +192,17 @@ namespace Itinero.Optimization.TSP.Solvers
                     if (!_nearestNeighbours ||
                         neighbours.Contains(v4))
                     {
-                        var weightV1V4 = weights[v1][v4];
-                        var weightV3V4 = weights[v3][v4];
+                        var weightV1V4 = problem.Weight(v1, v4); // weights[v1][v4];
+                        var weightV3V4 = problem.Weight(v3, v4); // weights[v3][v4];
                         if (v4 == problem.First && !problem.Last.HasValue)
                         { // set to zero if not closed.
                             weightV1V4 = 0;
                             weightV3V4 = 0;
                         }
                         var weightV1V2PlusV3V4 = weightV1V2 + weightV3V4;
-                        var weightsV3 = weights[v3];
-                        if (this.Try3OptMoves(problem, weights, tour, v1, v2, v3, weightsV3, v4, weightV1V2PlusV3V4, weightV1V4, out delta))
+                        // var weightsV3 = weights[v3];
+                        if (this.Try3OptMoves(problem, tour, v1, v2, v3, v4, weightV1V2PlusV3V4, weightV1V4, out delta))
+                        // if (this.Try3OptMoves(problem, weights, tour, v1, v2, v3, weightsV3, v4, weightV1V2PlusV3V4, weightV1V4, out delta))
                         {
                             return true;
                         }
@@ -218,28 +218,28 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(TSProblem problem, float[][] weights, Tour tour,
+        public bool Try3OptMoves(ITSProblem problem, Tour tour,
             int v1, int v2, float weightV1V2,
             int v3, out float delta)
         {
             // get v_4.
             var v4 = tour.GetNeigbour(v3);
-            var weightV1V2PlusV3V4 = weightV1V2 + weights[v3][v4];
-            var weightV1V4 = weights[v1][v4];
+            var weightV1V2PlusV3V4 = weightV1V2 + problem.Weight(v3, v4); // weights[v3][v4];
+            var weightV1V4 = problem.Weight(v1, v4); // weights[v1][v4];
             if (v4 == problem.First && !problem.Last.HasValue)
             { // set to zero if not closed.
                 weightV1V4 = 0;
             }
-            var weightsV3 = weights[v3];
-            return this.Try3OptMoves(problem, weights, tour, v1, v2, v3, weightsV3, v4, weightV1V2PlusV3V4, weightV1V4, out delta);
+            //var weightsV3 = weights[v3];
+            return this.Try3OptMoves(problem, tour, v1, v2, v3, v4, weightV1V2PlusV3V4, weightV1V4, out delta);
         }
 
         /// <summary>
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(TSProblem problem, float[][] weights, Tour tour,
-            int v1, int v2, int v3, float[] weightsV3, int v4, float weightV1V2PlusV3V4, float weightV1V4, out float delta)
+        public bool Try3OptMoves(ITSProblem problem, Tour tour,
+            int v1, int v2, int v3, int v4, float weightV1V2PlusV3V4, float weightV1V4, out float delta)
         {
             var betweenV4V1Enumerator = tour.Between(v4, v1).GetEnumerator();
             if (betweenV4V1Enumerator.MoveNext())
@@ -250,9 +250,9 @@ namespace Itinero.Optimization.TSP.Solvers
                     while (betweenV4V1Enumerator.MoveNext())
                     {
                         var v6 = betweenV4V1Enumerator.Current;
-                        var weightV3V6 = weightsV3[v6];
-                        var weightV5V2 = weights[v5][v2];
-                        var weightV5V6 = weights[v5][v6];
+                        var weightV3V6 = problem.Weight(v3, v6); // weightsV3[v6];
+                        var weightV5V2 = problem.Weight(v5, v2); // weights[v5][v2];
+                        var weightV5V6 = problem.Weight(v5, v6); // weights[v5][v6];
                         if (v6 == problem.First && !problem.Last.HasValue)
                         { // set to zero if not closed.
                             weightV3V6 = 0;
@@ -296,7 +296,9 @@ namespace Itinero.Optimization.TSP.Solvers
 
         #region Don't Look
 
-        private bool Check(TSProblem problem, int customer)
+        private bool[] _dontLookBits;
+
+        private bool Check(ITSProblem problem, int customer)
         {
             if (_dontLook)
             {
@@ -305,7 +307,7 @@ namespace Itinero.Optimization.TSP.Solvers
             return false;
         }
 
-        private void Set(TSProblem problem, int customer, bool value)
+        private void Set(ITSProblem problem, int customer, bool value)
         {
             if (_dontLook)
             {
