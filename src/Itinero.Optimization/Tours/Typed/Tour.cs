@@ -356,7 +356,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// Creates an exact deep-copy of this route.
         /// </summary>
         /// <returns></returns>
-        public object Clone()
+        public virtual object Clone()
         {
             return new Tour<T>(_getId, _getVisit, _tour);
         }
