@@ -43,19 +43,37 @@ namespace Itinero.Optimization.Test.TSP
             var problem = new TSProblem(first, weights);
             Assert.AreEqual(first, problem.First);
             Assert.IsNull(problem.Last);
-            Assert.AreEqual(weights, problem.Weights);
+            for (var x = 0; x < weights.Length; x++)
+            {
+                for (var y = 0; y < weights[x].Length; y++)
+                {
+                    Assert.AreEqual(weights[x][y], problem.Weight(x, y));
+                }
+            }
 
             // create a closed problem.
             problem = new TSProblem(first, first, weights);
             Assert.AreEqual(first, problem.First);
             Assert.AreEqual(first, problem.Last);
-            Assert.AreEqual(weights, problem.Weights);
+            for (var x = 0; x < weights.Length; x++)
+            {
+                for (var y = 0; y < weights[x].Length; y++)
+                {
+                    Assert.AreEqual(weights[x][y], problem.Weight(x, y));
+                }
+            }
 
             // create a fixed problem.
             problem = new TSProblem(first, last, weights);
             Assert.AreEqual(first, problem.First);
             Assert.AreEqual(last, problem.Last);
-            Assert.AreEqual(weights, problem.Weights);
+            for (var x = 0; x < weights.Length; x++)
+            {
+                for (var y = 0; y < weights[x].Length; y++)
+                {
+                    Assert.AreEqual(weights[x][y], problem.Weight(x, y));
+                }
+            }
         }
 
         /// <summary>
@@ -77,22 +95,22 @@ namespace Itinero.Optimization.Test.TSP
             Assert.AreEqual(0, closedProblem.First);
             Assert.IsTrue(closedProblem.Last.HasValue);
             Assert.AreEqual(0, closedProblem.Last.Value);
-            Assert.AreEqual(0, closedProblem.Weights[0][0]);
-            Assert.AreEqual(1, closedProblem.Weights[0][1]);
-            Assert.AreEqual(2, closedProblem.Weights[0][2]);
-            Assert.AreEqual(3, closedProblem.Weights[0][3]);
-            Assert.AreEqual(4, closedProblem.Weights[1][0]);
-            Assert.AreEqual(0, closedProblem.Weights[1][1]);
-            Assert.AreEqual(5, closedProblem.Weights[1][2]);
-            Assert.AreEqual(6, closedProblem.Weights[1][3]);
-            Assert.AreEqual(7, closedProblem.Weights[2][0]);
-            Assert.AreEqual(8, closedProblem.Weights[2][1]);
-            Assert.AreEqual(0, closedProblem.Weights[2][2]);
-            Assert.AreEqual(9, closedProblem.Weights[2][3]);
-            Assert.AreEqual(10, closedProblem.Weights[3][0]);
-            Assert.AreEqual(11, closedProblem.Weights[3][1]);
-            Assert.AreEqual(12, closedProblem.Weights[3][2]);
-            Assert.AreEqual(0, closedProblem.Weights[3][3]);
+            Assert.AreEqual(0, closedProblem.Weight(0, 0));
+            Assert.AreEqual(1, closedProblem.Weight(0, 1));
+            Assert.AreEqual(2, closedProblem.Weight(0, 2));
+            Assert.AreEqual(3, closedProblem.Weight(0, 3));
+            Assert.AreEqual(4, closedProblem.Weight(1, 0));
+            Assert.AreEqual(0, closedProblem.Weight(1, 1));
+            Assert.AreEqual(5, closedProblem.Weight(1, 2));
+            Assert.AreEqual(6, closedProblem.Weight(1, 3));
+            Assert.AreEqual(7, closedProblem.Weight(2, 0));
+            Assert.AreEqual(8, closedProblem.Weight(2, 1));
+            Assert.AreEqual(0, closedProblem.Weight(2, 2));
+            Assert.AreEqual(9, closedProblem.Weight(2, 3));
+            Assert.AreEqual(10, closedProblem.Weight(3, 0));
+            Assert.AreEqual(11, closedProblem.Weight(3, 1));
+            Assert.AreEqual(12, closedProblem.Weight(3, 2));
+            Assert.AreEqual(0, closedProblem.Weight(3, 3));
 
             weights = new float[][] {
                 new float[] { 0, 1, 2, 3 },
@@ -107,22 +125,22 @@ namespace Itinero.Optimization.Test.TSP
             Assert.AreEqual(0, closedProblem.First);
             Assert.IsTrue(closedProblem.Last.HasValue);
             Assert.AreEqual(0, closedProblem.Last.Value);
-            Assert.AreEqual(0, closedProblem.Weights[0][0]);
-            Assert.AreEqual(1, closedProblem.Weights[0][1]);
-            Assert.AreEqual(2, closedProblem.Weights[0][2]);
-            Assert.AreEqual(3, closedProblem.Weights[0][3]);
-            Assert.AreEqual(0, closedProblem.Weights[1][0]); // all weights to first are zero.
-            Assert.AreEqual(0, closedProblem.Weights[1][1]);
-            Assert.AreEqual(5, closedProblem.Weights[1][2]);
-            Assert.AreEqual(6, closedProblem.Weights[1][3]);
-            Assert.AreEqual(0, closedProblem.Weights[2][0]); // all weights to first are zero.
-            Assert.AreEqual(8, closedProblem.Weights[2][1]);
-            Assert.AreEqual(0, closedProblem.Weights[2][2]);
-            Assert.AreEqual(9, closedProblem.Weights[2][3]);
-            Assert.AreEqual(0, closedProblem.Weights[3][0]); // all weights to first are zero.
-            Assert.AreEqual(11, closedProblem.Weights[3][1]);
-            Assert.AreEqual(12, closedProblem.Weights[3][2]);
-            Assert.AreEqual(0, closedProblem.Weights[3][3]);
+            Assert.AreEqual(0, closedProblem.Weight(0, 0));
+            Assert.AreEqual(1, closedProblem.Weight(0, 1));
+            Assert.AreEqual(2, closedProblem.Weight(0, 2));
+            Assert.AreEqual(3, closedProblem.Weight(0, 3));
+            Assert.AreEqual(0, closedProblem.Weight(1, 0)); // all weights to first are zero.
+            Assert.AreEqual(0, closedProblem.Weight(1, 1));
+            Assert.AreEqual(5, closedProblem.Weight(1, 2));
+            Assert.AreEqual(6, closedProblem.Weight(1, 3));
+            Assert.AreEqual(0, closedProblem.Weight(2, 0)); // all weights to first are zero.
+            Assert.AreEqual(8, closedProblem.Weight(2, 1));
+            Assert.AreEqual(0, closedProblem.Weight(2, 2));
+            Assert.AreEqual(9, closedProblem.Weight(2, 3));
+            Assert.AreEqual(0, closedProblem.Weight(3, 0)); // all weights to first are zero.
+            Assert.AreEqual(11, closedProblem.Weight(3, 1));
+            Assert.AreEqual(12, closedProblem.Weight(3, 2));
+            Assert.AreEqual(0, closedProblem.Weight(3, 3));
 
             weights = new float[][] {
                 new float[] { 0, 1, 2, 3 },
@@ -137,18 +155,18 @@ namespace Itinero.Optimization.Test.TSP
             Assert.AreEqual(0, closedProblem.First);
             Assert.IsTrue(closedProblem.Last.HasValue);
             Assert.AreEqual(0, closedProblem.Last.Value);
-            Assert.AreEqual(3, closedProblem.Weights.Length);
-            Assert.AreEqual(3, closedProblem.Weights[0].Length);
-            Assert.AreEqual(3, closedProblem.Weights[1].Length);
-            Assert.AreEqual(0, closedProblem.Weights[0][0]);
-            Assert.AreEqual(2, closedProblem.Weights[0][1]); // this has to be old 0->2.
-            Assert.AreEqual(3, closedProblem.Weights[0][2]); // this has to be old 0->3
-            Assert.AreEqual(8, closedProblem.Weights[1][0]); // this has to be old 2->1.
-            Assert.AreEqual(0, closedProblem.Weights[1][1]);
-            Assert.AreEqual(9, closedProblem.Weights[1][2]); // this has to old 2->3.
-            Assert.AreEqual(11, closedProblem.Weights[2][0]); // this has to be old 3->1
-            Assert.AreEqual(12, closedProblem.Weights[2][1]); // this has to be old 3->2.
-            Assert.AreEqual(0, closedProblem.Weights[2][2]);
+            //Assert.AreEqual(3, closedProblem.Weight.Length);
+            //Assert.AreEqual(3, closedProblem.Weight(0].Length);
+            //Assert.AreEqual(3, closedProblem.Weight(1].Length);
+            Assert.AreEqual(0, closedProblem.Weight(0, 0));
+            Assert.AreEqual(2, closedProblem.Weight(0, 1)); // this has to be old 0->2.
+            Assert.AreEqual(3, closedProblem.Weight(0, 2)); // this has to be old 0->3
+            Assert.AreEqual(8, closedProblem.Weight(1, 0)); // this has to be old 2->1.
+            Assert.AreEqual(0, closedProblem.Weight(1, 1));
+            Assert.AreEqual(9, closedProblem.Weight(1, 2)); // this has to old 2->3.
+            Assert.AreEqual(11, closedProblem.Weight(2, 0)); // this has to be old 3->1
+            Assert.AreEqual(12, closedProblem.Weight(2, 1)); // this has to be old 3->2.
+            Assert.AreEqual(0, closedProblem.Weight(2, 2));
         }
     }
 }

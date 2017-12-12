@@ -26,7 +26,7 @@ namespace Itinero.Optimization.Test.TSP
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static Optimization.TSP.TSProblem CreateTSP(int first, int size, float defaultWeight)
+        public static TestTSPProblem CreateTSP(int first, int size, float defaultWeight)
         {
             var weights = new float[size][];
             for (int x = 0; x < size; x++)
@@ -41,13 +41,13 @@ namespace Itinero.Optimization.Test.TSP
                     }
                 }
             }
-            return new Optimization.TSP.TSProblem(0, weights);
+            return new TestTSPProblem(0, weights);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static Optimization.TSP.TSProblem CreateTSP(int first, int last, int size, float defaultWeight)
+        public static TestTSPProblem CreateTSP(int first, int last, int size, float defaultWeight)
         {
             var weights = new float[size][];
             for (int x = 0; x < size; x++)
@@ -58,25 +58,25 @@ namespace Itinero.Optimization.Test.TSP
                     weights[x][y] = defaultWeight;
                 }
             }
-            return new Optimization.TSP.TSProblem(first, last, weights);
+            return new TestTSPProblem(first, last, weights);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static Optimization.TSP.TSProblem CreateTSP(int first, float[][] weights)
+        public static TestTSPProblem CreateTSP(int first, float[][] weights)
         {
-            return new Optimization.TSP.TSProblem(first, weights);
+            return new TestTSPProblem(first, weights);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static Optimization.TSP.TSProblem CreateTSP(int first, int last, float[][] weights)
+        public static TestTSPProblem CreateTSP(int first, int last, float[][] weights)
         {
-            return new Optimization.TSP.TSProblem(first, last, weights);
+            return new TestTSPProblem(first, last, weights);
         }
 
         /// <summary>
