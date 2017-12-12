@@ -70,6 +70,30 @@ namespace Itinero.Optimization.Tours.Typed
             _tour = new Tour(customers.Select(x => _getId(x)), lastId);
         }
 
+        protected Tour RawTour
+        {
+            get
+            {
+                return _tour;
+            }
+        }
+
+        protected Func<T, int> GetId
+        {
+            get
+            {
+                return _getId;
+            }
+        }
+
+        protected Func<int, T> GetVisit
+        {
+            get
+            {
+                return _getVisit;
+            }
+        }
+
         /// <summary>
         /// Returns the amount of customers in the route.
         /// </summary>
