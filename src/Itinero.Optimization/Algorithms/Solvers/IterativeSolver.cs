@@ -17,6 +17,7 @@
  */
 
 using Itinero.Optimization.Algorithms.Solvers.Objective;
+using System.Text;
 
 namespace Itinero.Optimization.Algorithms.Solvers
 {
@@ -65,7 +66,22 @@ namespace Itinero.Optimization.Algorithms.Solvers
         /// </summary>
         public override string Name
         {
-            get { return string.Format("ITER_[{0}x{1}]", _n, _solver.Name); }
+            get
+            {
+                if (_operators != null && 
+                    _operators.Length > 0)
+                {
+                    var op = new StringBuilder();
+                    op.Append(_operators[0].Name);
+                    for (var i = 1; i < _operators.Length; i++)
+                    {
+                        op.Append('+');
+                        op.Append(_operators[i].Name);
+                    }
+                    return string.Format("ITER_[{0}x({1}+{2}]", _n, _solver.Name, op.ToString());
+                }
+                return string.Format("ITER_[{0}x{1}]", _n, _solver.Name);
+            }
         }
 
         /// <summary>
