@@ -78,7 +78,15 @@ namespace Itinero.Optimization.Algorithms.Solvers
                         op.Append('+');
                         op.Append(_operators[i].Name);
                     }
+                    if (_n == 1)
+                    {
+                        return string.Format("[{0}+{1}]", _solver.Name, op.ToString());
+                    }
                     return string.Format("ITER_[{0}x({1}+{2}]", _n, _solver.Name, op.ToString());
+                }
+                if (_n == 1)
+                {
+                    return string.Format("{0}", _solver.Name);
                 }
                 return string.Format("ITER_[{0}x{1}]", _n, _solver.Name);
             }
