@@ -28,7 +28,7 @@ Install the following package via Nuget:
 
     PM> Install-Package Itinero.Optimization -IncludePrerelease
 
-Then immidiately some extension methods are available on top the default Itinero _Router_ class. For each method there is a Try alternative that doesn't raise any exceptions when something goes wrong but gracefully reports on the error(s).
+Then immediately some extension methods are available on top the default Itinero _Router_ class. For each method there is a Try alternative that doesn't raise any exceptions when something goes wrong but gracefully reports on the error(s).
 
 - CalculateTSP (profile, locations, first, last): Calculates a default TSP.
   - profile: The vehicle profile.
