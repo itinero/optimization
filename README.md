@@ -3,7 +3,7 @@ Itinero.Optimization
 
 A module for solving optimization routing problems with Itinero as a routing solution.
 
-![Build status](http://build.itinero.tech/app/rest/builds/buildType:(id:Itinero_LogisticsDevelop)/statusIcon)
+![Build status](http://build.itinero.tech:8080/app/rest/builds/buildType:(id:Itinero_LogisticsDevelop)/statusIcon)
 [![Visit our website](https://img.shields.io/badge/website-itinero.tech-020031.svg) ](http://www.itinero.tech/)
 [![GPL licensed](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/itinero/optimization/blob/develop/LICENSE.md)
 
