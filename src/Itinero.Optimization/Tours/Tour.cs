@@ -513,7 +513,8 @@ namespace Itinero.Optimization.Tours
         {
             get
             {
-                return this.Count<int>();
+                throw new NotImplementedException("This linq-based stuff needs to go!");
+                //return this.Count<int>();
             }
         }
 
