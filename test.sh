@@ -1,7 +1,1 @@
-cd ./test/Itinero.Optimization.Test.Runner
-dotnet run -c release
-cd ../..
-
-cd ./test/Itinero.Optimization.Test.Functional
-dotnet run -c release
-cd ../..
+dotnet test ./test/Itinero.Optimization.Test

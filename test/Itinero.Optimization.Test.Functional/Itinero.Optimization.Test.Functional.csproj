@@ -1,34 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net451</TargetFramework>
-    <AssemblyName>Itinero.Optimization.Test.Functional</AssemblyName>
-    <OutputType>Exe</OutputType>
-    <PackageId>Itinero.Optimization.Test.Functional</PackageId>
-    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <StartupObject />
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Itinero.IO.Osm" Version="1.2.0-pre08" />
-    <PackageReference Include="System.Net.Http" Version="4.3.1" />
-  </ItemGroup>
-
+<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\..\src\Itinero.Optimization\Itinero.Optimization.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <None Update="Staging\query1.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Staging\query2.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <PackageReference Include="Itinero.IO.Osm" Version="1.4.0-pre22" />
   </ItemGroup>
-
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
 </Project>
