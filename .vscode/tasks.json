@@ -16,7 +16,7 @@
         {
             "command": "dotnet",
             "label": "build-test-functional",
-            "args": [ "build", "./test/Itinero.Test.Functional" ]
+            "args": [ "build", "./test/Itinero.Optimization.Test.Functional" ]
         }
     ]
 }
