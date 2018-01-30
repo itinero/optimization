@@ -31,11 +31,14 @@ namespace Itinero.Optimization.Tours.Typed
     public class Tour<T> : ITour<T>
         where T : struct
     {
-        private readonly Tour _tour;
+        private readonly ITour _tour;
         private readonly Func<T, int> _getId;
         private readonly Func<int, T> _getVisit;
 
-        protected Tour(Func<T, int> getId, Func<int, T> getVisit, Tour tour)
+        /// <summary>
+        /// Creates a typed tour from the given tour.
+        /// </summary>
+        public Tour(Func<T, int> getId, Func<int, T> getVisit, ITour tour)
         {
             _getId = getId;
             _getVisit = getVisit;
@@ -70,7 +73,11 @@ namespace Itinero.Optimization.Tours.Typed
             _tour = new Tour(customers.Select(x => _getId(x)), lastId);
         }
 
-        protected Tour RawTour
+        /// <summary>
+        /// Gets the raw tour.
+        /// </summary>
+        /// <returns></returns>
+        public ITour RawTour
         {
             get
             {

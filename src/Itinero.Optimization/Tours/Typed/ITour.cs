@@ -198,6 +198,15 @@ namespace Itinero.Optimization.Tours.Typed
         IEnumerable<Triple<T>> Triples();
 
         /// <summary>
+        /// Gets the raw tour.
+        /// </summary>
+        /// <returns></returns>
+        ITour RawTour
+        {
+            get;
+        }
+
+        /// <summary>
         /// Removes all customers in this route except the first one.
         /// </summary>
         void Clear();
