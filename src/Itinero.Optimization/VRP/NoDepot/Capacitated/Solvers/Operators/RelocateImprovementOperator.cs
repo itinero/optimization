@@ -30,7 +30,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
     /// Implements a relocate operator, tries to improve the existing tours by re-inserting a visit from one tour into another.
     /// </summary>
     /// <remarks>
-    /// This follows stop on first-improvement strategy. The algorithm works as follows:
+    /// This follows stop on first-improvement strategy and this operator will only modify the solution when it improves things. 
+    /// 
+    /// The algorithm works as follows:
     /// 
     /// - Select 2 random tours.
     /// - Try relocating from tour1 -> tour2:

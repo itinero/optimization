@@ -37,6 +37,11 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
         {
             throw new System.NotImplementedException();
         }
+        
+        public float Calculate(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int tourIdx)
+        {
+            throw new System.NotImplementedException();
+        }
 
         public override float Calculate(NoDepotCVRProblem problem, NoDepotCVRPSolution solution)
         {
