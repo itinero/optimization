@@ -26,21 +26,29 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
     public static class CheapestInsertionHelper
     {
         /// <summary>
-        /// Inserts the given customer at the best location.
+        /// Inserts the given visit at the best location.
         /// </summary>
-        public static void InsertCheapest(this ITour tour, float[][] weights, int customer)
+        /// <param name="tour">The tour to insert into.</param>
+        /// <param name="weights">The weights between visits.</param>
+        /// <param name="visit">The visit insert.</param>
+        public static void InsertCheapest(this ITour tour, float[][] weights, int visit)
         {
             Pair bestLocation;
-            if (tour.CalculateCheapest(weights, customer, out bestLocation) < float.MaxValue)
+            if (tour.CalculateCheapest(weights, visit, out bestLocation) < float.MaxValue)
             {
-                tour.InsertAfter(bestLocation.From, customer);
+                tour.InsertAfter(bestLocation.From, visit);
             }
         }
 
         /// <summary>
-        /// Calculates the best position to insert a given customer.
+        /// Calculates the best position to insert a given visit.
         /// </summary>
-        public static float CalculateCheapest(this ITour tour, float[][] weights, int customer, out Pair location)
+        /// <param name="tour">The tour to insert into.</param>
+        /// <param name="weights">The weights between visits.</param>
+        /// <param name="visit">The visit insert.</param>
+        /// <param name="location">The cheapest location to insert.</param>
+        /// <returns>The increase/decrease in weight.</returns>
+        public static float CalculateCheapest(this ITour tour, float[][] weights, int visit, out Pair location)
         {
             var bestCost = float.MaxValue;
             location = new Pair(int.MaxValue, int.MaxValue);
@@ -50,13 +58,13 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
                 var first = tour.First;
                 if (tour.IsClosed())
                 {
-                    bestCost = weights[first][customer] +
-                            weights[customer][first];
+                    bestCost = weights[first][visit] +
+                            weights[visit][first];
                     location = new Pair(first, first);
                 }
                 else
                 {
-                    bestCost = weights[first][customer];
+                    bestCost = weights[first][visit];
                     location = new Pair(first, int.MaxValue);
                 }
             }
@@ -64,8 +72,54 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
             {
                 foreach (var pair in tour.Pairs())
                 {
-                    var cost = weights[pair.From][customer] +
-                        weights[customer][pair.To] -
+                    var cost = weights[pair.From][visit] +
+                        weights[visit][pair.To] -
+                        weights[pair.From][pair.To];
+                    if (cost < bestCost)
+                    {
+                        bestCost = cost;
+                        location = pair;
+                    }
+                }
+            }
+            return bestCost;
+        }
+
+        /// <summary>
+        /// Calculates the cheapest location to insert a sub-path that consists of (from) -> ... -> (to).
+        /// </summary>
+        /// <param name="tour">The tour to insert into.</param>
+        /// <param name="weights">The weights between visits.</param>
+        /// <param name="from">The first visit in the path to insert.</param>
+        /// <param name="to">The last visit in the path to insert.</param>
+        /// <param name="location">The cheapest location to insert.</param>
+        /// <returns>The increase/decrease in weight not including the weight of the to be inserted sub-path.</returns>
+        public static float CalculateCheapest(this ITour tour, float[][] weights, int from, int to, out Pair location)
+        {
+            var bestCost = float.MaxValue;
+            location = new Pair(int.MaxValue, int.MaxValue);
+
+            if (tour.Count == 1)
+            {
+                var first = tour.First;
+                if (tour.IsClosed())
+                {
+                    bestCost = weights[first][from] +
+                            weights[to][first];
+                    location = new Pair(first, first);
+                }
+                else
+                {
+                    bestCost = weights[first][from];
+                    location = new Pair(first, int.MaxValue);
+                }
+            }
+            else
+            {
+                foreach (var pair in tour.Pairs())
+                {
+                    var cost = weights[pair.From][from] +
+                        weights[to][pair.To] -
                         weights[pair.From][pair.To];
                     if (cost < bestCost)
                     {

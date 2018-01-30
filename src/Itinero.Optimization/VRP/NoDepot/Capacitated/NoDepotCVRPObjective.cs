@@ -43,6 +43,38 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
             throw new System.NotImplementedException();
         }
 
+        public float[] CalculateCumul(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int tourIdx)
+        {
+            var tour = solution.Tour(tourIdx);
+
+            // intialize the result array.
+            var cumul = new float[tour.Count + 1];
+
+            int previous = -1; // the previous visit.
+            float time = 0; // the current weight.
+            int idx = 0; // the current index.
+            foreach (int visit1 in tour)
+            { // loop over all visits.
+                if (previous >= 0)
+                { // there is a previous visit.
+                    // add one visit and the distance to the previous visit.
+                    time = time + problem.Weights[previous][visit1];
+                    cumul[idx] = time;
+                }
+                else
+                { // there is no previous visit, this is the first one.
+                    cumul[idx] = 0;
+                }
+
+                idx++; // increase the index.
+                previous = visit1; // prepare for next loop.
+            }
+            // handle the edge last->first.
+            time = time + problem.Weights[previous][tour.First];
+            cumul[idx] = time;
+            return cumul;
+        }
+
         public override float Calculate(NoDepotCVRProblem problem, NoDepotCVRPSolution solution)
         {
             throw new System.NotImplementedException();
