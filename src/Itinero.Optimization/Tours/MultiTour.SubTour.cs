@@ -14,7 +14,7 @@ namespace Itinero.Optimization.Tours
         /// <summary>
         /// A class exposing only the information about one route.
         /// </summary>
-        private class SubTour : ITour
+        protected class SubTour : ITour
         {
             private int _first;
             private int? _last;

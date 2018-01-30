@@ -30,7 +30,7 @@ namespace Itinero.Optimization.Tours
     public partial class MultiTour : IMultiTour, IEquatable<MultiTour>
     {
         protected int[] _nextArray;
-        private SubTour[] _subtours;
+        protected SubTour[] _subtours;
 
         /// <summary>
         /// Creates a new dynamic route by creating shallow copy of the array(s) given.
@@ -54,7 +54,7 @@ namespace Itinero.Optimization.Tours
         /// <param name="first"></param>
         /// <param name="nextArray"></param>
         /// <param name="is_round"></param>
-        private MultiTour(IEnumerable<SubTour> first, int[] nextArray)
+        protected MultiTour(IEnumerable<SubTour> first, int[] nextArray)
         {
             _nextArray = nextArray.Clone() as int[];
 

@@ -73,12 +73,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="VRP\**" />
-    <EmbeddedResource Remove="VRP\**" />
-    <None Remove="VRP\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Itinero" Version="1.2.0-pre08" />
   </ItemGroup>
 

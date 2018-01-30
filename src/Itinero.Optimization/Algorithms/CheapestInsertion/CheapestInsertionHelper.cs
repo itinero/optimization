@@ -28,7 +28,7 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
         /// <summary>
         /// Inserts the given customer at the best location.
         /// </summary>
-        public static void InsertCheapest(this Tour tour, float[][] weights, int customer)
+        public static void InsertCheapest(this ITour tour, float[][] weights, int customer)
         {
             Pair bestLocation;
             if (tour.CalculateCheapest(weights, customer, out bestLocation) < float.MaxValue)
@@ -40,7 +40,7 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
         /// <summary>
         /// Calculates the best position to insert a given customer.
         /// </summary>
-        public static float CalculateCheapest(this Tour tour, float[][] weights, int customer, out Pair location)
+        public static float CalculateCheapest(this ITour tour, float[][] weights, int customer, out Pair location)
         {
             var bestCost = float.MaxValue;
             location = new Pair(int.MaxValue, int.MaxValue);
