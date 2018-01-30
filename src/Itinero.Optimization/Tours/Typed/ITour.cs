@@ -168,7 +168,7 @@ namespace Itinero.Optimization.Tours.Typed
         /// </summary>
         /// <param name="index">The position of the customer in the route, the first being at O.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">When the index is out of range.</exception>
-        T GetCustomerAt(int index);
+        T GetVisitAt(int index);
 
         /// <summary>
         /// Returns an enumerable that enumerates between the two given customers.

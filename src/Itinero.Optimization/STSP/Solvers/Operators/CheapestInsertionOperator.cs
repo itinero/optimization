@@ -77,7 +77,7 @@ namespace Itinero.Optimization.STSP.Solvers.Operators
                 {
                     i--;
                     var index = RandomGeneratorExtensions.GetRandom().Generate(solution.Count);
-                    var current = solution.GetCustomerAt(index);
+                    var current = solution.GetVisitAt(index);
                     if (current != Constants.NOT_SET)
                     {
                         if (current != solution.First &&

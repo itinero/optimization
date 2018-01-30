@@ -25,7 +25,7 @@ using System.Text;
 namespace Itinero.Optimization.Tours
 {
     /// <summary>
-    /// a route or a sequence of customers.
+    /// a tour or a sequence of visits.
     /// </summary>
     public sealed class Tour : ITour
     {
@@ -34,7 +34,7 @@ namespace Itinero.Optimization.Tours
         private int? _last;
 
         /// <summary>
-        /// Creates a new route based on the given array.
+        /// Creates a new tour based on the given array.
         /// </summary>
         private Tour(int first, int[] nextArray, int? last)
         {
@@ -46,65 +46,65 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
-        /// Creates a new closed route using a preexisting sequence.
+        /// Creates a new closed tour using a preexisting sequence.
         /// </summary>
-        public Tour(IEnumerable<int> customers)
-            : this(customers, customers.First())
+        public Tour(IEnumerable<int> visits)
+            : this(visits, visits.First())
         {
 
         }
 
         /// <summary>
-        /// Creates a new route using a preexisting sequence.
+        /// Creates a new tour using a preexisting sequence.
         /// </summary>
-        public Tour(IEnumerable<int> customers, int? last)
+        public Tour(IEnumerable<int> visits, int? last)
         {
             _nextArray = new int[0];
             var first = -1;
             var previous = -1;
 
             var lastOk = (!last.HasValue);
-            foreach (var customer in customers)
+            foreach (var visit in visits)
             {
                 // resize the array if needed.
-                if (_nextArray.Length <= customer)
+                if (_nextArray.Length <= visit)
                 {
-                    this.Resize(customer);
+                    this.Resize(visit);
                 }
 
-                // the first customer.
+                // the first visit.
                 if (first < 0)
-                { // set the first customer.
-                    first = customer;
+                { // set the first visit.
+                    first = visit;
                 }
                 else
                 { // set the next array.
-                    _nextArray[previous] = customer;
+                    _nextArray[previous] = visit;
                 }
 
                 if (!lastOk)
                 {
-                    lastOk = customer == last;
+                    lastOk = visit == last;
                 }
 
-                previous = customer;
+                previous = visit;
             }
 
             if (!lastOk)
             {
-                throw new ArgumentException("There is a fixed last customer defined but it's not in the initial customers set.");
+                throw new ArgumentException("There is a fixed last visit defined but it's not in the initial visits set.");
             }
 
             _nextArray[previous] = Constants.END;
 
-            // set actual route-data.
+            // set actual tour-data.
             _first = first;
             _internalLast = previous;
             _last = last;
         }
 
         /// <summary>
-        /// Returns true if there exists an edge from the given customer to another.
+        /// Returns true if there exists an edge from the given visit to another.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -112,13 +112,13 @@ namespace Itinero.Optimization.Tours
         public bool Contains(int from, int to)
         {
             if (_nextArray.Length > from)
-            { // customers should exist.
+            { // visits should exist.
                 if (_nextArray[from] == to)
                 { // edge found.
                     return true;
                 }
                 else if (this.Contains(from) && _nextArray[from] == Constants.END)
-                { // the from customer is contained but it does not have a next customer.
+                { // the from visit is contained but it does not have a next visit.
                     if (this.First == this.Last)
                     {
                         return to == _first;
@@ -129,142 +129,144 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
-        /// Returns true if the customer exists in this route.
+        /// Returns true if the visit exists in this tour.
         /// </summary>
-        /// <param name="customer"></param>
+        /// <param name="visit"></param>
         /// <returns></returns>
-        public bool Contains(int customer)
+        public bool Contains(int visit)
         {
-            if (_nextArray.Length > customer)
+            if (_nextArray.Length > visit)
             {
-                if (_nextArray[customer] >= 0)
-                { // customer is definetly contained.
+                if (_nextArray[visit] >= 0)
+                { // visit is definetly contained.
                     return true;
                 }
-                return _nextArray.Contains<int>(customer);
+                return _nextArray.Contains<int>(visit);
             }
             return false;
         }
 
         /// <summary>
-        /// Inserts a customer right after from and before to.
+        /// Inserts a visit right after from and before to.
         /// </summary>
         /// <param name="from"></param>
-        /// <param name="customer"></param>
-        public void ReplaceEdgeFrom(int from, int customer)
+        /// <param name="visit"></param>
+        public void ReplaceEdgeFrom(int from, int visit)
         {
             if (from < 0)
-            { // a new customer cannot be negative!
-                throw new ArgumentOutOfRangeException("Cannot add a customer after a customer with a negative index!");
+            { // a new visit cannot be negative!
+                throw new ArgumentOutOfRangeException("Cannot add a visit after a visit with a negative index!");
             }
 
-            if (customer == _first)
-            { // the next customer is actually the first customer.
-                // set the next customer of the from customer to -1.
-                customer = Constants.END;
+            _count = -1;
+            if (visit == _first)
+            { // the next visit is actually the first visit.
+                // set the next visit of the from visit to -1.
+                visit = Constants.END;
             }
 
             if (_nextArray.Length > from)
-            { // customers should exist.
+            { // visits should exist.
                 // resize the array if needed.
-                if (_nextArray.Length <= customer)
+                if (_nextArray.Length <= visit)
                 { // resize the array.
-                    this.Resize(customer);
+                    this.Resize(visit);
                 }
 
-                // insert customer.
-                _nextArray[from] = customer;
+                // insert visit.
+                _nextArray[from] = visit;
                 return;
             }
-            throw new ArgumentOutOfRangeException("Customer(s) do not exist in this route!");
+            throw new ArgumentOutOfRangeException("visit(s) do not exist in this tour!");
         }
 
         /// <summary>
-        /// Replaces the given old customer with the new customer. Assumes the new customer doesn't exist yet.
+        /// Replaces the given old visit with the new visit. Assumes the new visit doesn't exist yet.
         /// </summary>
-        public void Replace(int oldCustomer, int newCustomer)
+        public void Replace(int oldvisit, int newvisit)
         {
-            if (oldCustomer == newCustomer)
+            if (oldvisit == newvisit)
             {
                 return;
             }
-            if (newCustomer >= _nextArray.Length)
+            if (newvisit >= _nextArray.Length)
             {
-                this.Resize(newCustomer);
+                this.Resize(newvisit);
             }
 
-            _nextArray[newCustomer] = _nextArray[oldCustomer];
-            _nextArray[oldCustomer] = Constants.NOT_SET;
+            _nextArray[newvisit] = _nextArray[oldvisit];
+            _nextArray[oldvisit] = Constants.NOT_SET;
 
-            if (oldCustomer == _first)
+            if (oldvisit == _first)
             {
-                _first = newCustomer;
+                _first = newvisit;
             }
 
-            if (oldCustomer == _last)
+            if (oldvisit == _last)
             {
-                _last = newCustomer;
+                _last = newvisit;
             }
 
             for (var i = 0; i < _nextArray.Length; i++)
             {
-                if (_nextArray[i] == oldCustomer)
+                if (_nextArray[i] == oldvisit)
                 {
-                    _nextArray[i] = newCustomer;
+                    _nextArray[i] = newvisit;
                     break;
                 }
             }
         }
 
         /// <summary>
-        /// Inserts a customer right after from and before to.
+        /// Inserts a visit right after from and before to.
         /// </summary>
         /// <param name="from"></param>
-        /// <param name="customer"></param>
-        public void InsertAfter(int from, int customer)
+        /// <param name="visit"></param>
+        public void InsertAfter(int from, int visit)
         {
-            if (customer < 0)
-            { // a new customer cannot be negative!
-                throw new ArgumentOutOfRangeException("customer", "Cannot add customers with a negative id!");
+            if (visit < 0)
+            { // a new visit cannot be negative!
+                throw new ArgumentOutOfRangeException("visit", "Cannot add visits with a negative id!");
             }
             if (from < 0)
-            { // a new customer cannot be negative!
-                throw new ArgumentOutOfRangeException("from", "Cannot add a customer after a customer with a negative id!");
+            { // a new visit cannot be negative!
+                throw new ArgumentOutOfRangeException("from", "Cannot add a visit after a visit with a negative id!");
             }
-            if (from == customer)
-            { // the customer are identical.
-                throw new ArgumentException("Cannot add a customer after itself.");
+            if (from == visit)
+            { // the visit are identical.
+                throw new ArgumentException("Cannot add a visit after itself.");
             }
 
+            _count = -1;
             // resize the array if needed.
             if (_nextArray.Length <= from)
             { // array is not big enough.
                 this.Resize(from);
             }
-            if (_nextArray.Length <= customer)
+            if (_nextArray.Length <= visit)
             { // resize the array.
-                this.Resize(customer);
+                this.Resize(visit);
             }
 
-            // get the to customer if needed.
+            // get the to visit if needed.
             var to = _nextArray[from];
             if (to == Constants.NOT_SET)
             { // the to field is not set.
-                throw new ArgumentOutOfRangeException("from", string.Format("Customer {0} does not exist.", from));
+                throw new ArgumentOutOfRangeException("from", string.Format("visit {0} does not exist.", from));
             }
 
-            // insert customer.
-            _nextArray[from] = customer;
+            // insert visit.
+            _nextArray[from] = visit;
             if (to == Constants.END)
-            { // the to-customer is END.
+            { // the to-visit is END.
                 if (this.First != this.Last)
                 { // update last.
-                    _internalLast = customer;
+                    _internalLast = visit;
                 }
             }
 
-            // update the next for customer.
-            _nextArray[customer] = to;
+            // update the next for visit.
+            _nextArray[visit] = to;
 
             return;
         }
@@ -272,19 +274,19 @@ namespace Itinero.Optimization.Tours
         /// <summary>
         /// Resizes the array.
         /// </summary>
-        /// <param name="customer"></param>
-        private void Resize(int customer)
-        { // THIS EXPENSIZE! TRY TO ESTIMATE CORRECT SIZE WHEN CREATING ROUTE!
+        /// <param name="visit"></param>
+        private void Resize(int visit)
+        { // THIS EXPENSIZE! TRY TO ESTIMATE CORRECT SIZE WHEN CREATING tour!
             int old_size = _nextArray.Length;
-            Array.Resize<int>(ref _nextArray, customer + 1);
-            for (int newCustomer = old_size; newCustomer < _nextArray.Length; newCustomer++)
+            Array.Resize<int>(ref _nextArray, visit + 1);
+            for (int newvisit = old_size; newvisit < _nextArray.Length; newvisit++)
             { // initialize with NOT_SET.
-                _nextArray[newCustomer] = Constants.NOT_SET;
+                _nextArray[newvisit] = Constants.NOT_SET;
             }
         }
 
         /// <summary>
-        /// Cuts out a part of the route and returns the customers contained.
+        /// Cuts out a part of the tour and returns the visits contained.
         /// </summary>
         /// <param name="start"></param>
         /// <param name="length"></param>
@@ -293,43 +295,44 @@ namespace Itinero.Optimization.Tours
         {
             var cutPart = new int[length];
             var position = 0;
-            var currentCustomer = this.First;
+            var currentvisit = this.First;
 
             // keep moving next until the start.
             while (position < start - 1)
             {
                 position++; // increase the position.
-                currentCustomer = _nextArray[currentCustomer];
+                currentvisit = _nextArray[currentvisit];
             }
 
             // cut the actual part.
-            int startCustomer = currentCustomer;
+            int startvisit = currentvisit;
             while (position < start + length - 1)
             {
                 // move next.
                 position++; // increase the position.
-                currentCustomer = _nextArray[currentCustomer];
+                currentvisit = _nextArray[currentvisit];
 
-                // set the current customer.
-                cutPart[position - start] = currentCustomer;
+                // set the current visit.
+                cutPart[position - start] = currentvisit;
             }
 
-            currentCustomer = _nextArray[currentCustomer];
+            currentvisit = _nextArray[currentvisit];
 
-            // set the next customer.
-            _nextArray[startCustomer] = currentCustomer;
+            // set the next visit.
+            _nextArray[startvisit] = currentvisit;
 
+            _count -= length;
             return cutPart;
         }
 
         /// <summary>
-        /// Returns the neigbour of the given customer.
+        /// Returns the neigbour of the given visit.
         /// </summary>
-        /// <param name="customer"></param>
+        /// <param name="visit"></param>
         /// <returns></returns>
-        public int GetNeigbour(int customer)
+        public int GetNeigbour(int visit)
         {
-            var neighbour = _nextArray[customer];
+            var neighbour = _nextArray[visit];
             if (neighbour < 0)
             {
                 if (this.First == this.Last)
@@ -343,17 +346,17 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
-        /// Returns the neigbour of the given customer.
+        /// Returns the neigbour of the given visit.
         /// </summary>
-        /// <param name="customer"></param>
+        /// <param name="visit"></param>
         /// <returns></returns>
-        public int Next(int customer)
+        public int Next(int visit)
         {
-            return _nextArray[customer];
+            return _nextArray[visit];
         }
 
         /// <summary>
-        /// Creates an exact deep-copy of this route.
+        /// Creates an exact deep-copy of this tour.
         /// </summary>
         /// <returns></returns>
         public object Clone()
@@ -391,9 +394,9 @@ namespace Itinero.Optimization.Tours
         /// Returns the enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<int> GetEnumerator(int customer)
+        public IEnumerator<int> GetEnumerator(int visit)
         {
-            return new Enumerator(_first, customer, _nextArray);
+            return new Enumerator(_first, visit, _nextArray);
         }
 
         /// <summary>
@@ -483,11 +486,11 @@ namespace Itinero.Optimization.Tours
         /// <returns></returns>
         public IEnumerable<int> Between(int from, int to)
         {
-            return new RouteBetweenEnumerable(_nextArray, _first, _last, from, to);
+            return new TourBetweenEnumerable(_nextArray, _first, _last, from, to);
         }
 
         /// <summary>
-        /// Returns an enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a round the pair that contains last->first is also included.
+        /// Returns an enumerable that enumerates all visit pairs that occur in the tour as 1->2. If the tour is a round the pair that contains last->first is also included.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Pair> Pairs()
@@ -496,7 +499,7 @@ namespace Itinero.Optimization.Tours
         }
         
         /// <summary>
-        /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2-3. If the route is a round the tuples that contain last->first are also included.
+        /// Returns an enumerable that enumerates all visit triples that occur in the tour as 1->2-3. If the tour is a round the tuples that contain last->first are also included.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Triple> Triples()
@@ -507,42 +510,43 @@ namespace Itinero.Optimization.Tours
         #endregion
 
         /// <summary>
-        /// Returns the size of the route.
+        /// Returns the size of the tour.
         /// </summary>
         public int Count
         {
             get
             {
-                throw new NotImplementedException("This linq-based stuff needs to go!");
-                //return this.Count<int>();
+                this.UpdateCount();
+                return _count;
             }
         }
 
         /// <summary>
-        /// Removes a customer from the route.
+        /// Removes a visit from the tour.
         /// </summary>
-        /// <param name="customer"></param>
+        /// <param name="visit"></param>
         /// <returns></returns>
-        public bool Remove(int customer)
+        public bool Remove(int visit)
         {
-            if (customer == _first)
-            { // cannot remove the first customer.
-                throw new InvalidOperationException("Cannot remove first customer from a route.");
+            if (visit == _first)
+            { // cannot remove the first visit.
+                throw new InvalidOperationException("Cannot remove first visit from a tour.");
             }
-            if (customer == _last)
-            { // cannot remove the first customer.
-                throw new InvalidOperationException("Cannot remove last customer from a route.");
+            if (visit == _last)
+            { // cannot remove the first visit.
+                throw new InvalidOperationException("Cannot remove last visit from a tour.");
             }
             for (int idx = 0; idx < _nextArray.Length; idx++)
             {
-                if (_nextArray[idx] == customer)
+                if (_nextArray[idx] == visit)
                 {
-                    _nextArray[idx] = _nextArray[customer];
-                    _nextArray[customer] = Constants.NOT_SET;
-                    if(customer == _internalLast && this.First != this.Last)
+                    _nextArray[idx] = _nextArray[visit];
+                    _nextArray[visit] = Constants.NOT_SET;
+                    if(visit == _internalLast && this.First != this.Last)
                     { // update last if open problem.
                         _internalLast = idx;
                     }
+                    _count--;
                     return true;
                 }
             }
@@ -550,27 +554,28 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
-        /// Removes a customer from the route.
+        /// Removes a visit from the tour.
         /// </summary>
-        /// <param name="customer">The customer to remove.</param>
-        /// <param name="after">The customer that used to exist after.</param>
-        /// <param name="before">The customer that used to exist before.</param>
+        /// <param name="visit">The visit to remove.</param>
+        /// <param name="after">The visit that used to exist after.</param>
+        /// <param name="before">The visit that used to exist before.</param>
         /// <returns></returns>
-        public bool Remove(int customer, out int before, out int after)
+        public bool Remove(int visit, out int before, out int after)
         {
-            if (customer == _first)
-            { // cannot remove the first customer.
-                throw new InvalidOperationException("Cannot remove first customer from a route.");
+            if (visit == _first)
+            { // cannot remove the first visit.
+                throw new InvalidOperationException("Cannot remove first visit from a tour.");
             }
             for (int idx = 0; idx < _nextArray.Length; idx++)
             { // search for the 'before'.
-                if (_nextArray[idx] == customer)
+                if (_nextArray[idx] == visit)
                 {
                     before = idx;
-                    after = _nextArray[customer];
+                    after = _nextArray[visit];
 
-                    _nextArray[idx] = _nextArray[customer];
-                    _nextArray[customer] = Constants.NOT_SET;
+                    _nextArray[idx] = _nextArray[visit];
+                    _nextArray[visit] = Constants.NOT_SET;
+                    _count--;
                     return true;
                 }
             }
@@ -580,31 +585,31 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
-        /// Shifts the given customer to a new location and places it after the given 'before' customer.
+        /// Shifts the given visit to a new location and places it after the given 'before' visit.
         /// </summary>
-        /// <param name="customer">The customer to shift.</param>
-        /// <param name="before">The new customer that will come right before.</param>
+        /// <param name="visit">The visit to shift.</param>
+        /// <param name="before">The new visit that will come right before.</param>
         /// <returns></returns>
-        public bool ShiftAfter(int customer, int before)
+        public bool ShiftAfter(int visit, int before)
         {
             int oldBefore, oldAfter, newAfter;
-            return this.ShiftAfter(customer, before, out oldBefore, out oldAfter, out newAfter);
+            return this.ShiftAfter(visit, before, out oldBefore, out oldAfter, out newAfter);
         }
 
         /// <summary>
-        /// Shifts the given customer to a new location and places it after the given 'before' customer.
+        /// Shifts the given visit to a new location and places it after the given 'before' visit.
         /// </summary>
-        /// <param name="customer">The customer to shift.</param>
-        /// <param name="before">The new customer that will come right before.</param>
-        /// <param name="oldBefore">The customer that used to exist before.</param>
-        /// <param name="oldAfter">The customer that used to exist after.</param>
-        /// <param name="newAfter">The customer that new exists after.</param>
-        public bool ShiftAfter(int customer, int before, out int oldBefore, out int oldAfter, out int newAfter)
+        /// <param name="visit">The visit to shift.</param>
+        /// <param name="before">The new visit that will come right before.</param>
+        /// <param name="oldBefore">The visit that used to exist before.</param>
+        /// <param name="oldAfter">The visit that used to exist after.</param>
+        /// <param name="newAfter">The visit that new exists after.</param>
+        public bool ShiftAfter(int visit, int before, out int oldBefore, out int oldAfter, out int newAfter)
         {
-            if (customer == before) { throw new ArgumentException("Cannot shift a customer after itself."); }
-            var searchFor = customer;
-            if (customer == _first)
-            { // search for END when customer to insert is the first customer.
+            if (visit == before) { throw new ArgumentException("Cannot shift a visit after itself."); }
+            var searchFor = visit;
+            if (visit == _first)
+            { // search for END when visit to insert is the first visit.
                 searchFor = Constants.END;
             }
             for (int idx = 0; idx < _nextArray.Length; idx++)
@@ -612,7 +617,7 @@ namespace Itinero.Optimization.Tours
                 if (_nextArray[idx] == searchFor)
                 {
                     oldBefore = idx;
-                    oldAfter = _nextArray[customer];
+                    oldAfter = _nextArray[visit];
                     if(oldBefore == before)
                     { // nothing to do here!
                         if (this.First == this.Last && oldAfter == Constants.END)
@@ -625,9 +630,9 @@ namespace Itinero.Optimization.Tours
                     }
                     newAfter = _nextArray[before];
 
-                    // reorganize route.
+                    // reorganize tour.
                     _nextArray[before] = searchFor;
-                    _nextArray[customer] = newAfter;
+                    _nextArray[visit] = newAfter;
                     _nextArray[oldBefore] = oldAfter;
 
                     if (this.First == this.Last && oldAfter == Constants.END)
@@ -648,31 +653,31 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
-        /// Returns true if the given customer is the first one.
+        /// Returns true if the given visit is the first one.
         /// </summary>
-        public bool IsFirst(int customer)
+        public bool IsFirst(int visit)
         {
             if (this.First == this.Last)
-            { // no customer is first, this tour is a loop.
+            { // no visit is first, this tour is a loop.
                 return false;
             }
-            return this.First == customer;
+            return this.First == visit;
         }
 
         /// <summary>
-        /// Returns true if the given customer is the last one.
+        /// Returns true if the given visit is the last one.
         /// </summary>
-        public bool IsLast(int customer)
+        public bool IsLast(int visit)
         {
             if (this.First == this.Last)
-            { // no customer is last, this tour is a loop.
+            { // no visit is last, this tour is a loop.
                 return false;
             }
-            return _nextArray[customer] == Constants.END;
+            return _nextArray[visit] == Constants.END;
         }
 
         /// <summary>
-        /// Returns the first customer in this route.
+        /// Returns the first visit in this tour.
         /// </summary>
         public int First
         {
@@ -683,7 +688,7 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
-        /// Returns the last customer in this route.
+        /// Returns the last visit in this tour.
         /// </summary>
         public int? Last
         {
@@ -694,16 +699,16 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
-        /// Returns the index of the given customer.
+        /// Returns the index of the given visit.
         /// </summary>
-        /// <param name="customer"></param>
+        /// <param name="visit"></param>
         /// <returns></returns>
-        public int GetIndexOf(int customer)
+        public int GetIndexOf(int visit)
         {
             var idx = 0;
-            foreach (var possibleCustomer in this)
+            foreach (var possiblevisit in this)
             {
-                if (possibleCustomer == customer)
+                if (possiblevisit == visit)
                 {
                     return idx;
                 }
@@ -713,30 +718,30 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
-        /// Gets the customer at the given index.
+        /// Gets the visit at the given index.
         /// </summary>
-        /// <param name="index">The position of the customer in the route, the first being at O.</param>
+        /// <param name="index">The position of the visit in the tour, the first being at O.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">When the index is out of range.</exception>
-        public int GetCustomerAt(int index)
+        public int GetVisitAt(int index)
         {
-            if (index < 0) { new ArgumentOutOfRangeException("No customer can ever exist at an index smaller than 0."); }
+            if (index < 0) { new ArgumentOutOfRangeException("No visit can ever exist at an index smaller than 0."); }
 
             var idx = 0;
-            foreach (var possibleCustomer in this)
+            foreach (var possiblevisit in this)
             {
                 if (idx == index)
                 {
-                    return possibleCustomer;
+                    return possiblevisit;
                 }
                 idx++;
             }
-            throw new ArgumentOutOfRangeException(string.Format("No customer found at index {0}.", index));
+            throw new ArgumentOutOfRangeException(string.Format("No visit found at index {0}.", index));
         }
 
         private int _internalLast;
 
         /// <summary>
-        /// Updates and sets the last customer.
+        /// Updates and sets the last visit.
         /// </summary>
         private void UpdateLast()
         {
@@ -750,28 +755,38 @@ namespace Itinero.Optimization.Tours
             }
         }
 
+        private int _count = -1;
+
+        private void UpdateCount()
+        {
+            if (_count < 0)
+            {
+                _count = (this as IEnumerable<int>).Count();
+            }
+        }
+
         /// <summary>
-        /// Returns a description of this route.
+        /// Returns a description of this tour.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
             int previous = -1;
             var result = new StringBuilder();
-            foreach (int customer in this)
+            foreach (int visit in this)
             {
                 if (previous < 0)
                 {
                     result.Append('[');
-                    result.Append(customer);
+                    result.Append(visit);
                     result.Append(']');
                 }
-                else if(customer != this.Last)
+                else if(visit != this.Last)
                 {
                     result.Append("->");
-                    result.Append(customer);
+                    result.Append(visit);
                 }
-                previous = customer;
+                previous = visit;
             }
 
             if (this.Last.HasValue && this.Count > 1)
@@ -784,10 +799,12 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
-        /// Clears out all the customers in this route.
+        /// Clears out all the visits in this tour.
         /// </summary>
         public void Clear()
         {
+            // TODO: why explicity clear everything? also why resize, should be explicit.
+            //       see multitour.subtour.
             _nextArray = new int[_first + 1];
             for(var idx = 0; idx < _nextArray.Length; idx++)
             {
@@ -795,12 +812,13 @@ namespace Itinero.Optimization.Tours
             }
             _nextArray[_first] = Constants.END;
             _internalLast = _first;
+            _count = -1;
         }
 
         /// <summary>
-        /// An enumerable to enumerate customers between two given customers.
+        /// An enumerable to enumerate visits between two given visits.
         /// </summary>
-        internal class RouteBetweenEnumerable : IEnumerable<int>
+        internal class TourBetweenEnumerable : IEnumerable<int>
         {
             private readonly int _from;
             private readonly int _to;
@@ -811,7 +829,7 @@ namespace Itinero.Optimization.Tours
             /// <summary>
             /// Creates a new between enumerable.
             /// </summary>
-            public RouteBetweenEnumerable(int[] nextArray, int first, int? last, int from, int to)
+            public TourBetweenEnumerable(int[] nextArray, int first, int? last, int from, int to)
             {
                 _nextArray = nextArray;
                 _first = first;

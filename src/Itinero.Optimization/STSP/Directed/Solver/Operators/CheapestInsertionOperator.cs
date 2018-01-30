@@ -98,7 +98,7 @@ namespace Itinero.Optimization.STSP.Directed.Solvers.Operators
                 {
                     i--;
                     var index = RandomGeneratorExtensions.GetRandom().Generate(solution.Count);
-                    var directedId = solution.GetCustomerAt(index);
+                    var directedId = solution.GetVisitAt(index);
                     if (directedId != Constants.NOT_SET)
                     {
                         var current = DirectedHelper.ExtractId(directedId);

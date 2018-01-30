@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Licensed to SharpSoftware under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for 
  *  additional information regarding copyright ownership.
@@ -27,46 +27,28 @@ using System.Threading.Tasks;
 namespace Itinero.Optimization.Test.Tours
 {
     /// <summary>
-    /// Tests for tour.
+    /// Contains tests for the multi tour.
     /// </summary>
     [TestFixture]
-    public class TourTest
+    public class MultiTourTests
     {
+
         /// <summary>
-        /// Tests cloning a tour.
+        /// Tests adding a tour.
         /// </summary>
         [Test]
-        public void TestClone()
+        public void TestAddTour()
         {
             var tourEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            var tour = new Optimization.Tours.Tour(tourEnumerable, 0);
-            var cloned = tour.Clone() as Optimization.Tours.Tour;
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Tour(tourEnumerable, 0));
 
-            Assert.AreEqual(tour.First, cloned.First);
-            Assert.AreEqual(tour.Last, cloned.Last);
-            Assert.AreEqual(tour.Count, cloned.Count);
-
-            ExtraAssert.ItemsAreEqual(tour, cloned);
-
-            tourEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            tour = new Optimization.Tours.Tour(tourEnumerable, 4);
-            cloned = tour.Clone() as Optimization.Tours.Tour;
-
-            Assert.AreEqual(tour.First, cloned.First);
-            Assert.AreEqual(tour.Last, cloned.Last);
-            Assert.AreEqual(tour.Count, cloned.Count);
-
-            ExtraAssert.ItemsAreEqual(tour, cloned);
-
-            tourEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            tour = new Optimization.Tours.Tour(tourEnumerable, null);
-            cloned = tour.Clone() as Optimization.Tours.Tour;
-
-            Assert.AreEqual(tour.First, cloned.First);
-            Assert.AreEqual(tour.Last, cloned.Last);
-            Assert.AreEqual(tour.Count, cloned.Count);
-
-            ExtraAssert.ItemsAreEqual(tour, cloned);
+            Assert.AreEqual(1, multiTour.Count);
+            var subTour = multiTour.Tour(0);
+            Assert.IsNotNull(subTour);
+            Assert.AreEqual(0, subTour.First);
+            Assert.AreEqual(0, subTour.Last);
+            Assert.AreEqual(tourEnumerable, subTour);
         }
 
         /// <summary>
@@ -76,13 +58,15 @@ namespace Itinero.Optimization.Test.Tours
         public void TestClear()
         {
             var tourEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            var tour = new Optimization.Tours.Tour(tourEnumerable, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Tour(tourEnumerable, 0));
 
-            tour.Clear();
+            var subTour = multiTour.Tour(0);
+            subTour.Clear();
 
-            Assert.AreEqual(1, tour.Count);
-            Assert.AreEqual(0, tour.First);
-            Assert.AreEqual(0, tour.Last);
+            Assert.AreEqual(1, subTour.Count);
+            Assert.AreEqual(0, subTour.First);
+            Assert.AreEqual(0, subTour.Last);
         }
 
         /// <summary>
@@ -92,7 +76,10 @@ namespace Itinero.Optimization.Test.Tours
         public void TestGetVisitAt()
         {
             var tourEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            var tour = new Optimization.Tours.Tour(tourEnumerable, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Tour(tourEnumerable, 0));
+
+            var tour = multiTour.Tour(0);
 
             Assert.AreEqual(tourEnumerable[0], tour.GetVisitAt(0));
             Assert.AreEqual(tourEnumerable[1], tour.GetVisitAt(1));
@@ -111,13 +98,15 @@ namespace Itinero.Optimization.Test.Tours
         }
 
         /// <summary>
-        /// Tests enumerable constructors.
+        /// Tests adding closed tour.
         /// </summary>
         [Test]
-        public void TestEnumerableConstructorClosed()
+        public void TestAddClosedTour()
         {
             var tourEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            var tour = new Optimization.Tours.Tour(tourEnumerable, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(tourEnumerable, 0));
+            var tour = multiTour.Tour(0);
 
             Assert.AreEqual(5, tour.Count);
             Assert.AreEqual(0, tour.First);
@@ -132,13 +121,15 @@ namespace Itinero.Optimization.Test.Tours
         }
 
         /// <summary>
-        /// Tests enumerable constructors.
+        /// Tests adding fixed end tour.
         /// </summary>
         [Test]
-        public void TestEnumerableConstructorFixed()
+        public void TestAddFixedTour()
         {
             var tourEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            var tour = new Optimization.Tours.Tour(tourEnumerable, 4);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(tourEnumerable, 4));
+            var tour = multiTour.Tour(0);
 
             Assert.AreEqual(5, tour.Count);
             Assert.AreEqual(0, tour.First);
@@ -153,13 +144,15 @@ namespace Itinero.Optimization.Test.Tours
         }
 
         /// <summary>
-        /// Tests enumerable constructors.
+        /// Tests adding open tour.
         /// </summary>
         [Test]
-        public void TestEnumerableConstructorOpen()
+        public void TestAddOpenTour()
         {
             var tourEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            var tour = new Optimization.Tours.Tour(tourEnumerable, null);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(tourEnumerable, null));
+            var tour = multiTour.Tour(0);
 
             Assert.AreEqual(5, tour.Count);
             Assert.AreEqual(0, tour.First);
@@ -179,7 +172,9 @@ namespace Itinero.Optimization.Test.Tours
         [Test]
         public void TestCount()
         {
-            var tour = new Optimization.Tours.Tour(new int[] { 0 }, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(new int[] { 0 }, 0));
+            var tour = multiTour.Tour(0);
             Assert.AreEqual(1, tour.Count);
             tour.InsertAfter(0, 1);
             Assert.AreEqual(2, tour.Count);
@@ -189,7 +184,9 @@ namespace Itinero.Optimization.Test.Tours
             Assert.AreEqual(4, tour.Count);
             tour.InsertAfter(3, 4);
 
-            tour = new Optimization.Tours.Tour(new int[] { 0 }, null);
+            multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(new int[] { 0 }, null));
+            tour = multiTour.Tour(0);
             Assert.AreEqual(1, tour.Count);
             tour.InsertAfter(0, 1);
             Assert.AreEqual(2, tour.Count);
@@ -206,14 +203,18 @@ namespace Itinero.Optimization.Test.Tours
         [Test]
         public void TestFirstAndLast()
         {
-            var tour = new Optimization.Tours.Tour(new int[] { 0 }, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(new int[] { 0 }, 0));
+            var tour = multiTour.Tour(0);
             Assert.AreEqual(0, tour.First);
             Assert.AreEqual(0, tour.Last);
             tour.InsertAfter(0, 1);
             Assert.AreEqual(0, tour.First);
             Assert.AreEqual(0, tour.Last);
 
-            tour = new Optimization.Tours.Tour(new int[] { 0 }, null);
+            multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(new int[] { 0 }, null));
+            tour = multiTour.Tour(0);
             Assert.AreEqual(0, tour.First);
             Assert.AreEqual(null, tour.Last);
             tour.InsertAfter(0, 1);
@@ -221,17 +222,23 @@ namespace Itinero.Optimization.Test.Tours
             Assert.AreEqual(null, tour.Last);
 
             var tourEnumerable = new int[] { 0, 1, 3, 2, 4 };
-            tour = new Optimization.Tours.Tour(tourEnumerable, 4);
+            multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(tourEnumerable, 4));
+            tour = multiTour.Tour(0);
 
             Assert.AreEqual(0, tour.First);
             Assert.AreEqual(4, tour.Last);
 
-            tour = new Optimization.Tours.Tour(tourEnumerable, 0);
+            multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(tourEnumerable, 0));
+            tour = multiTour.Tour(0);
 
             Assert.AreEqual(0, tour.First);
             Assert.AreEqual(0, tour.Last);
 
-            tour = new Optimization.Tours.Tour(tourEnumerable, null);
+            multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(tourEnumerable, null));
+            tour = multiTour.Tour(0);
 
             Assert.AreEqual(0, tour.First);
             Assert.AreEqual(null, tour.Last);
@@ -244,7 +251,9 @@ namespace Itinero.Optimization.Test.Tours
         public void TestContainsClosed()
         {
             var tourEnumerable = new int[] { 0, 1, 2, 3, 4 };
-            var tour = new Optimization.Tours.Tour(tourEnumerable, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(tourEnumerable, 0));
+            var tour = multiTour.Tour(0);
 
             Assert.IsFalse(tour.Contains(10));
 
@@ -271,7 +280,9 @@ namespace Itinero.Optimization.Test.Tours
         public void TestContainsOpen()
         {
             var tourEnumerable = new int[] { 0, 1, 2, 3, 4 };
-            var tour = new Optimization.Tours.Tour(tourEnumerable, null);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(tourEnumerable, null));
+            var tour = multiTour.Tour(0);
 
             Assert.IsFalse(tour.Contains(10));
 
@@ -298,7 +309,9 @@ namespace Itinero.Optimization.Test.Tours
         public void TestContainsFixed()
         {
             var tourEnumerable = new int[] { 0, 1, 2, 3, 4 };
-            var tour = new Optimization.Tours.Tour(tourEnumerable, 4);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(tourEnumerable, 4));
+            var tour = multiTour.Tour(0);
 
             Assert.IsFalse(tour.Contains(10));
 
@@ -330,7 +343,9 @@ namespace Itinero.Optimization.Test.Tours
             while (count > 0)
             {
                 visits = new List<int>(new int[] { 0, 1, 2, 3, 4 });
-                var tour = new Optimization.Tours.Tour(visits, 0);
+                var multiTour = new MultiTour(5);
+                multiTour.Add(new Optimization.Tours.Tour(visits, 0));
+                var tour = multiTour.Tour(0);
 
                 // test removing first.
                 Assert.Catch<InvalidOperationException>(() => { tour.Remove(tour.First); });
@@ -368,7 +383,9 @@ namespace Itinero.Optimization.Test.Tours
             while (count > 0)
             {
                 visits = new List<int>(new int[] { 0, 1, 2, 3, 4 });
-                var tour = new Optimization.Tours.Tour(visits, null);
+                var multiTour = new MultiTour(5);
+                multiTour.Add(new Optimization.Tours.Tour(visits, null));
+                var tour = multiTour.Tour(0);
 
                 // test removing first.
                 Assert.Catch<InvalidOperationException>(() => { tour.Remove(tour.First); });
@@ -407,7 +424,9 @@ namespace Itinero.Optimization.Test.Tours
             while (count > 0)
             {
                 visits = new List<int>(new int[] { 0, 1, 2, 3, 4 });
-                var tour = new Optimization.Tours.Tour(visits, 4);
+                var multiTour = new MultiTour(5);
+                multiTour.Add(new Optimization.Tours.Tour(visits, 4));
+                var tour = multiTour.Tour(0);
 
                 // test removing first.
                 Assert.Catch<InvalidOperationException>(() => { tour.Remove(tour.First); });
@@ -437,13 +456,15 @@ namespace Itinero.Optimization.Test.Tours
             }
         }
 
-        /// <summary>
+                /// <summary>
         /// Tests insert after.
         /// </summary>
         [Test]
         public void TestInsertAfterOpen()
         {
-            var tour = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3 }, null);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3 }, null));
+            var tour = multiTour.Tour(0);
 
             // test arguments.
             Assert.Catch<ArgumentOutOfRangeException>(() =>
@@ -481,7 +502,9 @@ namespace Itinero.Optimization.Test.Tours
         [Test]
         public void TestInsertAfterFixed()
         {
-            var tour = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 100 }, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 100 }, 0));
+            var tour = multiTour.Tour(0);
 
             // test arguments.
             Assert.Catch<ArgumentOutOfRangeException>(() =>
@@ -515,7 +538,9 @@ namespace Itinero.Optimization.Test.Tours
         [Test]
         public void TestInsertAfterClose()
         {
-            var tour = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3 }, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3 }, 0));
+            var tour = multiTour.Tour(0);
 
             // test arguments.
             Assert.Catch<ArgumentOutOfRangeException>(() =>
@@ -554,7 +579,9 @@ namespace Itinero.Optimization.Test.Tours
         public void TestEnumerateOpen()
         {
             var list = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var tour = new Optimization.Tours.Tour(list, null);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(list, null));
+            var tour = multiTour.Tour(0);
             var enumeratedRoute = new List<int>(tour);
 
             Assert.AreEqual(list.ToArray(), enumeratedRoute);
@@ -598,7 +625,9 @@ namespace Itinero.Optimization.Test.Tours
         public void TestEnumerateClosed()
         {
             var list = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var tour = new Optimization.Tours.Tour(list, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(list, 0));
+            var tour = multiTour.Tour(0);
             var enumeratedRoute = new List<int>(tour);
 
             Assert.AreEqual(list, enumeratedRoute);
@@ -642,7 +671,9 @@ namespace Itinero.Optimization.Test.Tours
         public void TestEnumerateFixed()
         {
             var list = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var tour = new Optimization.Tours.Tour(list, 9);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(list, 9));
+            var tour = multiTour.Tour(0);
             var enumeratedRoute = new List<int>(tour);
 
             Assert.AreEqual(list, enumeratedRoute);
@@ -685,7 +716,9 @@ namespace Itinero.Optimization.Test.Tours
         [Test]
         public void TestEnumerateBetweenOpen()
         {
-            var tour = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, null);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, null));
+            var tour = multiTour.Tour(0);
 
             for (var from = 0; from < tour.Count; from++)
             {
@@ -711,7 +744,9 @@ namespace Itinero.Optimization.Test.Tours
         [Test]
         public void TestEnumerateBetweenClosed()
         {
-            var tour = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 0));
+            var tour = multiTour.Tour(0);
 
             for (var from = 0; from < tour.Count; from++)
             {
@@ -750,7 +785,9 @@ namespace Itinero.Optimization.Test.Tours
         [Test]
         public void TestEnumerateBetweenFixed()
         {
-            var tour = new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 9);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 9));
+            var tour = multiTour.Tour(0);
 
             for (var from = 0; from < tour.Count; from++)
             {
@@ -778,7 +815,9 @@ namespace Itinero.Optimization.Test.Tours
         {
             var count = 10;
             var visits = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var tour = new Optimization.Tours.Tour(visits, null);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(visits, null));
+            var tour = multiTour.Tour(0);
 
             int neighbour = Constants.NOT_SET;
             for (int visit = 0; visit < count - 1; visit++)
@@ -798,7 +837,9 @@ namespace Itinero.Optimization.Test.Tours
         {
             var count = 10;
             var visits = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var tour = new Optimization.Tours.Tour(visits, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(visits, 0));
+            var tour = multiTour.Tour(0);
 
             var neighbour = Constants.NOT_SET;
             for (int visit = 0; visit < count - 1; visit++)
@@ -821,7 +862,9 @@ namespace Itinero.Optimization.Test.Tours
             // create a new empty tour.
             var testCount = 10;
             var visits = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var tour = new Optimization.Tours.Tour(visits, 9);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(visits, 9));
+            var tour = multiTour.Tour(0);
 
             // remove visits.
             int testIdx = 0;
@@ -876,7 +919,9 @@ namespace Itinero.Optimization.Test.Tours
             // create a new empty tour.
             var testCount = 10;
             var visits = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var tour = new Optimization.Tours.Tour(visits, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(visits, 0));
+            var tour = multiTour.Tour(0);
 
             // remove visits.
             int testIdx = 0;
@@ -930,7 +975,9 @@ namespace Itinero.Optimization.Test.Tours
             // create a new empty tour.
             var testCount = 10;
             var visits = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var tour = new Optimization.Tours.Tour(visits, null);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(visits, null));
+            var tour = multiTour.Tour(0);
 
             // remove visits.
             int testIdx = 0;
@@ -981,7 +1028,9 @@ namespace Itinero.Optimization.Test.Tours
         public void TestReplaceClosed()
         {
             var visits = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-            var tour = new Optimization.Tours.Tour(visits, 0);
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(visits, 0));
+            var tour = multiTour.Tour(0);
 
             tour.Replace(0, 10);
 
@@ -994,18 +1043,6 @@ namespace Itinero.Optimization.Test.Tours
             tour.Replace(9, 19);
 
             ExtraAssert.ItemsAreEqual(new int[] { 10, 1, 2, 3, 4, 15, 6, 7, 8, 19 }, tour);
-        }
-
-        /// <summary>
-        /// Tests if the the presence of a fixed last visit is checked properly.
-        /// </summary>
-        [Test]
-        public void TestLastCheck()
-        {
-            Assert.Catch<ArgumentException>(() =>
-            {
-                new Tour(new int[] { 0, 1 }, 2);
-            });
         }
     }
 }

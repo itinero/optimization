@@ -168,7 +168,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
                 // ok try the new position.
                 for (var newPosition = 1; newPosition < invalid.Item2; newPosition++)
                 {
-                    var before = solution.GetCustomerAt(newPosition - 1);
+                    var before = solution.GetVisitAt(newPosition - 1);
 
                     // calculate new total min diff.
                     var newFitness = 0.0f;
@@ -271,7 +271,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
                 // ok try the new position.
                 for (var newPosition = valid.Item2 + 1; newPosition < problem.Times.Length; newPosition++)
                 {
-                    var before = solution.GetCustomerAt(newPosition);
+                    var before = solution.GetVisitAt(newPosition);
 
                     if (before == problem.Last)
                     { // cannot move a customer after a fixed last customer.
@@ -383,7 +383,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
                 // ok try the new position.
                 for (var newPosition = 1; newPosition < valid.Item2; newPosition++)
                 {
-                    var before = solution.GetCustomerAt(newPosition - 1);
+                    var before = solution.GetVisitAt(newPosition - 1);
 
                     // calculate new total min diff.
                     var newFitness = 0.0f;
@@ -488,7 +488,7 @@ namespace Itinero.Optimization.TSP.TimeWindows.Solvers.Operators
                 // ok try the new position.
                 for (var newPosition = invalid.Item2 + 1; newPosition < problem.Times.Length; newPosition++)
                 {
-                    var before = solution.GetCustomerAt(newPosition);
+                    var before = solution.GetVisitAt(newPosition);
                     if (before == problem.Last)
                     { // cannot move a customer after a fixed last customer.
                         continue;

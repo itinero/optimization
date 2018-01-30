@@ -306,9 +306,9 @@ namespace Itinero.Optimization.Tours.Typed
         /// </summary>
         /// <param name="index">The position of the customer in the route, the first being at O.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">When the index is out of range.</exception>
-        public T GetCustomerAt(int index)
+        public T GetVisitAt(int index)
         {
-            return _getVisit(_tour.GetCustomerAt(index));
+            return _getVisit(_tour.GetVisitAt(index));
         }
 
         /// <summary>

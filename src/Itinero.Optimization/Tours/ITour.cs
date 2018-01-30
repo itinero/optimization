@@ -35,7 +35,7 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
-        /// Returns the first customer.
+        /// Returns the first visit.
         /// </summary>
         /// <returns></returns>
         int First
@@ -44,7 +44,7 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
-        /// Returns the last customer.
+        /// Returns the last visit.
         /// </summary>
         int? Last
         {
@@ -61,58 +61,58 @@ namespace Itinero.Optimization.Tours
         bool Contains(int from, int to);
 
         /// <summary>
-        /// Returns true if the given customer is in this route.
+        /// Returns true if the given visit is in this route.
         /// </summary>
-        /// <param name="customer"></param>
-        /// <returns>True if the customer occurs in this route.</returns>
-        bool Contains(int customer);
+        /// <param name="visit"></param>
+        /// <returns>True if the visit occurs in this route.</returns>
+        bool Contains(int visit);
 
         /// <summary>
-        /// Removes a customer from the route.
+        /// Removes a visit from the route.
         /// </summary>
-        /// <param name="customer"></param>
-        /// <returns>Return true if the customer was found and removed.</returns>
-        /// <exception cref="System.InvalidOperationException">When attempting to remove the first customer.</exception>
-        bool Remove(int customer);
+        /// <param name="visit"></param>
+        /// <returns>Return true if the visit was found and removed.</returns>
+        /// <exception cref="System.InvalidOperationException">When attempting to remove the first visit.</exception>
+        bool Remove(int visit);
 
         /// <summary>
-        /// Removes a customer from the route.
+        /// Removes a visit from the route.
         /// </summary>
-        /// <param name="customer">The customer to remove.</param>
-        /// <param name="after">The customer that used to exist after.</param>
-        /// <param name="before">The customer that used to exist before.</param>
-        /// <returns>Return true if the customer was found and removed.</returns>
-        /// <exception cref="System.InvalidOperationException">When attempting to remove the first customer.</exception>
-        bool Remove(int customer, out int before, out int after);
+        /// <param name="visit">The visit to remove.</param>
+        /// <param name="after">The visit that used to exist after.</param>
+        /// <param name="before">The visit that used to exist before.</param>
+        /// <returns>Return true if the visit was found and removed.</returns>
+        /// <exception cref="System.InvalidOperationException">When attempting to remove the first visit.</exception>
+        bool Remove(int visit, out int before, out int after);
 
         /// <summary>
-        /// Shifts the given customer to a new location and places it after the given 'before' customer.
+        /// Shifts the given visit to a new location and places it after the given 'before' visit.
         /// </summary>
-        /// <param name="customer">The customer to shift.</param>
-        /// <param name="before">The new customer that will come right before.</param>
+        /// <param name="visit">The visit to shift.</param>
+        /// <param name="before">The new visit that will come right before.</param>
         /// <returns>True if the operation succeeded.</returns>
         /// <remarks>example:
         /// route: 1->2->3->4->5->6
-        ///     customer:   2
+        ///     visit:   2
         ///     before:     4
         ///     
         /// new route: 1->3->4->2->5->6
         /// </remarks>
-        /// <exception cref="System.ArgumentException">When customer equals before.</exception>
-        bool ShiftAfter(int customer, int before);
+        /// <exception cref="System.ArgumentException">When visit equals before.</exception>
+        bool ShiftAfter(int visit, int before);
 
         /// <summary>
-        /// Shifts the given customer to a new location and places it after the given 'before' customer.
+        /// Shifts the given visit to a new location and places it after the given 'before' visit.
         /// </summary>
-        /// <param name="customer">The customer to shift.</param>
-        /// <param name="before">The new customer that will come right before.</param>
-        /// <param name="oldBefore">The customer that used to exist before.</param>
-        /// <param name="oldAfter">The customer that used to exist after.</param>
-        /// <param name="newAfter">The customer that new exists after.</param>
+        /// <param name="visit">The visit to shift.</param>
+        /// <param name="before">The new visit that will come right before.</param>
+        /// <param name="oldBefore">The visit that used to exist before.</param>
+        /// <param name="oldAfter">The visit that used to exist after.</param>
+        /// <param name="newAfter">The visit that new exists after.</param>
         /// <returns></returns>
         /// <remarks>example:
         /// route: 1->2->3->4->5->6
-        ///     customer:   2
+        ///     visit:   2
         ///     before:     4
         ///     
         /// new route: 1->3->4->2->5->6
@@ -120,12 +120,12 @@ namespace Itinero.Optimization.Tours
         ///     oldAfter:   3
         ///     newAfter:   5
         /// </remarks>
-        /// <exception cref="System.ArgumentException">When customer equals before.</exception>
-        bool ShiftAfter(int customer, int before, out int oldBefore, out int oldAfter, out int newAfter);
+        /// <exception cref="System.ArgumentException">When visit equals before.</exception>
+        bool ShiftAfter(int visit, int before, out int oldBefore, out int oldAfter, out int newAfter);
 
         /// <summary>
         /// Removes the edge from->unknown and replaces it with the edge from->to.
-        /// 0->1->2:ReplaceEdgeFrom(0, 2):0->2 without resetting the last customer property.
+        /// 0->1->2:ReplaceEdgeFrom(0, 2):0->2 without resetting the last visit property.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -133,9 +133,9 @@ namespace Itinero.Optimization.Tours
         void ReplaceEdgeFrom(int from, int to);
 
         /// <summary>
-        /// Replaces the old customer with the new customer, assuming the new customer isn't already part of the route.
+        /// Replaces the old visit with the new visit, assuming the new visit isn't already part of the route.
         /// </summary>
-        void Replace(int oldCustomer, int newCustomer);
+        void Replace(int oldVisit, int newVisit);
 
         /// <summary>
         /// Removes the edge from->unknown and replaces it with the edge from->to->unknown.
@@ -148,27 +148,27 @@ namespace Itinero.Optimization.Tours
         void InsertAfter(int from, int to);
 
         /// <summary>
-        /// Returns the neigbour of a customer.
+        /// Returns the neigbour of a visit.
         /// </summary>
-        /// <param name="customer"></param>
-        /// <returns>The neighbours of the given customer.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">When the customer does not exist.</exception>
-        int GetNeigbour(int customer);
+        /// <param name="visit"></param>
+        /// <returns>The neighbours of the given visit.</returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">When the visit does not exist.</exception>
+        int GetNeigbour(int visit);
 
         /// <summary>
-        /// Returns the index of the given customer the first being zero.
+        /// Returns the index of the given visit the first being zero.
         /// </summary>
-        /// <param name="customer">The customer to search for.</param>
-        /// <returns>The index of the customer, it's position relative to the first customers.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">When the customer does not exist.</exception>
-        int GetIndexOf(int customer);
+        /// <param name="visit">The visit to search for.</param>
+        /// <returns>The index of the visit, it's position relative to the first customers.</returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">When the visit does not exist.</exception>
+        int GetIndexOf(int visit);
 
         /// <summary>
-        /// Gets the customer at the given index.
+        /// Gets the visit at the given index.
         /// </summary>
-        /// <param name="index">The position of the customer in the route, the first being at O.</param>
+        /// <param name="index">The position of the visit in the route, the first being at O.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">When the index is out of range.</exception>
-        int GetCustomerAt(int index);
+        int GetVisitAt(int index);
 
         /// <summary>
         /// Returns an enumerable that enumerates between the two given customers.
@@ -180,21 +180,21 @@ namespace Itinero.Optimization.Tours
         IEnumerable<int> Between(int from, int to);
 
         /// <summary>
-        /// Returns an enumerator that iterates through the customer in this route starting at the given customer.
+        /// Returns an enumerator that iterates through the visit in this route starting at the given visit.
         /// </summary>
         /// <returns></returns>
-        IEnumerator<int> GetEnumerator(int customer);
+        IEnumerator<int> GetEnumerator(int visit);
 
         /// <summary>
-        /// Returns an enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a tour the pair that contains last->first is also included.
+        /// Returns an enumerable that enumerates all visit pairs that occur in the route as 1->2. If the route is a tour the pair that contains last->first is also included.
         /// </summary>
-        /// <returns>An enumerable that enumerates all customer pairs that occur in the route as 1->2. If the route is a tour the pair that contains last->first is also included.</returns>
+        /// <returns>An enumerable that enumerates all visit pairs that occur in the route as 1->2. If the route is a tour the pair that contains last->first is also included.</returns>
         IEnumerable<Pair> Pairs();
 
         /// <summary>
-        /// Returns an enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a tour the tuples that contain last->first are also included.
+        /// Returns an enumerable that enumerates all visit triples that occur in the route as 1->2->3. If the route is a tour the tuples that contain last->first are also included.
         /// </summary>
-        /// <returns>An enumerable that enumerates all customer triples that occur in the route as 1->2->3. If the route is a tour the tuples that contain last->first are also included.</returns>
+        /// <returns>An enumerable that enumerates all visit triples that occur in the route as 1->2->3. If the route is a tour the tuples that contain last->first are also included.</returns>
         IEnumerable<Triple> Triples();
 
         /// <summary>
