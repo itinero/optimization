@@ -88,6 +88,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                 route2Weights[idx] = problem.Weights[edge.From][edge.To];
             }
 
+            // TODO: build a version where we don't use this list but evaluate right away.
             var route2Pairs = new List<EdgePair>();
             for (int iIdx = 0; iIdx < route2Edges.Count - 2; iIdx++)
             {

@@ -29,7 +29,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
     /// <summary>
     /// An exchange inter improvement operator.
     /// </summary>
-    /// /// <remarks>
+    /// <remarks>
     /// This follows a 'stop on first'-improvement strategy and this operator will only modify the solution when it improves things. 
     /// 
     /// The algorithm works as follows:
