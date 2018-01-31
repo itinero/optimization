@@ -18,6 +18,7 @@
 
 using Itinero.Optimization.Algorithms.Directed;
 using System.Collections.Generic;
+using System;
 
 namespace Itinero.Optimization.Algorithms.NearestNeighbour
 {
@@ -66,13 +67,22 @@ namespace Itinero.Optimization.Algorithms.NearestNeighbour
         /// <returns></returns>
         public static SortedNearestNeighbours Forward(float[][] weights, float max, int customer)
         {
+            return Forward((x, y) => weights[x][y], weights.Length, max, customer);
+        }
+
+        /// <summary>
+        /// Calculates then nearest neighbours using a weight smaller than or equal to a maximum in a forward-direction only.
+        /// </summary>
+        /// <returns></returns>
+        public static SortedNearestNeighbours Forward(Func<int, int, float> weightFunc, int count, float max, int customer)
+        {
             var neighbours = new Collections.SortedDictionary<float, List<int>>();
             var maxFound = 0f;
-            for (var current = 0; current < weights.Length; current++)
+            for (var current = 0; current < count; current++)
             {
                 if (current != customer)
                 {
-                    var weight = weights[customer][current];
+                    var weight = weightFunc(customer, current);
                     if (weight <= max)
                     {
                         List<int> customers = null;
@@ -150,13 +160,22 @@ namespace Itinero.Optimization.Algorithms.NearestNeighbour
         /// <returns></returns>
         public static SortedNearestNeighbours Backward(float[][] weights, float max, int customer)
         {
+            return Backward((x, y) => weights[x][y], weights.Length, max, customer);
+        }
+
+        /// <summary>
+        /// Calculates then nearest neighbours using a weight smaller than or equal to a maximum in a backward-direction only.
+        /// </summary>
+        /// <returns></returns>
+        public static SortedNearestNeighbours Backward(Func<int, int, float> weightFunc, int count, float max, int customer)
+        {
             var neighbours = new Collections.SortedDictionary<float, List<int>>();
             var maxFound = 0f;
-            for (var current = 0; current < weights.Length; current++)
+            for (var current = 0; current < count; current++)
             {
                 if (current != customer)
                 {
-                    var weight = weights[current][customer];
+                    var weight = weightFunc(current, customer);
                     if (weight <= max)
                     {
                         List<int> customers = null;
