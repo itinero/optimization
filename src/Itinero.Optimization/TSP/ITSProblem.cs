@@ -46,29 +46,11 @@ namespace Itinero.Optimization.TSP
         int Count { get; }
 
         /// <summary>
-        /// Gets a closed version.
+        /// Gets the nearest neighbour cache.
         /// </summary>
-        /// <returns></returns>
-        ITSProblem ToClosed();
-
-        /// <summary>
-        /// Generate the nearest neighbour list.
-        /// </summary>
-        NearestNeighbours GetNNearestNeighboursForward(int n, int visit);
-
-        /// <summary>
-        /// Generate the nearest neighbour list.
-        /// </summary>
-        NearestNeighbours GetNNearestNeighboursBackward(int n, int visit);
-
-        /// <summary>
-        /// Generate the nearest neighbour list.
-        /// </summary>
-        SortedNearestNeighbours GetNearestNeighboursForward(float weight, int visit);
-
-        /// <summary>
-        /// Generate the nearest neighbour list.
-        /// </summary>
-        SortedNearestNeighbours GetNearestNeighboursBackward(float weight, int visit);
+        NearestNeighbourCache NearestNeighbourCache
+        {
+            get;
+        }
     }
 }

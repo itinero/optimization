@@ -278,7 +278,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
                         do
                         {
                             // check the nearest neighbours of from
-                            foreach (var nn in problem.GetNNearestNeighboursForward(10, from))
+                            foreach (var nn in problem.NearestNeighbourCache.GetNNearestNeighboursForward(10, from))
                             {
                                 var nnTo = nextArrayA[nn];
 

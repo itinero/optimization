@@ -182,7 +182,7 @@ namespace Itinero.Optimization.TSP.Solvers
             NearestNeighbours neighbours = null;
             if (_nearestNeighbours)
             {
-                neighbours = problem.GetNNearestNeighboursForward(10, v1);
+                neighbours = problem.NearestNeighbourCache.GetNNearestNeighboursForward(10, v1);
             }
 
             foreach (int v4 in betweenV2V1)
