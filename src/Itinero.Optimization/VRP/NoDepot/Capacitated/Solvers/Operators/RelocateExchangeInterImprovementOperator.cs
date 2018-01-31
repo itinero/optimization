@@ -69,9 +69,6 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
             var tour2Weight = objective.Calculate(problem, solution, tourIdx2);
             var totalBefore =  tour1Weight + tour2Weight;
 
-/*             int route1_customers = tour1.Count;
-            int route2_customers = tour2.Count;
- */
             var route1Cumul = objective.CalculateCumul(problem, solution, tourIdx1);
             var route2Cumul = objective.CalculateCumul(problem, solution, tourIdx2);
 
