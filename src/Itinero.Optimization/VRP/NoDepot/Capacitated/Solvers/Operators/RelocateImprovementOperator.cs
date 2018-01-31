@@ -43,7 +43,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
     /// 
     /// The search stops from the moment any improvement is found.
     /// </remarks>
-    public class RelocateImprovementOperator : IOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>
+    public class RelocateImprovementOperator : IInterTourImprovementOperator
     {
         private const float E = 0.001f;
 
@@ -71,22 +71,30 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// <summary>
         /// Applies this operator.
         /// </summary>
+        public bool Apply (NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta) 
+        {
+            // choose two random routes.
+            var random = RandomGeneratorExtensions.GetRandom ();
+            var tourIdx1 = random.Generate (solution.Count);
+            var tourIdx2 = random.Generate (solution.Count - 1);
+            if (tourIdx2 >= tourIdx1) {
+                tourIdx2++;
+            }
+
+            return Apply(problem, objective, solution, tourIdx1, tourIdx2, out delta);
+        }
+
+        /// <summary>
+        /// Applies this operator.
+        /// </summary>
         /// <param name="problem"></param>
         /// <param name="objective"></param>
         /// <param name="solution"></param>
         /// <param name="delta"></param>
         /// <returns></returns>
-        public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta)
+        public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, 
+            int tourIdx1, int tourIdx2, out float delta)
         {
-            // choose two random routes.
-            var random = RandomGeneratorExtensions.GetRandom();
-            var tourIdx1 = random.Generate(solution.Count);
-            var tourIdx2 = random.Generate(solution.Count - 1);
-            if (tourIdx2 >= tourIdx1)
-            {
-                tourIdx2++;
-            }
-
             // try relocation from 1->2 and 2->1.
             if (this.RelocateFromTo(problem, solution, tourIdx1, tourIdx2, out delta))
             {

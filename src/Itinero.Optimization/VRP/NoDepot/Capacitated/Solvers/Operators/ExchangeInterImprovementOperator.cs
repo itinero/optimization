@@ -41,7 +41,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
     /// 
     /// The search stops from the moment any improvement is found.
     /// </remarks>
-    public class ExchangeInterImprovementOperator : IOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>
+    public class ExchangeInterImprovementOperator : IInterTourImprovementOperator
     {
         /// <summary>
         /// Gets the name of this operator.
@@ -61,18 +61,27 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// <summary>
         /// Applies this operator.
         /// </summary>
-        public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta)
+        public bool Apply (NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta) 
+        {
+            // choose two random routes.
+            var random = RandomGeneratorExtensions.GetRandom ();
+            var tourIdx1 = random.Generate (solution.Count);
+            var tourIdx2 = random.Generate (solution.Count - 1);
+            if (tourIdx2 >= tourIdx1) {
+                tourIdx2++;
+            }
+
+            return Apply(problem, objective, solution, tourIdx1, tourIdx2, out delta);
+        }
+
+        /// <summary>
+        /// Applies this operator.
+        /// </summary>
+        public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, 
+            int tourIdx1, int tourIdx2, out float delta)
         {            
             var max = problem.Max;
 
-            // choose two random routes.
-            var random = RandomGeneratorExtensions.GetRandom();
-            var tourIdx1 = random.Generate(solution.Count);
-            var tourIdx2 = random.Generate(solution.Count - 1);
-            if (tourIdx2 >= tourIdx1)
-            {
-                tourIdx2++;
-            }
             var tour1 = solution.Tour(tourIdx1);
             var tour2 = solution.Tour(tourIdx2);
 

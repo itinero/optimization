@@ -41,7 +41,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
     /// 
     /// The search stops from the moment any improvement is found.
     /// </remarks>
-    public class CrossExchangeInterImprovementOperator : IOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float> 
+    public class CrossExchangeInterImprovementOperator : IInterTourImprovementOperator
     {
         private const float E = 0.001f;
 
@@ -65,9 +65,6 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// </summary>
         public bool Apply (NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta) 
         {
-            int maxWindowSize = 50;
-            var max = problem.Max;
-
             // choose two random routes.
             var random = RandomGeneratorExtensions.GetRandom ();
             var tourIdx1 = random.Generate (solution.Count);
@@ -75,6 +72,18 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
             if (tourIdx2 >= tourIdx1) {
                 tourIdx2++;
             }
+
+            return Apply(problem, objective, solution, tourIdx1, tourIdx2, out delta);
+        }
+
+        /// <summary>
+        /// Applies this inter-improvement operator.
+        /// </summary>
+        public bool Apply (NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, 
+            int tourIdx1, int tourIdx2, out float delta) 
+        {
+            int maxWindowSize = 50;
+            var max = problem.Max;
             var tour1 = solution.Tour (tourIdx1);
             var tour2 = solution.Tour (tourIdx2);
 

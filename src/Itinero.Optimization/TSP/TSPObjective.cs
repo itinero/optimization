@@ -26,6 +26,24 @@ namespace Itinero.Optimization.TSP
     /// </summary>
     public sealed class TSPObjective : ObjectiveBase<ITSProblem, ITour, float>
     {
+        private static TSPObjective _default = null;
+
+        /// <summary>
+        /// Gets the default instance.
+        /// </summary>
+        /// <returns></returns>
+        public static TSPObjective Default
+        {
+            get
+            {
+                if (_default == null)
+                {
+                    _default = new TSPObjective();
+                }
+                return _default;
+            }
+        }
+
         /// <summary>
         /// Gets the value that represents infinity.
         /// </summary>
