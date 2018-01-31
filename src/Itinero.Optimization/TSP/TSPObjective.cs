@@ -24,7 +24,7 @@ namespace Itinero.Optimization.TSP
     /// <summary>
     /// The default TSP objective.
     /// </summary>
-    public sealed class TSPObjective : ObjectiveBase<ITSProblem, Tour, float>
+    public sealed class TSPObjective : ObjectiveBase<ITSProblem, ITour, float>
     {
         /// <summary>
         /// Gets the value that represents infinity.
@@ -81,7 +81,7 @@ namespace Itinero.Optimization.TSP
         /// <summary>
         /// Calculates the fitness value of the given solution.
         /// </summary>
-        public sealed override float Calculate(ITSProblem problem, Tour solution)
+        public sealed override float Calculate(ITSProblem problem, ITour solution)
         {
             var fitness = 0f;
             foreach (var pair in solution.Pairs())

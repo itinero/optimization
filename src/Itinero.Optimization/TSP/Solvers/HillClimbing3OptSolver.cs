@@ -26,10 +26,10 @@ namespace Itinero.Optimization.TSP.Solvers
     /// <summary>
     /// A 3-opt solver.
     /// </summary>
-    public sealed class HillClimbing3OptSolver : SolverBase<float, ITSProblem, TSPObjective, Tour, float>, 
-        IOperator<float, ITSProblem, TSPObjective, Tour, float>
+    public sealed class HillClimbing3OptSolver : SolverBase<float, ITSProblem, TSPObjective, ITour, float>, 
+        IOperator<float, ITSProblem, TSPObjective, ITour, float>
     {
-        private readonly ISolver<float, ITSProblem, TSPObjective, Tour, float> _generator;
+        private readonly ISolver<float, ITSProblem, TSPObjective, ITour, float> _generator;
         private readonly bool _nearestNeighbours = false;
         private readonly bool _dontLook = false;
         private readonly double _epsilon = 0.001f;
@@ -46,7 +46,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public HillClimbing3OptSolver(ISolver<float, ITSProblem, TSPObjective, Tour, float> generator, bool nearestNeighbours, bool dontLook)
+        public HillClimbing3OptSolver(ISolver<float, ITSProblem, TSPObjective, ITour, float> generator, bool nearestNeighbours, bool dontLook)
         {
             _generator = generator;
             _dontLook = dontLook;
@@ -89,7 +89,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override Tour Solve(ITSProblem problem, TSPObjective objective, out float fitness)
+        public override ITour Solve(ITSProblem problem, TSPObjective objective, out float fitness)
         {
             // generate some route first.
             var tour = _generator.Solve(problem, objective);
@@ -111,7 +111,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSProblem problem, TSPObjective objective, Tour solution, out float delta)
+        public bool Apply(ITSProblem problem, TSPObjective objective, ITour solution, out float delta)
         {
             if (!problem.Last.HasValue)
             {
@@ -162,7 +162,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Tries all 3Opt Moves for the neighbourhood of v1.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(ITSProblem problem, Tour tour, int v1, out float delta)
+        public bool Try3OptMoves(ITSProblem problem, ITour tour, int v1, out float delta)
         {
             // get v_2.
             var v2 = tour.GetNeigbour(v1);
@@ -218,7 +218,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(ITSProblem problem, Tour tour,
+        public bool Try3OptMoves(ITSProblem problem, ITour tour,
             int v1, int v2, float weightV1V2,
             int v3, out float delta)
         {
@@ -238,7 +238,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <returns></returns>
-        public bool Try3OptMoves(ITSProblem problem, Tour tour,
+        public bool Try3OptMoves(ITSProblem problem, ITour tour,
             int v1, int v2, int v3, int v4, float weightV1V2PlusV3V4, float weightV1V4, out float delta)
         {
             var betweenV4V1Enumerator = tour.Between(v4, v1).GetEnumerator();

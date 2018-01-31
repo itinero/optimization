@@ -29,7 +29,7 @@ namespace Itinero.Optimization.TSP
         /// Solves this TSP using a default solver.
         /// </summary>
         /// <returns></returns>
-        public static Tour Solve(this ITSProblem problem)
+        public static ITour Solve(this ITSProblem problem)
         {
             return problem.Solve(new Solvers.EAXSolver(Algorithms.Solvers.GA.GASettings.Default));
         }
@@ -37,7 +37,7 @@ namespace Itinero.Optimization.TSP
         /// <summary>
         /// Solvers this problem using the given solver.
         /// </summary>
-        public static Tour Solve(this ITSProblem problem, Algorithms.Solvers.ISolver<float, ITSProblem, TSPObjective, Tour, float> solver)
+        public static ITour Solve(this ITSProblem problem, Algorithms.Solvers.ISolver<float, ITSProblem, TSPObjective, ITour, float> solver)
         {
             return solver.Solve(problem, new TSPObjective());
         }

@@ -26,7 +26,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
     /// A local 1-Shift search for the TSP.
     /// </summary>
     /// <remarks>* 1-shift: Remove a customer and relocate it somewhere else, also called reinsertion heuristic.</remarks>
-    public class Local1Shift : IOperator<float, ITSProblem, TSPObjective, Tour, float>
+    public class Local1Shift : IOperator<float, ITSProblem, TSPObjective, ITour, float>
     {
         /// <summary>
         /// Returns the name of the operator.
@@ -49,7 +49,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <returns></returns>
-        public bool Apply(ITSProblem problem, TSPObjective objective, Tour tour, out float delta)
+        public bool Apply(ITSProblem problem, TSPObjective objective, ITour tour, out float delta)
         {
             var originalRoute = tour;
             var originalProblem = problem;

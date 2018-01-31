@@ -27,14 +27,14 @@ namespace Itinero.Optimization.TSP.Solvers
     /// <summary>
     /// A solver using a GA and the edge-assembly crossover.
     /// </summary> 
-    public class EAXSolver : GASolver<float, ITSProblem, TSPObjective, Tour, float>
+    public class EAXSolver : GASolver<float, ITSProblem, TSPObjective, ITour, float>
     {
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
         public EAXSolver(GASettings settings)
             : base(new TSPObjective(), new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<ITSProblem, Tour, TSPObjective, float>(10, 0.5), new EmptyOperator<float, ITSProblem, TSPObjective, Tour, float>(), settings)
+            new TournamentSelectionOperator<ITSProblem, ITour, TSPObjective, float>(10, 0.5), new EmptyOperator<float, ITSProblem, TSPObjective, ITour, float>(), settings)
         {
 
         }
@@ -42,9 +42,9 @@ namespace Itinero.Optimization.TSP.Solvers
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
-        public EAXSolver(GASettings settings, IOperator<float, ITSProblem, TSPObjective, Tour, float> mutation)
+        public EAXSolver(GASettings settings, IOperator<float, ITSProblem, TSPObjective, ITour, float> mutation)
             : base(new TSPObjective(), new HillClimbing3OptSolver(), new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<ITSProblem, Tour, TSPObjective, float>(10, 0.5), mutation, settings)
+            new TournamentSelectionOperator<ITSProblem, ITour, TSPObjective, float>(10, 0.5), mutation, settings)
         {
 
         }
@@ -52,10 +52,10 @@ namespace Itinero.Optimization.TSP.Solvers
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
-        public EAXSolver(GASettings settings, ISolver<float, ITSProblem, TSPObjective, Tour, float> generator, 
-            IOperator<float, ITSProblem, TSPObjective, Tour, float> mutation)
+        public EAXSolver(GASettings settings, ISolver<float, ITSProblem, TSPObjective, ITour, float> generator, 
+            IOperator<float, ITSProblem, TSPObjective, ITour, float> mutation)
             : base(new TSPObjective(), generator, new EAXOperator(30, EAXOperator.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom, true),
-            new TournamentSelectionOperator<ITSProblem, Tour, TSPObjective, float>(10, 0.5), mutation, settings)
+            new TournamentSelectionOperator<ITSProblem, ITour, TSPObjective, float>(10, 0.5), mutation, settings)
         {
 
         }
@@ -64,7 +64,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public override Tour Solve(ITSProblem problem, TSPObjective objective, out float fitness)
+        public override ITour Solve(ITSProblem problem, TSPObjective objective, out float fitness)
         {
             if (problem.Count < 5)
             { // use brute-force solver when problem is very small.

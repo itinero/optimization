@@ -29,7 +29,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
     /// <summary>
     /// An edge assembly crossover.
     /// </summary>
-    public sealed class EAXOperator : ICrossOverOperator<float, ITSProblem, TSPObjective, Tour, float>
+    public sealed class EAXOperator : ICrossOverOperator<float, ITSProblem, TSPObjective, ITour, float>
     {
         private readonly int _maxOffspring;
         private readonly EdgeAssemblyCrossoverSelectionStrategyEnum _strategy;
@@ -135,7 +135,7 @@ namespace Itinero.Optimization.TSP.Solvers.Operators
         /// Applies this operator using the given solutions and produces a new solution.
         /// </summary>
         /// <returns></returns>
-        public Tour Apply(ITSProblem problem, TSPObjective objective, Tour solution1, Tour solution2, out float fitness)
+        public ITour Apply(ITSProblem problem, TSPObjective objective, ITour solution1, ITour solution2, out float fitness)
         {
             if (solution1.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }
             if (solution2.Last != problem.Last) { throw new ArgumentException("Route and problem have to have the same last customer."); }

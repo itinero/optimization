@@ -37,7 +37,7 @@ namespace Itinero.Optimization.Routing
         /// Builds a route from a given tour.
         /// </summary>
         /// <returns></returns>
-        public static Route BuildRoute<T>(this IWeightMatrixAlgorithm<T> algorithm, Tour tour)
+        public static Route BuildRoute<T>(this IWeightMatrixAlgorithm<T> algorithm, ITour tour)
         {
             Route route = null;
             foreach (var pair in tour.Pairs())

@@ -26,7 +26,7 @@ namespace Itinero.Optimization.TSP.Solvers
     /// <summary>
     /// A solver that generates random solutions.
     /// </summary>
-    public sealed class RandomSolver : SolverBase<float, ITSProblem, TSPObjective, Tour, float>
+    public sealed class RandomSolver : SolverBase<float, ITSProblem, TSPObjective, ITour, float>
     {
         /// <summary>
         /// Returns the name of this solver.
@@ -40,7 +40,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public sealed override Tour Solve(ITSProblem problem, TSPObjective objective, out float fitness)
+        public sealed override ITour Solve(ITSProblem problem, TSPObjective objective, out float fitness)
         {
             // generate random solution.
             var visits = new List<int>();

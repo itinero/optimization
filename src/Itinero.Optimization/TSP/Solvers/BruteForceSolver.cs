@@ -25,7 +25,7 @@ namespace Itinero.Optimization.TSP.Solvers
     /// <summary>
     /// Implements a brute force solver by checking all possible combinations.
     /// </summary>
-    public sealed class BruteForceSolver : SolverBase<float, ITSProblem, TSPObjective, Tour, float>
+    public sealed class BruteForceSolver : SolverBase<float, ITSProblem, TSPObjective, ITour, float>
     {
         /// <summary>
         /// Returns a new for this solver.
@@ -42,7 +42,7 @@ namespace Itinero.Optimization.TSP.Solvers
         /// Solves the given problem.
         /// </summary>
         /// <returns></returns>
-        public sealed override Tour Solve(ITSProblem problem, TSPObjective objective, out float fitness)
+        public sealed override ITour Solve(ITSProblem problem, TSPObjective objective, out float fitness)
         {
             // initialize.
             var visits = new List<int>();

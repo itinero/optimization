@@ -102,7 +102,7 @@ namespace Itinero.Optimization.Test.TSP
         /// Solves this TSP using a default solver.
         /// </summary>
         /// <returns></returns>
-        public Tour Solve()
+        public ITour Solve()
         {
             return this.Solve(new EAXSolver(GASettings.Default));
         }
@@ -110,7 +110,7 @@ namespace Itinero.Optimization.Test.TSP
         /// <summary>
         /// Solvers this problem using the given solver.
         /// </summary>
-        public Tour Solve(Itinero.Optimization.Algorithms.Solvers.ISolver<float, ITSProblem, TSPObjective, Tour, float> solver)
+        public ITour Solve(Itinero.Optimization.Algorithms.Solvers.ISolver<float, ITSProblem, TSPObjective, ITour, float> solver)
         {
             return solver.Solve(this, new TSPObjective());
         }
