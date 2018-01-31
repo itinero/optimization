@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using Itinero.Optimization.Tours;
 
@@ -94,9 +95,10 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
         /// <param name="visits">The visits to potentially insert.</param>
         /// <param name="location">The cheapest location to insert.</param>
         /// <param name="visit">The cheapest visit to insert.</param>
+        /// <param name="costFunc">A function to add optional extra costs to a visit.</param>
         /// <returns>The increase/decrease in weight.</returns>
         public static float CalculateCheapestAny(this ITour tour, float[][] weights, IEnumerable<int> visits, 
-            out Pair location, out int visit)
+            out Pair location, out int visit, Func<int, float> costFunc = null)
         {
             // TODO: test performance if we turn this loop around, now it's tour and inner is target visits.
             var bestCost = float.MaxValue;
@@ -116,13 +118,18 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
                     visit = weights.CalculateCheapestTo(first, visits, out bestCost);
                     location = new Pair(first, int.MaxValue);
                 }
+
+                if (costFunc != null)
+                {
+                    bestCost += costFunc(first);
+                }
             }
             else
             {
                 foreach (var pair in tour.Pairs())
                 {
                     float cost;
-                    var localVisit = weights.CalculateCheapest(pair.From, pair.To, visits, out cost);
+                    var localVisit = weights.CalculateCheapest(pair.From, pair.To, visits, out cost, costFunc);
                     cost -= weights[pair.From][pair.To];
                     if (cost < bestCost)
                     {
@@ -189,9 +196,10 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
         /// <param name="source">The source visit.</param>
         /// <param name="targets">The target visits.</param>
         /// <param name="weight">The weight to the found target.</param>
+        /// <param name="costFunc">A function to add optional extra costs to a visit.</param>
         /// <returns>The cheapest target to reach from the given source visit.</returns>
         public static int CalculateCheapestTo(this float[][] weights, int source, IEnumerable<int> targets,
-            out float weight)
+            out float weight, Func<int, float> costFunc = null)
         {
             return weights.CalculateCheapest(source, Constants.NOT_SET, targets, out weight);
         }
@@ -203,11 +211,12 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
         /// <param name="target">The target visit.</param>
         /// <param name="sources">The source visits.</param>
         /// <param name="weight">The weight to the found target.</param>
+        /// <param name="costFunc">A function to add optional extra costs to a visit.</param>
         /// <returns>The cheapest target to reach from the given source visit.</returns>
         public static int CalculateCheapestFrom(this float[][] weights, int target, IEnumerable<int> sources,
-            out float weight)
+            out float weight, Func<int, float> costFunc = null)
         {
-            return weights.CalculateCheapest(Constants.NOT_SET, target, sources, out weight);
+            return weights.CalculateCheapest(Constants.NOT_SET, target, sources, out weight, costFunc);
         }
 
         /// <summary>
@@ -218,9 +227,10 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
         /// <param name="target">The target visit, ignored if Constants.NOT_SET.</param>
         /// <param name="visits">The visits to consider.</param>
         /// <param name="weight">The weight of the path of the cheapest visit, source->visit->target. The weight between source->target is NOT subtracted.</param>
+        /// <param name="costFunc">A function to add optional extra costs to a visit.</param>
         /// <returns>The cheapest visit the complete the sequence source->visit->target from the visits given.</returns>
         public static int CalculateCheapest(this float[][] weights, int source, int target, IEnumerable<int> visits,
-            out float weight)
+            out float weight, Func<int, float> costFunc = null)
         {
             weight = float.MaxValue;
             var best = Constants.NOT_SET;
@@ -235,6 +245,10 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
                 if (target != Constants.NOT_SET)
                 {
                     localWeight += weights[visit][target];
+                }
+                if (costFunc != null)
+                {
+                    localWeight += costFunc(visit);
                 }
                 if (localWeight < weight)
                 {
