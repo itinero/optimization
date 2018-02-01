@@ -25,24 +25,55 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
     /// </summary>
     public class NoDepotCVRPObjective : ObjectiveBase<NoDepotCVRProblem, NoDepotCVRPSolution, float>
     {
-        public override string Name => throw new System.NotImplementedException();
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        /// <returns></returns>
+        public override string Name => "DEFAULT";
 
-        public override bool IsNonContinuous => throw new System.NotImplementedException();
+        /// <summary>
+        /// Returns true if this is non-continuous.
+        /// </summary>
+        /// <returns></returns>
+        public override bool IsNonContinuous => false;
 
-        public override float Zero => throw new System.NotImplementedException();
+        /// <summary>
+        /// Returns the fitness value equivalent to zero.
+        /// </summary>
+        public override float Zero => 0;
 
-        public override float Infinite => throw new System.NotImplementedException();
+        /// <summary>
+        /// Returns the fitness value equivalent to infinite.
+        /// </summary>
+        public override float Infinite => float.MaxValue;
 
+        /// <summary>
+        /// Adds the two given values.
+        /// </summary>
         public override float Add(NoDepotCVRProblem problem, float fitness1, float fitness2)
         {
-            throw new System.NotImplementedException();
+            return fitness1 + fitness2;
         }
         
+        /// <summary>
+        /// Calculates the weight of the given tour.
+        /// </summary>
         public float Calculate(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int tourIdx)
         {
-            throw new System.NotImplementedException();
+            var weight = 0f;
+            var tour = solution.Tour(tourIdx);
+
+            foreach(var pair in tour.Pairs())
+            {
+                weight += problem.Weights[pair.From][pair.To];
+            }
+
+            return weight;
         }
 
+        /// <summary>
+        /// Calculate the cumulative weights.
+        /// </summary>
         public float[] CalculateCumul(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int tourIdx)
         {
             var tour = solution.Tour(tourIdx);
@@ -75,24 +106,47 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
             return cumul;
         }
 
+        /// <summary>
+        /// Calulates the total weight.
+        /// </summary>
         public override float Calculate(NoDepotCVRProblem problem, NoDepotCVRPSolution solution)
         {
-            throw new System.NotImplementedException();
+            var weight = 0f;
+
+            for (var t = 0; t < solution.Count; t++)
+            {
+                weight += this.Calculate(problem, solution, t);
+            }
+
+            return weight;
         }
 
+        /// <summary>
+        /// Compares the two given fitness values.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <param name="fitness1"></param>
+        /// <param name="fitness2"></param>
+        /// <returns></returns>
         public override int CompareTo(NoDepotCVRProblem problem, float fitness1, float fitness2)
         {
-            throw new System.NotImplementedException();
+            return fitness1.CompareTo(fitness2);
         }
 
+        /// <summary>
+        /// Returns true if the given fitness value is equivalent to zero.
+        /// </summary>
         public override bool IsZero(NoDepotCVRProblem problem, float fitness)
         {
-            throw new System.NotImplementedException();
+            return fitness == 0;
         }
 
+        /// <summary>
+        /// Subtracts the two given fitness values.
+        /// </summary>
         public override float Subtract(NoDepotCVRProblem problem, float fitness1, float fitness2)
         {
-            throw new System.NotImplementedException();
+            return fitness1 - fitness2;
         }
     }
 }

@@ -59,6 +59,11 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         }
 
         /// <summary>
+        /// Returns true if it doesn't matter if tour indexes are switched.
+        /// </summary>
+        public bool IsSymmetric => false;
+
+        /// <summary>
         /// Returns true if the given object is supported.
         /// </summary>
         /// <param name="objective"></param>

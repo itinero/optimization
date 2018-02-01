@@ -51,6 +51,11 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         public string Name => "CROSS";
 
         /// <summary>
+        /// Returns true if it doesn't matter if tour indexes are switched.
+        /// </summary>
+        public bool IsSymmetric => true;
+
+        /// <summary>
         /// Returns true if this operator supports the given objective.
         /// </summary>
         /// <param name="objective"></param>

@@ -22,6 +22,7 @@ using System.Text;
 using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
+using Itinero.Optimization.General;
 using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
@@ -31,26 +32,41 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
     /// </summary>
     public class SeededLocalizedCheapestInsertionSolver : SolverBase<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>
     {
-        // the amount of customers to place before applying local improvements.
-        private readonly int _k; 
-        // the percentage bound of space to leave for future improvements.
-        private readonly float _slackPercentage; 
-        // hold the select seed function.
-        private readonly Func<NoDepotCVRProblem, NoDepotCVRPSolution, int> _selectSeed; 
+        private readonly int _k; // the amount of visits to place before applying local improvements.
+        private readonly float _slackPercentage;  // the percentage of space to leave for future improvements.
+        private readonly Func<NoDepotCVRProblem, NoDepotCVRPSolution, int> _selectSeed; // hold the select seed function.
         // holds the intra-route improvements;
-        private List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>> _intraImprovements; 
-        private List<IInterTourImprovementOperator> _interImprovements; // Holds the inter-route improvements.
-        private bool _use_seed_cost; // Flag to configure seed costs.
-        private bool _use_seed; // Flag to use seeding heuristic or not.
-        private float _thresholdPercentage; // The threshold percentage.
-        private float _lambda; // The lambda.
+        private readonly List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>> _intraImprovements; 
+        private readonly List<IInterTourImprovementOperator> _interImprovements; // holds the inter-route improvements.
+        private readonly Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> _overlaps; // holds the overlap function.
+        private readonly float _thresholdPercentage; // the threshold percentage.
+        private readonly float _localizationFactor; // the localization factor.
 
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        public SeededLocalizedCheapestInsertionSolver(Func<NoDepotCVRProblem, NoDepotCVRPSolution, int> selectSeed)
+        /// <param name="selectSeed">The seed selection heuristic.</param>
+        /// <param name="intraImprovements">The tour improvement operators.</param>
+        /// <param name="interImprovements">The tour exhange improvement operators.</param>
+        /// <param name="overlaps">Function to calculate tour overlaps.</param>
+        /// <param name="k">The # of visits to place before apply intra improvements.</param>
+        /// <param name="slackPercentage">The percentage of space to leave for future improvements.</param>
+        /// <param name="thresholdPercentage">The percentage of unplaced visits to try and place in existing tours.</param>
+        /// <param name="localizationFactor">The factor to take into account the weight to the seed visit.</param>
+        public SeededLocalizedCheapestInsertionSolver(Func<NoDepotCVRProblem, NoDepotCVRPSolution, int> selectSeed, 
+            IEnumerable<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>> intraImprovements,
+            IEnumerable<IInterTourImprovementOperator> interImprovements,
+            Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlaps, int k = 10, float slackPercentage = 5, 
+            float thresholdPercentage = 10, float localizationFactor = 0.25f)
         {
             _selectSeed = selectSeed;
+            _intraImprovements = new List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>>(intraImprovements);
+            _interImprovements = new List<IInterTourImprovementOperator>(_interImprovements);
+            _overlaps = overlaps;
+            _k = k;
+            _slackPercentage = slackPercentage;
+            _thresholdPercentage = thresholdPercentage;
+            _localizationFactor = localizationFactor;
         }
 
         /// <summary>
@@ -66,62 +82,30 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
             // create the solution.
             var solution = new NoDepotCVRPSolution(problem.Weights.Length);
 
-            // create a list of customers to place.
-            var customers = new List<int>(System.Linq.Enumerable.Range(0, problem.Weights.Length));
+            // create a list of visits to place.
+            var visits = new List<int>(System.Linq.Enumerable.Range(0, problem.Weights.Length));
 
             // create the local max, taking into account the slack percentage.
             var max = problem.Max - (problem.Max * _slackPercentage);
 
-            // keep placing customer until none are left.
-            // keep a list of cheapest insertions.
-            IInsertionCosts costs = new BinaryHeapInsertionCosts();
-            while (customers.Count > 0)
+            // keep placing visit until none are left.
+            while (visits.Count > 0)
             {
-                // try and distribute the remaining customers if there are only a few left.
-                if (customers.Count < problem.Weights.Length * _thresholdPercentage)
+                // try and distribute the remaining visits if there are only a few left.
+                if (visits.Count < problem.Weights.Length * _thresholdPercentage)
                 {
-                    bool succes = true;
-                    while (succes && customers.Count > 0)
-                    {
-                        succes = false;
-                        CheapestInsertionResult best = new CheapestInsertionResult();
-                        best.Increase = float.MaxValue;
-                        int best_idx = -1;
-                        for (int route_idx = 0; route_idx < solution.Count; route_idx++)
-                        {
-                            IRoute route = solution.Route(route_idx);
-                            CheapestInsertionResult result =
-                                CheapestInsertionHelper.CalculateBestPlacement(problem, route, customers);
-                            if (best.Increase > result.Increase)
-                            {
-                                best = result;
-                                best_idx = route_idx;
-                            }
-                        }
-
-                        IRoute best_route = solution.Route(best_idx);
-                        double route_time = problem.Time(best_route);
-                        if (route_time + best.Increase < max)
-                        { // insert the customer.
-                            best_route.InsertAfter(best.CustomerBefore, best.Customer);
-                            customers.Remove(best.Customer);
-
-                            this.Improve(problem, solution, max, best_idx);
-
-                            succes = true;
-                        }
-                    }
+                    this.TryPlaceRemaining(problem, objective, solution, visits);
                 }
                 
-                // select a customer using some heuristic.
-                if (customers.Count > 0)
+                // select a visit using some heuristic.
+                if (visits.Count > 0)
                 {
-                    // select a customer according to the given seed strategy.
+                    // select a visit according to the given seed strategy.
                     var seed = _selectSeed(problem, solution);
-                    customers.Remove(seed);
+                    visits.Remove(seed);
                     
                     Func<int, float> lambdaCostFunc = null;
-                    if (_lambda != 0)
+                    if (_localizationFactor != 0)
                     { // create a function to add the localized effect (relative to the seed) to the CI algorithm
                        // if lambda is set.
                         lambdaCostFunc = (v) => problem.Weights[seed][v] + 
@@ -133,27 +117,27 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                     var currentWeight = 0f;
                     //solution[solution.Count - 1] = 0;
 
-                    while (customers.Count > 0)
+                    while (visits.Count > 0)
                     {
                         // calculate the cheapest visit to insert.
                         Pair location;
                         int visit;
-                        var increase = currentTour.CalculateCheapestAny(problem.Weights, customers, 
+                        var increase = currentTour.CalculateCheapestAny(problem.Weights, visits, 
                             out location, out visit, lambdaCostFunc);
 
                         // calculate the actual increase if an extra cost was added.
                         if (lambdaCostFunc != null)
-                        { // use the seed cost; the cost to the seed customer.
+                        { // use the seed cost; the cost to the seed visit.
                             increase -= lambdaCostFunc(visit);
                         }
 
                         // calculate the new weight.
                         var potentialWeight = currentWeight + increase;
-                        // cram as many customers into one route as possible.
+                        // cram as many visits into one route as possible.
                         if (potentialWeight < max)
                         {
-                            // insert the customer, it is 
-                            customers.Remove(visit);
+                            // insert the visit, it is 
+                            visits.Remove(visit);
                             currentTour.InsertAfter(location.From, visit);
 
                             // // free some memory in the costs list.
@@ -164,21 +148,21 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                             //solution[solution.Count - 1] = potentialWeight;
 
                             // improve if needed.
-                            if (((problem.Weights.Length - customers.Count) % _k) == 0)
+                            if (((problem.Weights.Length - visits.Count) % _k) == 0)
                             { // an improvement is decided.
                                 // apply the inter-route improvements.
                                 currentWeight = this.ImproveIntraRoute(problem.Weights, currentTour, 
                                     currentWeight);
 
                                 // also to the inter-improvements.
-                                currentTour = this.Improve(problem, solution, max, solution.Count - 1);
+                                this.Improve(problem, objective, solution, solution.Count - 1);
+                                currentTour = solution.Tour(solution.Count - 1);
                             }
                         }
                         else
                         {// ok we are done!
-
                             // run the inter-improvements one last time.
-                            this.Improve(problem, solution, max, solution.Count - 1);
+                            this.Improve(problem, objective, solution, solution.Count - 1);
 
                             // break the route.
                             break;
@@ -187,8 +171,104 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                 }
             }
 
+            fitness = 0;
             return solution;
-        }     
+        }
+        
+        /// <summary>
+        /// Runs the inter-tour improvements on the new tour and the existing tours.
+        /// </summary>
+        private void Improve(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, int newTourIdx)
+        {
+            var max = problem.Max;
+
+            // the current route.
+            var currentTour = solution.Tour(newTourIdx);
+
+            for (int tourIdx = 0; tourIdx < solution.Count; tourIdx++)
+            { // apply the intra-route heurstic between the new and all existing routes.
+                if (tourIdx != newTourIdx && _overlaps(problem, solution.Tour(tourIdx),
+                    solution.Tour(newTourIdx)))
+                { // only check routes that overlap.
+                    if (this.ImproveInterRoute(problem, objective, solution, tourIdx, newTourIdx, max))
+                    { // if there was an improvement, run intra-improvements also.
+                        this.ImproveIntraRoute(problem.Weights, solution.Tour(tourIdx), 
+                            objective.Calculate(problem, solution, tourIdx));
+                        this.ImproveIntraRoute(problem.Weights, solution.Tour(newTourIdx), 
+                            objective.Calculate(problem, solution, newTourIdx));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Try placing the remaining visits in the existing tours.
+        /// </summary>
+        private void TryPlaceRemaining(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, List<int> visits)
+        {
+            var max = problem.Max;
+            var succes = true;
+            Func<int, float> lambdaCostFunc = null;
+
+            // keep placing visits until it's not possible anymore.
+            while (succes && visits.Count > 0)
+            {
+                succes = false;
+                var bestIncrease = float.MaxValue;
+                Pair? bestLocation = null;
+                int bestTourIdx = -1;
+                int bestVisit = -1;
+                for (int tourIdx = 0; tourIdx < solution.Count; tourIdx++)
+                {
+                    var tour = solution.Tour(tourIdx);
+                    var seed = tour.First;
+                    Pair location;
+                    int visit;
+                                    
+                    lambdaCostFunc = null;
+                    if (_localizationFactor != 0)
+                    { // create a function to add the localized effect (relative to the seed) to the CI algorithm
+                        // if lambda is set.
+                        lambdaCostFunc = (v) => problem.Weights[seed][v] + 
+                        problem.Weights[v][seed];
+                    }
+
+                    // run CI algorithm.
+                    var increase = tour.CalculateCheapestAny(problem.Weights, visits, out location, out visit,
+                        lambdaCostFunc);
+                    if (increase < bestIncrease)
+                    {
+                        bestIncrease = increase;
+                        bestVisit = visit;
+                        bestLocation = location;
+                        bestTourIdx = tourIdx;
+                    }
+                }
+
+                // calculate the actual increase if an extra cost was added.
+                var bestTour = solution.Tour(bestTourIdx);
+                var actualIncrease = bestIncrease;
+                if (_localizationFactor != 0)
+                { // create a function to add the localized effect (relative to the seed) to the CI algorithm
+                    // if lambda is set.
+                    lambdaCostFunc = (v) => problem.Weights[bestTour.First][v] + 
+                    problem.Weights[v][bestTour.First];
+                    actualIncrease -= lambdaCostFunc(bestVisit);
+                }
+
+                // try to do the actual insert
+                var tourTime = objective.Calculate(problem, solution, bestTourIdx);
+                if (tourTime + actualIncrease < max)
+                { // insert the visit.
+                    bestTour.InsertAfter(bestLocation.Value.From, bestVisit);
+                    visits.Remove(bestVisit);
+
+                    this.Improve(problem, objective, solution, bestTourIdx);
+                    
+                    succes = true;
+                }
+            }
+        }
 
         /// <summary>
         /// Apply some improvements within one tour.
@@ -249,7 +329,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                     var totalBefore =  tour1Weight + tour2Weight;
 
                     float delta;
-                    if(improvementOperation.Apply(problem, solution, tour1Idx, tour2Idx, max))
+                    if(improvementOperation.Apply(problem, objective, solution, tour1Idx, tour2Idx, out delta))
                     { // there was an improvement.
                         improvement = true;
                         globalImprovement = true;
@@ -265,7 +345,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                         //break;
                     }
                     else if (!improvementOperation.IsSymmetric &&
-                        improvementOperation.Improve(problem, solution, tour2Idx, tour1Idx, max))
+                        improvementOperation.Apply(problem, objective, solution, tour2Idx, tour1Idx, out delta))
                     { // also do the improvement the other way around when not symmetric.
                         improvement = true;
                         globalImprovement = true;

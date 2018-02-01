@@ -32,6 +32,15 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
     public interface IInterTourImprovementOperator : IOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>
     {
         /// <summary>
+        /// Returns true if it doesn't matter if tour indexes are switched.
+        /// </summary>
+        /// <returns></returns>
+        bool IsSymmetric
+        {
+            get;
+        }
+
+        /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
         /// <param name="delta">The difference between the fitness value before and after the operation. The new fitness value can be calculated by subtracting the delta value from the old fitness value. This means a delta > 0 means an improvement in fitness when lower is better.</param>
