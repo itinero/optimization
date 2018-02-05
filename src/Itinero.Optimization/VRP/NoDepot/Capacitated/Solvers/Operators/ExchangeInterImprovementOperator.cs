@@ -68,6 +68,13 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// </summary>
         public bool Apply (NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta) 
         {
+            // check if solution has at least two tours.
+            if (solution.Count < 2)
+            {
+                delta = 0;
+                return false;
+            }
+
             // choose two random routes.
             var random = RandomGeneratorExtensions.GetRandom ();
             var tourIdx1 = random.Generate (solution.Count);

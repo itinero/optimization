@@ -15,21 +15,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-namespace Itinero.Optimization.General
+
+namespace Itinero.Optimization.Test
 {
     /// <summary>
-    /// Contains a collection of generally reusable delegates.
+    /// Contains some constains useful for testing.
     /// </summary>
-    public static class Delegates
+    public class TestConstants
     {
         /// <summary>
-        /// Returns true if the two given tours overlap.
+        /// The tolerance in weight difference.
         /// </summary>
-        /// <param name="problem">The problem these tours are for.</param>
-        /// <param name="tour1">The first tour.</param>
-        /// <param name="tour2">The second tour.</param>
-        /// <returns>True if the two tours geographically overlap.</returns>        
-        public delegate bool OverlapsFunc<TProblem, TTour>(TProblem problem, TTour tour1, TTour tour2);
+        public static float E = 0.01f;
     }
 }

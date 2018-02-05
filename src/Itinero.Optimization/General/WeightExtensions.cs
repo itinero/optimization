@@ -19,17 +19,24 @@
 namespace Itinero.Optimization.General
 {
     /// <summary>
-    /// Contains a collection of generally reusable delegates.
+    /// Contains helper functions related to weights.
     /// </summary>
-    public static class Delegates
+    public static class WeightExtensions
     {
         /// <summary>
-        /// Returns true if the two given tours overlap.
+        /// Calculates the weight of a sequence.
         /// </summary>
-        /// <param name="problem">The problem these tours are for.</param>
-        /// <param name="tour1">The first tour.</param>
-        /// <param name="tour2">The second tour.</param>
-        /// <returns>True if the two tours geographically overlap.</returns>        
-        public delegate bool OverlapsFunc<TProblem, TTour>(TProblem problem, TTour tour1, TTour tour2);
+        /// <param name="weights">The weight matrix.</param>
+        /// <param name="visits">The sequence.</param>
+        /// <returns></returns>
+        public static float Seq(this float[][] weights, params int[] visits)
+        {
+            var res = 0f;
+            for (var i = 1; i < visits.Length; i++)
+            {
+                res += weights[visits[i - 1]][visits[i]];
+            }
+            return res;
+        }
     }
 }
