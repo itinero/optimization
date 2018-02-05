@@ -19,6 +19,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Itinero.Optimization.General;
+using Itinero.Optimization.Tours;
+using Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers;
 
 namespace Itinero.Optimization.VRP.NoDepot.Capacitated
 {
@@ -37,5 +40,63 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
         /// Gets the weights.
         /// </summary>
         public float[][] Weights { get; set; }
+
+        /// <summary>
+        /// Gets the seed heuristic.
+        /// </summary>
+        /// <returns></returns>
+        public Func<NoDepotCVRProblem, IList<int>, int> SelectSeedHeuristic
+        {
+            get
+            {
+                return (problem, visits) => 
+                {
+                    var weights = problem.Weights;
+
+                    return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
+                        weights, visits);
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets the overlap func.
+        /// </summary>
+        /// <returns></returns>
+        public Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> OverlapsFunc
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Solves this using a default solver.
+        /// </summary>
+        /// <returns></returns>
+        public NoDepotCVRPSolution Solve()
+        {
+            return this.Solve(new SeededLocalizedCheapestInsertionSolver(
+                this.SelectSeedHeuristic, (p, x, y) => true));
+        }
+
+        /// <summary>
+        /// Solves this using a default solver.
+        /// </summary>
+        /// <returns></returns>
+        public NoDepotCVRPSolution Solve(Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc)
+        {
+            return this.Solve(new SeededLocalizedCheapestInsertionSolver(
+                this.SelectSeedHeuristic, overlapsFunc));
+        }
+
+        /// <summary>
+        /// Solvers this using the given solver.
+        /// </summary>
+        public NoDepotCVRPSolution Solve(Algorithms.Solvers.ISolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float> solver)
+        {
+            return solver.Solve(this, new NoDepotCVRPObjective());
+        }
     }
 }

@@ -34,13 +34,45 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
     {
         private readonly int _k; // the amount of visits to place before applying local improvements.
         private readonly float _slackPercentage;  // the percentage of space to leave for future improvements.
-        private readonly Func<NoDepotCVRProblem, NoDepotCVRPSolution, int> _selectSeed; // hold the select seed function.
+        private readonly Func<NoDepotCVRProblem, IList<int>, int> _selectSeed; // hold the select seed function.
         // holds the intra-route improvements;
         private readonly List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>> _intraImprovements; 
         private readonly List<IInterTourImprovementOperator> _interImprovements; // holds the inter-route improvements.
         private readonly Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> _overlaps; // holds the overlap function.
         private readonly float _thresholdPercentage; // the threshold percentage.
         private readonly float _localizationFactor; // the localization factor.
+
+        /// <summary>
+        /// Creates a new solver.
+        /// </summary>
+        /// <param name="selectSeed">The seed selection heuristic.</param>
+        /// <param name="overlaps">Function to calculate tour overlaps.</param>
+        /// <param name="k">The # of visits to place before apply intra improvements.</param>
+        /// <param name="slackPercentage">The percentage of space to leave for future improvements.</param>
+        /// <param name="thresholdPercentage">The percentage of unplaced visits to try and place in existing tours.</param>
+        /// <param name="localizationFactor">The factor to take into account the weight to the seed visit.</param>
+        public SeededLocalizedCheapestInsertionSolver(Func<NoDepotCVRProblem, IList<int>, int> selectSeed, 
+            Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlaps, int k = 10, float slackPercentage = 5, 
+            float thresholdPercentage = 10, float localizationFactor = 0.25f)
+        {
+            _selectSeed = selectSeed;
+            _overlaps = overlaps;
+            _k = k;
+            _slackPercentage = slackPercentage;
+            _thresholdPercentage = thresholdPercentage;
+            _localizationFactor = localizationFactor;
+
+            // register the default intra improvement operators.
+            _intraImprovements = new List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>>(1);
+            _intraImprovements.Add(new TSP.Solvers.HillClimbing3OptSolver());
+
+            // register the default inter improvement operators.
+            _interImprovements = new List<IInterTourImprovementOperator>(4);
+            _interImprovements.Add(new Operators.ExchangeInterImprovementOperator());
+            _interImprovements.Add(new Operators.RelocateImprovementOperator());
+            _interImprovements.Add(new Operators.RelocateExchangeInterImprovementOperator());
+            _interImprovements.Add(new Operators.CrossExchangeInterImprovementOperator());
+        }
 
         /// <summary>
         /// Creates a new solver.
@@ -53,7 +85,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
         /// <param name="slackPercentage">The percentage of space to leave for future improvements.</param>
         /// <param name="thresholdPercentage">The percentage of unplaced visits to try and place in existing tours.</param>
         /// <param name="localizationFactor">The factor to take into account the weight to the seed visit.</param>
-        public SeededLocalizedCheapestInsertionSolver(Func<NoDepotCVRProblem, NoDepotCVRPSolution, int> selectSeed, 
+        public SeededLocalizedCheapestInsertionSolver(Func<NoDepotCVRProblem, IList<int>, int> selectSeed, 
             IEnumerable<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>> intraImprovements,
             IEnumerable<IInterTourImprovementOperator> interImprovements,
             Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlaps, int k = 10, float slackPercentage = 5, 
@@ -101,7 +133,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                 if (visits.Count > 0)
                 {
                     // select a visit according to the given seed strategy.
-                    var seed = _selectSeed(problem, solution);
+                    var seed = _selectSeed(problem, visits);
                     visits.Remove(seed);
                     
                     Func<int, float> lambdaCostFunc = null;

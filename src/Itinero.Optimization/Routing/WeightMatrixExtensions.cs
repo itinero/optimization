@@ -24,6 +24,7 @@ using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 using System.Linq;
+using Itinero.LocalGeo;
 
 namespace Itinero.Optimization.Routing
 {
@@ -33,6 +34,59 @@ namespace Itinero.Optimization.Routing
     /// </summary>
     public static class WeightMatrixExtensions
     {
+        /// <summary>
+        /// Returns true if the boundingboxes of the two tours overlap.
+        /// </summary>
+        /// <param name="algorithm">The weight matrix algorithm.</param>
+        /// <param name="tour1">The first tour.</param>
+        /// <param name="tour2">The second tour.</param>
+        /// <returns></returns>
+        public static bool ToursOverlap<T>(this IWeightMatrixAlgorithm<T> algorithm, ITour tour1, ITour tour2)
+        {
+            var box1 = algorithm.BoundingBox(tour1);
+            var box2 = algorithm.BoundingBox(tour2);
+
+            return box1.Overlaps(box2);
+        }
+
+        /// <summary>
+        /// Calculates the boundingbox around the given tour.
+        /// </summary>
+        /// <param name="algorithm">The weight matrix algorithm.</param>
+        /// <param name="tour">The tour.</param>
+        /// <returns></returns>
+        public static Box BoundingBox<T>(this IWeightMatrixAlgorithm<T> algorithm, ITour tour)
+        {
+            Box? box = null;
+            foreach (var visit in tour)
+            {
+                var visitLocation = algorithm.LocationOnNetwork(tour.First);
+                if (box == null)
+                {
+                    box = new Box(visitLocation, visitLocation);
+                }
+                else
+                {
+                    box = box.Value.ExpandWith(visitLocation.Latitude, visitLocation.Longitude);
+                }
+            }
+            return box.Value;
+        }
+        
+        /// <summary>
+        /// Gets the location on het routing network for a given visit.
+        /// </summary>
+        /// <param name="algorithm">The weight matrix algorithm.</param>
+        /// <param name="visit">The visit.</param>
+        /// <returns></returns>
+        public static Coordinate LocationOnNetwork<T>(this IWeightMatrixAlgorithm<T> algorithm, int visit)
+        {
+            var originalIdx = algorithm.OriginalIndexOf(visit);
+            var routerPoint = algorithm.RouterPoints[originalIdx];
+
+            return routerPoint.LocationOnNetwork(algorithm.Router.Db);
+        }
+
         /// <summary>
         /// Builds a route from a given tour.
         /// </summary>
