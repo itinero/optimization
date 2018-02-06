@@ -17,6 +17,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Itinero.Optimization.Tours
 {
@@ -54,6 +55,27 @@ namespace Itinero.Optimization.Tours
         public static IEnumerable<Pair> Pairs(this IEnumerable<int> tour, bool isClosed)
         {
             return new PairEnumerable<IEnumerable<int>>(tour, isClosed);
+        }
+
+        /// <summary>
+        /// Enumerates all sequences in the given tour with the given size.
+        /// </summary>
+        public static IEnumerable<int[]> Seq(this ITour tour, int size)
+        {
+            return new Sequences.SequenceEnumerable(tour, size);
+        }
+
+        /// <summary>
+        /// Enumerates all sequences in the given tour with the given size and smaller.
+        /// </summary>
+        public static IEnumerable<int[]> SeqAndSmaller(this ITour tour, int size)
+        {
+            var enumerable = System.Linq.Enumerable.Empty<int[]>();
+            for (var i = 2; i <= size; i++)
+            {
+                enumerable = enumerable.Concat(tour.Seq(i));
+            }
+            return enumerable;
         }
     }
 }
