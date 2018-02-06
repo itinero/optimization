@@ -19,6 +19,7 @@
 using System.Collections.Generic;
 using Itinero.LocalGeo;
 using Itinero.Optimization.General;
+using Itinero.Optimization.Test.Staging;
 using Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated;
 using Itinero.Optimization.VRP.NoDepot.Capacitated;
 using Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators;
@@ -94,6 +95,53 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
         }
 
         /// <summary>
+        /// Tests the operator on a solution that has a possible exchange but with the tours given.
+        /// </summary>
+        [Test]
+        public void TestWithExchangeWithFixedTours()
+        {
+            // build a real problem but with an empty solution.
+            NoDepotCVRPSolution solution = null;
+            List<Coordinate> locations = null;
+            var problem = "data.geometric.problem1.geojson".BuildProblem(out solution, out locations);
+            var objective = new NoDepotCVRPObjective();
+
+            // make sure there is a possible exchange.
+            // tour0: replace 3->4->5 with 3->8->5
+            // tour1: replace 7->8->9 with 7->4->9
+            var original = solution.Clone() as NoDepotCVRPSolution;
+            var tour0 = solution.Tour(0);
+            var tour1 = solution.Tour(1);
+            tour0.ReplaceEdgeFrom(3, 8);
+            tour0.ReplaceEdgeFrom(8, 5);
+            tour1.ReplaceEdgeFrom(7, 4);
+            tour1.ReplaceEdgeFrom(4, 9);
+            var expectedDelta = problem.Weights.Seq(3, 8, 5) +
+                problem.Weights.Seq(7, 4, 9) - 
+                problem.Weights.Seq(3, 4, 5) -
+                problem.Weights.Seq(7, 8, 9);
+
+            // apply the operator.
+            var op = new ExchangeInterImprovementOperator();
+            float delta;
+            Assert.IsTrue(op.Apply(problem, objective, solution, 0, 1, out delta));
+            Assert.AreEqual(expectedDelta, delta, TestConstants.E);
+
+            // apply the operator the other way around.
+            solution = original;
+            tour0 = solution.Tour(0);
+            tour1 = solution.Tour(1);
+            tour0.ReplaceEdgeFrom(3, 8);
+            tour0.ReplaceEdgeFrom(8, 5);
+            tour1.ReplaceEdgeFrom(7, 4);
+            tour1.ReplaceEdgeFrom(4, 9);
+
+            // apply the operator.
+            Assert.IsTrue(op.Apply(problem, objective, solution, 1, 0, out delta));
+            Assert.AreEqual(expectedDelta, delta, TestConstants.E);
+        }
+
+        /// <summary>
         /// Tests the operator on a solution that has a possible exchange.
         /// </summary>
         [Test]
@@ -108,7 +156,6 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             // make sure there is a possible exchange.
             // tour0: replace 3->4->5 with 3->8->5
             // tour1: replace 7->8->9 with 7->4->9
-            // TODO: perhaps there's a faster way to exchange stuff?
             var tour0 = solution.Tour(0);
             var tour1 = solution.Tour(1);
             tour0.ReplaceEdgeFrom(3, 8);
@@ -120,7 +167,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
                 problem.Weights.Seq(3, 4, 5) -
                 problem.Weights.Seq(7, 8, 9);
 
-            // apply the operator to the empty solution.
+            // apply the operator.
             var op = new ExchangeInterImprovementOperator();
             float delta;
             Assert.IsTrue(op.Apply(problem, objective, solution, out delta));

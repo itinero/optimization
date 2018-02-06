@@ -131,7 +131,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                             { // the old weights are bigger!
                                 // check if the new routes are bigger than max.
                                 if (tour1Weight + (weight1After - weight1) <= max &&
-                                    tour2Weight + (weight2After - weight1) <= max)
+                                    tour2Weight + (weight2After - weight2) <= max)
                                 { // the exchange can happen, both routes stay within bound!
                                     // exchange customer.
                                     tour1.ReplaceEdgeFrom(previousVisit1, visit2);
@@ -139,12 +139,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                                     tour2.ReplaceEdgeFrom(previousVisit2, visit1);
                                     tour2.ReplaceEdgeFrom(visit1, nextVisit2);
 
-                                    var tour1WeightAfter = objective.Calculate(problem, solution, tourIdx1);
-                                    var tour2WeightAfter = objective.Calculate(problem, solution, tourIdx2);
-                                    var totalAfter = tour1WeightAfter +
-                                        tour2WeightAfter;
-
-                                    delta = totalBefore - totalAfter;
+                                    delta = -difference;
                                     return true;
                                 }
                             }

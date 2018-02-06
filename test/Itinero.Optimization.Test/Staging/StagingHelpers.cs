@@ -28,6 +28,41 @@ namespace Itinero.Optimization.Test.Staging
         }
 
         /// <summary>
+        /// Builds a linestring represents the route from the given tour and locations.
+        /// </summary>
+        public static LineString BuildRoute(this ITour tour, IList<Itinero.LocalGeo.Coordinate> locations)
+        {
+            var coordinates = new List<GeoAPI.Geometries.Coordinate>();
+            var first = locations[tour.First];
+            coordinates.Add(new GeoAPI.Geometries.Coordinate(first.Longitude, first.Latitude));
+            foreach(var pair in tour.Pairs())
+            {
+                var to = locations[pair.To];
+                coordinates.Add(new GeoAPI.Geometries.Coordinate(to.Longitude, to.Latitude));
+            }
+            
+            return new LineString(coordinates.ToArray());
+        }
+
+        /// <summary>
+        /// Builds the the routes from the given tours and locations.
+        /// </summary>
+        public static FeatureCollection BuildRoutes(this IMultiTour tours, IList<Itinero.LocalGeo.Coordinate> locations)
+        {
+            var features = new FeatureCollection();
+
+            for (var t = 0; t < tours.Count; t++)
+            {
+                var lineString = tours.Tour(t).BuildRoute(locations);
+                var attributes = new AttributesTable();
+                attributes.Add("tour_id", t);
+                features.Add(new Feature(lineString, attributes));
+            }
+
+            return features;
+        }
+
+        /// <summary>
         /// Builds a test problem and default solution (as-the-crow-flies distances) from the given lines.
         /// </summary>
         /// <param name="features">The linestring(s).</param>
