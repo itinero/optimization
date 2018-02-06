@@ -78,6 +78,13 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// </summary>
         public bool Apply (NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta) 
         {
+            // check if solution has at least two tours.
+            if (solution.Count < 2)
+            {
+                delta = 0;
+                return false;
+            }
+
             // choose two random routes.
             var random = RandomGeneratorExtensions.GetRandom ();
             var tourIdx1 = random.Generate (solution.Count);
@@ -101,11 +108,11 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
             int tourIdx1, int tourIdx2, out float delta)
         {
             // try relocation from 1->2 and 2->1.
-            if (this.RelocateFromTo(problem, solution, tourIdx1, tourIdx2, out delta))
+            if (this.RelocateFromTo(problem, objective, solution, tourIdx1, tourIdx2, out delta))
             {
                 return true;
             }
-            if (this.RelocateFromTo(problem, solution, tourIdx2, tourIdx1, out delta))
+            if (this.RelocateFromTo(problem, objective, solution, tourIdx2, tourIdx1, out delta))
             {
                 return true;
             }
@@ -117,7 +124,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// <summary>
         /// Tries a relocation of the visits in tour1 to tour2.
         /// </summary>
-        private bool RelocateFromTo(NoDepotCVRProblem problem, NoDepotCVRPSolution solution,
+        private bool RelocateFromTo(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution,
             int tourIdx1, int tourIdx2, out float delta)
         {
             int previous = -1;
@@ -126,7 +133,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
             var tour1 = solution.Tour(tourIdx1);
             var tour2 = solution.Tour(tourIdx2);
 
-            var tour2Weight = solution.Weights[tourIdx2];
+            var tour2Weight = objective.Calculate(problem, solution, tourIdx2);
             foreach (int next in tour1)
             {
                 if (previous >= 0 && current >= 0)
@@ -168,7 +175,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                 { // there is a gain in relocating this visit.
                     tour.ReplaceEdgeFrom(location.From, current);
                     tour.ReplaceEdgeFrom(current, location.To);
-                    delta = result - removalGain;
+                    delta = removalGain - result;
                     return true;
                 }
             }
