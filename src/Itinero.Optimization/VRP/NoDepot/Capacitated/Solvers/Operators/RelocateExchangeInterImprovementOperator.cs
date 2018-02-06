@@ -31,6 +31,17 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
     /// </summary>
     public class RelocateExchangeInterImprovementOperator : IInterTourImprovementOperator
     {
+        private readonly int _maxWindowSize = 10;
+
+        /// <summary>
+        /// Creates a new improvement operator.
+        /// </summary>
+        /// <param name="maxWindowSize">The maximum window size to search for sequences to relocate.</param>
+        public RelocateExchangeInterImprovementOperator(int maxWindowSize = 10)
+        {
+            _maxWindowSize = maxWindowSize;
+        }
+
         /// <summary>
         /// Gets the name of this operator.
         /// </summary>
@@ -56,6 +67,13 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// </summary>
         public bool Apply (NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta) 
         {
+            // check if solution has at least two tours.
+            if (solution.Count < 2)
+            {
+                delta = 0;
+                return false;
+            }
+
             // choose two random routes.
             var random = RandomGeneratorExtensions.GetRandom ();
             var tourIdx1 = random.Generate (solution.Count);
@@ -74,7 +92,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
             int tourIdx1, int tourIdx2, out float delta)
         {     
             var max = problem.Max;
-            int maxWindowSize = 10;
+            int maxWindowSize = _maxWindowSize;
 
             var tour1 = solution.Tour(tourIdx1);
             var tour2 = solution.Tour(tourIdx2);
