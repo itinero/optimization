@@ -17,6 +17,7 @@
  */
 
 using System.Linq;
+using Itinero.Optimization.Tours;
 using Itinero.Optimization.Tours.Sequences;
 using NUnit.Framework;
 
@@ -264,6 +265,95 @@ namespace Itinero.Optimization.Test.Tours.Sequences
             Assert.AreEqual(1, result[4][2]);
             Assert.AreEqual(2, result[4][3]);
             Assert.AreEqual(3, result[4][4]);
+        }
+
+        /// <summary>
+        /// Tests enumerating sequences of size x and smaller.
+        /// </summary>
+        [Test]
+        public void TestSeqAndSmallerExtensionOpen()
+        {
+            var tourEnumerable = new int[] { 0, 1, 2, 3, 4 };
+            var tour = new Tour(tourEnumerable, null);
+            var result = tour.SeqAndSmaller(3).ToList();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(7, result.Count);
+            Assert.IsNotNull(result[0]);
+            Assert.IsNotNull(result[1]);
+            Assert.IsNotNull(result[2]);
+            Assert.IsNotNull(result[3]);
+            Assert.IsNotNull(result[4]);
+            Assert.IsNotNull(result[5]);
+            Assert.IsNotNull(result[6]);
+            Assert.AreEqual(0, result[0][0]);
+            Assert.AreEqual(1, result[0][1]);
+            Assert.AreEqual(1, result[1][0]);
+            Assert.AreEqual(2, result[1][1]);
+            Assert.AreEqual(2, result[2][0]);
+            Assert.AreEqual(3, result[2][1]);
+            Assert.AreEqual(3, result[3][0]);
+            Assert.AreEqual(4, result[3][1]);
+
+            Assert.AreEqual(0, result[4][0]);
+            Assert.AreEqual(1, result[4][1]);
+            Assert.AreEqual(2, result[4][2]);
+            Assert.AreEqual(1, result[5][0]);
+            Assert.AreEqual(2, result[5][1]);
+            Assert.AreEqual(3, result[5][2]);
+            Assert.AreEqual(2, result[6][0]);
+            Assert.AreEqual(3, result[6][1]);
+            Assert.AreEqual(4, result[6][2]);
+        }
+
+        /// <summary>
+        /// Tests enumerating sequences of size the same as the tour.
+        /// </summary>
+        [Test]
+        public void TestSeqAndSmallerExtensionClosed()
+        {
+            var tourEnumerable = new int[] { 0, 1, 2, 3, 4 };
+            var tour = new Tour(tourEnumerable, 0);
+            var result = tour.SeqAndSmaller(3).ToList();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(10, result.Count);
+            Assert.IsNotNull(result[0]);
+            Assert.IsNotNull(result[1]);
+            Assert.IsNotNull(result[2]);
+            Assert.IsNotNull(result[3]);
+            Assert.IsNotNull(result[4]);
+            Assert.IsNotNull(result[5]);
+            Assert.IsNotNull(result[6]);
+            Assert.IsNotNull(result[7]);
+            Assert.IsNotNull(result[8]);
+            Assert.IsNotNull(result[9]);
+            Assert.AreEqual(0, result[0][0]);
+            Assert.AreEqual(1, result[0][1]);
+            Assert.AreEqual(1, result[1][0]);
+            Assert.AreEqual(2, result[1][1]);
+            Assert.AreEqual(2, result[2][0]);
+            Assert.AreEqual(3, result[2][1]);
+            Assert.AreEqual(3, result[3][0]);
+            Assert.AreEqual(4, result[3][1]);
+            Assert.AreEqual(4, result[4][0]);
+            Assert.AreEqual(0, result[4][1]);
+
+            Assert.AreEqual(0, result[5][0]);
+            Assert.AreEqual(1, result[5][1]);
+            Assert.AreEqual(2, result[5][2]);
+            Assert.AreEqual(1, result[6][0]);
+            Assert.AreEqual(2, result[6][1]);
+            Assert.AreEqual(3, result[6][2]);
+            Assert.AreEqual(2, result[7][0]);
+            Assert.AreEqual(3, result[7][1]);
+            Assert.AreEqual(4, result[7][2]);
+            Assert.AreEqual(3, result[8][0]);
+            Assert.AreEqual(4, result[8][1]);
+            Assert.AreEqual(0, result[8][2]);
+            Assert.AreEqual(4, result[9][0]);
+            Assert.AreEqual(0, result[9][1]);
+            Assert.AreEqual(1, result[9][2]);
         }
     }
 }
