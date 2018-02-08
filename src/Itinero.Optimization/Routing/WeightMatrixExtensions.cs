@@ -60,7 +60,7 @@ namespace Itinero.Optimization.Routing
             Box? box = null;
             foreach (var visit in tour)
             {
-                var visitLocation = algorithm.LocationOnNetwork(tour.First);
+                var visitLocation = algorithm.LocationOnNetwork(visit);
                 if (box == null)
                 {
                     box = new Box(visitLocation, visitLocation);
