@@ -60,18 +60,6 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// Gets the overlap func.
-        /// </summary>
-        /// <returns></returns>
-        public Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> OverlapsFunc
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Solves this using a default solver.
         /// </summary>
         /// <returns></returns>

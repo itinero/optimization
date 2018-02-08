@@ -253,7 +253,7 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
                 if (localWeight < weight)
                 {
                     weight = localWeight;
-                    best = target;
+                    best = visit;
                 }
             }
 

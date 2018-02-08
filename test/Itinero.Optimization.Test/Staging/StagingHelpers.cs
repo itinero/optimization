@@ -1,3 +1,21 @@
+/*
+ *  Licensed to SharpSoftware under one or more contributor
+ *  license agreements. See the NOTICE file distributed with this work for 
+ *  additional information regarding copyright ownership.
+ * 
+ *  SharpSoftware licenses this file to you under the Apache License, 
+ *  Version 2.0 (the "License"); you may not use this file except in 
+ *  compliance with the License. You may obtain a copy of the License at
+ * 
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+ 
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -60,6 +78,19 @@ namespace Itinero.Optimization.Test.Staging
             }
 
             return features;
+        }
+
+        /// <summary>
+        /// Builds a test problem and default solution (as-the-crow-flies distances) from the given lines.
+        /// </summary>
+        /// <param name="features">The linestring(s).</param>
+        /// <param name="locations">The locations.</param>
+        /// <returns>The weights (as-the-crow-flies distances) between the points in the linestring(s).</returns>
+        public static float[][] BuildMatrix(this FeatureCollection features, out List<Itinero.LocalGeo.Coordinate> locations)
+        {
+            List<ITour> tours;
+            IAttributesTable attributes;
+            return features.BuildMatrix(out tours, out locations, out attributes);
         }
 
         /// <summary>
@@ -138,6 +169,41 @@ namespace Itinero.Optimization.Test.Staging
             }
             locations.Add(location);
             return locations.Count - 1;
+        }
+
+        /// <summary>
+        /// Returns true if the two given tour's bounding boxes overlap.
+        /// </summary>
+        public static bool ToursOverlap(this List<Itinero.LocalGeo.Coordinate> locations, ITour tour1, ITour tour2)
+        {
+            var box1 = locations.BoundingBox(tour1);
+            var box2 = locations.BoundingBox(tour2);
+
+            return box1.Overlaps(box2);
+        }
+
+        /// <summary>
+        /// Calculates the boundingbox around the given tour.
+        /// </summary>
+        /// <param name="algorithm">The weight matrix algorithm.</param>
+        /// <param name="tour">The tour.</param>
+        /// <returns></returns>
+        public static LocalGeo.Box BoundingBox(this List<Itinero.LocalGeo.Coordinate> locations, ITour tour)
+        {
+            LocalGeo.Box? box = null;
+            foreach (var visit in tour)
+            {
+                var visitLocation = locations[visit];
+                if (box == null)
+                {
+                    box = new LocalGeo.Box(visitLocation, visitLocation);
+                }
+                else
+                {
+                    box = box.Value.ExpandWith(visitLocation.Latitude, visitLocation.Longitude);
+                }
+            }
+            return box.Value;
         }
     }
 }

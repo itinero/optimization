@@ -58,8 +58,8 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
             _selectSeed = selectSeed;
             _overlaps = overlaps;
             _k = k;
-            _slackPercentage = slackPercentage;
-            _thresholdPercentage = thresholdPercentage;
+            _slackPercentage = slackPercentage / 100f;
+            _thresholdPercentage = thresholdPercentage / 100f;
             _localizationFactor = localizationFactor;
 
             // register the default intra improvement operators.
@@ -96,8 +96,8 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
             _interImprovements = new List<IInterTourImprovementOperator>(_interImprovements);
             _overlaps = overlaps;
             _k = k;
-            _slackPercentage = slackPercentage;
-            _thresholdPercentage = thresholdPercentage;
+            _slackPercentage = slackPercentage / 100f;
+            _thresholdPercentage = thresholdPercentage / 100f;
             _localizationFactor = localizationFactor;
         }
 
