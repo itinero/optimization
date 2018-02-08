@@ -120,18 +120,22 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             tour0.InsertAfter(8, 9);
             tour1.InsertAfter(7, 4);
             tour1.InsertAfter(4, 5);
-            var expectedDelta = problem.Weights.Seq(3, 8, 9, 4) -
-                problem.Weights.Seq(3, 4, 5, 6) +
-                problem.Weights.Seq(7, 4, 5, 10) - 
-                problem.Weights.Seq(7, 8, 9, 10);
+            var expectedDelta = problem.Weights.Seq(3, 8) + 
+                + problem.Weights.Seq(9, 0)
+                - problem.Weights.Seq(3, 4)
+                - problem.Weights.Seq(5, 0)
+                + problem.Weights.Seq(7, 4)
+                + problem.Weights.Seq(5, 10)
+                - problem.Weights.Seq(7, 8)
+                - problem.Weights.Seq(9, 10);
 
             // apply the operator.
-            var op = new CrossExchangeInterImprovementOperator(1);
+            var op = new CrossExchangeInterImprovementOperator();
             float delta;
             Assert.IsTrue(op.Apply(problem, objective, solution, 1, 0, out delta));
             tour0 = solution.Tour(0);
             tour1 = solution.Tour(1);
-            Assert.AreEqual(0, delta, TestConstants.E);
+            Assert.AreEqual(expectedDelta, delta, TestConstants.E);
 
             // apply the operator the other way around.
             solution = original;
@@ -147,7 +151,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             tour1.InsertAfter(4, 5);
 
             // apply the operator.
-            Assert.IsTrue(op.Apply(problem, objective, solution, 1, 0, out delta));
+            Assert.IsTrue(op.Apply(problem, objective, solution, 0, 1, out delta));
             Assert.AreEqual(expectedDelta, delta, TestConstants.E);
         }
     }
