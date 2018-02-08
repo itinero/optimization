@@ -92,9 +92,9 @@ namespace Itinero.Optimization.Tours
             // create and set an empty route.
             _subtours[routeIdx] = new SubTour(this, first, last);
 
-            if (last.HasValue && last != first)
+            if (last.HasValue)
             { // make sure the last is marked as last.
-                _nextArray[last.Value] = Constants.NOT_SET;
+                _nextArray[last.Value] = Constants.END;
             }
 
             // return the new route.

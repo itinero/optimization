@@ -536,7 +536,7 @@ namespace Itinero.Optimization.Test.Tours
         /// Tests insert after.
         /// </summary>
         [Test]
-        public void TestInsertAfterClose()
+        public void TestInsertAfterClosed()
         {
             var multiTour = new MultiTour(5);
             multiTour.Add(new Optimization.Tours.Tour(new int[] { 0, 1, 2, 3 }, 0));
@@ -570,6 +570,65 @@ namespace Itinero.Optimization.Test.Tours
                 Assert.AreEqual(0, tour.First);
                 Assert.AreEqual(0, tour.Last);
             }
+        }
+
+        /// <summary>
+        /// Tests insert after in a tour with one visit.
+        /// </summary>
+        [Test]
+        public void TestInsertAfterClosedOneVisit()
+        {
+            var multiTour = new MultiTour(5);
+            multiTour.Add(new Optimization.Tours.Tour(new int[] { 0 }, 0));
+            var tour = multiTour.Tour(0);
+
+            // test arguments.
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                tour.InsertAfter(0, -1);
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                tour.InsertAfter(-1, 0);
+            });
+            Assert.Catch<ArgumentException>(() =>
+            {
+                tour.InsertAfter(1, 1);
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                tour.InsertAfter(10, 11);
+            });
+
+            // insert visit.
+            tour.InsertAfter(0, 1);
+            Assert.AreEqual(new [] { 0, 1 }, tour);
+
+            multiTour = new MultiTour(5);
+            multiTour.Add(0, 0);
+            tour = multiTour.Tour(0);
+
+            // test arguments.
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                tour.InsertAfter(0, -1);
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                tour.InsertAfter(-1, 0);
+            });
+            Assert.Catch<ArgumentException>(() =>
+            {
+                tour.InsertAfter(1, 1);
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                tour.InsertAfter(10, 11);
+            });
+
+            // insert visit.
+            tour.InsertAfter(0, 1);
+            Assert.AreEqual(new [] { 0, 1 }, tour);
         }
 
         /// <summary>
