@@ -115,14 +115,14 @@ namespace Itinero.Optimization.TSP.Solvers
         {
             if (!problem.Last.HasValue)
             {
-                Itinero.Optimization.Logging.Logger.Log(this.Name, Logging.TraceEventType.Warning,
+                Itinero.Logging.Logger.Log(this.Name, Logging.TraceEventType.Warning,
                     "Cannot apply this operator to an open problem, skipping.");
                 delta = 0;
                 return false;
             }
             if (solution.First != solution.Last)
             {
-                Itinero.Optimization.Logging.Logger.Log(this.Name, Logging.TraceEventType.Warning,
+                Itinero.Logging.Logger.Log(this.Name, Logging.TraceEventType.Warning,
                     "Cannot apply this operator to an open fixed end problem, skipping.");
                 delta = 0;
                 return false;

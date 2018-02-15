@@ -139,6 +139,10 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                                     tour2.ReplaceEdgeFrom(previousVisit2, visit1);
                                     tour2.ReplaceEdgeFrom(visit1, nextVisit2);
 
+                                    // automatically removed in release mode.
+                                    tour1.Verify(problem.Weights.Length);
+                                    tour2.Verify(problem.Weights.Length);
+
                                     delta = -difference;
                                     return true;
                                 }

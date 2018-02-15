@@ -50,7 +50,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// Creates a new improvement operator.
         /// </summary>
         /// <param name="maxWindowSize">The maximum window size to search for sequences to exchange.</param>
-        public CrossExchangeInterImprovementOperator(int maxWindowSize = 10)
+        public CrossExchangeInterImprovementOperator(int maxWindowSize = 5)
         {
             _maxWindowSize = maxWindowSize;
         }
@@ -115,11 +115,11 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
             // loop over all sequences of size 4->maxWindowSize. 
             // - A minimum of 4 because otherwise we exchange just one visit.
             // - The edge to be exchanged are also included.
-            foreach (var s1 in tour1.SeqAndSmaller(4, _maxWindowSize))
+            foreach (var s1 in tour1.SeqAndSmaller(4, _maxWindowSize, false))
             {
                 var existing1 = problem.Weights[s1[0]][s1[1]] + 
                     problem.Weights[s1[s1.Length - 2]][s1[s1.Length - 1]];
-                foreach (var s2 in tour2.SeqAndSmaller(4, _maxWindowSize))
+                foreach (var s2 in tour2.SeqAndSmaller(4, _maxWindowSize, false))
                 {
                     var existing2 = problem.Weights[s2[0]][s2[1]] + 
                         problem.Weights[s2[s2.Length - 2]][s2[s2.Length - 1]];
@@ -157,6 +157,10 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                             tour2.ReplaceEdgeFrom(s1[i], s1[i + 1]);
                         }
                         tour2.ReplaceEdgeFrom(s1[s1.Length - 2], s2[s2.Length - 1]);
+
+                        // automatically removed in release mode.
+                        tour1.Verify(problem.Weights.Length);
+                        tour2.Verify(problem.Weights.Length);
 
                         delta = localDelta;
                         return true;

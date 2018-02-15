@@ -111,6 +111,20 @@ namespace Itinero.Optimization.Routing
         }
 
         /// <summary>
+        /// Builds routes from a given multitour.
+        /// </summary>
+        /// <returns></returns>
+        public static List<Route> BuildRoutes<T>(this IWeightMatrixAlgorithm<T> algorithm, IMultiTour tours)
+        {
+            var routes = new List<Route>();
+            for (var t = 0; t < tours.Count; t++)
+            {
+                routes.Add(algorithm.BuildRoute(tours.Tour(t)));
+            }
+            return routes;
+        }
+
+        /// <summary>
         /// Builds the routes in segments divided by routes between customers in the given tour.
         /// </summary>
         /// <returns></returns>

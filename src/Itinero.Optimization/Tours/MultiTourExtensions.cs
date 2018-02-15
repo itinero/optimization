@@ -25,6 +25,17 @@ namespace Itinero.Optimization.Tours
     /// </summary>
     public static class MultiTourExtensions
     {
-        
+        /// <summary>
+        /// Verifies the given tour.
+        /// </summary>
+        public static void Verify(this IMultiTour tour, int count)
+        {
+#if DEBUG
+            for (var t = 0; t < tour.Count; t++)
+            {
+                tour.Tour(t).Verify(count);
+            }
+#endif
+        }
     }
 }

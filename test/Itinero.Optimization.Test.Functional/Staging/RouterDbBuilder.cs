@@ -44,47 +44,72 @@ namespace Itinero.Optimization.Test.Functional.Staging
         /// <returns></returns>
         public static RouterDb Build(string queryName, Vehicle vehicle)
         {
-            Download.ToFile(queryName);
-
-            var fileName = queryName + ".osm";
-
             RouterDb routerDb = null;
-            Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "No existing RouterDb file found, creating now.");
-            using (var stream = File.OpenRead(fileName))
+            var routerDbFileName = queryName + ".routerdb";
+            if (File.Exists(routerDbFileName))
             {
-                var xmlStream = new OsmSharp.Streams.XmlOsmStreamSource(stream);
-                var sortedData = xmlStream.ToList();
-                sortedData.Sort((x, y) =>
+                try
                 {
-                    if (x.Type == y.Type)
+                    using (var stream = File.OpenRead(routerDbFileName))
                     {
-                        return x.Id.Value.CompareTo(y.Id.Value);
+                        routerDb = RouterDb.Deserialize(stream);
                     }
-                    if (x.Type == OsmSharp.OsmGeoType.Node)
-                    {
-                        return -1;
-                    }
-                    else if (x.Type == OsmSharp.OsmGeoType.Way)
-                    {
-                        if (y.Type == OsmSharp.OsmGeoType.Node)
-                        {
-                            return 1;
-                        }
-                        return -1;
-                    }
-                    return 1;
-                });
-                
-                routerDb = new RouterDb();
-                routerDb.LoadOsmData(sortedData, vehicle);
+                }
+                catch
+                {
+                    routerDb = null;
+                }
             }
-            
-            Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "RouterDb file created.");
 
-            if (!routerDb.HasContractedFor(vehicle.Fastest()))
+            if (routerDb == null)
             {
-                Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "No contracted graph found for the 'car' profile, building now...");
-                routerDb.AddContracted(vehicle.Fastest(), true);
+                // make sure source OSM data is there.
+                Download.ToFile(queryName);
+                var fileName = queryName + ".osm";
+
+                // build routerdb.
+                Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "No existing RouterDb file found, creating now.");
+                using (var stream = File.OpenRead(fileName))
+                {
+                    var xmlStream = new OsmSharp.Streams.XmlOsmStreamSource(stream);
+                    var sortedData = xmlStream.ToList();
+                    sortedData.Sort((x, y) =>
+                    {
+                        if (x.Type == y.Type)
+                        {
+                            return x.Id.Value.CompareTo(y.Id.Value);
+                        }
+                        if (x.Type == OsmSharp.OsmGeoType.Node)
+                        {
+                            return -1;
+                        }
+                        else if (x.Type == OsmSharp.OsmGeoType.Way)
+                        {
+                            if (y.Type == OsmSharp.OsmGeoType.Node)
+                            {
+                                return 1;
+                            }
+                            return -1;
+                        }
+                        return 1;
+                    });
+                    
+                    routerDb = new RouterDb();
+                    routerDb.LoadOsmData(sortedData, vehicle);
+                }
+                
+                Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "RouterDb file created.");
+
+                if (!routerDb.HasContractedFor(vehicle.Fastest()))
+                {
+                    Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "No contracted graph found for the 'car' profile, building now...");
+                    routerDb.AddContracted(vehicle.Fastest(), true);
+                }
+
+                using (var stream = File.Open(routerDbFileName, FileMode.Create))
+                {
+                    routerDb.Serialize(stream);
+                }
             }
             return routerDb;
         }

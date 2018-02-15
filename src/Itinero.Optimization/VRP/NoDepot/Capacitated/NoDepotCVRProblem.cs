@@ -53,8 +53,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
                 {
                     var weights = problem.Weights;
 
-                    return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-                        weights, visits);
+                    //return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
+                    //     weights, visits);
+                    return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
                 };
             }
         }
@@ -75,8 +76,12 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
         /// <returns></returns>
         public NoDepotCVRPSolution Solve(Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc)
         {
-            return this.Solve(new SeededLocalizedCheapestInsertionSolver(
-                this.SelectSeedHeuristic, overlapsFunc));
+            var solver = new SeededLocalizedCheapestInsertionSolver(
+                this.SelectSeedHeuristic, overlapsFunc);
+
+            var iterator = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
+                solver, 10);
+            return this.Solve(iterator);
         }
 
         /// <summary>

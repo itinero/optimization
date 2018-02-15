@@ -18,7 +18,7 @@
 
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.GA;
-using Itinero.Optimization.Logging;
+using Itinero.Logging;
 using Itinero.Optimization.Tours;
 using Itinero.Optimization.TSP.Solvers.Operators;
 

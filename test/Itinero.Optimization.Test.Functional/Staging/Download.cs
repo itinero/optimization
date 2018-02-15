@@ -43,6 +43,8 @@ namespace Itinero.Optimization.Test.Functional.Staging
             var query = File.ReadAllText(queryFileName);
             if (!File.Exists(filename))
             {
+                Itinero.Logging.Logger.Log("Download", Itinero.Logging.TraceEventType.Information, 
+                    "Data not found locally, downloading from overpass...");
                 var client = new HttpClient();
                 var content = new StringContent("data=" + query);
                 var response = client.PostAsync(@"http://overpass-api.de/api/interpreter", content);

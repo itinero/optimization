@@ -29,7 +29,7 @@ namespace Itinero.Optimization.Algorithms.Solvers.VNS
         where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
         where TWeight : struct
     {
-        private static Itinero.Optimization.Logging.Logger _log = new Logging.Logger("VNSSolver");
+        private static Itinero.Logging.Logger _log = new Logging.Logger("VNSSolver");
         private readonly SolverDelegates.StopConditionWithLevelDelegate<TProblem, TObjective, TSolution> _stopCondition;
         private readonly ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> _generator;
         private readonly IPerturber<TWeight, TProblem, TObjective, TSolution, TFitness> _perturber;

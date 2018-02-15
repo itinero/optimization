@@ -145,6 +145,11 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                     if (this.TryVisit(problem, tour2, previous, current, next, tour2Weight, out delta))
                     {
                         tour1.ReplaceEdgeFrom(previous, next);
+
+                        // automatically removed in release mode.
+                        tour1.Verify(problem.Weights.Length);
+                        tour2.Verify(problem.Weights.Length);
+
                         return true;
                     }
                 }

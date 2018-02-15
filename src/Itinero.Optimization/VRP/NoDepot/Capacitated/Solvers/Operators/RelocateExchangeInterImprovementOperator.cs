@@ -37,7 +37,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// Creates a new improvement operator.
         /// </summary>
         /// <param name="maxWindowSize">The maximum window size to search for sequences to relocate.</param>
-        public RelocateExchangeInterImprovementOperator(int maxWindowSize = 10)
+        public RelocateExchangeInterImprovementOperator(int maxWindowSize = 15)
         {
             _maxWindowSize = maxWindowSize;
         }
@@ -196,6 +196,10 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                     previous = visit;
                 }
                 tour1.ReplaceEdgeFrom(previous, bestLocation.Value.To);
+
+                // automatically removed in release mode.
+                tour1.Verify(problem.Weights.Length);
+                tour2.Verify(problem.Weights.Length);
 
                 tour1Weight = objective.Calculate(problem, solution, tourIdx1);
                 tour2Weight = objective.Calculate(problem, solution, tourIdx2);

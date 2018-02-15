@@ -3,7 +3,11 @@
     <ProjectReference Include="..\..\src\Itinero.Optimization\Itinero.Optimization.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Itinero.IO.Osm" Version="1.4.0-pre22" />
+    <PackageReference Include="Itinero.IO.Osm" Version="1.4.0-pre30" />
+    <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.15.0-pre032" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="data\**\*.geojson" />
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>

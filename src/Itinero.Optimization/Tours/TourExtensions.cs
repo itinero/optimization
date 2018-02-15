@@ -93,5 +93,59 @@ namespace Itinero.Optimization.Tours
             }
             return enumerable;
         }
+
+        /// <summary>
+        /// Enumerates all sequences in the given tour with the given size and smaller.
+        /// </summary>
+        public static IEnumerable<int[]> SeqAndSmaller(this IEnumerable<int> tour, int size, bool isClosed = false)
+        {
+            return tour.SeqAndSmaller(2, size, isClosed);
+        }
+
+        /// <summary>
+        /// Enumerates all sequences in the given tour with the given size and smaller.
+        /// </summary>
+        public static IEnumerable<int[]> SeqAndSmaller(this IEnumerable<int> tour, int minSize, int maxSize, bool isClosed = false)
+        {
+            var enumerable = System.Linq.Enumerable.Empty<int[]>();
+            for (var i = minSize; i <= maxSize; i++)
+            {
+                enumerable = enumerable.Concat(tour.Seq(i, isClosed));
+            }
+            return enumerable;
+        }
+
+        /// <summary>
+        /// Verifies the given tour.
+        /// </summary>
+        public static void Verify(this ITour tour, int count)
+        {
+#if DEBUG
+            if (!tour.TryVerify(count))
+            {
+                    throw new System.Exception("Tour probably invalid: enumerates more visits then it's supposed to.");
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Tries to verify the given tour.
+        /// </summary>
+        public static bool TryVerify(this ITour tour, int count)
+        {
+#if DEBUG
+            var enumerator = tour.GetEnumerator();
+            var enumCount = 0;
+            while(enumerator.MoveNext())
+            {
+                enumCount++;
+                if (enumCount > count)
+                {
+                    return false;
+                }
+            }
+#endif
+            return true;
+        }
     }
 }

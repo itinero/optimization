@@ -89,7 +89,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
             IEnumerable<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>> intraImprovements,
             IEnumerable<IInterTourImprovementOperator> interImprovements,
             Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlaps, int k = 10, float slackPercentage = 5, 
-            float thresholdPercentage = 10, float localizationFactor = 0.25f)
+            float thresholdPercentage = 10, float localizationFactor = 0.75f)
         {
             _selectSeed = selectSeed;
             _intraImprovements = new List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>>(intraImprovements);
@@ -203,7 +203,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                 }
             }
 
-            fitness = 0;
+            fitness = objective.Calculate(problem, solution);
             return solution;
         }
         
