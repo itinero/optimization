@@ -76,8 +76,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
         /// <returns></returns>
         public NoDepotCVRPSolution Solve(Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc)
         {
-            var solver = new SeededLocalizedCheapestInsertionSolver(
+            var constructionHeuristic = new SeededLocalizedCheapestInsertionSolver(
                 this.SelectSeedHeuristic, overlapsFunc);
+            var solver = new GuidedVNS(constructionHeuristic, overlapsFunc, 120);
 
             var iterator = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
                 solver, 10);

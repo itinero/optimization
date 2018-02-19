@@ -126,7 +126,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                 // try and distribute the remaining visits if there are only a few left.
                 if (visits.Count < problem.Weights.Length * _thresholdPercentage)
                 {
-                    this.TryPlaceRemaining(problem, objective, solution, visits);
+                    this.TryPlaceRemaining(problem, objective, solution, visits, max);
                 }
                 
                 // select a visit using some heuristic.
@@ -187,14 +187,14 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                                     currentWeight);
 
                                 // also to the inter-improvements.
-                                this.Improve(problem, objective, solution, solution.Count - 1);
+                                this.Improve(problem, objective, solution, solution.Count - 1, max);
                                 currentTour = solution.Tour(solution.Count - 1);
                             }
                         }
                         else
                         {// ok we are done!
                             // run the inter-improvements one last time.
-                            this.Improve(problem, objective, solution, solution.Count - 1);
+                            this.Improve(problem, objective, solution, solution.Count - 1, max);
 
                             // break the route.
                             break;
@@ -210,10 +210,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
         /// <summary>
         /// Runs the inter-tour improvements on the new tour and the existing tours.
         /// </summary>
-        private void Improve(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, int newTourIdx)
+        private void Improve(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, int newTourIdx,
+            float max)
         {
-            var max = problem.Max;
-
             // the current route.
             var currentTour = solution.Tour(newTourIdx);
 
@@ -236,9 +235,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
         /// <summary>
         /// Try placing the remaining visits in the existing tours.
         /// </summary>
-        private void TryPlaceRemaining(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, List<int> visits)
+        private void TryPlaceRemaining(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, List<int> visits,
+            float max)
         {
-            var max = problem.Max;
             var succes = true;
             Func<int, float> lambdaCostFunc = null;
 
@@ -295,7 +294,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                     bestTour.InsertAfter(bestLocation.Value.From, bestVisit);
                     visits.Remove(bestVisit);
 
-                    this.Improve(problem, objective, solution, bestTourIdx);
+                    this.Improve(problem, objective, solution, bestTourIdx, max);
                     
                     succes = true;
                 }
