@@ -53,7 +53,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
         /// <param name="localizationFactor">The factor to take into account the weight to the seed visit.</param>
         public SeededLocalizedCheapestInsertionSolver(Func<NoDepotCVRProblem, IList<int>, int> selectSeed, 
             Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlaps, int k = 10, float slackPercentage = 5, 
-            float thresholdPercentage = 10, float localizationFactor = 0.25f)
+            float thresholdPercentage = 10, float localizationFactor = 0.5f)
         {
             _selectSeed = selectSeed;
             _overlaps = overlaps;
@@ -70,8 +70,8 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
             _interImprovements = new List<IInterTourImprovementOperator>(4);
             _interImprovements.Add(new Operators.ExchangeInterImprovementOperator());
             _interImprovements.Add(new Operators.RelocateImprovementOperator());
-            _interImprovements.Add(new Operators.RelocateExchangeInterImprovementOperator());
-            _interImprovements.Add(new Operators.CrossExchangeInterImprovementOperator());
+            _interImprovements.Add(new Operators.RelocateExchangeInterImprovementOperator(5));
+            _interImprovements.Add(new Operators.CrossExchangeInterImprovementOperator(5));
         }
 
         /// <summary>

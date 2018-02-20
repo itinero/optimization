@@ -28,8 +28,8 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
         {
             // RunWechelderzande();
             RunSpijkenisse();
-            // RunDeHague();
-            // RunRotterdam();
+            RunDeHague();
+            RunRotterdam();
         }
 
         public static void RunWechelderzande()
@@ -48,9 +48,9 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, 900));
             var routes = func.TestPerf("Testing No-Depot Capacitated VRP (0->0)");
 
-#if DEBUG
+//#if DEBUG
             routes.WriteGeoJson("lille-{0}.geojson");
-#endif
+//#endif
         }
 
         public static void RunSpijkenisse()
@@ -70,9 +70,9 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max));
             var routes = func.TestPerf("Testing No-Depot Capacitated VRP (0->0)");
 
-#if DEBUG
+//#if DEBUG
             routes.WriteGeoJson("spijkenisse-{0}.geojson");
-#endif
+//#endif
         }
 
         public static void RunDeHague()
@@ -92,9 +92,9 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max));
             var routes = func.TestPerf("Testing No-Depot Capacitated VRP (0->0)");
 
-#if DEBUG
+//#if DEBUG
             routes.WriteGeoJson("de-hague-{0}.geojson");
-#endif
+//#endif
         }
 
         public static void RunRotterdam()
@@ -114,9 +114,9 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max));
             var routes = func.TestPerf("Testing No-Depot Capacitated VRP (0->0)");
 
-#if DEBUG
+//#if DEBUG
             routes.WriteGeoJson("rotterdam-{0}.geojson");
-#endif 
+//#endif 
         }
     }
 }

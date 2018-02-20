@@ -37,7 +37,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// Creates a new improvement operator.
         /// </summary>
         /// <param name="maxWindowSize">The maximum window size to search for sequences to relocate.</param>
-        public RelocateExchangeInterImprovementOperator(int maxWindowSize = 15)
+        public RelocateExchangeInterImprovementOperator(int maxWindowSize = 5)
         {
             _maxWindowSize = maxWindowSize;
         }

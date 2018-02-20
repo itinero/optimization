@@ -50,7 +50,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// Creates a new improvement operator.
         /// </summary>
         /// <param name="maxWindowSize">The maximum window size to search for sequences to exchange.</param>
-        public CrossExchangeInterImprovementOperator(int maxWindowSize = 5)
+        public CrossExchangeInterImprovementOperator(int maxWindowSize = 10)
         {
             _maxWindowSize = maxWindowSize;
         }

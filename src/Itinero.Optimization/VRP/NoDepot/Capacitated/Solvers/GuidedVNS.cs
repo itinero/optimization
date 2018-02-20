@@ -50,8 +50,8 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
             _interImprovements = new List<IInterTourImprovementOperator>(4);
             _interImprovements.Add(new Operators.RelocateImprovementOperator());
             _interImprovements.Add(new Operators.ExchangeInterImprovementOperator());
-            _interImprovements.Add(new Operators.RelocateExchangeInterImprovementOperator());
-            _interImprovements.Add(new Operators.CrossExchangeInterImprovementOperator());
+            _interImprovements.Add(new Operators.RelocateExchangeInterImprovementOperator(10));
+            _interImprovements.Add(new Operators.CrossExchangeInterImprovementOperator(10));
         }
 
         /// <summary>
@@ -68,72 +68,88 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
         /// <returns></returns>
         public override NoDepotCVRPSolution Solve(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, out float fitness)
         {
+            var worstFactor = 10;
+
             // construct initial solution.
             var solution = _constructionHeuristic.Solve(problem, objective);
 
             // loop over all tour pairs.
-            var penalizations = new Dictionary<Pair, Penalty>();
-            for (var t1 = 0; t1 < solution.Count; t1++)
-            for (var t2 = t1 + 1; t2 < solution.Count; t2++)
+            bool improved = true;
+            while (improved)
             {
-                var tour1 = solution.Tour(t1);
-                var tour2 = solution.Tour(t2);
-                if (!_overlaps(problem, tour1, tour2))
-                { // don't overlap, move on.
-                    continue;
-                }
-                
-                var worstPenalty = -1f;
-                while (true)
-                { // keep penalizing->improving->penalizing until penalization exceeds bounds.
-                    var tour1Before = objective.Calculate(problem, solution, t1);
-                    var tour2Before = objective.Calculate(problem, solution, t2);
-                    var localSolution = solution.Clone() as NoDepotCVRPSolution;
+                improved = false;
 
-                    // select and execute next penalization.
-                    var nextPenalty = PenalizeNext(problem, tour1, tour2, penalizations);
-                    if (worstPenalty < 0)
-                    { // keep the first penalized weight.
-                        worstPenalty = nextPenalty.Original;
+                for (var t1 = 0; t1 < solution.Count; t1++)
+                for (var t2 = t1 + 1; t2 < solution.Count; t2++)
+                {
+                    var tour1 = solution.Tour(t1);
+                    var tour2 = solution.Tour(t2);
+                    if (!_overlaps(problem, tour1, tour2))
+                    { // don't overlap, move on.
+                        continue;
                     }
+                    
+                    var penalizations = new Dictionary<Pair, Penalty>();
+                    var worstPenalty = -1f;
+                    while (true)
+                    { // keep penalizing->improving->penalizing until penalization exceeds bounds.
+                        var tour1Before = objective.Calculate(problem, solution, t1);
+                        var tour2Before = objective.Calculate(problem, solution, t2);
 
-                    // apply penalizations again.
-                    foreach (var penalty in penalizations)
-                    {
-                        var e = penalty.Key;
-                        var p = penalty.Value;
+                        // select and execute next penalization.
+                        var nextPenalty = PenalizeNext(problem, tour1, tour2, penalizations);
+                        if (worstPenalty < 0)
+                        { // keep the first penalized weight.
+                            worstPenalty = nextPenalty.Original;
+                        }
 
-                        problem.Weights[e.From][e.To] = p.Original + _lambda * p.Count;
-                    }
+                        // apply penalizations again.
+                        var localSolution = solution.Clone() as NoDepotCVRPSolution;
+                        foreach (var penalty in penalizations)
+                        {
+                            var e = penalty.Key;
+                            var p = penalty.Value;
 
-                    // apply inter-tour improvements.
-                    if (this.ImproveInterRoute(problem, objective, localSolution, t1, t2))
-                    {
-                        tour1 = localSolution.Tour(t1);
-                        this.ImproveIntraRoute(problem.Weights, tour1, 
-                            objective.Calculate(problem, localSolution, t1));
-                        tour2 = localSolution.Tour(t2);
-                        this.ImproveIntraRoute(problem.Weights, tour2, 
-                            objective.Calculate(problem, localSolution, t2));
-                    }
+                            problem.Weights[e.From][e.To] = p.Original + _lambda * p.Count;
+                        }
 
-                    // verifiy against original if there are improvements.
-                    var totalPenalty = ResetPenalizations(problem, penalizations);
+                        // apply inter-tour improvements.
+                        if (this.ImproveInterRoute(problem, objective, localSolution, t1, t2))
+                        {
+                            tour1 = localSolution.Tour(t1);
+                            this.ImproveIntraRoute(problem.Weights, tour1, 
+                                objective.Calculate(problem, localSolution, t1));
+                            tour2 = localSolution.Tour(t2);
+                            this.ImproveIntraRoute(problem.Weights, tour2, 
+                                objective.Calculate(problem, localSolution, t2));
+                        }
 
-                    var tour1After = objective.Calculate(problem, localSolution, t1);
-                    var tour2After = objective.Calculate(problem, localSolution, t2);
+                        // verifiy against original if there are improvements.
+                        var totalPenalty = ResetPenalizations(problem, penalizations);
 
-                    if (tour1Before + tour2Before > tour1After + tour2After)
-                    { // new solution is better, yay!
-                        Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
-                            "Improvement found {0}->{1}", tour1Before + tour2Before, tour1After + tour2After);
+                        var tour1After = objective.Calculate(problem, localSolution, t1);
+                        var tour2After = objective.Calculate(problem, localSolution, t2);
 
-                        solution = localSolution;
-                    }
+                        if (tour1Before + tour2Before > tour1After + tour2After)
+                        { // new solution is better, yay!
+                            Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
+                                "Improvement found {0}-{1} : {2}->{3} : Penalty: {4}/{5}", t1, t2, tour1Before + tour2Before, tour1After + tour2After,
+                                    totalPenalty, worstPenalty * worstFactor);
 
-                    if (totalPenalty > worstPenalty * 100)
-                    {
-                        break;
+                            solution = localSolution;
+                            improved = true;
+                        }
+                        else
+                        {
+                            // Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
+                            //     "No improvement found {0}-{1} : {2}->{3} : Penalty: {4}/{5}", t1, t2, tour1Before + tour2Before, tour1After + tour2After,
+                            //         totalPenalty, worstPenalty * worstFactor);
+                        }
+
+                        if (totalPenalty > worstPenalty * worstFactor)
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -162,9 +178,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                     float delta;
                     if (improvementOperator.Apply(subTourProblem, TSP.TSPObjective.Default, tour, out delta))
                     {
-                        Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
-                            "Intra-improvement found {0} {1}->{2}",
-                                improvementOperator.Name, newWeight, newWeight - delta);
+                        // Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
+                        //     "Intra-improvement found {0} {1}->{2}",
+                        //         improvementOperator.Name, newWeight, newWeight - delta);
                                 
                         // update the weight.
                         newWeight = newWeight - delta;
@@ -212,9 +228,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                         tour2Weight = objective.Calculate(problem, solution, tour2Idx);
                         var totalAfter =  tour1Weight + tour2Weight;
                         
-                        Itinero.Logging.Logger.Log("G-VNS", Itinero.Logging.TraceEventType.Information,
-                            "Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
-                                tour1Idx, tour2Idx, improvementOperation.Name, totalBefore, totalAfter);
+                        // Itinero.Logging.Logger.Log("G-VNS", Itinero.Logging.TraceEventType.Information,
+                        //     "Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
+                        //         tour1Idx, tour2Idx, improvementOperation.Name, totalBefore, totalAfter);
 
                         //break;
                     }
@@ -224,9 +240,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                         improvement = true;
                         globalImprovement = true;
 
-                        Itinero.Logging.Logger.Log("G-VNS", Itinero.Logging.TraceEventType.Information,
-                            "Inter-improvement found {0}<->{1}: {2}",
-                            tour1Idx, tour2Idx, improvementOperation.Name);
+                        // Itinero.Logging.Logger.Log("G-VNS", Itinero.Logging.TraceEventType.Information,
+                        //     "Inter-improvement found {0}<->{1}: {2}",
+                        //     tour1Idx, tour2Idx, improvementOperation.Name);
 
                         //break;
                     }
