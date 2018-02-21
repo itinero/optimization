@@ -95,8 +95,8 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
             var tour1 = solution.Tour(tourIdx1);
             var tour2 = solution.Tour(tourIdx2);
 
-            var tour1Weight = objective.Calculate(problem, solution, tourIdx1);
-            var tour2Weight = objective.Calculate(problem, solution, tourIdx2);
+            var tour1Weight = solution.Contents[tourIdx1].Weight; //objective.Calculate(problem, solution, tourIdx1);
+            var tour2Weight = solution.Contents[tourIdx2].Weight; //objective.Calculate(problem, solution, tourIdx2);
             var totalBefore =  tour1Weight + tour2Weight;
 
             // this heuristic removes a visit1 from tour1 and a visit2 from tour2 and inserts the visits again
@@ -153,6 +153,8 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                                     // update content.
                                     problem.Capacity.UpdateExchange(solution.Contents[tourIdx1], visit1, visit2);
                                     problem.Capacity.UpdateExchange(solution.Contents[tourIdx2], visit2, visit1);
+                                    solution.Contents[tourIdx1].Weight = tour1Weight + (weight1After - weight1);
+                                    solution.Contents[tourIdx2].Weight = tour2Weight + (weight2After - weight2);
 
                                     // automatically removed in release mode.
                                     tour1.Verify(problem.Weights.Length);

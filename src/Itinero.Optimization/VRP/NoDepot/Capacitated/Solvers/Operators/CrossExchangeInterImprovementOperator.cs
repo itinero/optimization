@@ -108,8 +108,8 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
             var tour1 = solution.Tour (tourIdx1);
             var tour2 = solution.Tour (tourIdx2);
 
-            var tour1Weight = objective.Calculate(problem, solution, tourIdx1);
-            var tour2Weight = objective.Calculate(problem, solution, tourIdx2);
+            var tour1Weight = solution.Contents[tourIdx1].Weight; //objective.Calculate(problem, solution, tourIdx1);
+            var tour2Weight = solution.Contents[tourIdx2].Weight; //objective.Calculate(problem, solution, tourIdx2);
             
             // loop over all sequences of size 4->maxWindowSize. 
             // - A minimum of 4 because otherwise we exchange just one visit.
@@ -168,6 +168,8 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                         // update content.
                         problem.Capacity.UpdateExchange(solution.Contents[tourIdx1], s1, s2);
                         problem.Capacity.UpdateExchange(solution.Contents[tourIdx1], s2, s1);
+                        solution.Contents[tourIdx1].Weight = newWeight1;
+                        solution.Contents[tourIdx2].Weight = newWeight2;
 
                         // automatically removed in release mode.
                         tour1.Verify(problem.Weights.Length);

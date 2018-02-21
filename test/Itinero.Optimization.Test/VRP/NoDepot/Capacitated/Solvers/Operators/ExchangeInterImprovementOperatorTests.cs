@@ -120,6 +120,8 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
                 problem.Weights.Seq(7, 4, 9) - 
                 problem.Weights.Seq(3, 4, 5) -
                 problem.Weights.Seq(7, 8, 9);
+            solution.Contents[0].Weight = objective.Calculate(problem, solution, 0);
+            solution.Contents[1].Weight = objective.Calculate(problem, solution, 1);
 
             // apply the operator.
             var op = new ExchangeInterImprovementOperator();
@@ -135,6 +137,8 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             tour0.ReplaceEdgeFrom(8, 5);
             tour1.ReplaceEdgeFrom(7, 4);
             tour1.ReplaceEdgeFrom(4, 9);
+            solution.Contents[0].Weight = objective.Calculate(problem, solution, 0);
+            solution.Contents[1].Weight = objective.Calculate(problem, solution, 1);
 
             // apply the operator.
             Assert.IsTrue(op.Apply(problem, objective, solution, 1, 0, out delta));

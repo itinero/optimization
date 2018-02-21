@@ -223,9 +223,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                     if (this.ImproveInterRoute(problem, objective, solution, tourIdx, newTourIdx))
                     { // if there was an improvement, run intra-improvements also.
                         this.ImproveIntraRoute(problem.Weights, solution.Tour(tourIdx), 
-                            objective.Calculate(problem, solution, tourIdx));
-                        this.ImproveIntraRoute(problem.Weights, solution.Tour(newTourIdx), 
-                            objective.Calculate(problem, solution, newTourIdx));
+                            solution.Contents[tourIdx].Weight);
+                        this.ImproveIntraRoute(problem.Weights, solution.Tour(newTourIdx),
+                            solution.Contents[newTourIdx].Weight);
                     }
                 }
             }
@@ -286,7 +286,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                 }
 
                 // try to do the actual insert
-                var tourTime = objective.Calculate(problem, solution, bestTourIdx);
+                var tourTime = solution.Contents[bestTourIdx].Weight; //objective.Calculate(problem, solution, bestTourIdx);
                 if (problem.Capacity.UpdateAndCheckCosts(solution.Contents[bestTourIdx], tourTime + actualIncrease, bestVisit))
                 { // insert the visit.
                     bestTour.InsertAfter(bestLocation.Value.From, bestVisit);
@@ -353,8 +353,8 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                 { // keep looping when there is improvement.
                     improvement = false;
 
-                    var tour1Weight = objective.Calculate(problem, solution, tour1Idx);
-                    var tour2Weight = objective.Calculate(problem, solution, tour2Idx);
+                    var tour1Weight = solution.Contents[tour1Idx].Weight; //objective.Calculate(problem, solution, tour1Idx);
+                    var tour2Weight = solution.Contents[tour2Idx].Weight; //objective.Calculate(problem, solution, tour2Idx);
                     var totalBefore =  tour1Weight + tour2Weight;
 
                     float delta;
@@ -363,8 +363,8 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                         improvement = true;
                         globalImprovement = true;
 
-                        tour1Weight = objective.Calculate(problem, solution, tour1Idx);
-                        tour2Weight = objective.Calculate(problem, solution, tour2Idx);
+                        tour1Weight = solution.Contents[tour1Idx].Weight; //objective.Calculate(problem, solution, tour1Idx);
+                        tour2Weight = solution.Contents[tour2Idx].Weight; //objective.Calculate(problem, solution, tour2Idx);
                         var totalAfter =  tour1Weight + tour2Weight;
                         
                         Itinero.Logging.Logger.Log("SeededLocalizedCheapestInsertionSolver", Itinero.Logging.TraceEventType.Information,

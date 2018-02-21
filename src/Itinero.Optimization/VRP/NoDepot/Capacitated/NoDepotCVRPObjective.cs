@@ -54,7 +54,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
         {
             return fitness1 + fitness2;
         }
-        
+
         /// <summary>
         /// Calculates the weight of the given tour.
         /// </summary>
@@ -63,7 +63,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
             var weight = 0f;
             var tour = solution.Tour(tourIdx);
 
-            foreach(var pair in tour.Pairs())
+            foreach (var pair in tour.Pairs())
             {
                 weight += problem.Weights[pair.From][pair.To];
             }

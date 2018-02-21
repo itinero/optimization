@@ -133,7 +133,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
             var tour1 = solution.Tour(tourIdx1);
             var tour2 = solution.Tour(tourIdx2);
 
-            var tour2Weight = objective.Calculate(problem, solution, tourIdx2);
+            var tour2Weight = solution.Contents[tourIdx2].Weight; //objective.Calculate(problem, solution, tourIdx2);
             foreach (int next in tour1)
             {
                 if (previous >= 0 && current >= 0)
@@ -149,6 +149,8 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                         // update contents.
                         problem.Capacity.Remove(solution.Contents[tourIdx1], current);
                         problem.Capacity.Add(solution.Contents[tourIdx2], current);
+                        solution.Contents[tourIdx1].Weight = objective.Calculate(problem, solution, tourIdx1);
+                        solution.Contents[tourIdx2].Weight = objective.Calculate(problem, solution, tourIdx2);
 
                         // automatically removed in release mode.
                         tour1.Verify(problem.Weights.Length);

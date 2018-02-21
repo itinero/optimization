@@ -96,8 +96,8 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
             var tour1 = solution.Tour(tourIdx1);
             var tour2 = solution.Tour(tourIdx2);
 
-            var tour1Weight = objective.Calculate(problem, solution, tourIdx1);
-            var tour2Weight = objective.Calculate(problem, solution, tourIdx2);
+            var tour1Weight = solution.Contents[tourIdx1].Weight; //objective.Calculate(problem, solution, tourIdx1);
+            var tour2Weight = solution.Contents[tourIdx2].Weight; //objective.Calculate(problem, solution, tourIdx2);
             var totalBefore =  tour1Weight + tour2Weight;
 
             var route1Cumul = objective.CalculateCumul(problem, solution, tourIdx1);
@@ -202,15 +202,18 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                 tour1.ReplaceEdgeFrom(previous, bestLocation.Value.To);
 
                 // update contents.
+                // TODO: be smarter about the updates, no need to fully recalculate.
                 problem.Capacity.Add(solution.Contents[tourIdx1], best.Between);
                 problem.Capacity.Remove(solution.Contents[tourIdx2], best.Between);
+                solution.Contents[tourIdx1].Weight = objective.Calculate(problem, solution, tourIdx1);
+                solution.Contents[tourIdx2].Weight = objective.Calculate(problem, solution, tourIdx2);
 
                 // automatically removed in release mode.
                 tour1.Verify(problem.Weights.Length);
                 tour2.Verify(problem.Weights.Length);
 
-                tour1Weight = objective.Calculate(problem, solution, tourIdx1);
-                tour2Weight = objective.Calculate(problem, solution, tourIdx2);
+                tour1Weight = solution.Contents[tourIdx1].Weight;
+                tour2Weight = solution.Contents[tourIdx2].Weight;
                 var totalAfter =  tour1Weight + tour2Weight;
                 
                 delta = totalBefore - totalAfter;
