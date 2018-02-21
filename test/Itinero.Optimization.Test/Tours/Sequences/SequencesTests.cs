@@ -200,6 +200,37 @@ namespace Itinero.Optimization.Test.Tours.Sequences
         }
 
         /// <summary>
+        /// Tests enumerating sequences of size 4.
+        /// </summary>
+        [Test]
+        public void TestSequencesSize4ClosedNoLoopAround()
+        {
+            var tourEnumerable = new int[] { 0, 1, 2, 3, 4 };
+
+            var result = new SequenceEnumerable(tourEnumerable, true, 4, false).ToList();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(3, result.Count);
+            Assert.IsNotNull(result[0]);
+            Assert.IsNotNull(result[1]);
+            Assert.IsNotNull(result[2]);
+            Assert.AreEqual(0, result[0][0]);
+            Assert.AreEqual(1, result[0][1]);
+            Assert.AreEqual(2, result[0][2]);
+            Assert.AreEqual(3, result[0][3]);
+
+            Assert.AreEqual(1, result[1][0]);
+            Assert.AreEqual(2, result[1][1]);
+            Assert.AreEqual(3, result[1][2]);
+            Assert.AreEqual(4, result[1][3]);
+
+            Assert.AreEqual(2, result[2][0]);
+            Assert.AreEqual(3, result[2][1]);
+            Assert.AreEqual(4, result[2][2]);
+            Assert.AreEqual(0, result[2][3]);
+        }
+
+        /// <summary>
         /// Tests enumerating sequences of size the same as the tour.
         /// </summary>
         [Test]

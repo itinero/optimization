@@ -114,11 +114,11 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
             // loop over all sequences of size 4->maxWindowSize. 
             // - A minimum of 4 because otherwise we exchange just one visit.
             // - The edge to be exchanged are also included.
-            foreach (var s1 in tour1.SeqAndSmaller(4, _maxWindowSize, false))
+            foreach (var s1 in tour1.SeqAndSmaller(4, _maxWindowSize, tour1.IsClosed(), false))
             {
                 var existing1 = problem.Weights[s1[0]][s1[1]] + 
                     problem.Weights[s1[s1.Length - 2]][s1[s1.Length - 1]];
-                foreach (var s2 in tour2.SeqAndSmaller(4, _maxWindowSize, false))
+                foreach (var s2 in tour2.SeqAndSmaller(4, _maxWindowSize, tour2.IsClosed(), false))
                 {
                     var existing2 = problem.Weights[s2[0]][s2[1]] + 
                         problem.Weights[s2[s2.Length - 2]][s2[s2.Length - 1]];

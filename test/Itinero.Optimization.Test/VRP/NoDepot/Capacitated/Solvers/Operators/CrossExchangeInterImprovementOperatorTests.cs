@@ -151,7 +151,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             tour1.InsertAfter(4, 5);
 
             // apply the operator.
-            Assert.IsTrue(op.Apply(problem, objective, solution, 0, 1, out delta));
+            Assert.IsTrue(op.Apply(problem, objective, original, 0, 1, out delta));
             Assert.AreEqual(expectedDelta, delta, TestConstants.E);
         }
     }
