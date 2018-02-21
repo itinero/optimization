@@ -6,18 +6,45 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
 {
     public static class CapacityExtensions
     {
-        public static float[] BuildMaxArray(this MaxCapacityConstraint[] constraints)
+        //public static float[] BuildMaxArray(this MaxCapacityConstraint[] constraints)
+        //{
+        //    if (constraints == null)
+        //    {
+        //        return new float[0];
+        //    }
+        //    var maxes = new float[constraints.Length];
+        //    for (var i = 0; i < maxes.Length; i++)
+        //    {
+        //        maxes[i] = constraints[i].Max;
+        //    }
+        //    return maxes;
+        //}
+
+        /// <summary>
+        /// Updates the costs associated with a tour with the given visits.
+        /// </summary>
+        public static void UpdateCosts(this Capacity capacity, Content content, IEnumerable<int> visits)
         {
-            if (constraints == null)
-            {
-                return new float[0];
+            if (capacity.Constraints == null)
+            { // no constraints, no work.
+                return;
             }
-            var maxes = new float[constraints.Length];
-            for (var i = 0; i < maxes.Length; i++)
+
+            if (content.Quantities == null ||
+                content.Quantities.Length != capacity.Constraints.Length)
             {
-                maxes[i] = constraints[i].Max;
+                content.Quantities = new float[capacity.Constraints.Length];
             }
-            return maxes;
+
+            foreach (var visit in visits)
+            {
+                for (var i = 0; i < capacity.Constraints.Length; i++)
+                {
+                    var constraint = capacity.Constraints[i];
+
+                    content.Quantities[i] = content.Quantities[i] + constraint.Values[visit];
+                }
+            }
         }
 
         public static bool UpdateAndCheckCosts(this Capacity capacity, Content content, float weight, int visit)

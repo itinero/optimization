@@ -45,6 +45,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             var problem = "data.geometric.problem1.geojson".BuildProblem(out solution, out locations);
             var objective = new NoDepotCVRPObjective();
             solution = new NoDepotCVRPSolution(problem.Weights.Length);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator to the empty solution.
             var op = new CrossExchangeInterImprovementOperator();
@@ -67,6 +68,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             var tour = solution.Tour(0);
             solution = new NoDepotCVRPSolution(problem.Weights.Length);
             solution.Add(tour);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator to the empty solution.
             var op = new CrossExchangeInterImprovementOperator();
@@ -86,6 +88,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             List<Coordinate> locations = null;
             var problem = "data.geometric.problem1.geojson".BuildProblem(out solution, out locations);
             var objective = new NoDepotCVRPObjective();
+            objective.UpdateContent(problem, solution);
 
             // apply the operator to the empty solution.
             var op = new CrossExchangeInterImprovementOperator();
@@ -128,6 +131,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
                 + problem.Weights.Seq(5, 10)
                 - problem.Weights.Seq(7, 8)
                 - problem.Weights.Seq(9, 10);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator.
             var op = new CrossExchangeInterImprovementOperator();
@@ -149,6 +153,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             tour0.InsertAfter(8, 9);
             tour1.InsertAfter(7, 4);
             tour1.InsertAfter(4, 5);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator.
             Assert.IsTrue(op.Apply(problem, objective, original, 0, 1, out delta));

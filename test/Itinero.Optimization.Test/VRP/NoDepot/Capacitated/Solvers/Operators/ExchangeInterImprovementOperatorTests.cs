@@ -24,6 +24,7 @@ using Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated;
 using Itinero.Optimization.VRP.NoDepot.Capacitated;
 using Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators;
 using NUnit.Framework;
+using Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers;
 
 namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
 {
@@ -67,6 +68,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             var tour = solution.Tour(0);
             solution = new NoDepotCVRPSolution(problem.Weights.Length);
             solution.Add(tour);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator to the empty solution.
             var op = new ExchangeInterImprovementOperator();
@@ -120,8 +122,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
                 problem.Weights.Seq(7, 4, 9) - 
                 problem.Weights.Seq(3, 4, 5) -
                 problem.Weights.Seq(7, 8, 9);
-            solution.Contents[0].Weight = objective.Calculate(problem, solution, 0);
-            solution.Contents[1].Weight = objective.Calculate(problem, solution, 1);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator.
             var op = new ExchangeInterImprovementOperator();
@@ -137,8 +138,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             tour0.ReplaceEdgeFrom(8, 5);
             tour1.ReplaceEdgeFrom(7, 4);
             tour1.ReplaceEdgeFrom(4, 9);
-            solution.Contents[0].Weight = objective.Calculate(problem, solution, 0);
-            solution.Contents[1].Weight = objective.Calculate(problem, solution, 1);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator.
             Assert.IsTrue(op.Apply(problem, objective, solution, 1, 0, out delta));
@@ -170,6 +170,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
                 problem.Weights.Seq(7, 4, 9) - 
                 problem.Weights.Seq(3, 4, 5) -
                 problem.Weights.Seq(7, 8, 9);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator.
             var op = new ExchangeInterImprovementOperator();

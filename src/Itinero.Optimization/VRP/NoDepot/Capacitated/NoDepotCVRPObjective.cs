@@ -16,7 +16,9 @@
  *  limitations under the License.
  */
 
+using System;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
+using Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers;
 
 namespace Itinero.Optimization.VRP.NoDepot.Capacitated
 {
@@ -104,6 +106,22 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
             time = time + problem.Weights[previous][tour.First];
             cumul[idx] = time;
             return cumul;
+        }
+
+        /// <summary>
+        /// Updates all content properly.
+        /// </summary>
+        public void UpdateContent(NoDepotCVRProblem problem, NoDepotCVRPSolution solution)
+        {
+            for (var t = 0; t < solution.Count; t++)
+            {
+                if (t >= solution.Contents.Count)
+                {
+                    solution.Contents.Add(new Solvers.CapacityExtensions.Content());
+                }
+                solution.Contents[t].Weight = this.Calculate(problem, solution, t);
+                problem.Capacity.UpdateCosts(solution.Contents[t], solution.Tour(t));
+            }
         }
 
         /// <summary>

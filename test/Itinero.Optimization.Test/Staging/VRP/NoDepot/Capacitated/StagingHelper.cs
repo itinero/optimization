@@ -64,6 +64,22 @@ namespace Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated
             };
             var objective = new NoDepotCVRPObjective();
 
+            // generate random extra constraint that's always satisfied.
+            var values = new float[weights.Length];
+            for (var i = 0; i < values.Length; i++)
+            {
+                values[i] = Itinero.Optimization.Algorithms.Random.RandomGeneratorExtensions.GetRandom().Generate(100) + 20;
+            }
+            problem.Capacity.Constraints = new MaxCapacityConstraint[]
+            {
+                new MaxCapacityConstraint()
+                {
+                    Max = 120 * weights.Length + 100,
+                    Name = "something",
+                    Values = values
+                }
+            };
+
             // build a solution if any.
             solution = null;
             if (tours != null &&
