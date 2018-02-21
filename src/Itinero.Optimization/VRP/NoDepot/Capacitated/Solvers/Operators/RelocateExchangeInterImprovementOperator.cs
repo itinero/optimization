@@ -90,8 +90,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// </summary>
         public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, 
             int tourIdx1, int tourIdx2, out float delta)
-        {     
-            var max = problem.Max;
+        {
             int maxWindowSize = _maxWindowSize;
 
             var tour1 = solution.Tour(tourIdx1);
@@ -174,9 +173,14 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                     // calculate the real increase.
                     var newWeight = route1Weight + weight + pair2.WeightBetween;
 
-                    // check the max.
-                    if (newWeight < max && newWeight < bestWeight)
-                    { // the route is smaller than max.
+                    // check the max and constraints if any.
+                    if (newWeight < problem.Capacity.Max &&
+                        newWeight < bestWeight)
+                    { // the exchange is possible.
+                        if (!problem.Capacity.CanAdd(solution.Contents[tourIdx1], pair2.Between))
+                        {
+                            continue;
+                        }
                         bestWeight = newWeight;
                         bestLocation = location;
                         best = pair2;
@@ -196,6 +200,10 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                     previous = visit;
                 }
                 tour1.ReplaceEdgeFrom(previous, bestLocation.Value.To);
+
+                // update contents.
+                problem.Capacity.Add(solution.Contents[tourIdx1], best.Between);
+                problem.Capacity.Remove(solution.Contents[tourIdx2], best.Between);
 
                 // automatically removed in release mode.
                 tour1.Verify(problem.Weights.Length);

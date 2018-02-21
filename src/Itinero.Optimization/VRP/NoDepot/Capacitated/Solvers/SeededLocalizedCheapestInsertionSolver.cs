@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Itinero.Optimization.Algorithms.CheapestInsertion;
-using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.General;
 using Itinero.Optimization.Tours;
@@ -117,8 +116,12 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
             // create a list of visits to place.
             var visits = new List<int>(System.Linq.Enumerable.Range(0, problem.Weights.Length));
 
-            // create the local max, taking into account the slack percentage.
-            var max = problem.Max - (problem.Max * _slackPercentage);
+            // create a new problem definition, taking into account the slack percentage.
+            problem = new NoDepotCVRProblem()
+            {
+                Capacity = problem.Capacity.Scale(1 - _slackPercentage),
+                Weights = problem.Weights
+            };
 
             // keep placing visit until none are left.
             while (visits.Count > 0)
@@ -126,7 +129,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                 // try and distribute the remaining visits if there are only a few left.
                 if (visits.Count < problem.Weights.Length * _thresholdPercentage)
                 {
-                    this.TryPlaceRemaining(problem, objective, solution, visits, max);
+                    this.TryPlaceRemaining(problem, objective, solution, visits);
                 }
                 
                 // select a visit using some heuristic.
@@ -146,8 +149,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
 
                     // start a route r.
                     var currentTour = solution.Add(seed, seed);
-                    var currentWeight = 0f;
-                    //solution[solution.Count - 1] = 0;
+                    var content = problem.Capacity.Empty();
+                    problem.Capacity.Add(content, seed);
+                    solution.Contents.Add(content);
 
                     while (visits.Count > 0)
                     {
@@ -164,37 +168,33 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                         }
 
                         // calculate the new weight.
-                        var potentialWeight = currentWeight + increase;
+                        var potentialWeight = content.Weight + increase;
                         // cram as many visits into one route as possible.
-                        if (potentialWeight < max)
+                        if (problem.Capacity.UpdateAndCheckCosts(content, potentialWeight, visit))
                         {
-                            // insert the visit, it is 
+                            // insert the visit, it is possible to add it. 
                             visits.Remove(visit);
                             currentTour.InsertAfter(location.From, visit);
 
-                            // // free some memory in the costs list.
-                            // costs.Remove(result.CustomerBefore, result.CustomerAfter);
-
                             // update the cost of the route.
-                            currentWeight = potentialWeight;
-                            //solution[solution.Count - 1] = potentialWeight;
+                            content.Weight = potentialWeight;
 
                             // improve if needed.
                             if (((problem.Weights.Length - visits.Count) % _k) == 0)
                             { // an improvement is decided.
                                 // apply the inter-route improvements.
-                                currentWeight = this.ImproveIntraRoute(problem.Weights, currentTour, 
-                                    currentWeight);
+                                content.Weight = this.ImproveIntraRoute(problem.Weights, currentTour,
+                                    content.Weight);
 
                                 // also to the inter-improvements.
-                                this.Improve(problem, objective, solution, solution.Count - 1, max);
+                                this.Improve(problem, objective, solution, solution.Count - 1);
                                 currentTour = solution.Tour(solution.Count - 1);
                             }
                         }
                         else
                         {// ok we are done!
                             // run the inter-improvements one last time.
-                            this.Improve(problem, objective, solution, solution.Count - 1, max);
+                            this.Improve(problem, objective, solution, solution.Count - 1);
 
                             // break the route.
                             break;
@@ -210,8 +210,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
         /// <summary>
         /// Runs the inter-tour improvements on the new tour and the existing tours.
         /// </summary>
-        private void Improve(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, int newTourIdx,
-            float max)
+        private void Improve(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, int newTourIdx)
         {
             // the current route.
             var currentTour = solution.Tour(newTourIdx);
@@ -221,7 +220,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                 if (tourIdx != newTourIdx && _overlaps(problem, solution.Tour(tourIdx),
                     solution.Tour(newTourIdx)))
                 { // only check routes that overlap.
-                    if (this.ImproveInterRoute(problem, objective, solution, tourIdx, newTourIdx, max))
+                    if (this.ImproveInterRoute(problem, objective, solution, tourIdx, newTourIdx))
                     { // if there was an improvement, run intra-improvements also.
                         this.ImproveIntraRoute(problem.Weights, solution.Tour(tourIdx), 
                             objective.Calculate(problem, solution, tourIdx));
@@ -235,8 +234,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
         /// <summary>
         /// Try placing the remaining visits in the existing tours.
         /// </summary>
-        private void TryPlaceRemaining(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, List<int> visits,
-            float max)
+        private void TryPlaceRemaining(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, List<int> visits)
         {
             var succes = true;
             Func<int, float> lambdaCostFunc = null;
@@ -289,12 +287,12 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
 
                 // try to do the actual insert
                 var tourTime = objective.Calculate(problem, solution, bestTourIdx);
-                if (tourTime + actualIncrease < max)
+                if (problem.Capacity.UpdateAndCheckCosts(solution.Contents[bestTourIdx], tourTime + actualIncrease, bestVisit))
                 { // insert the visit.
                     bestTour.InsertAfter(bestLocation.Value.From, bestVisit);
                     visits.Remove(bestVisit);
 
-                    this.Improve(problem, objective, solution, bestTourIdx, max);
+                    this.Improve(problem, objective, solution, bestTourIdx);
                     
                     succes = true;
                 }
@@ -340,7 +338,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
         /// Apply some improvements between the given routes and returns the resulting weight.
         /// </summary>
         private bool ImproveInterRoute(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, 
-            int tour1Idx, int tour2Idx, double max)
+            int tour1Idx, int tour2Idx)
         {
             // get the routes.
             var route1 = solution.Tour(tour1Idx);

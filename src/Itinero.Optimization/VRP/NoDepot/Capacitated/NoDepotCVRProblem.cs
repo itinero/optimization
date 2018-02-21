@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Itinero.Optimization.General;
 using Itinero.Optimization.Tours;
 using Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers;
@@ -31,10 +30,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
     public class NoDepotCVRProblem
     {
         /// <summary>
-        /// The vehicle capacity.!--
+        /// Gets or sets the vehicle capacity.
         /// </summary>
-        /// <returns></returns>
-        public float Max { get; set; } 
+        public Capacity Capacity { get; set; }
 
         /// <summary>
         /// Gets the weights.
@@ -95,5 +93,42 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
         {
             return solver.Solve(this, new NoDepotCVRPObjective());
         }
+    }
+    
+    /// <summary>
+    /// Represent the capacity of a vehicle.
+    /// </summary>
+    public class Capacity
+    {
+        /// <summary>
+        /// The maximum travel time.
+        /// </summary>
+        public float Max { get; set; }
+
+        /// <summary>
+        /// A collection of custom constraints.
+        /// </summary>
+        public MaxCapacityConstraint[] Constraints { get; set; }
+    }
+
+    /// <summary>
+    /// A generic max capacity constraint, this can be weight, # of items or cubic centimeters of example.
+    /// </summary>
+    public class MaxCapacityConstraint
+    {
+        /// <summary>
+        /// Gets or sets the name of this constraint.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum.
+        /// </summary>
+        public float Max { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value per visit.
+        /// </summary>
+        public float[] Values { get; set; }
     }
 }

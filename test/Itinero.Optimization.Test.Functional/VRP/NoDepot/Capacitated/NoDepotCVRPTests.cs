@@ -26,7 +26,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
     {
         public static void Run()
         {
-            // RunWechelderzande();
+            RunWechelderzande();
             RunSpijkenisse();
             RunDeHague();
             RunRotterdam();

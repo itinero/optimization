@@ -92,8 +92,6 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, 
             int tourIdx1, int tourIdx2, out float delta)
         {            
-            var max = problem.Max;
-
             var tour1 = solution.Tour(tourIdx1);
             var tour2 = solution.Tour(tourIdx2);
 
@@ -130,14 +128,31 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                             if (difference < -0.01)
                             { // the old weights are bigger!
                                 // check if the new routes are bigger than max.
-                                if (tour1Weight + (weight1After - weight1) <= max &&
-                                    tour2Weight + (weight2After - weight2) <= max)
+                                if (tour1Weight + (weight1After - weight1) <= problem.Capacity.Max &&
+                                    tour2Weight + (weight2After - weight2) <= problem.Capacity.Max)
                                 { // the exchange can happen, both routes stay within bound!
+
+                                    // check constraints if any.
+                                    if (!problem.Capacity.ExchangeIsPossible(solution.Contents[tourIdx1], 
+                                            visit1, visit2))
+                                    {
+                                        continue;
+                                    }
+                                    if (!problem.Capacity.ExchangeIsPossible(solution.Contents[tourIdx2],
+                                            visit2, visit1))
+                                    {
+                                        continue;
+                                    }
+
                                     // exchange customer.
                                     tour1.ReplaceEdgeFrom(previousVisit1, visit2);
                                     tour1.ReplaceEdgeFrom(visit2, nextVisit1);
                                     tour2.ReplaceEdgeFrom(previousVisit2, visit1);
                                     tour2.ReplaceEdgeFrom(visit1, nextVisit2);
+
+                                    // update content.
+                                    problem.Capacity.UpdateExchange(solution.Contents[tourIdx1], visit1, visit2);
+                                    problem.Capacity.UpdateExchange(solution.Contents[tourIdx2], visit2, visit1);
 
                                     // automatically removed in release mode.
                                     tour1.Verify(problem.Weights.Length);

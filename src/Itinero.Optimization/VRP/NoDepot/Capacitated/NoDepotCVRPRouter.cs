@@ -66,7 +66,10 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
             // build problem.
             var problem = new NoDepotCVRProblem()
             {
-                Max = _max,
+                Capacity = new Capacity()
+                {
+                    Max = _max
+                },
                 Weights = _weightMatrixAlgorithm.Weights
             };
 

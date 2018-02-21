@@ -199,8 +199,6 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
         private bool ImproveInterRoute(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, 
             int tour1Idx, int tour2Idx)
         {
-            var max = problem.Max;
-
             // get the routes.
             var route1 = solution.Tour(tour1Idx);
             var route2 = solution.Tour(tour2Idx);

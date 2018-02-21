@@ -105,7 +105,6 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
             int tourIdx1, int tourIdx2, out float delta) 
         {
             int maxWindowSize = _maxWindowSize;
-            var max = problem.Max;
             var tour1 = solution.Tour (tourIdx1);
             var tour2 = solution.Tour (tourIdx2);
 
@@ -132,12 +131,20 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                     if (localDelta > E)
                     { // there is a potential improvement.
                         var newWeight1 = tour1Weight - existing1 + new1To2;
-                        if (newWeight1 > max)
+                        if (newWeight1 > problem.Capacity.Max)
                         {
                             continue;
                         }
                         var newWeight2 = tour2Weight - existing2 + new2To1;
-                        if (newWeight2 > max)
+                        if (newWeight2 > problem.Capacity.Max)
+                        {
+                            continue;
+                        }
+                        if (!problem.Capacity.ExchangeIsPossible(solution.Contents[tourIdx1], s1, s2))
+                        {
+                            continue;
+                        }
+                        if (!problem.Capacity.ExchangeIsPossible(solution.Contents[tourIdx2], s2, s1))
                         {
                             continue;
                         }
@@ -157,6 +164,10 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                             tour2.ReplaceEdgeFrom(s1[i], s1[i + 1]);
                         }
                         tour2.ReplaceEdgeFrom(s1[s1.Length - 2], s2[s2.Length - 1]);
+
+                        // update content.
+                        problem.Capacity.UpdateExchange(solution.Contents[tourIdx1], s1, s2);
+                        problem.Capacity.UpdateExchange(solution.Contents[tourIdx1], s2, s1);
 
                         // automatically removed in release mode.
                         tour1.Verify(problem.Weights.Length);
