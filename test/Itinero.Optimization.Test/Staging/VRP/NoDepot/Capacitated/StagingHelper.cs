@@ -19,6 +19,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Itinero.LocalGeo;
+using Itinero.Optimization.Capacities;
 using Itinero.Optimization.Tours;
 using Itinero.Optimization.VRP.NoDepot.Capacitated;
 using NetTopologySuite.Features;
@@ -70,9 +71,9 @@ namespace Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated
             {
                 values[i] = Itinero.Optimization.Algorithms.Random.RandomGeneratorExtensions.GetRandom().Generate(100) + 20;
             }
-            problem.Capacity.Constraints = new MaxCapacityConstraint[]
+            problem.Capacity.Constraints = new CapacityConstraint[]
             {
-                new MaxCapacityConstraint()
+                new CapacityConstraint()
                 {
                     Max = 120 * weights.Length + 100,
                     Name = "something",

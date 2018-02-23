@@ -1,25 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Itinero.Optimization.Capacities;
 
 namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
 {
     public static class CapacityExtensions
     {
-        //public static float[] BuildMaxArray(this MaxCapacityConstraint[] constraints)
-        //{
-        //    if (constraints == null)
-        //    {
-        //        return new float[0];
-        //    }
-        //    var maxes = new float[constraints.Length];
-        //    for (var i = 0; i < maxes.Length; i++)
-        //    {
-        //        maxes[i] = constraints[i].Max;
-        //    }
-        //    return maxes;
-        //}
-
         /// <summary>
         /// Updates the costs associated with a tour with the given visits.
         /// </summary>
@@ -77,37 +64,6 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers
                 content.Quantities[i] = content.Quantities[i] + constraint.Values[visit];
             }
             return true;
-        }
-
-        /// <summary>
-        /// Scales the given capacity by the given percentage.
-        /// </summary>
-        /// <param name="capacity"></param>
-        /// <param name="percentage"></param>
-        /// <returns></returns>
-        public static Capacity Scale(this Capacity capacity, float percentage)
-        {
-            if (capacity.Constraints == null)
-            {
-                return new Capacity()
-                {
-                    Max = capacity.Max * percentage
-                };
-            }
-            var constraints = new MaxCapacityConstraint[capacity.Constraints.Length];
-            for (var i = 0; i < constraints.Length; i++)
-            {
-                constraints[i] = new MaxCapacityConstraint()
-                {
-                    Max = capacity.Constraints[i].Max * percentage,
-                    Values = capacity.Constraints[i].Values
-                };
-            }
-            return new Capacity()
-            {
-                Max = capacity.Max * percentage,
-                Constraints = constraints
-            };
         }
 
         /// <summary>

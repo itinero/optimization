@@ -20,6 +20,7 @@ using Itinero.Algorithms;
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.Optimization.Algorithms.Solvers;
+using Itinero.Optimization.Capacities;
 using Itinero.Optimization.Routing;
 
 namespace Itinero.Optimization.VRP.NoDepot.Capacitated
@@ -30,15 +31,15 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
     public class NoDepotCVRPRouter : AlgorithmBase
     {
         private readonly IWeightMatrixAlgorithm<float> _weightMatrixAlgorithm;
-        private readonly float _max;
+        private readonly Capacity _capacity;
 
         /// <summary>
         /// Creates a new TSP router.
         /// </summary>
-        public NoDepotCVRPRouter(IWeightMatrixAlgorithm<float> weightMatrixAlgorithm, float max,
+        public NoDepotCVRPRouter(IWeightMatrixAlgorithm<float> weightMatrixAlgorithm, Capacity capacity,
             ISolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float> solver = null)
         {
-            _max = max;
+            _capacity = capacity;
             _weightMatrixAlgorithm = weightMatrixAlgorithm;
             _solver = solver;
         }
@@ -66,10 +67,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
             // build problem.
             var problem = new NoDepotCVRProblem()
             {
-                Capacity = new Capacity()
-                {
-                    Max = _max
-                },
+                Capacity = _capacity.AdjustToMatrix(_weightMatrixAlgorithm),
                 Weights = _weightMatrixAlgorithm.Weights
             };
 
