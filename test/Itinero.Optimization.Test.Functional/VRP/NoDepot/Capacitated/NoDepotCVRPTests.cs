@@ -94,7 +94,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             var routes = func.TestPerf("No-Depot Capacitated VRP (Wechelderzande - Capacitated)");
 
 //#if DEBUG
-            routes.WriteGeoJson("lille-{0}.geojson");
+            routes.WriteGeoJson("lille-capacitated-{0}.geojson");
 //#endif
         }
 
@@ -157,7 +157,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             var routes = func.TestPerf("No-Depot Capacitated VRP (Spijkenisse - Capacitated)");
 
 //#if DEBUG
-            routes.WriteGeoJson("spijkenisse-{0}.geojson");
+            routes.WriteGeoJson("spijkenisse-capacitated-{0}.geojson");
 //#endif
         }
 
