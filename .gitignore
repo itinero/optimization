@@ -39,6 +39,5 @@ packages/*
 *.routerdb
 *.osm.pbf
 TestResult*.xml
-query*.osm
 
 test/Itinero.Optimization.Test.Functional/*.geojson

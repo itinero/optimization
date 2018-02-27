@@ -63,9 +63,13 @@ namespace Itinero.Optimization.Test.Functional.Staging
 
             if (routerDb == null)
             {
-                // make sure source OSM data is there.
-                Download.ToFile(queryName);
-                var fileName = queryName + ".osm";
+                // check if OSM file is there, otherwise attempt to download from overpass.
+                var fileName = Path.Combine("Staging", queryName + ".osm");
+                if (!File.Exists(fileName))
+                {
+                    // make sure source OSM data is there.
+                    Download.ToFile(queryName);
+                }
 
                 // build routerdb.
                 Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "No existing RouterDb file found, creating now.");

@@ -32,7 +32,7 @@ namespace Itinero.Optimization.Test.Functional.Staging
         /// </summary>
         public static void ToFile(string queryName)
         {
-            var filename = queryName + ".osm";
+            var filename = Path.Combine("Staging", queryName + ".osm");
             var queryFileName = Path.Combine("Staging", queryName + ".txt");
 
             if (!File.Exists(queryFileName))
