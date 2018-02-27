@@ -26,7 +26,7 @@ namespace Itinero.Optimization.Test.STSP
         /// <summary>
         /// Creates a new STSP.
         /// </summary>
-        public static Optimization.STSP.STSProblem CreateSTSP(int first, int size, float defaultWeight, float max)
+        public static Optimization.Solutions.STSP.STSProblem CreateSTSP(int first, int size, float defaultWeight, float max)
         {
             var weights = new float[size][];
             for (int x = 0; x < size; x++)
@@ -41,13 +41,13 @@ namespace Itinero.Optimization.Test.STSP
                     }
                 }
             }
-            return new Optimization.STSP.STSProblem(0, weights, max);
+            return new Optimization.Solutions.STSP.STSProblem(0, weights, max);
         }
 
         /// <summary>
         /// Creates a new STSP.
         /// </summary>
-        public static Optimization.STSP.STSProblem CreateSTSP(int first, int last, int size, float defaultWeight, float max)
+        public static Optimization.Solutions.STSP.STSProblem CreateSTSP(int first, int last, int size, float defaultWeight, float max)
         {
             var weights = new float[size][];
             for (int x = 0; x < size; x++)
@@ -58,31 +58,31 @@ namespace Itinero.Optimization.Test.STSP
                     weights[x][y] = defaultWeight;
                 }
             }
-            return new Optimization.STSP.STSProblem(first, last, weights, max);
+            return new Optimization.Solutions.STSP.STSProblem(first, last, weights, max);
         }
 
         /// <summary>
         /// Creates a new STSP.
         /// </summary>
         /// <returns></returns>
-        public static Optimization.STSP.STSProblem CreateSTSP(int first, float[][] weights, float max)
+        public static Optimization.Solutions.STSP.STSProblem CreateSTSP(int first, float[][] weights, float max)
         {
-            return new Optimization.STSP.STSProblem(first, weights, max);
+            return new Optimization.Solutions.STSP.STSProblem(first, weights, max);
         }
 
         /// <summary>
         /// Creates a new STSP.
         /// </summary>
         /// <returns></returns>
-        public static Optimization.STSP.STSProblem CreateSTSP(int first, int last, float[][] weights, float max)
+        public static Optimization.Solutions.STSP.STSProblem CreateSTSP(int first, int last, float[][] weights, float max)
         {
-            return new Optimization.STSP.STSProblem(first, last, weights, max);
+            return new Optimization.Solutions.STSP.STSProblem(first, last, weights, max);
         }
 
         /// <summary>
         /// Creates a directed STSP.
         /// </summary>
-        public static Optimization.STSP.Directed.STSProblem CreateDirectedSTSP(int first, int size, float defaultWeight, float turnPenalities, float max)
+        public static Optimization.Solutions.STSP.Directed.STSProblem CreateDirectedSTSP(int first, int size, float defaultWeight, float turnPenalities, float max)
         {
             var weights = new float[size * 2][];
             for (int x = 0; x < size * 2; x++)
@@ -109,13 +109,13 @@ namespace Itinero.Optimization.Test.STSP
                     }
                 }
             }
-            return new Itinero.Optimization.STSP.Directed.STSProblem(0, weights, turnPenalities, max);
+            return new Itinero.Optimization.Solutions.STSP.Directed.STSProblem(0, weights, turnPenalities, max);
         }
 
         /// <summary>
         /// Creates a new directed STSP.
         /// </summary>
-        public static Optimization.STSP.Directed.STSProblem CreateDirectedSTSP(int first, int last, int size, float defaultWeight, float turnPenalities, float max)
+        public static Optimization.Solutions.STSP.Directed.STSProblem CreateDirectedSTSP(int first, int last, int size, float defaultWeight, float turnPenalities, float max)
         {
             var weights = new float[size * 2][];
             for (int x = 0; x < size * 2; x++)
@@ -142,7 +142,7 @@ namespace Itinero.Optimization.Test.STSP
                     }
                 }
             }
-            return new Optimization.STSP.Directed.STSProblem(first, last, weights, turnPenalities, max);
+            return new Optimization.Solutions.STSP.Directed.STSProblem(first, last, weights, turnPenalities, max);
         }
     }
 }

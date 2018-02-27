@@ -21,9 +21,9 @@ using Itinero.LocalGeo;
 using Itinero.Optimization.General;
 using Itinero.Optimization.Test.Staging;
 using Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated;
-using Itinero.Optimization.VRP.NoDepot.Capacitated;
-using Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers;
-using Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators;
+using Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated;
+using Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers;
+using Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers.Operators;
 using NUnit.Framework;
 
 namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers

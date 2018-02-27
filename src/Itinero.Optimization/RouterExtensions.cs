@@ -21,10 +21,10 @@ using Itinero.Algorithms.Matrices;
 using Itinero.LocalGeo;
 using Itinero.Optimization.Routing;
 using Itinero.Optimization.Sequence.Directed;
-using Itinero.Optimization.STSP;
-using Itinero.Optimization.TimeWindows;
+using Itinero.Optimization.Solutions.STSP;
+using Itinero.Optimization.Models.TimeWindows;
 using Itinero.Optimization.Tours;
-using Itinero.Optimization.TSP;
+using Itinero.Optimization.Solutions.TSP;
 using Itinero.Profiles;
 
 namespace Itinero.Optimization
@@ -83,7 +83,7 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, int first = 0, int? last = null)
         {
-            var tspRouter = new TSP.Directed.TSPRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), turnPenaltyInSeconds, first, last);
+            var tspRouter = new Solutions.TSP.Directed.TSPRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), turnPenaltyInSeconds, first, last);
             tspRouter.Run();
             if (!tspRouter.HasSucceeded)
             {
@@ -105,7 +105,7 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateTSPTW(this RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, int first = 0, int? last = null)
         {
-            var tspRouter = new TSP.TimeWindows.TSPTWRouter(new WeightMatrixAlgorithm(router, profile, locations), windows, first, last);
+            var tspRouter = new Solutions.TSP.TimeWindows.TSPTWRouter(new WeightMatrixAlgorithm(router, profile, locations), windows, first, last);
             tspRouter.Run();
             if (!tspRouter.HasSucceeded)
             {
@@ -127,7 +127,7 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateTSPTWDirected(this Router router, Profile profile, Coordinate[] locations, TimeWindow[] windows, float turnPenaltyInSeconds, int first = 0, int? last = null)
         {
-            var tspRouter = new TSP.TimeWindows.Directed.TSPTWRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), windows, turnPenaltyInSeconds, first, last, null);
+            var tspRouter = new Solutions.TSP.TimeWindows.Directed.TSPTWRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), windows, turnPenaltyInSeconds, first, last, null);
             tspRouter.Run();
             if (!tspRouter.HasSucceeded)
             {
@@ -171,7 +171,7 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateSTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, float max, int first = 0, int? last = null)
         {
-            var tspRouter = new Itinero.Optimization.STSP.Directed.STSPRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), turnPenaltyInSeconds, max, first, last);
+            var tspRouter = new Itinero.Optimization.Solutions.STSP.Directed.STSPRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), turnPenaltyInSeconds, max, first, last);
             tspRouter.Run();
             if (!tspRouter.HasSucceeded)
             {

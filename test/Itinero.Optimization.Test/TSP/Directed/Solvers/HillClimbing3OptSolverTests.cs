@@ -18,8 +18,8 @@
 
 using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Random;
-using Itinero.Optimization.TSP.Directed;
-using Itinero.Optimization.TSP.Directed.Solvers;
+using Itinero.Optimization.Solutions.TSP.Directed;
+using Itinero.Optimization.Solutions.TSP.Directed.Solvers;
 using NUnit.Framework;
 using System.Collections.Generic;
 

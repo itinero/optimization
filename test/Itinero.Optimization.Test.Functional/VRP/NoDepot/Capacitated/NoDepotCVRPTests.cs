@@ -19,8 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Itinero.Optimization.Capacities;
-using Itinero.Optimization.VRP.NoDepot.Capacitated;
+using Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated;
 
 namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 {

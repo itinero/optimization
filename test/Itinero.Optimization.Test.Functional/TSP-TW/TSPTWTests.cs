@@ -36,26 +36,26 @@ namespace Itinero.Optimization.Test.Functional.TSP_TW
             };
             
             // define some time windows, all max.
-            var windows = new TimeWindows.TimeWindow[]
+            var windows = new Models.TimeWindows.TimeWindow[]
             {
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default,
-                TimeWindows.TimeWindow.Default
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default,
+                Models.TimeWindows.TimeWindow.Default
             };
 
             // calculate TSP-TW.

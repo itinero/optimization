@@ -18,8 +18,8 @@
 
 using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Random;
-using Itinero.Optimization.STSP.Directed;
-using Itinero.Optimization.STSP.Directed.Solvers.Operators;
+using Itinero.Optimization.Solutions.STSP.Directed;
+using Itinero.Optimization.Solutions.STSP.Directed.Solvers.Operators;
 using NUnit.Framework;
 using System.Linq;
 

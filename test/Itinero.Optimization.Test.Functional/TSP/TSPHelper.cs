@@ -26,7 +26,7 @@ namespace Itinero.Optimization.Test.Functional
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static Itinero.Optimization.TSP.TSProblem CreateTSP(int first, int size, float defaultWeight)
+        public static Itinero.Optimization.Solutions.TSP.TSProblem CreateTSP(int first, int size, float defaultWeight)
         {
             var weights = new float[size][];
             for (int x = 0; x < size; x++)
@@ -41,13 +41,13 @@ namespace Itinero.Optimization.Test.Functional
                     }
                 }
             }
-            return new Itinero.Optimization.TSP.TSProblem(0, weights);
+            return new Itinero.Optimization.Solutions.TSP.TSProblem(0, weights);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static Itinero.Optimization.TSP.TSProblem CreateTSP(int first, int last, int size, float defaultWeight)
+        public static Itinero.Optimization.Solutions.TSP.TSProblem CreateTSP(int first, int last, int size, float defaultWeight)
         {
             var weights = new float[size][];
             for (int x = 0; x < size; x++)
@@ -58,31 +58,31 @@ namespace Itinero.Optimization.Test.Functional
                     weights[x][y] = defaultWeight;
                 }
             }
-            return new Itinero.Optimization.TSP.TSProblem(first, last, weights);
+            return new Itinero.Optimization.Solutions.TSP.TSProblem(first, last, weights);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static Itinero.Optimization.TSP.TSProblem CreateTSP(int first, float[][] weights)
+        public static Itinero.Optimization.Solutions.TSP.TSProblem CreateTSP(int first, float[][] weights)
         {
-            return new Itinero.Optimization.TSP.TSProblem(first, weights);
+            return new Itinero.Optimization.Solutions.TSP.TSProblem(first, weights);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static Itinero.Optimization.TSP.TSProblem CreateTSP(int first, int last, float[][] weights)
+        public static Itinero.Optimization.Solutions.TSP.TSProblem CreateTSP(int first, int last, float[][] weights)
         {
-            return new Itinero.Optimization.TSP.TSProblem(first, last, weights);
+            return new Itinero.Optimization.Solutions.TSP.TSProblem(first, last, weights);
         }
         
         /// <summary>
         /// Creates a directed TSP.
         /// </summary>
-        public static Itinero.Optimization.TSP.Directed.TSProblem CreateDirectedTSP(int first, int size, float defaultWeight, float turnPenalities)
+        public static Itinero.Optimization.Solutions.TSP.Directed.TSProblem CreateDirectedTSP(int first, int size, float defaultWeight, float turnPenalities)
         {
             var weights = new float[size * 2][];
             for (int x = 0; x < size * 2; x++)
@@ -109,13 +109,13 @@ namespace Itinero.Optimization.Test.Functional
                     }
                 }
             }
-            return new Itinero.Optimization.TSP.Directed.TSProblem(0, weights, turnPenalities);
+            return new Itinero.Optimization.Solutions.TSP.Directed.TSProblem(0, weights, turnPenalities);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static Itinero.Optimization.TSP.Directed.TSProblem CreateDirectedTSP(int first, int last, int size, float defaultWeight, float turnPenalities)
+        public static Itinero.Optimization.Solutions.TSP.Directed.TSProblem CreateDirectedTSP(int first, int last, int size, float defaultWeight, float turnPenalities)
         {
             var weights = new float[size * 2][];
             for (int x = 0; x < size * 2; x++)
@@ -142,13 +142,13 @@ namespace Itinero.Optimization.Test.Functional
                     }
                 }
             }
-            return new Itinero.Optimization.TSP.Directed.TSProblem(first, last, weights, turnPenalities);
+            return new Itinero.Optimization.Solutions.TSP.Directed.TSProblem(first, last, weights, turnPenalities);
         }
         
         /// <summary>
         /// Creates a new STSP.
         /// </summary>
-        public static Itinero.Optimization.STSP.STSProblem CreateSTSP(int first, int size, float defaultWeight, float max)
+        public static Itinero.Optimization.Solutions.STSP.STSProblem CreateSTSP(int first, int size, float defaultWeight, float max)
         {
             var weights = new float[size][];
             for (int x = 0; x < size; x++)
@@ -163,7 +163,7 @@ namespace Itinero.Optimization.Test.Functional
                     }
                 }
             }
-            return new Itinero.Optimization.STSP.STSProblem(0, weights, max);
+            return new Itinero.Optimization.Solutions.STSP.STSProblem(0, weights, max);
         }
     }
 }

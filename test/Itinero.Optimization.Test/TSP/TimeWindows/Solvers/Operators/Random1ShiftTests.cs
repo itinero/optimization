@@ -17,9 +17,9 @@
  */
 
 using Itinero.Optimization.Algorithms.Random;
-using Itinero.Optimization.TimeWindows;
-using Itinero.Optimization.TSP.TimeWindows;
-using Itinero.Optimization.TSP.TimeWindows.Solvers.Operators;
+using Itinero.Optimization.Models.TimeWindows;
+using Itinero.Optimization.Solutions.TSP.TimeWindows;
+using Itinero.Optimization.Solutions.TSP.TimeWindows.Solvers.Operators;
 using NUnit.Framework;
 using System.Collections.Generic;
 

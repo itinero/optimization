@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.TSP;
+using Itinero.Optimization.Solutions.TSP;
 
 namespace Itinero.Optimization.Tours.Operations
 {

@@ -17,8 +17,8 @@
  */
 
 using Itinero.Optimization.Algorithms.Random;
-using Itinero.Optimization.TSP;
-using Itinero.Optimization.TSP.Solvers;
+using Itinero.Optimization.Solutions.TSP;
+using Itinero.Optimization.Solutions.TSP.Solvers;
 using NUnit.Framework;
 using System.Collections.Generic;
 
@@ -37,7 +37,7 @@ namespace Itinero.Optimization.Test.TSP.Solvers
         public void TestName()
         {
             // create the solver.
-            var solver = new Optimization.TSP.Directed.Solvers.RandomSolver();
+            var solver = new Optimization.Solutions.TSP.Directed.Solvers.RandomSolver();
 
             Assert.AreEqual("RAN", solver.Name);
         }

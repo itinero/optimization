@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using Itinero.Algorithms.Matrices;
 using Itinero.LocalGeo;
-using Itinero.Optimization.Capacities;
 using Itinero.Optimization.Routing;
-using Itinero.Optimization.VRP.NoDepot.Capacitated;
+using Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated;
 using Itinero.Profiles;
 
 namespace Itinero.Optimization.Test.Functional
@@ -26,7 +25,7 @@ namespace Itinero.Optimization.Test.Functional
         public static Result<List<Route>> TryCalculateNoDepotCVRP(this Router router, Profile profile, Coordinate[] locations, 
             Capacity capacity)
         {
-            var vrpRouter = new Itinero.Optimization.VRP.NoDepot.Capacitated.NoDepotCVRPRouter(new WeightMatrixAlgorithm(router, profile, locations),
+            var vrpRouter = new Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.NoDepotCVRPRouter(new WeightMatrixAlgorithm(router, profile, locations),
                 capacity);
             vrpRouter.Run();
             if (!vrpRouter.HasSucceeded)

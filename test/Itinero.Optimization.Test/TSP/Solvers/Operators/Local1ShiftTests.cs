@@ -16,8 +16,8 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.TSP;
-using Itinero.Optimization.TSP.Solvers.Operators;
+using Itinero.Optimization.Solutions.TSP;
+using Itinero.Optimization.Solutions.TSP.Solvers.Operators;
 using NUnit.Framework;
 using System.Linq;
 
