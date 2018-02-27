@@ -19,6 +19,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Itinero.LocalGeo;
+using Itinero.Optimization.Capacities;
 using Itinero.Optimization.Tours;
 using Itinero.Optimization.VRP.NoDepot.Capacitated;
 using NetTopologySuite.Features;
@@ -40,11 +41,45 @@ namespace Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated
             out NoDepotCVRPSolution solution, out List<Coordinate> locations)
         {
             var features = embeddedResourcePath.GetFeatureCollection();
-
+            
             // builds the weight matrix.
             List<ITour> tours;
             IAttributesTable attributes;
             var weights = features.BuildMatrix(out tours, out locations, out attributes);
+
+            // try get the max property.
+            int max;
+            if (!attributes.TryGetValueInt32("max", out max))
+            {
+                max = -1;
+            }
+
+            // build the problem.
+            var problem = new NoDepotCVRProblem()
+            {
+                Capacity = new Capacity()
+                {
+                    Max = max
+                },
+                Weights = weights
+            };
+            var objective = new NoDepotCVRPObjective();
+
+            // generate random extra constraint that's always satisfied.
+            var values = new float[weights.Length];
+            for (var i = 0; i < values.Length; i++)
+            {
+                values[i] = Itinero.Optimization.Algorithms.Random.RandomGeneratorExtensions.GetRandom().Generate(100) + 20;
+            }
+            problem.Capacity.Constraints = new CapacityConstraint[]
+            {
+                new CapacityConstraint()
+                {
+                    Max = 120 * weights.Length + 100,
+                    Name = "something",
+                    Values = values
+                }
+            };
 
             // build a solution if any.
             solution = null;
@@ -55,21 +90,14 @@ namespace Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated
                 foreach (var tour in tours)
                 {
                     solution.Add(tour);
+                    solution.Contents.Add(new Optimization.VRP.NoDepot.Capacitated.Solvers.CapacityExtensions.Content()
+                    {
+                        Weight = objective.Calculate(problem, solution, solution.Count - 1)
+                    });
                 }
             }
 
-            // try get the max property.
-            int max;
-            if (!attributes.TryGetValueInt32("max", out max))
-            {
-                max = -1;
-            }
-
-            return new NoDepotCVRProblem()
-            {
-                Max = max,
-                Weights = weights
-            };
+            return problem;
         }
     }
 }

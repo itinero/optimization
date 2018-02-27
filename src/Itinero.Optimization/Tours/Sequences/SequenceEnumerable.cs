@@ -9,26 +9,29 @@ namespace Itinero.Optimization.Tours.Sequences
     {
         private readonly IEnumerable<int> _tour;
         private readonly bool _isClosed;
+        private readonly bool _loopAround;
         private readonly int _size;
         
         /// <summary>
         /// Creates a new sequence enumerable starting from the given customer.
         /// </summary>
-        public SequenceEnumerable(IEnumerable<int> tour, bool isClosed, int size)
+        public SequenceEnumerable(IEnumerable<int> tour, bool isClosed, int size, bool loopAround = true)
         {
             _size = size;
             _tour = tour;
             _isClosed = isClosed;
+            _loopAround = loopAround;
         }
         
         /// <summary>
         /// Creates a new sequence enumerable starting from the given customer.
         /// </summary>
-        public SequenceEnumerable(ITour tour, int size)
+        public SequenceEnumerable(ITour tour, int size, bool loopAround = true)
         {
             _size = size;
             _tour = tour;
             _isClosed = tour.IsClosed();
+            _loopAround = loopAround;
         }
 
         /// <summary>
@@ -37,6 +40,7 @@ namespace Itinero.Optimization.Tours.Sequences
         public sealed class SequenceEnumerator : IEnumerator<int[]>
         {
             private readonly bool _isClosed;
+            private readonly bool _loopAroundFirst;
             private readonly IEnumerator<int> _enumerator;
             private readonly int _size;
 
@@ -45,11 +49,13 @@ namespace Itinero.Optimization.Tours.Sequences
             /// </summary>
             /// <param name="enumerator">The enumerator.</param>
             /// <param name="isClosed">True if the tour is closed.</param>
+            /// <param name="loopAroundFirst">If the tour is closed, loop around first or not.</param>
             /// <param name="size">The size of the sequences to return.</param>
-            public SequenceEnumerator(IEnumerator<int> enumerator, bool isClosed, int size)
+            public SequenceEnumerator(IEnumerator<int> enumerator, bool isClosed, int size, bool loopAroundFirst)
             {
                 _enumerator = enumerator;
                 _isClosed = isClosed;
+                _loopAroundFirst = loopAroundFirst;
                 _size = size;
 
                 _current = new int[_size];
@@ -142,6 +148,10 @@ namespace Itinero.Optimization.Tours.Sequences
                 }
                 else if(_afterFirst < _size - 1)
                 {
+                    if (!_loopAroundFirst && _afterFirst > 0)
+                    { // don't loop around, only use first once as the last.
+                        return false;
+                    }
                     if (_enumerator.MoveNext())
                     {
                         _afterFirst++;
@@ -175,7 +185,7 @@ namespace Itinero.Optimization.Tours.Sequences
         /// <returns>The sequence enumerator.</returns>
         public SequenceEnumerator GetEnumerator()
         {
-            return new SequenceEnumerator(_tour.GetEnumerator(), _isClosed, _size);
+            return new SequenceEnumerator(_tour.GetEnumerator(), _isClosed, _size, _loopAround);
         }
 
         /// <summary>

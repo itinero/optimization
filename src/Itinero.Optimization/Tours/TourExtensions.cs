@@ -60,9 +60,9 @@ namespace Itinero.Optimization.Tours
         /// <summary>
         /// Enumerates all sequences in the given sequence with the given size.
         /// </summary>
-        public static IEnumerable<int[]> Seq(this IEnumerable<int> sequence, int size, bool isClosed = false)
+        public static IEnumerable<int[]> Seq(this IEnumerable<int> sequence, int size, bool isClosed = false, bool loopAround = true)
         {
-            return new Sequences.SequenceEnumerable(sequence, isClosed, size);
+            return new Sequences.SequenceEnumerable(sequence, isClosed, size, loopAround);
         }
 
         /// <summary>
@@ -105,12 +105,12 @@ namespace Itinero.Optimization.Tours
         /// <summary>
         /// Enumerates all sequences in the given tour with the given size and smaller.
         /// </summary>
-        public static IEnumerable<int[]> SeqAndSmaller(this IEnumerable<int> tour, int minSize, int maxSize, bool isClosed = false)
+        public static IEnumerable<int[]> SeqAndSmaller(this IEnumerable<int> tour, int minSize, int maxSize, bool isClosed = false, bool loopAround = true)
         {
             var enumerable = System.Linq.Enumerable.Empty<int[]>();
             for (var i = minSize; i <= maxSize; i++)
             {
-                enumerable = enumerable.Concat(tour.Seq(i, isClosed));
+                enumerable = enumerable.Concat(tour.Seq(i, isClosed, loopAround));
             }
             return enumerable;
         }

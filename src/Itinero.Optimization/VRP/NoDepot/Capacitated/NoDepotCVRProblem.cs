@@ -18,8 +18,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using Itinero.Algorithms.Matrices;
+using Itinero.Optimization.Capacities;
 using Itinero.Optimization.General;
+using Itinero.Optimization.Routing;
 using Itinero.Optimization.Tours;
 using Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers;
 
@@ -31,10 +33,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
     public class NoDepotCVRProblem
     {
         /// <summary>
-        /// The vehicle capacity.!--
+        /// Gets or sets the vehicle capacity.
         /// </summary>
-        /// <returns></returns>
-        public float Max { get; set; } 
+        public Capacity Capacity { get; set; }
 
         /// <summary>
         /// Gets the weights.

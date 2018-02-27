@@ -92,13 +92,11 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, 
             int tourIdx1, int tourIdx2, out float delta)
         {            
-            var max = problem.Max;
-
             var tour1 = solution.Tour(tourIdx1);
             var tour2 = solution.Tour(tourIdx2);
 
-            var tour1Weight = objective.Calculate(problem, solution, tourIdx1);
-            var tour2Weight = objective.Calculate(problem, solution, tourIdx2);
+            var tour1Weight = solution.Contents[tourIdx1].Weight; //objective.Calculate(problem, solution, tourIdx1);
+            var tour2Weight = solution.Contents[tourIdx2].Weight; //objective.Calculate(problem, solution, tourIdx2);
             var totalBefore =  tour1Weight + tour2Weight;
 
             // this heuristic removes a visit1 from tour1 and a visit2 from tour2 and inserts the visits again
@@ -130,14 +128,33 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                             if (difference < -0.01)
                             { // the old weights are bigger!
                                 // check if the new routes are bigger than max.
-                                if (tour1Weight + (weight1After - weight1) <= max &&
-                                    tour2Weight + (weight2After - weight2) <= max)
+                                if (tour1Weight + (weight1After - weight1) <= problem.Capacity.Max &&
+                                    tour2Weight + (weight2After - weight2) <= problem.Capacity.Max)
                                 { // the exchange can happen, both routes stay within bound!
+
+                                    // check constraints if any.
+                                    if (!problem.Capacity.ExchangeIsPossible(solution.Contents[tourIdx1], 
+                                            visit1, visit2))
+                                    {
+                                        continue;
+                                    }
+                                    if (!problem.Capacity.ExchangeIsPossible(solution.Contents[tourIdx2],
+                                            visit2, visit1))
+                                    {
+                                        continue;
+                                    }
+
                                     // exchange customer.
                                     tour1.ReplaceEdgeFrom(previousVisit1, visit2);
                                     tour1.ReplaceEdgeFrom(visit2, nextVisit1);
                                     tour2.ReplaceEdgeFrom(previousVisit2, visit1);
                                     tour2.ReplaceEdgeFrom(visit1, nextVisit2);
+
+                                    // update content.
+                                    problem.Capacity.UpdateExchange(solution.Contents[tourIdx1], visit1, visit2);
+                                    problem.Capacity.UpdateExchange(solution.Contents[tourIdx2], visit2, visit1);
+                                    solution.Contents[tourIdx1].Weight = tour1Weight + (weight1After - weight1);
+                                    solution.Contents[tourIdx2].Weight = tour2Weight + (weight2After - weight2);
 
                                     // automatically removed in release mode.
                                     tour1.Verify(problem.Weights.Length);

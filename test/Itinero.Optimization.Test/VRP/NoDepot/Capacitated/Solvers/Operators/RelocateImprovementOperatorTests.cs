@@ -45,6 +45,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             var problem = "data.geometric.problem1.geojson".BuildProblem(out solution, out locations);
             var objective = new NoDepotCVRPObjective();
             solution = new NoDepotCVRPSolution(problem.Weights.Length);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator to the empty solution.
             var op = new RelocateImprovementOperator();
@@ -67,6 +68,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             var tour = solution.Tour(0);
             solution = new NoDepotCVRPSolution(problem.Weights.Length);
             solution.Add(tour);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator to the empty solution.
             var op = new RelocateImprovementOperator();
@@ -86,6 +88,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             List<Coordinate> locations = null;
             var problem = "data.geometric.problem1.geojson".BuildProblem(out solution, out locations);
             var objective = new NoDepotCVRPObjective();
+            objective.UpdateContent(problem, solution);
 
             // apply the operator to the empty solution.
             var op = new RelocateImprovementOperator();
@@ -118,6 +121,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
                 problem.Weights.Seq(3, 4) +
                 problem.Weights.Seq(7, 9) - 
                 problem.Weights.Seq(7, 8, 9);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator.
             var op = new RelocateImprovementOperator();
@@ -131,6 +135,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
             tour1 = solution.Tour(1);
             tour1.Remove(8);
             tour0.InsertAfter(3, 8);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator.
             Assert.IsTrue(op.Apply(problem, objective, solution, 1, 0, out delta));
@@ -161,6 +166,7 @@ namespace Itinero.Optimization.Test.VRP.NoDepot.Capacitated.Solvers.Operators
                 problem.Weights.Seq(3, 4) +
                 problem.Weights.Seq(7, 9) - 
                 problem.Weights.Seq(7, 8, 9);
+            objective.UpdateContent(problem, solution);
 
             // apply the operator.
             var op = new RelocateImprovementOperator();

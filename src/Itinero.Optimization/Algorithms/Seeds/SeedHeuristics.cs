@@ -123,7 +123,7 @@ namespace Itinero.Optimization.Algorithms.Seeds
             var maxWeight = float.MaxValue;
             foreach (int pooledVisit in visitPool)
             {
-                var neighbours = new SortedDictionary<float, List<int>>();
+                var neighbours = new Collections.SortedDictionary<float, List<int>>();
                 for (int idx = 0; idx < visitPool.Count; idx++)
                 {
                     int visit = visitPool[idx];

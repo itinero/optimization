@@ -277,5 +277,21 @@ namespace Itinero.Optimization.Routing
             }
             return routes;
         }
+
+        /// <summary>
+        /// Adjusts the given array of weights to an array that matches the calculate weight matrix.
+        /// </summary>
+        /// <param name="algorithm">The weight matrix.</param>
+        /// <param name="weights">The weights.</param>
+        /// <returns>Weights adjusted to the weight matrix, exclusing unresolvable or unroutable locations.</returns>
+        public static W[] AdjustToMatrix<T, W>(this IWeightMatrixAlgorithm<T> algorithm, W[] weights)
+        {
+            var newWeights = new W[algorithm.Weights.Length];
+            for (var i = 0; i < newWeights.Length; i++)
+            {
+                newWeights[i] = weights[algorithm.OriginalLocationIndex(i)];
+            }
+            return newWeights;
+        }
     }
 }

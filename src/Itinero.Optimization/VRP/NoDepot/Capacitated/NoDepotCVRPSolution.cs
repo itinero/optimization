@@ -28,6 +28,9 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
     /// </summary>
     public class NoDepotCVRPSolution : MultiTour
     {
+        private readonly List<Solvers.CapacityExtensions.Content> _contents
+            = new List<Solvers.CapacityExtensions.Content>();
+
         /// <summary>
         /// Creates a new solution.
         /// </summary>
@@ -39,20 +42,33 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
         /// <summary>
         /// Creates a new dynamic route by creating shallow copy of the array(s) given.
         /// </summary>
-        protected NoDepotCVRPSolution(IEnumerable<SubTour> first, int[] nextArray)
+        protected NoDepotCVRPSolution(IEnumerable<SubTour> first, int[] nextArray, List<Solvers.CapacityExtensions.Content> contents)
             : base(first, nextArray)
         {
-
+            // make a deep-copy of the contents.
+            _contents = new List<Solvers.CapacityExtensions.Content>(contents.Count);
+            for (var c = 0; c < contents.Count; c++)
+            {
+                _contents.Add(new Solvers.CapacityExtensions.Content()
+                {
+                    Weight = contents[c].Weight
+                });
+                if (contents[c].Quantities != null)
+                {
+                    _contents[c].Quantities = contents[c].Quantities.Clone() as float[];
+                }
+            }
         }
 
         /// <summary>
-        /// Gets or sets the tour weights.
+        /// Gets or sets the contents of each tour.
         /// </summary>
-        /// <returns></returns>
-        public float[] Weights
+        public List<Solvers.CapacityExtensions.Content> Contents
         {
-            get;
-            set;
+            get
+            {
+                return _contents;
+            }
         }
 
         /// <summary>
@@ -61,7 +77,7 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated
         /// <returns></returns>
         public override object Clone()
         {
-            return new NoDepotCVRPSolution(_subtours, _nextArray);
+            return new NoDepotCVRPSolution(_subtours, _nextArray, _contents);
         }
     }
 }

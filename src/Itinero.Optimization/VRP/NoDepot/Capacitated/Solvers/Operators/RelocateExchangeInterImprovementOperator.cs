@@ -90,15 +90,14 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
         /// </summary>
         public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, 
             int tourIdx1, int tourIdx2, out float delta)
-        {     
-            var max = problem.Max;
+        {
             int maxWindowSize = _maxWindowSize;
 
             var tour1 = solution.Tour(tourIdx1);
             var tour2 = solution.Tour(tourIdx2);
 
-            var tour1Weight = objective.Calculate(problem, solution, tourIdx1);
-            var tour2Weight = objective.Calculate(problem, solution, tourIdx2);
+            var tour1Weight = solution.Contents[tourIdx1].Weight; //objective.Calculate(problem, solution, tourIdx1);
+            var tour2Weight = solution.Contents[tourIdx2].Weight; //objective.Calculate(problem, solution, tourIdx2);
             var totalBefore =  tour1Weight + tour2Weight;
 
             var route1Cumul = objective.CalculateCumul(problem, solution, tourIdx1);
@@ -174,9 +173,14 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                     // calculate the real increase.
                     var newWeight = route1Weight + weight + pair2.WeightBetween;
 
-                    // check the max.
-                    if (newWeight < max && newWeight < bestWeight)
-                    { // the route is smaller than max.
+                    // check the max and constraints if any.
+                    if (newWeight < problem.Capacity.Max &&
+                        newWeight < bestWeight)
+                    { // the exchange is possible.
+                        if (!problem.Capacity.CanAdd(solution.Contents[tourIdx1], pair2.Between))
+                        {
+                            continue;
+                        }
                         bestWeight = newWeight;
                         bestLocation = location;
                         best = pair2;
@@ -197,12 +201,19 @@ namespace Itinero.Optimization.VRP.NoDepot.Capacitated.Solvers.Operators
                 }
                 tour1.ReplaceEdgeFrom(previous, bestLocation.Value.To);
 
+                // update contents.
+                // TODO: be smarter about the updates, no need to fully recalculate.
+                problem.Capacity.Add(solution.Contents[tourIdx1], best.Between);
+                problem.Capacity.Remove(solution.Contents[tourIdx2], best.Between);
+                solution.Contents[tourIdx1].Weight = objective.Calculate(problem, solution, tourIdx1);
+                solution.Contents[tourIdx2].Weight = objective.Calculate(problem, solution, tourIdx2);
+
                 // automatically removed in release mode.
                 tour1.Verify(problem.Weights.Length);
                 tour2.Verify(problem.Weights.Length);
 
-                tour1Weight = objective.Calculate(problem, solution, tourIdx1);
-                tour2Weight = objective.Calculate(problem, solution, tourIdx2);
+                tour1Weight = solution.Contents[tourIdx1].Weight;
+                tour2Weight = solution.Contents[tourIdx2].Weight;
                 var totalAfter =  tour1Weight + tour2Weight;
                 
                 delta = totalBefore - totalAfter;
