@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Licensed to SharpSoftware under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for 
  *  additional information regarding copyright ownership.
@@ -16,46 +16,41 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Models.TimeWindows
+using System;
+using System.Collections.Generic;
+using Itinero.Optimization.Abstract.Models;
+using Itinero.Optimization.Tours;
+
+namespace Itinero.Optimization.Abstract.Solvers
 {
     /// <summary>
-    /// Represents a timewindow.
+    /// Represents solver details, hooks custom solver implementations to the solver registry.
     /// </summary>
-    public struct TimeWindow
+    public class SolverDetails
     {
         /// <summary>
-        /// The minimum time in seconds.
-        /// </summary>
-        public float Min { get; set; }
-
-        /// <summary>
-        /// The maximum time in seconds.
-        /// </summary>
-        public float Max { get; set; }
-
-        /// <summary>
-        /// Returns a default timewindow with unlimited arrival/departure times.
-        /// </summary>
-        public static TimeWindow Default
-        {
-            get
-            {
-                return new TimeWindow()
-                {
-                    Max = float.MaxValue,
-                    Min = float.MinValue
-                };
-            }
-        }
-
-        /// <summary>
-        /// Returns the fully qualified type name of this instance.
+        /// Gets or sets the name.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return string.Format("[{0}, {1}]",
-                this.Min, this.Max);
-        }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// A delegate to define can solve calls.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="reasonIfNot">A human readable feedback on why this model can't be solved.</param>
+        /// <returns></returns>
+        public delegate bool CanSolveDelegate(AbstractModel model, out string reasonIfNot);
+
+        /// <summary>
+        /// The can solve call.
+        /// </summary>
+        public CanSolveDelegate CanSolve { get; set; }
+
+        /// <summary>
+        /// The solve call.
+        /// </summary>
+        /// <returns></returns>
+        public Func<AbstractModel, IList<ITour>> Solve { get; set; }
     }
 }

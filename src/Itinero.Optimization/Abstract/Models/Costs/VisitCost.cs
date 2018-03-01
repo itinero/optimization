@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Licensed to SharpSoftware under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for 
  *  additional information regarding copyright ownership.
@@ -16,46 +16,23 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Models.TimeWindows
+namespace Itinero.Optimization.Abstract.Models.Costs
 {
     /// <summary>
-    /// Represents a timewindow.
+    /// Represents the cost per visit.
     /// </summary>
-    public struct TimeWindow
+    public class VisitCosts
     {
         /// <summary>
-        /// The minimum time in seconds.
-        /// </summary>
-        public float Min { get; set; }
-
-        /// <summary>
-        /// The maximum time in seconds.
-        /// </summary>
-        public float Max { get; set; }
-
-        /// <summary>
-        /// Returns a default timewindow with unlimited arrival/departure times.
-        /// </summary>
-        public static TimeWindow Default
-        {
-            get
-            {
-                return new TimeWindow()
-                {
-                    Max = float.MaxValue,
-                    Min = float.MinValue
-                };
-            }
-        }
-
-        /// <summary>
-        /// Returns the fully qualified type name of this instance.
+        /// Gets or sets the name of the metric used for the cost.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return string.Format("[{0}, {1}]",
-                this.Min, this.Max);
-        }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the costs.
+        /// </summary>
+        /// <returns></returns>
+        public float[] Costs { get;set; }
     }
 }

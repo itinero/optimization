@@ -16,22 +16,29 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Models.Vehicles
+using Itinero.Algorithms.Matrices;
+using Itinero.Algorithms.Search;
+
+namespace Itinero.Optimization.Models.Mapping
 {
     /// <summary>
-    /// Represents a pool of vehicles.
+    /// The model mapper, maps a model to the routing network.
     /// </summary>
-    public class VehiclePool
+    public static class ModelMapper
     {
         /// <summary>
-        /// Gets or sets the vehicles.
+        /// Maps the model to the routing network using the given router.
         /// </summary>
-        /// <returns></returns>
-        public Vehicle[] Vehicles { get; set; }
+        public static DefaultMappedModel Map(this Model model, RouterBase router)
+        {
+            var profileName = model.VehiclePool.Vehicles[0].Profile;
+            var profile = router.Db.GetSupportedProfile(profileName);
 
-        /// <summary>
-        /// Gets or sets the reusable flag.
-        /// </summary>
-        public bool Reusable { get; set; }
+            var weightMatrixAlgorithm = new WeightMatrixAlgorithm(router, profile, 
+                new MassResolvingAlgorithm(router, new Profiles.IProfileInstance[] { profile }, 
+                    model.Visits));
+            
+            return new DefaultMappedModel(model, weightMatrixAlgorithm);
+        }
     }
 }

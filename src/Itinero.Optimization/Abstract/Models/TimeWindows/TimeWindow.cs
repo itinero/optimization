@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Models.TimeWindows
+namespace Itinero.Optimization.Abstract.Models.TimeWindows
 {
     /// <summary>
     /// Represents a timewindow.
@@ -32,6 +32,34 @@ namespace Itinero.Optimization.Models.TimeWindows
         /// The maximum time in seconds.
         /// </summary>
         public float Max { get; set; }
+
+        /// <summary>
+        /// Returns true if this window is valid at the given seconds.
+        /// </summary>
+        /// <param name="seconds">The time.</param>
+        /// <returns></returns>
+        public bool IsValidAt(float seconds)
+        {
+            return this.Min <= seconds && this.Max >= seconds;
+        }
+
+        /// <summary>
+        /// Returns the minimum difference.
+        /// </summary>
+        /// <param name="seconds">The time.</param>
+        /// <returns></returns>
+        public float MinDiff(float seconds)
+        {
+            if (this.Min <= seconds && this.Max >= seconds)
+            { // the time is within the window, no difference.
+                return 0;
+            }
+            if (seconds < this.Min)
+            { // time window too late.
+                return this.Min - seconds;
+            }
+            return seconds - this.Max;
+        }
 
         /// <summary>
         /// Returns a default timewindow with unlimited arrival/departure times.

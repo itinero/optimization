@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Licensed to SharpSoftware under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for 
  *  additional information regarding copyright ownership.
@@ -16,46 +16,32 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Models.TimeWindows
+using Itinero.Optimization.Tours;
+
+namespace Itinero.Optimization.Models
 {
     /// <summary>
-    /// Represents a timewindow.
+    /// Represents a mapped model.
     /// </summary>
-    public struct TimeWindow
-    {
+    public abstract class MappedModel
+    {        
         /// <summary>
-        /// The minimum time in seconds.
-        /// </summary>
-        public float Min { get; set; }
-
-        /// <summary>
-        /// The maximum time in seconds.
-        /// </summary>
-        public float Max { get; set; }
-
-        /// <summary>
-        /// Returns a default timewindow with unlimited arrival/departure times.
-        /// </summary>
-        public static TimeWindow Default
-        {
-            get
-            {
-                return new TimeWindow()
-                {
-                    Max = float.MaxValue,
-                    Min = float.MinValue
-                };
-            }
-        }
-
-        /// <summary>
-        /// Returns the fully qualified type name of this instance.
+        /// Builds the abstract model.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return string.Format("[{0}, {1}]",
-                this.Min, this.Max);
-        }
+        public abstract Abstract.Models.AbstractModel BuildAbstract();
+
+        /// <summary>
+        /// Builds a real-world route based on the given tour.
+        /// </summary>
+        /// <param name="tour">The tour.</param>
+        /// <returns></returns>
+        public abstract Route BuildRoute(ITour tour);
+
+        /// <summary>
+        /// Gets the model.
+        /// </summary>
+        /// <returns></returns>
+        public Model Model { get; protected set; }
     }
 }

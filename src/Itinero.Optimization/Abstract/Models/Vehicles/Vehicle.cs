@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Licensed to SharpSoftware under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for 
  *  additional information regarding copyright ownership.
@@ -16,46 +16,35 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Models.TimeWindows
+using Itinero.Optimization.Abstract.Models.Vehicles.Constraints;
+
+namespace Itinero.Optimization.Abstract.Models.Vehicles
 {
     /// <summary>
-    /// Represents a timewindow.
+    /// Represents a vehicle.
     /// </summary>
-    public struct TimeWindow
+    public class Vehicle
     {
         /// <summary>
-        /// The minimum time in seconds.
+        /// Gets or sets the metric that has to be used for the travel times related to this vehicle.
         /// </summary>
-        public float Min { get; set; }
+        public string Metric { get; set; }
 
         /// <summary>
-        /// The maximum time in seconds.
+        /// Gets or sets the capacity constraints.
         /// </summary>
-        public float Max { get; set; }
+        public CapacityConstraint[] CapacityConstraints { get; set; }
 
         /// <summary>
-        /// Returns a default timewindow with unlimited arrival/departure times.
-        /// </summary>
-        public static TimeWindow Default
-        {
-            get
-            {
-                return new TimeWindow()
-                {
-                    Max = float.MaxValue,
-                    Min = float.MinValue
-                };
-            }
-        }
-
-        /// <summary>
-        /// Returns the fully qualified type name of this instance.
+        /// Gets or sets the departure location if fixed.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return string.Format("[{0}, {1}]",
-                this.Min, this.Max);
-        }
+        public int? Departure { get; set; }
+
+        /// <summary>
+        /// Gets or sets the arrival location if fixed.
+        /// </summary>
+        /// <returns></returns>
+        public int? Arrival { get; set; }
     }
 }

@@ -19,13 +19,15 @@
 using System.Collections.Generic;
 using Itinero.Algorithms.Matrices;
 using Itinero.LocalGeo;
-using Itinero.Optimization.Routing;
 using Itinero.Optimization.Sequence.Directed;
 using Itinero.Optimization.Solutions.STSP;
 using Itinero.Optimization.Models.TimeWindows;
 using Itinero.Optimization.Tours;
 using Itinero.Optimization.Solutions.TSP;
 using Itinero.Profiles;
+using Itinero.Algorithms.Search;
+using Itinero.Optimization.Models.Mapping;
+using Itinero.Optimization.Models;
 
 namespace Itinero.Optimization
 {
@@ -61,13 +63,29 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateTSP(this RouterBase router, Profile profile, Coordinate[] locations, int first = 0, int? last = null)
         {
-            var tspRouter = new TSPRouter(new WeightMatrixAlgorithm(router, profile, locations), first, last);
-            tspRouter.Run();
-            if (!tspRouter.HasSucceeded)
+            // build model.
+            var model = new Model()
             {
-                return new Result<Route>(tspRouter.ErrorMessage);
-            }
-            return new Result<Route>(tspRouter.WeightMatrix.BuildRoute(tspRouter.Tour));
+                Visits = locations,
+                VehiclePool = new Models.Vehicles.VehiclePool()
+                {
+                    Vehicles = new Models.Vehicles.Vehicle[] 
+                    {
+                        new Models.Vehicles.Vehicle()
+                        {
+                            Profile = profile.FullName,
+                            Departure = first,
+                            Arrival = last
+                        }
+                    },
+                    Reusable = false
+                }
+            };
+
+            // solve model.
+            var routes = router.Solve(model);
+
+            return new Result<Route>(routes.Value[0]);
         }
 
         /// <summary>
@@ -83,13 +101,30 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, int first = 0, int? last = null)
         {
-            var tspRouter = new Solutions.TSP.Directed.TSPRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), turnPenaltyInSeconds, first, last);
-            tspRouter.Run();
-            if (!tspRouter.HasSucceeded)
+            // build model.
+            var model = new Model()
             {
-                return new Result<Route>(tspRouter.ErrorMessage);
-            }
-            return new Result<Route>(tspRouter.WeightMatrix.BuildRoute(tspRouter.Tour));
+                Visits = locations,
+                VehiclePool = new Models.Vehicles.VehiclePool()
+                {
+                    Vehicles = new Models.Vehicles.Vehicle[] 
+                    {
+                        new Models.Vehicles.Vehicle()
+                        {
+                            Profile = profile.FullName,
+                            Departure = first,
+                            Arrival = last,
+                            TurnPentalty = turnPenaltyInSeconds
+                        }
+                    },
+                    Reusable = false
+                }
+            };
+
+            // solve model.
+            var routes = router.Solve(model);
+
+            return new Result<Route>(routes.Value[0]);
         }
 
         /// <summary>
@@ -105,13 +140,30 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateTSPTW(this RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, int first = 0, int? last = null)
         {
-            var tspRouter = new Solutions.TSP.TimeWindows.TSPTWRouter(new WeightMatrixAlgorithm(router, profile, locations), windows, first, last);
-            tspRouter.Run();
-            if (!tspRouter.HasSucceeded)
+            // build model.
+            var model = new Model()
             {
-                return new Result<Route>(tspRouter.ErrorMessage);
-            }
-            return new Result<Route>(tspRouter.WeightMatrix.BuildRoute(tspRouter.Tour));
+                Visits = locations,
+                VehiclePool = new Models.Vehicles.VehiclePool()
+                {
+                    Vehicles = new Models.Vehicles.Vehicle[] 
+                    {
+                        new Models.Vehicles.Vehicle()
+                        {
+                            Profile = profile.FullName,
+                            Departure = first,
+                            Arrival = last
+                        }
+                    },
+                    Reusable = false
+                },
+                TimeWindows = windows
+            };
+
+            // solve model.
+            var routes = router.Solve(model);
+
+            return new Result<Route>(routes.Value[0]);
         }
 
         /// <summary>
@@ -127,13 +179,31 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateTSPTWDirected(this Router router, Profile profile, Coordinate[] locations, TimeWindow[] windows, float turnPenaltyInSeconds, int first = 0, int? last = null)
         {
-            var tspRouter = new Solutions.TSP.TimeWindows.Directed.TSPTWRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), windows, turnPenaltyInSeconds, first, last, null);
-            tspRouter.Run();
-            if (!tspRouter.HasSucceeded)
+            // build model.
+            var model = new Model()
             {
-                return new Result<Route>(tspRouter.ErrorMessage);
-            }
-            return new Result<Route>(tspRouter.WeightMatrix.BuildRoute(tspRouter.Tour));
+                Visits = locations,
+                VehiclePool = new Models.Vehicles.VehiclePool()
+                {
+                    Vehicles = new Models.Vehicles.Vehicle[] 
+                    {
+                        new Models.Vehicles.Vehicle()
+                        {
+                            Profile = profile.FullName,
+                            Departure = first,
+                            Arrival = last,
+                            TurnPentalty = turnPenaltyInSeconds
+                        }
+                    },
+                    Reusable = false
+                },
+                TimeWindows = windows
+            };
+
+            // solve model.
+            var routes = router.Solve(model);
+
+            return new Result<Route>(routes.Value[0]);
         }
 
         /// <summary>
@@ -149,13 +219,37 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateSTSP(this RouterBase router, Profile profile, Coordinate[] locations, float max, int first = 0, int? last = null)
         {
-            var tspRouter = new STSPRouter(new WeightMatrixAlgorithm(router, profile, locations), max, first, last);
-            tspRouter.Run();
-            if (!tspRouter.HasSucceeded)
+            // build model.
+            var model = new Model()
             {
-                return new Result<Route>(tspRouter.ErrorMessage);
-            }
-            return new Result<Route>(tspRouter.WeightMatrix.BuildRoute(tspRouter.Tour));
+                Visits = locations,
+                VehiclePool = new Models.Vehicles.VehiclePool()
+                {
+                    Vehicles = new Models.Vehicles.Vehicle[] 
+                    {
+                        new Models.Vehicles.Vehicle()
+                        {
+                            Profile = profile.FullName,
+                            Departure = first,
+                            Arrival = last,
+                            CapacityConstraints = new Models.Vehicles.Constraints.CapacityConstraint[] 
+                            {
+                                new Models.Vehicles.Constraints.CapacityConstraint()
+                                {
+                                    Name = profile.Metric.ToModelMetric(),
+                                    Capacity = max
+                                }
+                            }
+                        }
+                    },
+                    Reusable = false
+                }
+            };
+
+            // solve model.
+            var routes = router.Solve(model);
+
+            return new Result<Route>(routes.Value[0]);
         }
 
         /// <summary>
@@ -171,13 +265,38 @@ namespace Itinero.Optimization
         /// </summary>
         public static Result<Route> TryCalculateSTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, float max, int first = 0, int? last = null)
         {
-            var tspRouter = new Itinero.Optimization.Solutions.STSP.Directed.STSPRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), turnPenaltyInSeconds, max, first, last);
-            tspRouter.Run();
-            if (!tspRouter.HasSucceeded)
+            // build model.
+            var model = new Model()
             {
-                return new Result<Route>(tspRouter.ErrorMessage);
-            }
-            return new Result<Route>(tspRouter.WeightMatrix.BuildRoute(tspRouter.Tour));
+                Visits = locations,
+                VehiclePool = new Models.Vehicles.VehiclePool()
+                {
+                    Vehicles = new Models.Vehicles.Vehicle[] 
+                    {
+                        new Models.Vehicles.Vehicle()
+                        {
+                            Profile = profile.FullName,
+                            Departure = first,
+                            Arrival = last,
+                            CapacityConstraints = new Models.Vehicles.Constraints.CapacityConstraint[] 
+                            {
+                                new Models.Vehicles.Constraints.CapacityConstraint()
+                                {
+                                    Name = profile.Metric.ToModelMetric(),
+                                    Capacity = max
+                                }
+                            },
+                            TurnPentalty = turnPenaltyInSeconds
+                        }
+                    },
+                    Reusable = false
+                }
+            };
+
+            // solve model.
+            var routes = router.Solve(model);
+
+            return new Result<Route>(routes.Value[0]);
         }
 
         /// <summary>
@@ -186,6 +305,32 @@ namespace Itinero.Optimization
         public static Route CalculateSTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, float max, int first = 0, int? last = null)
         {
             return router.TryCalculateSTSPDirected(profile, locations, turnPenaltyInSeconds, max, first, last).Value;
+        }
+
+        /// <summary>
+        /// Solvers the routing problem represented by the given model.
+        /// </summary>
+        /// <param name="router">The router.</param>
+        /// <param name="model">The model to solve.</param>
+        /// <returns></returns>
+        public static Result<Route[]> Solve(this RouterBase router, Models.Model model)
+        {
+            // map the model.
+            var defaultModelMap = model.Map(router);
+
+            // build the abstract model.
+            var abstractModel = defaultModelMap.BuildAbstract();
+
+            // solve the abstract model.
+            var tours = Abstract.Solvers.SolverRegistry.Solve(abstractModel);
+
+            // use the map to convert to real-world routes.
+            var routes = new Route[tours.Count];
+            for (var t = 0; t < tours.Count; t++)
+            {
+                routes[t] = defaultModelMap.BuildRoute(tours[t]);
+            }
+            return new Result<Route[]>(routes);
         }
     }
 }

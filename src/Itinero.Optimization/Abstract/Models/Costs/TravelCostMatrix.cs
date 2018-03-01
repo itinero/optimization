@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Licensed to SharpSoftware under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for 
  *  additional information regarding copyright ownership.
@@ -16,46 +16,28 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Models.TimeWindows
+namespace Itinero.Optimization.Abstract.Models.Costs
 {
     /// <summary>
-    /// Represents a timewindow.
+    /// Represents a travel cost matrix, the costs between visits, this could be distance, time or some custom metric.
     /// </summary>
-    public struct TimeWindow
+    public class TravelCostMatrix
     {
         /// <summary>
-        /// The minimum time in seconds.
-        /// </summary>
-        public float Min { get; set; }
-
-        /// <summary>
-        /// The maximum time in seconds.
-        /// </summary>
-        public float Max { get; set; }
-
-        /// <summary>
-        /// Returns a default timewindow with unlimited arrival/departure times.
-        /// </summary>
-        public static TimeWindow Default
-        {
-            get
-            {
-                return new TimeWindow()
-                {
-                    Max = float.MaxValue,
-                    Min = float.MinValue
-                };
-            }
-        }
-
-        /// <summary>
-        /// Returns the fully qualified type name of this instance.
+        /// Gets or sets the name of the type of metric used.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return string.Format("[{0}, {1}]",
-                this.Min, this.Max);
-        }
+        public string Name { get; set; } = Metrics.Time;
+
+        /// <summary>
+        /// Gets or sets the cost matrix.
+        /// </summary>
+        public float[][] Costs { get;set; }
+
+        /// <summary>
+        /// Gets or sets the directed flag.
+        /// </summary>
+        /// <remarks>If this is true there are 4 costs per visit pair, for each direction to leave/arrive.</remarks>
+        public bool Directed { get; set; }
     }
 }
