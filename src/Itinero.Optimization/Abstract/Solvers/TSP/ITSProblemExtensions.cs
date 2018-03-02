@@ -18,7 +18,7 @@
 
 using Itinero.Optimization.Tours;
 
-namespace Itinero.Optimization.Solutions.TSP
+namespace Itinero.Optimization.Abstract.Solvers.TSP
 {
     /// <summary>
     /// Contains extension method for the ITSProblem.

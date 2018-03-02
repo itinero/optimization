@@ -22,7 +22,7 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 using System;
 
-namespace Itinero.Optimization.Solutions.TSP.TimeWindows.Directed.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.Solvers
 {
     /// <summary>
     /// A 3-opt solver.

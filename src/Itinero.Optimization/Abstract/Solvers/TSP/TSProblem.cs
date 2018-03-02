@@ -20,7 +20,7 @@ using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Solutions.TSP
+namespace Itinero.Optimization.Abstract.Solvers.TSP
 {
     /// <summary>
     /// The default TSP profile definition.

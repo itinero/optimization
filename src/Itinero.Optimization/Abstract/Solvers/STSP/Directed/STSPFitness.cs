@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Solutions.STSP.Directed
+namespace Itinero.Optimization.Abstract.Solvers.STSP.Directed
 {
     /// <summary>
     /// Represents a fitness value of an STSP solution.

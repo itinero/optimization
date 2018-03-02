@@ -82,7 +82,7 @@ namespace Itinero.Optimization.Test.TSP
         /// <summary>
         /// Creates a directed TSP.
         /// </summary>
-        public static Optimization.Solutions.TSP.Directed.TSProblem CreateDirectedTSP(int first, int size, float defaultWeight, float turnPenalities)
+        public static Optimization.Abstract.Solvers.TSP.Directed.TSProblem CreateDirectedTSP(int first, int size, float defaultWeight, float turnPenalities)
         {
             var weights = new float[size * 2][];
             for (int x = 0; x < size * 2; x++)
@@ -109,13 +109,13 @@ namespace Itinero.Optimization.Test.TSP
                     }
                 }
             }
-            return new Itinero.Optimization.Solutions.TSP.Directed.TSProblem(0, weights, turnPenalities);
+            return new Itinero.Optimization.Abstract.Solvers.TSP.Directed.TSProblem(0, weights, turnPenalities);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static Optimization.Solutions.TSP.Directed.TSProblem CreateDirectedTSP(int first, int last, int size, float defaultWeight, float turnPenalities)
+        public static Optimization.Abstract.Solvers.TSP.Directed.TSProblem CreateDirectedTSP(int first, int last, int size, float defaultWeight, float turnPenalities)
         {
             var weights = new float[size * 2][];
             for (int x = 0; x < size * 2; x++)
@@ -142,7 +142,7 @@ namespace Itinero.Optimization.Test.TSP
                     }
                 }
             }
-            return new Optimization.Solutions.TSP.Directed.TSProblem(first, last, weights, turnPenalities);
+            return new Optimization.Abstract.Solvers.TSP.Directed.TSProblem(first, last, weights, turnPenalities);
         }
     }
 }

@@ -19,9 +19,9 @@
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.VNS;
 using Itinero.Optimization.Tours;
-using Itinero.Optimization.Solutions.TSP.TimeWindows.Directed.Solvers.Operators;
+using Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.Solvers.Operators;
 
-namespace Itinero.Optimization.Solutions.TSP.TimeWindows.Directed.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.Solvers
 {
     /// <summary>
     /// A VNS-solver for the TSP-TW problem.

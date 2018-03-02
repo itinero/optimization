@@ -86,11 +86,11 @@ namespace Itinero.Optimization.Test.Functional.TSP
 
             // calculate Directed TSP.
             func = new Func<Route>(() => router.CalculateTSPDirected(vehicle.Fastest(), locations, 60, 0, 0));
-            route = func.TestPerf("Testing Directed TSP (0->0)");
+            route = func.TestPerf("Testing Directed TSP Hengelo (0->0)");
             func = new Func<Route>(() => router.CalculateTSPDirected(vehicle.Fastest(), locations, 60, 0, locations.Length - 1));
-            route = func.TestPerf("Testing Directed TSP (0->last)");
+            route = func.TestPerf("Testing Directed TSP Hengelo (0->last)");
             func = new Func<Route>(() => router.CalculateTSPDirected(vehicle.Fastest(), locations, 60, 0, null));
-            route = func.TestPerf("Testing Directed TSP (0->...)");      
+            route = func.TestPerf("Testing Directed TSP Hengelo (0->...)");      
         }
     }
 }

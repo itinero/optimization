@@ -22,7 +22,7 @@ using Itinero.Algorithms.Search;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 
-namespace Itinero.Optimization.Solutions.TSP.Directed
+namespace Itinero.Optimization.Abstract.Solvers.TSP.Directed
 {
     /// <summary>
     /// An algorithm to calculate u-turn aware TSP solutions.

@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Text;
 using Itinero.Optimization.Tours;
 
-namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
     /// <summary>
     /// Represents a solution to a capacitated no-depot VRP.

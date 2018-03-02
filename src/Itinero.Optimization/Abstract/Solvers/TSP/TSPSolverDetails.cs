@@ -16,9 +16,11 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using Itinero.Optimization.Abstract.Models;
-using Itinero.Optimization.Solutions.TSP;
+using Itinero.Optimization.Abstract.Solvers.TSP;
+using Itinero.Optimization.Models.Mapping;
 using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers.TSP
@@ -35,26 +37,112 @@ namespace Itinero.Optimization.Abstract.Solvers.TSP
         public static SolverDetails Default = new SolverDetails()
         {
             Name = "TSP",
-            CanSolve = CanSolve,
-            Solve = Solve
+            TrySolve = TrySolve
         };
 
-        private static bool CanSolve(AbstractModel model, out string reasonIfNot)
+        private static Result<IList<ITour>> TrySolve(MappedModel mappedModel)
         {
-            return model.IsTSP(out reasonIfNot);
-        }
+            var result = mappedModel.TryToTSP();
 
-        private static IList<ITour> Solve(AbstractModel model)
-        {
-            string reasonIfFailed;
-            var problem = model.ToTSP(out reasonIfFailed);
-            var solution = problem.Solve();
+            if (result.IsError)
+            {
+                return result.ConvertError<IList<ITour>>();
+            }
+            
+            var solution = result.Value.Solve();
 
-            return new List<ITour>(
+            return new Result<IList<ITour>>(new List<ITour>(
                 new ITour[]
                 {
                     solution
-                });
+                }));
+        }
+
+        /// <summary>
+        /// Returns true if the given model is a TSP.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        public static bool IsTSP(this AbstractModel model)
+        {
+            string reasonIfNot;
+            return model.IsTSP(out reasonIfNot);
+        }
+
+        /// <summary>
+        /// Returns true if the given model is a TSP.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="reasonIfNot">The reason if it's not considered a TSP.</param>
+        /// <returns></returns>
+        public static bool IsTSP(this AbstractModel model, out string reasonIfNot)
+        {
+            if (!model.IsValid(out reasonIfNot))
+            {
+                reasonIfNot = "Model is invalid: " + reasonIfNot;
+                return false;
+            }
+
+            if (model.VehiclePool.Reusable ||
+                model.VehiclePool.Vehicles.Length > 1)
+            {
+                reasonIfNot = "More than one vehicle or vehicle reusable.";
+                return false;
+            }
+            var vehicle = model.VehiclePool.Vehicles[0];
+            if (vehicle.TurnPentalty != 0)
+            {
+                reasonIfNot = "Turning penalty, this is a directed problem.";
+                return false;
+            }
+            if (vehicle.CapacityConstraints != null &&
+                vehicle.CapacityConstraints.Length > 0)
+            {
+                reasonIfNot = "At least one capacity constraint was found.";
+                return false;
+            }
+            if (model.TimeWindows != null &&
+                model.TimeWindows.Length > 0)
+            {
+                // TODO: check if timewindows are there but are all set to max.
+                reasonIfNot = "Timewindows detected.";
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Converts the given abstract model to a TSP.
+        /// </summary>
+        public static Result<ITSProblem> TryToTSP(this MappedModel mappedModel)
+        {
+            var model = mappedModel.BuildAbstract();
+
+            string reasonWhenFailed;
+            if (!model.IsTSP(out reasonWhenFailed))
+            {
+                return new Result<ITSProblem>("Model is not a TSP: " +
+                    reasonWhenFailed);
+            }
+
+            var vehicle = model.VehiclePool.Vehicles[0];
+            var metric = vehicle.Metric;
+            if (!model.TryGetTravelCostsForMetric(metric, out Models.Costs.TravelCostMatrix weights))
+            {
+                throw new Exception("Travel costs not found but model was declared valid.");
+            }
+            int first = 0;
+            
+            var problem = new TSProblem(first, weights.Costs);
+            if (vehicle.Departure.HasValue)
+            {
+                problem.First = vehicle.Departure.Value;
+            }
+            if (vehicle.Arrival.HasValue)
+            {
+                problem.Last = vehicle.Arrival.Value;
+            }
+            return new Result<ITSProblem>(problem);
         }
     }
 }

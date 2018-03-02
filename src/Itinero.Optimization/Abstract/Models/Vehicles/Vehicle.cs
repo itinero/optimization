@@ -46,5 +46,11 @@ namespace Itinero.Optimization.Abstract.Models.Vehicles
         /// </summary>
         /// <returns></returns>
         public int? Arrival { get; set; }
+
+        /// <summary>
+        /// Gets or sets a turn penalty (if any).
+        /// </summary>
+        /// <returns></returns>
+        public float TurnPentalty { get; set; }
     }
 }

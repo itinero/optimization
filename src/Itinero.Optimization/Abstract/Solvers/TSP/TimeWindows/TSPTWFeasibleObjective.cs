@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.Tours;
 
-namespace Itinero.Optimization.Solutions.TSP.TimeWindows
+namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows
 {
     /// <summary>
     /// An objective that leads to feasible solutions for the TSP with TW.

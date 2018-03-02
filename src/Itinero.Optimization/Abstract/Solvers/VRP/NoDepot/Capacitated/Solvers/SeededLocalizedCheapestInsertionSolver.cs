@@ -24,7 +24,7 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.General;
 using Itinero.Optimization.Tours;
 
-namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
 {
     /// <summary>
     /// A seeded localized cheapest insertion solver.
@@ -35,7 +35,7 @@ namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers
         private readonly float _slackPercentage;  // the percentage of space to leave for future improvements.
         private readonly Func<NoDepotCVRProblem, IList<int>, int> _selectSeed; // hold the select seed function.
         // holds the intra-route improvements;
-        private readonly List<IOperator<float, Solutions.TSP.ITSProblem, Solutions.TSP.TSPObjective, ITour, float>> _intraImprovements; 
+        private readonly List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>> _intraImprovements; 
         private readonly List<IInterTourImprovementOperator> _interImprovements; // holds the inter-route improvements.
         private readonly Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> _overlaps; // holds the overlap function.
         private readonly float _thresholdPercentage; // the threshold percentage.
@@ -62,8 +62,8 @@ namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers
             _localizationFactor = localizationFactor;
 
             // register the default intra improvement operators.
-            _intraImprovements = new List<IOperator<float, Solutions.TSP.ITSProblem, Solutions.TSP.TSPObjective, ITour, float>>(1);
-            _intraImprovements.Add(new Solutions.TSP.Solvers.HillClimbing3OptSolver());
+            _intraImprovements = new List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>>(1);
+            _intraImprovements.Add(new TSP.Solvers.HillClimbing3OptSolver());
 
             // register the default inter improvement operators.
             _interImprovements = new List<IInterTourImprovementOperator>(4);
@@ -85,13 +85,13 @@ namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers
         /// <param name="thresholdPercentage">The percentage of unplaced visits to try and place in existing tours.</param>
         /// <param name="localizationFactor">The factor to take into account the weight to the seed visit.</param>
         public SeededLocalizedCheapestInsertionSolver(Func<NoDepotCVRProblem, IList<int>, int> selectSeed, 
-            IEnumerable<IOperator<float, Solutions.TSP.ITSProblem, Solutions.TSP.TSPObjective, ITour, float>> intraImprovements,
+            IEnumerable<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>> intraImprovements,
             IEnumerable<IInterTourImprovementOperator> interImprovements,
             Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlaps, int k = 10, float slackPercentage = 5, 
             float thresholdPercentage = 10, float localizationFactor = 0.75f)
         {
             _selectSeed = selectSeed;
-            _intraImprovements = new List<IOperator<float, Solutions.TSP.ITSProblem, Solutions.TSP.TSPObjective, ITour, float>>(intraImprovements);
+            _intraImprovements = new List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>>(intraImprovements);
             _interImprovements = new List<IInterTourImprovementOperator>(_interImprovements);
             _overlaps = overlaps;
             _k = k;
@@ -305,7 +305,7 @@ namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers
         private float ImproveIntraRoute(float[][] weights, ITour tour, float currentWeight)
         {
             // TODO: this can probably be replaced by the iterative solver.
-            var subTourProblem = new Solutions.TSP.TSPSubProblem(tour, weights);
+            var subTourProblem = new TSP.TSPSubProblem(tour, weights);
 
             var improvement = true;
             var newWeight = currentWeight;
@@ -317,7 +317,7 @@ namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers
                 foreach (var improvementOperator in _intraImprovements)
                 { // try the current improvement operations.
                     float delta;
-                    if (improvementOperator.Apply(subTourProblem, Solutions.TSP.TSPObjective.Default, tour, out delta))
+                    if (improvementOperator.Apply(subTourProblem, TSP.TSPObjective.Default, tour, out delta))
                     {
                         Itinero.Logging.Logger.Log("SeededLocalizedCheapestInsertionSolver", Itinero.Logging.TraceEventType.Information,
                             "Intra-improvement found {0} {1}->{2}",

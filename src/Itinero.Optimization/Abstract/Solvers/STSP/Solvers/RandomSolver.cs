@@ -21,7 +21,7 @@ using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 
-namespace Itinero.Optimization.Solutions.STSP.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.STSP.Solvers
 {
     /// <summary>
     /// A solver that generates random solutions.

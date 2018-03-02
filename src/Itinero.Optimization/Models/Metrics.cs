@@ -1,4 +1,4 @@
-namespace Itinero.Optimization.Abstract.Models
+namespace Itinero.Optimization.Models
 {
     /// <summary>
     /// Defines a few default metric names.

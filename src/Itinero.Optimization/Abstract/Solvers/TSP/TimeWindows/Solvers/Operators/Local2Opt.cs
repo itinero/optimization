@@ -20,7 +20,7 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Solutions.TSP.TimeWindows.Solvers.Operators
+namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Solvers.Operators
 {
     /// <summary>
     /// A local 2-Opt* search for the TSP-TW.

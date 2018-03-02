@@ -24,7 +24,7 @@ using Itinero.Optimization.Tours;
 using Itinero.Optimization.Tours.TurningWeights;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Solutions.STSP.Directed.Solvers.Operators
+namespace Itinero.Optimization.Abstract.Solvers.STSP.Directed.Solvers.Operators
 {
     /// <summary>
     /// An operator that executes a cheapest insertion operation.

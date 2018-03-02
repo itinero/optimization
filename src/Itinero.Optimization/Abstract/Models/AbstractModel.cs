@@ -53,20 +53,41 @@ namespace Itinero.Optimization.Abstract.Models
         public VehiclePool VehiclePool { get; set; }
 
         /// <summary>
+        /// Gets a visit cost for the given metric.
+        /// </summary>
+        /// <param name="metric">The metric to get costs for.</param>
+        /// <param name="visitCosts">The visit costs.</param>
+        public bool TryGetVisitCostsForMetric(string metric, out VisitCosts visitCosts)
+        {
+            for (var i = 0; i < this.VisitCosts.Length; i++)
+            {
+                if (this.VisitCosts[i].Name == metric)
+                {
+                    visitCosts = this.VisitCosts[i];
+                    return true;
+                }
+            }
+            visitCosts = null;
+            return false;
+        }
+
+        /// <summary>
         /// Returns a travel cost for the given metric or throws an exception of not found.
         /// </summary>
         /// <param name="metric">The metric to get costs for.</param>
-        public TravelCostMatrix GetForMetric(string metric)
+        /// <param name="travelCosts">The travel costs.</param>
+        public bool TryGetTravelCostsForMetric(string metric, out TravelCostMatrix travelCosts)
         {
             for (var i = 0; i < this.TravelCosts.Length; i++)
             {
                 if (this.TravelCosts[i].Name == metric)
                 {
-                    return this.TravelCosts[i];
+                    travelCosts = this.TravelCosts[i];
+                    return true;
                 }
             }
-            throw new ArgumentOutOfRangeException(nameof(metric), metric, 
-                string.Format("No travel cost found for the given metric."));
+            travelCosts = null;
+            return false;
         }
     }
 

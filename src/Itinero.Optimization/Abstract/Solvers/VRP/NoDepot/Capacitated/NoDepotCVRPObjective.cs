@@ -18,9 +18,9 @@
 
 using System;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
-using Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers;
+using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers;
 
-namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
     /// <summary>
     /// An objective of a no-depot CVRP.

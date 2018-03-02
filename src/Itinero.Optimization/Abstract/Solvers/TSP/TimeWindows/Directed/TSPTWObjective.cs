@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System;
 using Itinero.Optimization.Algorithms.Directed;
 
-namespace Itinero.Optimization.Solutions.TSP.TimeWindows.Directed
+namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Directed
 {
     /// <summary>
     /// The TSP-TW objective.

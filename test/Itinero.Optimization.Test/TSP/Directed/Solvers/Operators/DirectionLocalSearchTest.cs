@@ -16,8 +16,8 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.Solutions.TSP.Directed.Solvers;
-using Itinero.Optimization.Solutions.TSP.Directed.Solvers.Operators;
+using Itinero.Optimization.Abstract.Solvers.TSP.Directed.Solvers;
+using Itinero.Optimization.Abstract.Solvers.TSP.Directed.Solvers.Operators;
 using NUnit.Framework;
 
 namespace Itinero.Optimization.Test.TSP.Directed.Solvers.Operators
@@ -36,11 +36,11 @@ namespace Itinero.Optimization.Test.TSP.Directed.Solvers.Operators
         {
             var problem = TSPHelper.CreateDirectedTSP(0, 10, 100, 5);
             var random = new RandomSolver();
-            var randomRoute = random.Solve(problem, new Optimization.Solutions.TSP.Directed.TSPObjective());
+            var randomRoute = random.Solve(problem, new Optimization.Abstract.Solvers.TSP.Directed.TSPObjective());
 
             var op = new DirectionLocalSearch();
             float delta;
-            var optimized = op.Apply(problem, new Optimization.Solutions.TSP.Directed.TSPObjective(), randomRoute, out delta);
+            var optimized = op.Apply(problem, new Optimization.Abstract.Solvers.TSP.Directed.TSPObjective(), randomRoute, out delta);
 
 
         }

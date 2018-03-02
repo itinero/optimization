@@ -24,7 +24,7 @@ using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 
-namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers.Operators
+namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.Operators
 {
     /// <summary>
     /// Implements a relocate operator, tries to improve the existing tours by re-inserting a visit from one tour into another.

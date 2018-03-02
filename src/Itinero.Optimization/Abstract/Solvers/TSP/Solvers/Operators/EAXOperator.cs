@@ -24,7 +24,7 @@ using Itinero.Optimization.Tours.Cycles;
 using System;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Solutions.TSP.Solvers.Operators
+namespace Itinero.Optimization.Abstract.Solvers.TSP.Solvers.Operators
 {
     /// <summary>
     /// An edge assembly crossover.

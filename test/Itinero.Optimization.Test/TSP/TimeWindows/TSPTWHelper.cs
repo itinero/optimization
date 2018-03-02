@@ -16,8 +16,8 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.Models.TimeWindows;
-using Itinero.Optimization.Solutions.TSP.TimeWindows;
+using Itinero.Optimization.Abstract.Models.TimeWindows;
+using Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows;
 
 namespace Itinero.Optimization.Test.TSP.TimeWindows
 {
@@ -106,24 +106,24 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows
         /// Creates a new TSP-TW.
         /// </summary>
         /// <returns></returns>
-        public static Optimization.Solutions.TSP.TimeWindows.Directed.TSPTWProblem CreateDirectedTSPTW(int first, float[][] weights, TimeWindow[] windows, float turnPenalities)
+        public static Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.TSPTWProblem CreateDirectedTSPTW(int first, float[][] weights, TimeWindow[] windows, float turnPenalities)
         {
-            return new Optimization.Solutions.TSP.TimeWindows.Directed.TSPTWProblem(first, weights, windows, turnPenalities);
+            return new Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.TSPTWProblem(first, weights, windows, turnPenalities);
         }
 
         /// <summary>
         /// Creates a new TSP-TW.
         /// </summary>
         /// <returns></returns>
-        public static Optimization.Solutions.TSP.TimeWindows.Directed.TSPTWProblem CreateDirectedTSPTW(int first, int last, float[][] weights, TimeWindow[] windows, float turnPenalities)
+        public static Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.TSPTWProblem CreateDirectedTSPTW(int first, int last, float[][] weights, TimeWindow[] windows, float turnPenalities)
         {
-            return new Optimization.Solutions.TSP.TimeWindows.Directed.TSPTWProblem(first, last, weights, windows, turnPenalities);
+            return new Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.TSPTWProblem(first, last, weights, windows, turnPenalities);
         }
 
         /// <summary>
         /// Creates a directed TSP-TW.
         /// </summary>
-        public static Optimization.Solutions.TSP.TimeWindows.Directed.TSPTWProblem CreateDirectedTSPTW(int first, int size, float defaultWeight, TimeWindow[] windows, float turnPenalities)
+        public static Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.TSPTWProblem CreateDirectedTSPTW(int first, int size, float defaultWeight, TimeWindow[] windows, float turnPenalities)
         {
             var weights = new float[size * 2][];
             for (int x = 0; x < size * 2; x++)
@@ -150,14 +150,14 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows
                     }
                 }
             }
-            return new Itinero.Optimization.Solutions.TSP.TimeWindows.Directed.TSPTWProblem(0, weights, windows, turnPenalities);
+            return new Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.TSPTWProblem(0, weights, windows, turnPenalities);
         }
 
 
         /// <summary>
         /// Creates a directed TSP-TW.
         /// </summary>
-        public static Optimization.Solutions.TSP.TimeWindows.Directed.TSPTWProblem CreateDirectedTSPTW(int first, int size, float defaultWeight, float turnPenalities)
+        public static Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.TSPTWProblem CreateDirectedTSPTW(int first, int size, float defaultWeight, float turnPenalities)
         {
             var windows = new TimeWindow[size];
             for (var i = 0; i < windows.Length; i++)
@@ -190,13 +190,13 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows
                     }
                 }
             }
-            return new Itinero.Optimization.Solutions.TSP.TimeWindows.Directed.TSPTWProblem(0, weights, windows, turnPenalities);
+            return new Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.TSPTWProblem(0, weights, windows, turnPenalities);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static Optimization.Solutions.TSP.TimeWindows.Directed.TSPTWProblem CreateDirectedTSPTW(int first, int last, int size, float defaultWeight, float turnPenalities)
+        public static Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.TSPTWProblem CreateDirectedTSPTW(int first, int last, int size, float defaultWeight, float turnPenalities)
         {
             var windows = new TimeWindow[size];
             for (var i = 0; i < windows.Length; i++)
@@ -229,7 +229,7 @@ namespace Itinero.Optimization.Test.TSP.TimeWindows
                     }
                 }
             }
-            return new Optimization.Solutions.TSP.TimeWindows.Directed.TSPTWProblem(first, last, weights, windows, turnPenalities);
+            return new Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.TSPTWProblem(first, last, weights, windows, turnPenalities);
         }
     }
 }

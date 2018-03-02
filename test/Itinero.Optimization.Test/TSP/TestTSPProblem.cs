@@ -1,8 +1,8 @@
 ﻿using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers.GA;
 using Itinero.Optimization.Tours;
-using Itinero.Optimization.Solutions.TSP;
-using Itinero.Optimization.Solutions.TSP.Solvers;
+using Itinero.Optimization.Abstract.Solvers.TSP;
+using Itinero.Optimization.Abstract.Solvers.TSP.Solvers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

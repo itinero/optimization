@@ -22,7 +22,7 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Solutions.TSP.Directed.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.TSP.Directed.Solvers
 {
     /// <summary>
     /// A solver that generates random solutions.

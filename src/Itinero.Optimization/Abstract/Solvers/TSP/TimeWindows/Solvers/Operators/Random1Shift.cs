@@ -21,7 +21,7 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.Tours;
 
-namespace Itinero.Optimization.Solutions.TSP.TimeWindows.Solvers.Operators
+namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Solvers.Operators
 {
     /// <summary>
     /// An operator to execute n random 1-shift* relocations.

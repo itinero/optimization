@@ -17,9 +17,9 @@
  */
 
 using Itinero.Optimization.Tours;
-using Itinero.Optimization.Models.TimeWindows;
+using Itinero.Optimization.Abstract.Models.TimeWindows;
 
-namespace Itinero.Optimization.Solutions.TSP.TimeWindows
+namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows
 {
     /// <summary>
     /// The default TSP-TW profile definition.

@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.Solutions.TSP;
+using Itinero.Optimization.Abstract.Solvers.TSP;
 using NUnit.Framework;
 
 namespace Itinero.Optimization.Test.TSP

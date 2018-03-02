@@ -20,7 +20,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Itinero.Optimization.Abstract.Models;
-using Itinero.Optimization.Solutions.TSP;
+using Itinero.Optimization.Abstract.Solvers.TSP;
+using Itinero.Optimization.Models.Mapping;
 using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers
@@ -33,22 +34,26 @@ namespace Itinero.Optimization.Abstract.Solvers
         private static List<SolverDetails> _solvers = new List<SolverDetails>(
             new SolverDetails[]
             {
-                TSP.TSPSolverDetails.Default
+                TSP.TSPSolverDetails.Default,
+                STSP.STSPSolverDetails.Default,
+                TSP.TimeWindows.TSPTWSolverDetails.Default,
+                TSP.Directed.TSPSolverDetails.Default,
+                STSP.Directed.STSPSolverDetails.Default,
+                TSP.TimeWindows.Directed.TSPTWSolverDetails.Default,
+                VRP.NoDepot.Capacitated.NoDepotCVRPSolverDetails.Default
             });
 
         /// <summary>
         /// Registers a new solver.
         /// </summary>
         /// <param name="name">The name of the solver.</param>
-        /// <param name="canSolve">A callback to decide if this solver can solve the given model.</param>
-        /// <param name="solve">A callback to run the solver.</param>
-        public static void Register(string name, SolverDetails.CanSolveDelegate canSolve, Func<AbstractModel, IList<ITour>> solve)
+        /// <param name="trySolve">A callback to call the solver to try and solve the given model.</param>
+        public static void Register(string name, SolverDetails.TrySolveDelegate trySolve)
         {
             _solvers.Add(new SolverDetails()
             {
                 Name = name,
-                CanSolve = canSolve,
-                Solve = solve
+                TrySolve = trySolve
             });
         }
 
@@ -56,19 +61,19 @@ namespace Itinero.Optimization.Abstract.Solvers
         /// Attempts to use the registered solvers to solve the given model.
         /// </summary>
         /// <param name="model">The model to solve.</param>
-        public static IList<ITour> Solve(AbstractModel model)
+        public static IList<ITour> Solve(MappedModel model)
         {
             var reasonsWhy = new StringBuilder();
             for (var i = 0; i < _solvers.Count; i++)
             {
-                string reasonWhy;
-                if (_solvers[i].CanSolve(model, out reasonWhy))
+                var result = _solvers[i].TrySolve(model);
+                if (!result.IsError)
                 {
-                    return _solvers[i].Solve(model);
+                    return result.Value;
                 }
                 else
                 {
-                    reasonsWhy.Append(reasonWhy);
+                    reasonsWhy.Append(result.ErrorMessage);
                     reasonsWhy.Append(Environment.NewLine);
                 }
             }

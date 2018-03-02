@@ -18,7 +18,7 @@
 
 using Itinero.Optimization.Algorithms.NearestNeighbour;
 
-namespace Itinero.Optimization.Solutions.TSP
+namespace Itinero.Optimization.Abstract.Solvers.TSP
 {
     /// <summary>
     /// A abstract representation of a TSP.

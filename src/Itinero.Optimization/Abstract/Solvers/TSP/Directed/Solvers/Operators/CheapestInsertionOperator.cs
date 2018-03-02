@@ -25,7 +25,7 @@ using Itinero.Optimization.Algorithms.Directed;
 using System.Collections.Generic;
 using System;
 
-namespace Itinero.Optimization.Solutions.TSP.Directed.Solvers.Operators
+namespace Itinero.Optimization.Abstract.Solvers.TSP.Directed.Solvers.Operators
 {
     /// <summary>
     /// An operator that executes a cheapest insertion operation.

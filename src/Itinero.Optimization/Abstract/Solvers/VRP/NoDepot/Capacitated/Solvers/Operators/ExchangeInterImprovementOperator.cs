@@ -24,7 +24,7 @@ using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 
-namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers.Operators
+namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.Operators
 {
     /// <summary>
     /// An exchange inter improvement operator.

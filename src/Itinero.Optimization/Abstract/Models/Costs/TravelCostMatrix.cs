@@ -27,7 +27,7 @@ namespace Itinero.Optimization.Abstract.Models.Costs
         /// Gets or sets the name of the type of metric used.
         /// </summary>
         /// <returns></returns>
-        public string Name { get; set; } = Metrics.Time;
+        public string Name { get; set; } = Itinero.Optimization.Models.Metrics.Time;
 
         /// <summary>
         /// Gets or sets the cost matrix.

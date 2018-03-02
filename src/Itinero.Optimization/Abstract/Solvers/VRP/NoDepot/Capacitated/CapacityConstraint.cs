@@ -1,4 +1,4 @@
-namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
     /// <summary>
     /// A generic max capacity constraint, this can be weight, # of items or cubic centimeters of example.

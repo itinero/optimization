@@ -20,10 +20,10 @@ using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
-using Itinero.Optimization.Solutions.TSP.Directed.Solvers.Operators;
+using Itinero.Optimization.Abstract.Solvers.TSP.Directed.Solvers.Operators;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Solutions.TSP.Directed
+namespace Itinero.Optimization.Abstract.Solvers.TSP.Directed
 {
     /// <summary>
     /// The default TSP profile definition.

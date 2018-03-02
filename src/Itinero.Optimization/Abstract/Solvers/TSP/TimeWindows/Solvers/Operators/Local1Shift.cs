@@ -22,7 +22,7 @@ using Itinero.Optimization.Tours;
 using System;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Solutions.TSP.TimeWindows.Solvers.Operators
+namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Solvers.Operators
 {
     /// <summary>
     /// A local search procedure to move around and improve the time window 'violations' in a solution.

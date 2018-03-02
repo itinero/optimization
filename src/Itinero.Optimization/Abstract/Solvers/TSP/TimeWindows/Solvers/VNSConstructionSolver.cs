@@ -19,9 +19,9 @@
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.VNS;
 using Itinero.Optimization.Tours;
-using Itinero.Optimization.Solutions.TSP.TimeWindows.Solvers.Operators;
+using Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Solvers.Operators;
 
-namespace Itinero.Optimization.Solutions.TSP.TimeWindows.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Solvers
 {
     /// <summary>
     /// Implements a VNS-strategy to construct feasible solution for the TSP-TW from random tours.

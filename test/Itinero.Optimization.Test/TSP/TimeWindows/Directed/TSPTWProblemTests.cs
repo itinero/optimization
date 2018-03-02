@@ -17,7 +17,7 @@
  */
 
 using Itinero.Optimization.Algorithms.Directed;
-using Itinero.Optimization.Models.TimeWindows;
+using Itinero.Optimization.Abstract.Models.TimeWindows;
 using NUnit.Framework;
 
 namespace Itinero.Optimization.Test.TSP.TimeWindows.Directed

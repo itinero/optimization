@@ -87,6 +87,59 @@ namespace Itinero.Optimization.Models.Mapping
         }
 
         /// <summary>
+        /// Returns true if the boundingboxes of the two tours overlap.
+        /// </summary>
+        /// <param name="algorithm">The weight matrix algorithm.</param>
+        /// <param name="tour1">The first tour.</param>
+        /// <param name="tour2">The second tour.</param>
+        /// <returns></returns>
+        public static bool ToursOverlap<T>(this IDirectedWeightMatrixAlgorithm<T> algorithm, ITour tour1, ITour tour2)
+        {
+            var box1 = algorithm.BoundingBox(tour1);
+            var box2 = algorithm.BoundingBox(tour2);
+
+            return box1.Overlaps(box2);
+        }
+
+        /// <summary>
+        /// Calculates the boundingbox around the given tour.
+        /// </summary>
+        /// <param name="algorithm">The weight matrix algorithm.</param>
+        /// <param name="tour">The tour.</param>
+        /// <returns></returns>
+        public static Box BoundingBox<T>(this IDirectedWeightMatrixAlgorithm<T> algorithm, ITour tour)
+        {
+            Box? box = null;
+            foreach (var visit in tour)
+            {
+                var visitLocation = algorithm.LocationOnNetwork(visit);
+                if (box == null)
+                {
+                    box = new Box(visitLocation, visitLocation);
+                }
+                else
+                {
+                    box = box.Value.ExpandWith(visitLocation.Latitude, visitLocation.Longitude);
+                }
+            }
+            return box.Value;
+        }
+        
+        /// <summary>
+        /// Gets the location on het routing network for a given visit.
+        /// </summary>
+        /// <param name="algorithm">The weight matrix algorithm.</param>
+        /// <param name="visit">The visit.</param>
+        /// <returns></returns>
+        public static Coordinate LocationOnNetwork<T>(this IDirectedWeightMatrixAlgorithm<T> algorithm, int visit)
+        {
+            var originalIdx = algorithm.OriginalIndexOf(visit);
+            var routerPoint = algorithm.RouterPoints[originalIdx];
+
+            return routerPoint.LocationOnNetwork(algorithm.Router.Db);
+        }
+
+        /// <summary>
         /// Builds a route from a given tour.
         /// </summary>
         /// <returns></returns>
@@ -166,7 +219,7 @@ namespace Itinero.Optimization.Models.Mapping
         /// Builds the resulting route.
         /// </summary>
         /// <returns></returns>
-        public static Route BuildRoute<T>(this IDirectedWeightMatrixAlgorithm<T> algorithm, Tour tour)
+        public static Route BuildRoute<T>(this IDirectedWeightMatrixAlgorithm<T> algorithm, ITour tour)
         {
             Route route = null;
             // TODO: check what to do here, use the cached version or not?
@@ -307,6 +360,22 @@ namespace Itinero.Optimization.Models.Mapping
             for (var i = 0; i < newWeights.Length; i++)
             {
                 newWeights[i] = convert(a[algorithm.OriginalLocationIndex(i)]);
+            }
+            return newWeights;
+        }
+
+        /// <summary>
+        /// Adjusts the given array of weights to an array that matches the calculate weight matrix.
+        /// </summary>
+        /// <param name="algorithm">The weight matrix.</param>
+        /// <param name="weights">The weights.</param>
+        /// <returns>Weights adjusted to the weight matrix, exclusing unresolvable or unroutable locations.</returns>
+        public static W[] AdjustToMatrix<T, W>(this IDirectedWeightMatrixAlgorithm<T> algorithm, W[] weights)
+        {
+            var newWeights = new W[algorithm.Weights.Length / 2];
+            for (var i = 0; i < newWeights.Length; i++)
+            {
+                newWeights[i] = weights[algorithm.OriginalLocationIndex(i)];
             }
             return newWeights;
         }

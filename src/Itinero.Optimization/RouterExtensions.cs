@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using Itinero.Algorithms.Matrices;
 using Itinero.LocalGeo;
 using Itinero.Optimization.Sequence.Directed;
-using Itinero.Optimization.Solutions.STSP;
+using Itinero.Optimization.Abstract.Solvers.STSP;
 using Itinero.Optimization.Models.TimeWindows;
 using Itinero.Optimization.Tours;
-using Itinero.Optimization.Solutions.TSP;
+using Itinero.Optimization.Abstract.Solvers.TSP;
 using Itinero.Profiles;
 using Itinero.Algorithms.Search;
 using Itinero.Optimization.Models.Mapping;
@@ -316,13 +316,10 @@ namespace Itinero.Optimization
         public static Result<Route[]> Solve(this RouterBase router, Models.Model model)
         {
             // map the model.
-            var defaultModelMap = model.Map(router);
-
-            // build the abstract model.
-            var abstractModel = defaultModelMap.BuildAbstract();
+            var defaultModelMap = new MappedModel(model, router);
 
             // solve the abstract model.
-            var tours = Abstract.Solvers.SolverRegistry.Solve(abstractModel);
+            var tours = Abstract.Solvers.SolverRegistry.Solve(defaultModelMap);
 
             // use the map to convert to real-world routes.
             var routes = new Route[tours.Count];

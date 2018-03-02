@@ -19,12 +19,12 @@
 using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Models.TimeWindows;
+using Itinero.Optimization.Abstract.Models.TimeWindows;
 using Itinero.Optimization.Tours;
 using Itinero.Optimization.Tours.Operations;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Solutions.TSP.TimeWindows.Directed
+namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Directed
 {
     /// <summary>
     /// The default TSP-TW profile definition.

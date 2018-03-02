@@ -20,7 +20,7 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 using Itinero.Optimization.Tours.Operations;
 
-namespace Itinero.Optimization.Solutions.TSP.Solvers.Operators
+namespace Itinero.Optimization.Abstract.Solvers.TSP.Solvers.Operators
 {
     /// <summary>
     /// A local 1-Shift search for the TSP.

@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using Itinero.Optimization.Abstract.Models;
+using Itinero.Optimization.Models.Mapping;
 using Itinero.Optimization.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers
@@ -35,22 +36,16 @@ namespace Itinero.Optimization.Abstract.Solvers
         public string Name { get; set; }
 
         /// <summary>
-        /// A delegate to define can solve calls.
+        /// A delegate to define try solve calls.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <param name="reasonIfNot">A human readable feedback on why this model can't be solved.</param>
         /// <returns></returns>
-        public delegate bool CanSolveDelegate(AbstractModel model, out string reasonIfNot);
+        public delegate Result<IList<ITour>> TrySolveDelegate(MappedModel model);
 
         /// <summary>
-        /// The can solve call.
-        /// </summary>
-        public CanSolveDelegate CanSolve { get; set; }
-
-        /// <summary>
-        /// The solve call.
+        /// Gets or sets the try solve function.
         /// </summary>
         /// <returns></returns>
-        public Func<AbstractModel, IList<ITour>> Solve { get; set; }
+        public TrySolveDelegate TrySolve { get; set; }
     }
 }

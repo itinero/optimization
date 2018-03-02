@@ -22,7 +22,7 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.General;
 using Itinero.Optimization.Tours;
 
-namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
 {
     /// <summary>
     /// A Guided VNS search applying intra-tour improvements until no improvements can be found.
@@ -32,7 +32,7 @@ namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers
         private readonly float _lambda; // hold the lambda value, define a better name.
         private readonly SolverBase<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float> _constructionHeuristic;
         private readonly Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> _overlaps; // holds the overlap function.
-        private readonly List<IOperator<float, Solutions.TSP.ITSProblem, Solutions.TSP.TSPObjective, ITour, float>> _intraImprovements;
+        private readonly List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>> _intraImprovements;
         private readonly List<IInterTourImprovementOperator> _interImprovements; // holds the inter-route improvements.
 
         /// <summary>
@@ -49,8 +49,8 @@ namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers
             _lambda = lambda;
 
             // register the default intra improvement operators.
-            _intraImprovements = new List<IOperator<float, Solutions.TSP.ITSProblem, Solutions.TSP.TSPObjective, ITour, float>>(1);
-            _intraImprovements.Add(new Solutions.TSP.Solvers.HillClimbing3OptSolver());
+            _intraImprovements = new List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>>(1);
+            _intraImprovements.Add(new TSP.Solvers.HillClimbing3OptSolver());
 
             // register the default inter improvement operators.
             _interImprovements = new List<IInterTourImprovementOperator>(4);
@@ -170,7 +170,7 @@ namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers
         private float ImproveIntraRoute(float[][] weights, ITour tour, float currentWeight)
         {
             // TODO: this can probably be replaced by the iterative solver.
-            var subTourProblem = new Solutions.TSP.TSPSubProblem(tour, weights);
+            var subTourProblem = new TSP.TSPSubProblem(tour, weights);
 
             var improvement = true;
             var newWeight = currentWeight;
@@ -182,7 +182,7 @@ namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers
                 foreach (var improvementOperator in _intraImprovements)
                 { // try the current improvement operations.
                     float delta;
-                    if (improvementOperator.Apply(subTourProblem, Solutions.TSP.TSPObjective.Default, tour, out delta))
+                    if (improvementOperator.Apply(subTourProblem, TSP.TSPObjective.Default, tour, out delta))
                     {
                         // Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
                         //     "Intra-improvement found {0} {1}->{2}",

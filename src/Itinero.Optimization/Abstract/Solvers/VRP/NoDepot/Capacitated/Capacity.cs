@@ -1,6 +1,6 @@
 using Itinero.Algorithms.Matrices;
 
-namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
     /// <summary>
     /// Represent the capacity of a vehicle.

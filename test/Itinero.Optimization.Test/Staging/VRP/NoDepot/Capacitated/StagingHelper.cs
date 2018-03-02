@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using Itinero.LocalGeo;
 using Itinero.Optimization.Tours;
-using Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated;
+using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated;
 using NetTopologySuite.Features;
 
 namespace Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated
@@ -89,7 +89,7 @@ namespace Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated
                 foreach (var tour in tours)
                 {
                     solution.Add(tour);
-                    solution.Contents.Add(new Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers.CapacityExtensions.Content()
+                    solution.Contents.Add(new Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.CapacityExtensions.Content()
                     {
                         Weight = objective.Calculate(problem, solution, solution.Count - 1)
                     });

@@ -20,7 +20,7 @@ using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.Tours;
 
-namespace Itinero.Optimization.Solutions.STSP.Directed
+namespace Itinero.Optimization.Abstract.Solvers.STSP.Directed
 {
     /// <summary>
     /// The default TSP objective.

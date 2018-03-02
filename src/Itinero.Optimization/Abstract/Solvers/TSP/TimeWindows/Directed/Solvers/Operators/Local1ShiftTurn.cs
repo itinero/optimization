@@ -21,7 +21,7 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 using Itinero.Optimization.Algorithms.Directed;
 
-namespace Itinero.Optimization.Solutions.TSP.TimeWindows.Directed.Solvers.Operators
+namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.Solvers.Operators
 {
     /// <summary>
     /// A local search procedure to optimize turns.

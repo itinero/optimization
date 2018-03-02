@@ -19,12 +19,12 @@
 using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
-using Itinero.Optimization.Solutions.STSP.Directed.Solvers.Operators;
+using Itinero.Optimization.Abstract.Solvers.STSP.Directed.Solvers.Operators;
 using System.Collections.Generic;
-using Itinero.Optimization.Solutions.STSP.Directed.Solver.Operators;
+using Itinero.Optimization.Abstract.Solvers.STSP.Directed.Solver.Operators;
 using Itinero.Optimization.Algorithms.Directed;
 
-namespace Itinero.Optimization.Solutions.STSP.Directed
+namespace Itinero.Optimization.Abstract.Solvers.STSP.Directed
 {
     /// <summary>
     /// The default STSP profile definition.

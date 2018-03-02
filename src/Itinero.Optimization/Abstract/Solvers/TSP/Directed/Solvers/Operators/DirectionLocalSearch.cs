@@ -23,7 +23,7 @@ using Itinero.Optimization.Tours;
 using Itinero.Optimization.Tours.TurningWeights;
 using System;
 
-namespace Itinero.Optimization.Solutions.TSP.Directed.Solvers.Operators
+namespace Itinero.Optimization.Abstract.Solvers.TSP.Directed.Solvers.Operators
 {
     /// <summary>
     /// A local search operator trying to improve the solution by switching directions.

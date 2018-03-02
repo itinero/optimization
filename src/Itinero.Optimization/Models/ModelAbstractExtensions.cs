@@ -1,4 +1,3 @@
-using Itinero.Algorithms.Matrices;
 using Itinero.Optimization.Models.Mapping;
 using Itinero.Profiles;
 
@@ -49,14 +48,15 @@ namespace Itinero.Optimization.Models
         /// <param name="vehicle">The vehicle.</param>
         /// <param name="weightMatrix">The weight matrix.</param>
         /// <returns></returns>
-        public static Abstract.Models.Vehicles.Vehicle ToAbstract<T>(this Models.Vehicles.Vehicle vehicle, IWeightMatrixAlgorithm<T> weightMatrix)
+        public static Abstract.Models.Vehicles.Vehicle ToAbstract(this Models.Vehicles.Vehicle vehicle, WeightMatrixBase weightMatrix)
         {
             return new Abstract.Models.Vehicles.Vehicle()
             {
-                Metric = weightMatrix.Profile.Profile.Metric.ToModelMetric(),
+                Metric = weightMatrix.Metric,
                 Arrival = weightMatrix.WeightIndexNullable(vehicle.Arrival),
                 Departure = weightMatrix.WeightIndexNullable(vehicle.Departure),
-                CapacityConstraints = vehicle.CapacityConstraints.ToAbstract()
+                CapacityConstraints = vehicle.CapacityConstraints.ToAbstract(),
+                TurnPentalty = vehicle.TurnPentalty
             };
         }
 
@@ -66,7 +66,7 @@ namespace Itinero.Optimization.Models
         /// <param name="vehicles">The vehicles to convert.</param>
         /// <param name="weightMatrix">The weight matrix.</param>
         /// <returns></returns>
-        public static Abstract.Models.Vehicles.Vehicle[] ToAbstract<T>(this Models.Vehicles.Vehicle[] vehicles, IWeightMatrixAlgorithm<T> weightMatrix)
+        public static Abstract.Models.Vehicles.Vehicle[] ToAbstract(this Models.Vehicles.Vehicle[] vehicles, WeightMatrixBase weightMatrix)
         {
             if (vehicles == null)
             {
@@ -87,7 +87,7 @@ namespace Itinero.Optimization.Models
         /// <param name="vehiclePool">The vehicle pool.</param>
         /// <param name="weightMatrix">The weight matrix.</param>
         /// <returns></returns>
-        public static Abstract.Models.Vehicles.VehiclePool ToAbstract<T>(this Models.Vehicles.VehiclePool vehiclePool, IWeightMatrixAlgorithm<T> weightMatrix)
+        public static Abstract.Models.Vehicles.VehiclePool ToAbstract(this Models.Vehicles.VehiclePool vehiclePool, WeightMatrixBase weightMatrix)
         {
             return new Abstract.Models.Vehicles.VehiclePool()
             {
@@ -116,7 +116,7 @@ namespace Itinero.Optimization.Models
         /// <param name="timeWindows">The time windows to convert.</param>
         /// <param name="weightMatrix">The weight matrix.</param>
         /// <returns></returns>
-        public static Abstract.Models.TimeWindows.TimeWindow[] ToAbstract<T>(this Models.TimeWindows.TimeWindow[] timeWindows, IWeightMatrixAlgorithm<T> weightMatrix)
+        public static Abstract.Models.TimeWindows.TimeWindow[] ToAbstract(this Models.TimeWindows.TimeWindow[] timeWindows, WeightMatrixBase weightMatrix)
         {
             if (timeWindows == null)
             {
@@ -140,7 +140,7 @@ namespace Itinero.Optimization.Models
         /// <param name="visitCost">The visit cost.</param>
         /// <param name="weightMatrix">The weight matrix.</param>
         /// <returns></returns>
-        public static Abstract.Models.Costs.VisitCosts ToAbstract<T>(this Models.Costs.VisitCosts visitCost, IWeightMatrixAlgorithm<T> weightMatrix)
+        public static Abstract.Models.Costs.VisitCosts ToAbstract(this Models.Costs.VisitCosts visitCost, WeightMatrixBase weightMatrix)
         {
             return new Abstract.Models.Costs.VisitCosts()
             {
@@ -155,7 +155,7 @@ namespace Itinero.Optimization.Models
         /// <param name="visitCosts">The visit costs to convert.</param>
         /// <param name="weightMatrix">The weight matrix.</param>
         /// <returns></returns>
-        public static Abstract.Models.Costs.VisitCosts[] ToAbstract<T>(this Models.Costs.VisitCosts[] visitCosts, IWeightMatrixAlgorithm<T> weightMatrix)
+        public static Abstract.Models.Costs.VisitCosts[] ToAbstract(this Models.Costs.VisitCosts[] visitCosts, WeightMatrixBase weightMatrix)
         {
             if (visitCosts == null)
             {
@@ -179,9 +179,9 @@ namespace Itinero.Optimization.Models
             switch (profileMetric)
             {
                 case ProfileMetric.DistanceInMeters:
-                    return Abstract.Models.Metrics.Distance;
+                    return Models.Metrics.Distance;
                 case ProfileMetric.TimeInSeconds:
-                    return Abstract.Models.Metrics.Time;
+                    return Models.Metrics.Time;
             }
             return "custom";
         }

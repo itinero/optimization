@@ -16,9 +16,9 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.Solutions.TSP.TimeWindows;
+using Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows;
 using NUnit.Framework;
-using Itinero.Optimization.Models.TimeWindows;
+using Itinero.Optimization.Abstract.Models.TimeWindows;
 
 namespace Itinero.Optimization.Test.TSP.TimeWindows
 {

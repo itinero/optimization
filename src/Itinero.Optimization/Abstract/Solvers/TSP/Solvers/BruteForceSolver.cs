@@ -20,7 +20,7 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Tours;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Solutions.TSP.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.TSP.Solvers
 {
     /// <summary>
     /// Implements a brute force solver by checking all possible combinations.

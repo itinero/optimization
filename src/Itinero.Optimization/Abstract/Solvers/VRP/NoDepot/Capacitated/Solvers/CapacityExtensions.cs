@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Itinero.Optimization.Solutions.VRP.NoDepot.Capacitated.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
 {
     /// <summary>
     /// Contains extension methods to handle capacity.

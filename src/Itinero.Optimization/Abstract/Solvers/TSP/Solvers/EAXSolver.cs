@@ -20,9 +20,9 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.GA;
 using Itinero.Logging;
 using Itinero.Optimization.Tours;
-using Itinero.Optimization.Solutions.TSP.Solvers.Operators;
+using Itinero.Optimization.Abstract.Solvers.TSP.Solvers.Operators;
 
-namespace Itinero.Optimization.Solutions.TSP.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.TSP.Solvers
 {
     /// <summary>
     /// A solver using a GA and the edge-assembly crossover.
