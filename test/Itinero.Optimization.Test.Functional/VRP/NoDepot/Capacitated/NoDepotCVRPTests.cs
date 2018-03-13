@@ -225,10 +225,10 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             // 
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, 
                 capacityConstraint, visitCosts));
-            var routes = func.TestPerf("No-Depot Capacitated VRP (Spijkenisse - Capacitated)");
+            var routes = func.TestPerf("No-Depot Visit Costs VRP (Spijkenisse - Capacitated)");
 
 //#if DEBUG
-            routes.WriteGeoJson("spijkenisse-capacitated-{0}.geojson");
+            routes.WriteGeoJson("spijkenisse-visit-costs-{0}.geojson");
 //#endif
         }
 

@@ -125,7 +125,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 }
             };
 
-            if (travelCostConstraint != null)
+            if (travelCostVisitCosts != null)
             {
                 problem.VisitCosts = travelCostVisitCosts.Costs;
             }

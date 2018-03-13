@@ -16,12 +16,12 @@
  *  limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Linq;
 using Itinero.Algorithms;
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Weights;
 using Itinero.Data.Network;
-using System.Collections.Generic;
-using System.Linq;
 using Itinero.LocalGeo;
 using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms.Directed;
@@ -71,7 +71,7 @@ namespace Itinero.Optimization.Models.Mapping
             }
             return box.Value;
         }
-        
+
         /// <summary>
         /// Gets the location on het routing network for a given visit.
         /// </summary>
@@ -124,7 +124,7 @@ namespace Itinero.Optimization.Models.Mapping
             }
             return box.Value;
         }
-        
+
         /// <summary>
         /// Gets the location on het routing network for a given visit.
         /// </summary>
@@ -150,6 +150,15 @@ namespace Itinero.Optimization.Models.Mapping
             {
                 var localRoute = algorithm.Router.Calculate(algorithm.Profile, algorithm.RouterPoints[pair.From],
                     algorithm.RouterPoints[pair.To]);
+                if (localRoute.Stops != null &&
+                    localRoute.Stops.Length == 2)
+                {
+                    localRoute.Stops[0].Attributes.AddOrReplace("stop", 
+                        pair.From.ToInvariantString());
+                    localRoute.Stops[1].Attributes.AddOrReplace("stop",
+                        pair.To.ToInvariantString());
+                }
+
                 if (route == null)
                 {
                     route = localRoute;
@@ -214,7 +223,7 @@ namespace Itinero.Optimization.Models.Mapping
             }
             return routes;
         }
-        
+
         /// <summary>
         /// Builds the resulting route.
         /// </summary>
@@ -227,7 +236,7 @@ namespace Itinero.Optimization.Models.Mapping
             foreach (var pair in tour.Pairs())
             {
                 // TODO: extract more info at once!
-                var pairFromDepartureId =  algorithm.SourcePaths[DirectedHelper.ExtractDepartureId(pair.From)];
+                var pairFromDepartureId = algorithm.SourcePaths[DirectedHelper.ExtractDepartureId(pair.From)];
                 var pairToArrivalId = algorithm.TargetPaths[DirectedHelper.ExtractArrivalId(pair.To)];
 
                 var pairFromEdgeId = algorithm.Router.Db.Network.GetEdges(pairFromDepartureId.From.Vertex).First(x => x.To == pairFromDepartureId.Vertex).IdDirected();
@@ -244,6 +253,15 @@ namespace Itinero.Optimization.Models.Mapping
                 localRouteRaw.StripTarget();
 
                 var localRoute = algorithm.Router.BuildRoute(algorithm.Profile, weightHandler, fromRouterPoint, toRouterPoint, localRouteRaw).Value;
+                if (localRoute.Stops != null &&
+                    localRoute.Stops.Length == 2)
+                {
+                    localRoute.Stops[0].Attributes.AddOrReplace("stop", 
+                        pair.From.ToInvariantString());
+                    localRoute.Stops[1].Attributes.AddOrReplace("stop",
+                        pair.To.ToInvariantString());
+                }
+
                 if (route == null)
                 {
                     route = localRoute;
@@ -353,7 +371,7 @@ namespace Itinero.Optimization.Models.Mapping
         /// <param name="a">The orginal array.</param>
         /// <param name="convert">The conversion function, a function applied to every element.</param>
         /// <returns>Array adjusted to the weight matrix, exclusing unresolvable or unroutable locations.</returns>
-        public static B[] AdjustToMatrix<T, A, B>(this IWeightMatrixAlgorithm<T> algorithm, A[] a, 
+        public static B[] AdjustToMatrix<T, A, B>(this IWeightMatrixAlgorithm<T> algorithm, A[] a,
             System.Func<A, B> convert)
         {
             var newWeights = new B[algorithm.Weights.Length];
@@ -390,8 +408,8 @@ namespace Itinero.Optimization.Models.Mapping
             return new Abstract.Models.Costs.TravelCostMatrix()
             {
                 Directed = false,
-                Costs = weightMatrix.Weights,
-                Name = weightMatrix.Profile.Profile.Metric.ToModelMetric()
+                    Costs = weightMatrix.Weights,
+                    Name = weightMatrix.Profile.Profile.Metric.ToModelMetric()
             };
         }
 

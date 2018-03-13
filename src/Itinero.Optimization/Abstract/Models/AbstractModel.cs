@@ -59,6 +59,12 @@ namespace Itinero.Optimization.Abstract.Models
         /// <param name="visitCosts">The visit costs.</param>
         public bool TryGetVisitCostsForMetric(string metric, out VisitCosts visitCosts)
         {
+            if (this.VisitCosts == null)
+            {
+                visitCosts = null;
+                return false;
+            }
+
             for (var i = 0; i < this.VisitCosts.Length; i++)
             {
                 if (this.VisitCosts[i].Name == metric)
