@@ -22,7 +22,7 @@ using System.Text;
 using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.General;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
 {
@@ -120,7 +120,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
             problem = new NoDepotCVRProblem()
             {
                 Capacity = problem.Capacity.Scale(1 - _slackPercentage),
-                Weights = problem.Weights
+                Weights = problem.Weights,
+                VisitCosts = problem.VisitCosts
             };
 
             // keep placing visit until none are left.
@@ -150,6 +151,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                     // start a route r.
                     var currentTour = solution.Add(seed, seed);
                     var content = problem.Capacity.Empty();
+                    content.Weight += problem.GetVisitCost(seed);
                     problem.Capacity.Add(content, seed);
                     solution.Contents.Add(content);
 
@@ -167,8 +169,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                             increase -= lambdaCostFunc(visit);
                         }
 
+                        // get the visit cost.
+                        var visitCost = problem.GetVisitCost(visit);
+
                         // calculate the new weight.
-                        var potentialWeight = content.Weight + increase;
+                        var potentialWeight = content.Weight + increase + visitCost;
                         // cram as many visits into one route as possible.
                         if (problem.Capacity.UpdateAndCheckCosts(content, potentialWeight, visit))
                         {
@@ -285,6 +290,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                     actualIncrease -= lambdaCostFunc(bestVisit);
                 }
 
+                // add the visit cost.
+                actualIncrease += problem.GetVisitCost(bestVisit);
+
                 // try to do the actual insert
                 var tourTime = solution.Contents[bestTourIdx].Weight; //objective.Calculate(problem, solution, bestTourIdx);
                 if (problem.Capacity.UpdateAndCheckCosts(solution.Contents[bestTourIdx], tourTime + actualIncrease, bestVisit))
@@ -353,8 +361,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                 { // keep looping when there is improvement.
                     improvement = false;
 
-                    var tour1Weight = solution.Contents[tour1Idx].Weight; //objective.Calculate(problem, solution, tour1Idx);
-                    var tour2Weight = solution.Contents[tour2Idx].Weight; //objective.Calculate(problem, solution, tour2Idx);
+                    var tour1Weight = solution.Contents[tour1Idx].Weight;
+                    var tour2Weight = solution.Contents[tour2Idx].Weight;
                     var totalBefore =  tour1Weight + tour2Weight;
 
                     float delta;
@@ -363,15 +371,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                         improvement = true;
                         globalImprovement = true;
 
-                        tour1Weight = solution.Contents[tour1Idx].Weight; //objective.Calculate(problem, solution, tour1Idx);
-                        tour2Weight = solution.Contents[tour2Idx].Weight; //objective.Calculate(problem, solution, tour2Idx);
+                        tour1Weight = solution.Contents[tour1Idx].Weight;
+                        tour2Weight = solution.Contents[tour2Idx].Weight;
                         var totalAfter =  tour1Weight + tour2Weight;
                         
                         Itinero.Logging.Logger.Log("SeededLocalizedCheapestInsertionSolver", Itinero.Logging.TraceEventType.Information,
                             "Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
                                 tour1Idx, tour2Idx, improvementOperation.Name, totalBefore, totalAfter);
-
-                        //break;
                     }
                     else if (!improvementOperation.IsSymmetric &&
                         improvementOperation.Apply(problem, objective, solution, tour2Idx, tour1Idx, out delta))
@@ -382,8 +388,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                         Itinero.Logging.Logger.Log("SeededLocalizedCheapestInsertionSolver", Itinero.Logging.TraceEventType.Information,
                             "Inter-improvement found {0}<->{1}: {2}",
                             tour1Idx, tour2Idx, improvementOperation.Name);
-
-                        //break;
                     }
                 }
             }

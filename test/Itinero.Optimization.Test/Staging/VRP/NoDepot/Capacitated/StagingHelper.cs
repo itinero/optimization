@@ -18,9 +18,10 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Itinero.LocalGeo;
-using Itinero.Optimization.Tours;
 using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated;
+using Itinero.Optimization.Abstract.Tours;
 using NetTopologySuite.Features;
 
 namespace Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated
@@ -40,7 +41,7 @@ namespace Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated
             out NoDepotCVRPSolution solution, out List<Coordinate> locations)
         {
             var features = embeddedResourcePath.GetFeatureCollection();
-            
+
             // builds the weight matrix.
             List<ITour> tours;
             IAttributesTable attributes;
@@ -63,22 +64,41 @@ namespace Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated
                 Weights = weights
             };
             var objective = new NoDepotCVRPObjective();
-
-            // generate random extra constraint that's always satisfied.
-            var values = new float[weights.Length];
-            for (var i = 0; i < values.Length; i++)
+            
+            // add visits costs if any.
+            var visitCosts = features.BuildVisitCosts(locations);
+            if (visitCosts.Count > 0)
             {
-                values[i] = Itinero.Optimization.Algorithms.Random.RandomGeneratorExtensions.GetRandom().Generate(100) + 20;
-            }
-            problem.Capacity.Constraints = new CapacityConstraint[]
-            {
-                new CapacityConstraint()
+                foreach (var visitCost in visitCosts)
                 {
-                    Max = 120 * weights.Length + 100,
-                    Name = "something",
-                    Values = values
+                    if (visitCost.Name == Models.Metrics.Distance)
+                    {
+                        problem.VisitCosts = visitCost.Costs;
+                        visitCosts.Remove(visitCost);
+                        break;
+                    }
                 }
-            };
+
+                var constraints = new CapacityConstraint[visitCosts.Count];
+                for (var v = 0; v < visitCosts.Count; v++)
+                {
+                    constraints[v] = new CapacityConstraint()
+                    {
+                        Max = visitCosts[v].Costs.Sum() * 2, // make sure constraints are always met.
+                        Name = visitCosts[v].Name,
+                        Values = visitCosts[v].Costs
+                    };
+                }
+                problem.Capacity.Constraints = constraints;
+            }
+
+            // // generate random extra visit costs.
+            // var visitCosts = new float[weights.Length];
+            // for (var v = 0; v < visitCosts.Length; v++)
+            // {
+            //     visitCosts[v] = Itinero.Optimization.Algorithms.Random.RandomGeneratorExtensions.GetRandom().Generate(60);
+            // }
+            // problem.VisitCosts = visitCosts;
 
             // build a solution if any.
             solution = null;

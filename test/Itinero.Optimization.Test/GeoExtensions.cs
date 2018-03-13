@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System.Globalization;
 using System.IO;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
@@ -112,6 +113,29 @@ namespace Itinero.Optimization.Test
         /// <summary>
         /// Tries to get a value for the given name.
         /// </summary>
+        public static bool TryGetValueString(this IAttributesTable attributes, string name, out string value)
+        {
+            var names = attributes.GetNames();
+            for (var i = 0; i < names.Length; i++)
+            {
+                if (names[i] == name)
+                {
+                    var localVal = attributes.GetValues()[i];
+                    value = string.Empty;
+                    if (localVal != null)
+                    {
+                        value = localVal.ToInvariantString();
+                    }
+                    return true;
+                }
+            }
+            value = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to get a value for the given name.
+        /// </summary>
         public static bool TryGetValueInt32(this IAttributesTable attributes, string name, out int value)
         {
             object rawValue;
@@ -121,6 +145,25 @@ namespace Itinero.Optimization.Test
                 return false;
             }
             if (!int.TryParse(rawValue.ToInvariantString(), out value))
+            {
+                value = 0;
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tries to get a value for the given name.
+        /// </summary>
+        public static bool TryGetValueSingle(this IAttributesTable attributes, string name, out float value)
+        {
+            object rawValue;
+            if (!attributes.TryGetValue(name, out rawValue))
+            {
+                value = 0;
+                return false;
+            }
+            if (!float.TryParse(rawValue.ToInvariantString(), NumberStyles.Any, CultureInfo.InvariantCulture, out value))
             {
                 value = 0;
                 return false;

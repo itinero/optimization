@@ -18,8 +18,8 @@
 
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Tours;
-using Itinero.Optimization.Tours.Operations;
+using Itinero.Optimization.Abstract.Tours;
+using Itinero.Optimization.Abstract.Tours.Operations;
 using System;
 
 namespace Itinero.Optimization.General.Operators

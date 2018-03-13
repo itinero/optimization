@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using Itinero.Optimization.Abstract.Models;
 using Itinero.Optimization.Abstract.Solvers.TSP;
 using Itinero.Optimization.Models.Mapping;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers.TSP
 {

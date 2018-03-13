@@ -18,7 +18,7 @@
 
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Tours
+namespace Itinero.Optimization.Abstract.Tours
 {
     /// <summary>
     /// An enumerable of all possible permutations of a given sequence of objects.

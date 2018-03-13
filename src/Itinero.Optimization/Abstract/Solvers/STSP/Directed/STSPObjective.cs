@@ -18,7 +18,7 @@
 
 using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers.STSP.Directed
 {

@@ -15,14 +15,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.Operators
 {
@@ -66,7 +66,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
         /// <summary>
         /// Applies this operator.
         /// </summary>
-        public bool Apply (NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta) 
+        public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta)
         {
             // check if solution has at least two tours.
             if (solution.Count < 2)
@@ -76,10 +76,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
             }
 
             // choose two random routes.
-            var random = RandomGeneratorExtensions.GetRandom ();
-            var tourIdx1 = random.Generate (solution.Count);
-            var tourIdx2 = random.Generate (solution.Count - 1);
-            if (tourIdx2 >= tourIdx1) {
+            var random = RandomGeneratorExtensions.GetRandom();
+            var tourIdx1 = random.Generate(solution.Count);
+            var tourIdx2 = random.Generate(solution.Count - 1);
+            if (tourIdx2 >= tourIdx1)
+            {
                 tourIdx2++;
             }
 
@@ -89,15 +90,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
         /// <summary>
         /// Applies this operator.
         /// </summary>
-        public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, 
+        public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution,
             int tourIdx1, int tourIdx2, out float delta)
-        {            
+        {
             var tour1 = solution.Tour(tourIdx1);
             var tour2 = solution.Tour(tourIdx2);
 
             var tour1Weight = solution.Contents[tourIdx1].Weight; //objective.Calculate(problem, solution, tourIdx1);
             var tour2Weight = solution.Contents[tourIdx2].Weight; //objective.Calculate(problem, solution, tourIdx2);
-            var totalBefore =  tour1Weight + tour2Weight;
+            var totalBefore = tour1Weight + tour2Weight;
 
             // this heuristic removes a visit1 from tour1 and a visit2 from tour2 and inserts the visits again
             // but swaps them; visit1 in tour2 and visit2 in tour1.
@@ -107,6 +108,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
                 if (previousVisit1 >= 0)
                 { // the previous customer is set.
                     int nextVisit1 = tour1.GetNeigbour(visit1);
+                    var visit1Cost = problem.GetVisitCost(visit1);
                     int previousVisit2 = -1;
 
                     foreach (int visit2 in tour2)
@@ -114,15 +116,17 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
                         int nextVisit2 = tour2.GetNeigbour(visit2);
                         if (previousVisit2 >= 0)
                         { // the previous customer is set.
-                            var weight1 = problem.Weights[previousVisit1][visit1] +
-                                problem.Weights[visit1][nextVisit1];
-                            var weight2 = problem.Weights[previousVisit2][visit2] +
-                                problem.Weights[visit2][nextVisit2];
+                            var visit2Cost = problem.GetVisitCost(visit2);
 
-                            var weight1After = (float)problem.Weights[previousVisit1][visit2] +
-                                (float)problem.Weights[visit2][nextVisit1];
-                            var weight2After = (float)problem.Weights[previousVisit2][visit1] +
-                                (float)problem.Weights[visit1][nextVisit2];
+                            var weight1 = problem.Weights[previousVisit1][visit1] +
+                                problem.Weights[visit1][nextVisit1] + visit1Cost;
+                            var weight2 = problem.Weights[previousVisit2][visit2] +
+                                problem.Weights[visit2][nextVisit2] + visit2Cost;
+
+                            var weight1After = (float) problem.Weights[previousVisit1][visit2] +
+                                (float) problem.Weights[visit2][nextVisit1] + visit2Cost;
+                            var weight2After = (float) problem.Weights[previousVisit2][visit1] +
+                                (float) problem.Weights[visit1][nextVisit2] + visit1Cost;
                             var difference = (weight1After + weight2After) - (weight1 + weight2);
 
                             if (difference < -0.01)
@@ -133,7 +137,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
                                 { // the exchange can happen, both routes stay within bound!
 
                                     // check constraints if any.
-                                    if (!problem.Capacity.ExchangeIsPossible(solution.Contents[tourIdx1], 
+                                    if (!problem.Capacity.ExchangeIsPossible(solution.Contents[tourIdx1],
                                             visit1, visit2))
                                     {
                                         continue;

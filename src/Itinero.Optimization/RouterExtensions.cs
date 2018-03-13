@@ -22,7 +22,7 @@ using Itinero.LocalGeo;
 using Itinero.Optimization.Sequence.Directed;
 using Itinero.Optimization.Abstract.Solvers.STSP;
 using Itinero.Optimization.Models.TimeWindows;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Abstract.Solvers.TSP;
 using Itinero.Profiles;
 using Itinero.Algorithms.Search;

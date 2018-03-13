@@ -18,7 +18,7 @@
 
 using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Abstract.Solvers.STSP.Directed.Solvers.Operators;
 using System.Collections.Generic;
 using Itinero.Optimization.Abstract.Solvers.STSP.Directed.Solver.Operators;

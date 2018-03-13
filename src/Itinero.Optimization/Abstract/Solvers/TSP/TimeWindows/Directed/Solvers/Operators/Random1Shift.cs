@@ -20,8 +20,8 @@ using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
-using Itinero.Optimization.Tours;
-using Itinero.Optimization.Tours.TurningWeights;
+using Itinero.Optimization.Abstract.Tours;
+using Itinero.Optimization.Abstract.Tours.TurningWeights;
 
 namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Directed.Solvers.Operators
 {

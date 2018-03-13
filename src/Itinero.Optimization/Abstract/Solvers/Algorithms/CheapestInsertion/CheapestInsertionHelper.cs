@@ -18,7 +18,7 @@
 
 using System;
 using System.Collections.Generic;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Algorithms.CheapestInsertion
 {

@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Solvers.Operators
 {

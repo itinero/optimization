@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Itinero.Optimization.Tours
+namespace Itinero.Optimization.Abstract.Tours
 {
     /// <summary>
     /// a tour or a sequence of visits.

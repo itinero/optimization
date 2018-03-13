@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using Itinero.Algorithms.Matrices;
 using Itinero.Optimization.General;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
@@ -39,6 +39,26 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// Gets the weights.
         /// </summary>
         public float[][] Weights { get; set; }
+
+        /// <summary>
+        /// Gets or sets the visit costs.
+        /// </summary>
+        /// <returns></returns>
+        public float[] VisitCosts { get; set; }
+
+        /// <summary>
+        /// Gets the cost for the given visit (if any).
+        /// </summary>
+        /// <param name="visit">The visit.</param>
+        /// <returns></returns>
+        public float GetVisitCost(int visit)
+        {
+            if (this.VisitCosts == null)
+            {
+                return 0;
+            }
+            return this.VisitCosts[visit];
+        }
 
         /// <summary>
         /// Gets the seed heuristic.

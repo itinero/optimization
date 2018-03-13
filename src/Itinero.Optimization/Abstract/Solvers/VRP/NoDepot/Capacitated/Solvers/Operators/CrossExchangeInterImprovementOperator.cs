@@ -18,13 +18,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.General;
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.Operators 
+namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.Operators
 {
     /// <summary>
     /// An improvement operator that tries to exchange parts of routes.
@@ -44,15 +46,18 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
     public class CrossExchangeInterImprovementOperator : IInterTourImprovementOperator
     {
         private const float E = 0.001f;
-        private readonly int _maxWindowSize = 10;
+        private readonly int _maxWindowSize = 8;
+        private readonly bool _tryReversed = true;
 
         /// <summary>
         /// Creates a new improvement operator.
         /// </summary>
         /// <param name="maxWindowSize">The maximum window size to search for sequences to exchange.</param>
-        public CrossExchangeInterImprovementOperator(int maxWindowSize = 10)
+        /// <param name="tryReversed">True when exchanged sequenced also need to be reversed before testing.</param>
+        public CrossExchangeInterImprovementOperator(int maxWindowSize = 8, bool tryReversed = true)
         {
             _maxWindowSize = maxWindowSize;
+            _tryReversed = tryReversed;
         }
 
         /// <summary>
@@ -70,7 +75,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
         /// </summary>
         /// <param name="objective"></param>
         /// <returns></returns>
-        public bool Supports (NoDepotCVRPObjective objective) 
+        public bool Supports(NoDepotCVRPObjective objective)
         {
             return true;
         }
@@ -78,7 +83,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
         /// <summary>
         /// Applies this operator.
         /// </summary>
-        public bool Apply (NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta) 
+        public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta)
         {
             // check if solution has at least two tours.
             if (solution.Count < 2)
@@ -88,10 +93,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
             }
 
             // choose two random routes.
-            var random = RandomGeneratorExtensions.GetRandom ();
-            var tourIdx1 = random.Generate (solution.Count);
-            var tourIdx2 = random.Generate (solution.Count - 1);
-            if (tourIdx2 >= tourIdx1) {
+            var random = RandomGeneratorExtensions.GetRandom();
+            var tourIdx1 = random.Generate(solution.Count);
+            var tourIdx2 = random.Generate(solution.Count - 1);
+            if (tourIdx2 >= tourIdx1)
+            {
                 tourIdx2++;
             }
 
@@ -101,81 +107,89 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
         /// <summary>
         /// Applies this inter-improvement operator.
         /// </summary>
-        public bool Apply (NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, 
-            int tourIdx1, int tourIdx2, out float delta) 
+        public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution,
+            int tourIdx1, int tourIdx2, out float delta)
         {
             int maxWindowSize = _maxWindowSize;
-            var tour1 = solution.Tour (tourIdx1);
-            var tour2 = solution.Tour (tourIdx2);
+            var tour1 = solution.Tour(tourIdx1);
+            var tour2 = solution.Tour(tourIdx2);
 
-            var tour1Weight = solution.Contents[tourIdx1].Weight; //objective.Calculate(problem, solution, tourIdx1);
-            var tour2Weight = solution.Contents[tourIdx2].Weight; //objective.Calculate(problem, solution, tourIdx2);
-            
-            // loop over all sequences of size 4->maxWindowSize. 
+            var tour1Weight = solution.Contents[tourIdx1].Weight;
+            var tour2Weight = solution.Contents[tourIdx2].Weight;
+
+            var tour1Enumerable = tour1.SeqAndSmaller(4, maxWindowSize + 2, tour1.IsClosed(), false);
+            var tour2Enumerable = tour2.SeqAndSmaller(4, maxWindowSize + 2, tour2.IsClosed(), false);
+
+            // loop over all sequences of size 4->maxWindowSize + 2. 
             // - A minimum of 4 because otherwise we exchange just one visit.
             // - The edge to be exchanged are also included.
-            foreach (var s1 in tour1.SeqAndSmaller(4, _maxWindowSize, tour1.IsClosed(), false))
+            foreach (var s1 in tour1Enumerable)
             {
-                var existing1 = problem.Weights[s1[0]][s1[1]] + 
+                // calculate existing weights for s1.
+                var existing1 = problem.Weights[s1[0]][s1[1]] +
                     problem.Weights[s1[s1.Length - 2]][s1[s1.Length - 1]];
-                foreach (var s2 in tour2.SeqAndSmaller(4, _maxWindowSize, tour2.IsClosed(), false))
+                var between1 = problem.Weights.SeqRange(1, s1.Length - 2, s1);
+                var total1 = existing1 + between1;
+
+                // switch s1.
+                var between1Rev = 0f;
+                int[] s1Rev = null;
+                if (_tryReversed)
+                { // only setup reversed data if needed.
+                    between1Rev = problem.Weights.SeqReversed(1, s1.Length - 2, s1);
+                    s1Rev = s1.Clone() as int[];
+                    s1Rev.ReverseRange();
+                }
+
+                foreach (var s2 in tour2Enumerable)
                 {
-                    var existing2 = problem.Weights[s2[0]][s2[1]] + 
+                    // calculate existing weights for s2.
+                    var existing2 = problem.Weights[s2[0]][s2[1]] +
                         problem.Weights[s2[s2.Length - 2]][s2[s2.Length - 1]];
-                    var new1To2 = problem.Weights[s1[0]][s2[1]] + 
-                        problem.Weights[s2[s2.Length - 2]][s1[s1.Length - 1]];
-                    var new2To1 = problem.Weights[s2[0]][s1[1]] + 
-                        problem.Weights[s1[s1.Length - 2]][s2[s2.Length - 1]];
+                    var between2 = problem.Weights.SeqRange(1, s2.Length - 2, s2);
+                    var total2 = existing2 + between2;
 
-                    var localDelta = (existing1 + existing2) - (new1To2 + new2To1);
-                    if (localDelta > E)
-                    { // there is a potential improvement.
-                        var newWeight1 = tour1Weight - existing1 + new1To2;
-                        if (newWeight1 > problem.Capacity.Max)
-                        {
-                            continue;
-                        }
-                        var newWeight2 = tour2Weight - existing2 + new2To1;
-                        if (newWeight2 > problem.Capacity.Max)
-                        {
-                            continue;
-                        }
-                        if (!problem.Capacity.ExchangeIsPossible(solution.Contents[tourIdx1], s1, s2))
-                        {
-                            continue;
-                        }
-                        if (!problem.Capacity.ExchangeIsPossible(solution.Contents[tourIdx2], s2, s1))
-                        {
-                            continue;
-                        }
+                    // try exchanging without change order.
+                    if (this.TryExchange(problem, objective, solution,
+                            tourIdx1, tour1Weight, s1, total1, between1,
+                            tourIdx2, tour2Weight, s2, total2, between2,
+                            out delta))
+                    {
+                        return true;
+                    }
 
-                        // exchange is possible and there is improvement, do the improvement.
+                    if (!_tryReversed)
+                    { // don't try the other options with sequences reversed.
+                        continue;
+                    }
 
-                        // tour2 -> tour1
-                        tour1.ReplaceEdgeFrom(s1[0], s2[1]);
-                        for (var i = 1; i < s2.Length - 1; i++) {
-                            tour1.ReplaceEdgeFrom(s2[i], s2[i + 1]);
-                        }
-                        tour1.ReplaceEdgeFrom(s2[s2.Length - 2], s1[s1.Length - 1]);
+                    // try reversing s1.
+                    if (this.TryExchange(problem, objective, solution,
+                            tourIdx1, tour1Weight, s1Rev, total1, between1Rev,
+                            tourIdx2, tour2Weight, s2, total2, between2,
+                            out delta))
+                    {
+                        return true;
+                    }
 
-                        // tour1 -> tour2
-                        tour2.ReplaceEdgeFrom(s2[0], s1[1]);
-                        for (var i = 1; i < s1.Length - 1; i++) {
-                            tour2.ReplaceEdgeFrom(s1[i], s1[i + 1]);
-                        }
-                        tour2.ReplaceEdgeFrom(s1[s1.Length - 2], s2[s2.Length - 1]);
+                    // try reversing s2.
+                    var between2Rev = problem.Weights.SeqReversed(1, s2.Length - 2, s2);
+                    var s2Rev = s2; // WARNING: overwriting s2 to avoid cloning, we don't need it anymore.
+                    s2Rev.ReverseRange();
+                    if (this.TryExchange(problem, objective, solution,
+                            tourIdx1, tour1Weight, s1, total1, between1,
+                            tourIdx2, tour2Weight, s2Rev, total2, between2Rev,
+                            out delta))
+                    {
+                        return true;
+                    }
 
-                        // update content.
-                        problem.Capacity.UpdateExchange(solution.Contents[tourIdx1], s1, s2);
-                        problem.Capacity.UpdateExchange(solution.Contents[tourIdx1], s2, s1);
-                        solution.Contents[tourIdx1].Weight = newWeight1;
-                        solution.Contents[tourIdx2].Weight = newWeight2;
-
-                        // automatically removed in release mode.
-                        tour1.Verify(problem.Weights.Length);
-                        tour2.Verify(problem.Weights.Length);
-
-                        delta = localDelta;
+                    // try reversing both.
+                    if (this.TryExchange(problem, objective, solution,
+                            tourIdx1, tour1Weight, s1Rev, total1, between1Rev,
+                            tourIdx2, tour2Weight, s2Rev, total2, between2Rev,
+                            out delta))
+                    {
                         return true;
                     }
                 }
@@ -185,26 +199,125 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
             return false;
         }
 
-        private class EdgePair {
-            public Pair First { get; set; }
+        private bool TryExchange(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution,
+            int tour1Idx, float tour1Weight, int[] s1, float total1, float between1New,
+            int tour2Idx, float tour2Weight, int[] s2, float total2, float between2New,
+            out float delta)
+        {
+            // calculate weights if exchange was made.
+            var exchange1To2 = problem.Weights[s1[0]][s2[1]] +
+                problem.Weights[s2[s2.Length - 2]][s1[s1.Length - 1]] +
+                between2New;
+            var exchange2To1 = problem.Weights[s2[0]][s1[1]] +
+                problem.Weights[s1[s1.Length - 2]][s2[s2.Length - 1]] +
+                between1New;
 
-            public float FirstWeight { get; set; }
+            var localDelta = (total1 + total2) - (exchange1To2 + exchange2To1);
+            if (localDelta > E)
+            { // there is a potential improvement.
+                // calculate the visit weights for the exchange sequences if any.
+                var visitWeights1 = problem.VisitCosts.Seq(1, s1.Length - 2, s1);
+                var visitWeights2 = problem.VisitCosts.Seq(1, s2.Length - 2, s2);
 
-            public Pair Second { get; set; }
+                var newWeight1 = tour1Weight - visitWeights1 - total1 + exchange1To2 + visitWeights2;
+                if (newWeight1 > problem.Capacity.Max)
+                {
+                    delta = 0;
+                    return false;
+                }
+                var newWeight2 = tour2Weight - visitWeights1 - total2 + exchange2To1 + visitWeights1;
+                if (newWeight2 > problem.Capacity.Max)
+                {
+                    delta = 0;
+                    return false;
+                }
+                if (!problem.Capacity.ExchangeIsPossible(solution.Contents[tour1Idx], s1, s2))
+                {
+                    delta = 0;
+                    return false;
+                }
+                if (!problem.Capacity.ExchangeIsPossible(solution.Contents[tour2Idx], s2, s1))
+                {
+                    delta = 0;
+                    return false;
+                }
 
-            public float SecondWeight { get; set; }
+                // exchange is possible and there is improvement, do the improvement.
+                var tour1 = solution.Tour(tour1Idx);
+                var tour2 = solution.Tour(tour2Idx);
 
-            public List<int> Between { get; set; }
+                // tour2 -> tour1
+                tour1.ReplaceEdgeFrom(s1[0], s2[1]);
+                for (var i = 1; i < s2.Length - 1; i++)
+                {
+                    tour1.ReplaceEdgeFrom(s2[i], s2[i + 1]);
+                }
+                tour1.ReplaceEdgeFrom(s2[s2.Length - 2], s1[s1.Length - 1]);
 
-            public float WeightTotal { get; set; }
+                // tour1 -> tour2
+                tour2.ReplaceEdgeFrom(s2[0], s1[1]);
+                for (var i = 1; i < s1.Length - 1; i++)
+                {
+                    tour2.ReplaceEdgeFrom(s1[i], s1[i + 1]);
+                }
+                tour2.ReplaceEdgeFrom(s1[s1.Length - 2], s2[s2.Length - 1]);
 
-            public float WeightBefore { get; set; }
+                // update content.
+                problem.Capacity.UpdateExchange(solution.Contents[tour1Idx], s1, s2);
+                problem.Capacity.UpdateExchange(solution.Contents[tour2Idx], s2, s1);
+                solution.Contents[tour1Idx].Weight = newWeight1;
+                solution.Contents[tour2Idx].Weight = newWeight2;
 
-            public float WeightAfter { get; set; }
+                // automatically removed in release mode.
+                tour1.Verify(problem.Weights.Length);
+                tour2.Verify(problem.Weights.Length);
 
-            public float WeightBetween { get; set; }
-
-            public int CustomersBetween { get; set; }
+                delta = localDelta;
+                return true;
+            }
+            delta = 0;
+            return false;
         }
+
+        // private IEnumerable<LocalSeq> EnumerateAugemented(ITour tour, int maxWindowSize, bool doReverse)
+        // {        
+        //     if (doReverse)
+        //     {
+        //         return this.EnumerateAugementedForward(tour, maxWindowSize).Concat(this.EnumerateAugementedForward(tour, maxWindowSize));
+        //     }
+        //     return this.EnumerateAugementedForward(tour, maxWindowSize);
+        // }
+
+        // private IEnumerable<LocalSeq> EnumerateAugementedForward(ITour tour, int maxWindowSize)
+        // {
+        //     foreach (var seq in tour.SeqAndSmaller(4, maxWindowSize + 2, tour.IsClosed(), false))
+        //     {
+        //         yield return new LocalSeq()
+        //         {
+        //             Seq = seq,
+        //             Forward = true
+        //         };
+        //     }
+        // }
+
+        // private IEnumerable<LocalSeq> EnumerateAugementedBackward(ITour tour, int maxWindowSize)
+        // {
+        //     foreach (var seq in tour.SeqAndSmaller(4, maxWindowSize + 2, tour.IsClosed(), false).SeqReversed())
+        //     {
+        //         yield return new LocalSeq()
+        //         {
+        //             Seq = seq,
+        //             Forward = false
+        //         };
+        //     }
+        // }
+
+        private struct LocalSeq
+        {
+            public int[] Seq { get; set; }
+
+            public bool Forward { get; set; }
+        }
+
     }
 }

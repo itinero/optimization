@@ -38,5 +38,64 @@ namespace Itinero.Optimization.General
             }
             return res;
         }
+
+        /// <summary>
+        /// Calculates the weight of a sequence.
+        /// </summary>
+        /// <param name="weights">The weight matrix.</param>
+        /// <param name="start">The start in the sequence.</param>
+        /// <param name="end">The end in the sequence.</param>
+        /// <param name="visits">The sequence.</param>
+        /// <returns></returns>
+        public static float SeqRange(this float[][] weights, int start, int end, params int[] visits)
+        {
+            var res = 0f;
+            for (var i = start + 1; i <= end; i++)
+            {
+                res += weights[visits[i - 1]][visits[i]];
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// Calculates the weight of a sequence if it were reversed.
+        /// </summary>
+        /// <param name="weights">The weight matrix.</param>
+        /// <param name="start">The start in the sequence.</param>
+        /// <param name="end">The end in the sequence.</param>
+        /// <param name="visits">The sequence.</param>
+        /// <returns></returns>
+        public static float SeqReversed(this float[][] weights, int start, int end, params int[] visits)
+        {
+            var res = 0f;
+            for (var i = start + 1; i <= end; i++)
+            {
+                res += weights[visits[i]][visits[i - 1]];
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// Calculates the cost of a sequence.
+        /// </summary>
+        /// <param name="costs">The costs.</param>
+        /// <param name="start">The start in the sequence.</param>
+        /// <param name="end">The end in the sequence.</param>
+        /// <param name="visits">The sequence.</param>
+        /// <returns></returns>
+        public static float Seq(this float[] costs, int start, int end, params int[] visits)
+        {
+            if (costs == null)
+            {
+                return 0f;
+            }
+            
+            var res = 0f;
+            for (var i = start; i <= end; i++)
+            {
+                res += costs[visits[i]];
+            }
+            return res;
+        }
     }
 }

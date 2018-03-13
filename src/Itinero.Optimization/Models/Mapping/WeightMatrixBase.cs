@@ -1,6 +1,6 @@
 using System;
 using Itinero.Algorithms;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Models.Mapping
 {

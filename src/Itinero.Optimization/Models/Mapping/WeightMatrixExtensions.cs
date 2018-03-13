@@ -23,7 +23,7 @@ using Itinero.Data.Network;
 using System.Collections.Generic;
 using System.Linq;
 using Itinero.LocalGeo;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms.Directed;
 
 namespace Itinero.Optimization.Models.Mapping

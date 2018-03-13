@@ -19,7 +19,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Itinero.Optimization.Tours.Cycles
+namespace Itinero.Optimization.Abstract.Tours.Cycles
 {
     /// <summary>
     /// A collection of asymmetric alternating cycles.

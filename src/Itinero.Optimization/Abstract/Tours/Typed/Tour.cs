@@ -23,7 +23,7 @@ using System.Linq;
 using Itinero.Optimization.Algorithms;
 using System.Text;
 
-namespace Itinero.Optimization.Tours.Typed
+namespace Itinero.Optimization.Abstract.Tours.Typed
 {
     /// <summary>
     /// a route or a sequence of customers.

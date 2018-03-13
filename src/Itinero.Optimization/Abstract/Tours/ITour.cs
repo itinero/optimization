@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Tours
+namespace Itinero.Optimization.Abstract.Tours
 {
     /// <summary>
     /// Abstract representation of a route or a sequence of customers.

@@ -15,14 +15,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.Operators
 {
@@ -76,7 +76,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
         /// <summary>
         /// Applies this operator.
         /// </summary>
-        public bool Apply (NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta) 
+        public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta)
         {
             // check if solution has at least two tours.
             if (solution.Count < 2)
@@ -86,10 +86,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
             }
 
             // choose two random routes.
-            var random = RandomGeneratorExtensions.GetRandom ();
-            var tourIdx1 = random.Generate (solution.Count);
-            var tourIdx2 = random.Generate (solution.Count - 1);
-            if (tourIdx2 >= tourIdx1) {
+            var random = RandomGeneratorExtensions.GetRandom();
+            var tourIdx1 = random.Generate(solution.Count);
+            var tourIdx2 = random.Generate(solution.Count - 1);
+            if (tourIdx2 >= tourIdx1)
+            {
                 tourIdx2++;
             }
 
@@ -106,7 +107,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
         /// <param name="tourIdx1">The first tour.</param>
         /// <param name="tourIdx2">The second tour.</param>
         /// <returns></returns>
-        public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, 
+        public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution,
             int tourIdx1, int tourIdx2, out float delta)
         {
             // try relocation from 1->2 and 2->1.
@@ -130,7 +131,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
             int tourIdx1, int tourIdx2, out float delta)
         {
             int previous = -1;
-            int current = -1;
+            int visit = -1;
 
             var tour1 = solution.Tour(tourIdx1);
             var tour2 = solution.Tour(tourIdx2);
@@ -138,19 +139,19 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
             var tour2Weight = solution.Contents[tourIdx2].Weight; //objective.Calculate(problem, solution, tourIdx2);
             foreach (int next in tour1)
             {
-                if (previous >= 0 && current >= 0)
+                if (previous >= 0 && visit >= 0)
                 { // consider the next customer.
 
                     int countBefore1 = tour1.Count;
                     int countBefore2 = tour2.Count;
 
-                    if (this.TryVisit(problem, tour2, solution.Contents[tourIdx2], previous, current, next, tour2Weight, out delta))
+                    if (this.TryVisit(problem, tour2, solution.Contents[tourIdx2], previous, visit, next, tour2Weight, out delta))
                     {
                         tour1.ReplaceEdgeFrom(previous, next);
 
                         // update contents.
-                        problem.Capacity.Remove(solution.Contents[tourIdx1], current);
-                        problem.Capacity.Add(solution.Contents[tourIdx2], current);
+                        problem.Capacity.Remove(solution.Contents[tourIdx1], visit);
+                        problem.Capacity.Add(solution.Contents[tourIdx2], visit);
                         solution.Contents[tourIdx1].Weight = objective.Calculate(problem, solution, tourIdx1);
                         solution.Contents[tourIdx2].Weight = objective.Calculate(problem, solution, tourIdx2);
 
@@ -162,10 +163,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
                     }
                 }
 
-                previous = current;
-                current = next;
+                previous = visit;
+                visit = next;
             }
-            
+
             delta = 0;
             return false;
         }
@@ -173,27 +174,28 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
         /// <summary>
         /// Considers one visit for relocation.
         /// </summary>
-        private bool TryVisit(NoDepotCVRProblem problem, ITour tour, CapacityExtensions.Content tourContent, int previous, int current, int next, 
+        private bool TryVisit(NoDepotCVRProblem problem, ITour tour, CapacityExtensions.Content tourContent, int previous, int visit, int next,
             float routeWeight, out float delta)
         {
-            if (!problem.Capacity.CanAdd(tourContent, current))
+            if (!problem.Capacity.CanAdd(tourContent, visit))
             { // capacity doesn't allow placing this visit.
                 delta = 0;
                 return false;
             }
 
             // calculate the removal gain of the customer.
-            var removalGain = problem.Weights[previous][current] + problem.Weights[current][next]
-                - problem.Weights[previous][next];
+            var removalGain = problem.Weights[previous][visit] + problem.Weights[visit][next] -
+                problem.Weights[previous][next] + problem.GetVisitCost(visit);
             if (removalGain > E)
             { // calculate cheapest placement.
                 Pair location;
-                var result = tour.CalculateCheapest(problem.Weights, current, out location);
-                if (result < removalGain - E && 
+                var result = tour.CalculateCheapest(problem.Weights, visit, out location);
+                result += problem.GetVisitCost(visit);
+                if (result < removalGain - E &&
                     routeWeight + result < problem.Capacity.Max)
                 { // there is a gain in relocating this visit.
-                    tour.ReplaceEdgeFrom(location.From, current);
-                    tour.ReplaceEdgeFrom(current, location.To);
+                    tour.ReplaceEdgeFrom(location.From, visit);
+                    tour.ReplaceEdgeFrom(visit, location.To);
                     delta = removalGain - result;
                     return true;
                 }

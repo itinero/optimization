@@ -16,14 +16,15 @@
  *  limitations under the License.
  */
 
+using System.Collections.Generic;
 using Itinero.Optimization.Algorithms;
 
-namespace Itinero.Optimization.Tours
+namespace Itinero.Optimization.Abstract.Tours
 {
     /// <summary>
     /// An abstract definition of a tour with multiple subtours.
     /// </summary>
-    public interface IMultiTour : ISolution
+    public interface IMultiTour : ISolution, IEnumerable<ITour>
     {
         /// <summary>
         /// Returns one of the sub tours.

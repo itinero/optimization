@@ -19,8 +19,8 @@
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers.GA;
 using Itinero.Logging;
-using Itinero.Optimization.Tours;
-using Itinero.Optimization.Tours.Cycles;
+using Itinero.Optimization.Abstract.Tours;
+using Itinero.Optimization.Abstract.Tours.Cycles;
 using System;
 using System.Collections.Generic;
 

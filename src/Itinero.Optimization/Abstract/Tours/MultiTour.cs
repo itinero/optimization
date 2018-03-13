@@ -15,14 +15,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Itinero.Optimization.Algorithms;
 
-namespace Itinero.Optimization.Tours
+namespace Itinero.Optimization.Abstract.Tours
 {
     /// <summary>
     /// An asymetric dynamically sizeable mutliple routes object.
@@ -406,6 +407,28 @@ namespace Itinero.Optimization.Tours
         public void CopyFrom(ISolution solution)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Gets the enumerator for this multi tour.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<ITour> GetEnumerator()
+        {
+            return this.BuildEnumerable().GetEnumerator();
+        }
+
+        private IEnumerable<ITour> BuildEnumerable()
+        {
+            for (var i = 0; i < this.Count; i++)
+            {
+                yield return this.Tour(i);
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

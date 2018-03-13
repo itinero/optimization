@@ -19,7 +19,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Itinero.Optimization.Tours
+namespace Itinero.Optimization.Abstract.Tours
 {
     /// <summary>
     /// Contains tour extensions.
@@ -33,9 +33,9 @@ namespace Itinero.Optimization.Tours
         public static List<T> ToList<T>(this IEnumerator<T> enumerator)
         {
             var list = new List<T>();
-            while(enumerator.MoveNext())
+            while (enumerator.MoveNext())
             {
-                list.Add(enumerator.Current);
+            list.Add(enumerator.Current);
             }
             return list;
         }
@@ -116,6 +116,65 @@ namespace Itinero.Optimization.Tours
         }
 
         /// <summary>
+        /// Returns an enumerable that also includes the reverse sequences.
+        /// </summary>
+        /// <param name="sequences">The original sequences.</param>
+        /// <param name="offsetStart">The start offset, everything before this index is kept as original.</param>
+        /// <param name="offsetEnd">The end offset, everything after this index is kept as original.</param>
+        /// <returns></returns>
+        public static IEnumerable<int[]> AddSeqReversed(this IEnumerable<int[]> sequences, int offsetStart = 1, int offsetEnd = 1)
+        {
+            return sequences.Concat(sequences.SeqReversed(offsetStart, offsetStart));
+        }
+
+        /// <summary>
+        /// Returns an enumerable that includes the reverse sequences.
+        /// </summary>
+        /// <param name="sequences">The original sequences.</param>
+        /// <param name="offsetStart">The start offset, everything before this index is kept as original.</param>
+        /// <param name="offsetEnd">The end offset, everything after this index is kept as original.</param>
+        /// <returns></returns>
+        public static IEnumerable<int[]> SeqReversed(this IEnumerable<int[]> sequences, int offsetStart = 1, int offsetEnd = 1)
+        {
+            var totalOffset = offsetStart + offsetEnd;
+            foreach (var seq in sequences)
+            {
+                if (seq.Length <= totalOffset + 1)
+                { // can't reverse single visits or sequence smaller than the offsets.
+                    yield return seq;
+                }
+                var newSeq = seq.Clone() as int[]; // clone the sequence, important!
+                for (var i = offsetStart; i < seq.Length - offsetEnd; i++)
+                {
+                    var j = seq.Length - i - 1;
+                    newSeq[j] = seq[i];
+                }
+                yield return newSeq;
+            }
+        }
+
+        /// <summary>
+        /// Reverses a part of the given sequence.
+        /// </summary>
+        /// <param name="seq">The sequence.</param>
+        /// <param name="offsetStart">The start offset.</param>
+        /// <param name="offsetEnd">The end offset.</param>
+        public static void ReverseRange<T>(this T[] seq, int offsetStart = 1, int offsetEnd = 1)
+        {
+            if (seq.Length <= offsetEnd + offsetStart + 1)
+            { // can't reverse single visits or sequence smaller than the offsets.
+                return;
+            }
+            for (var i = offsetStart; i < (seq.Length - offsetEnd) / 2 + 1; i++)
+            {
+                var j = seq.Length - i - 1;
+                var jVal = seq[j];
+                seq[j] = seq[i];
+                seq[i] = jVal;
+            }
+        }
+
+        /// <summary>
         /// Verifies the given tour.
         /// </summary>
         public static void Verify(this ITour tour, int count)
@@ -123,7 +182,7 @@ namespace Itinero.Optimization.Tours
 #if DEBUG
             if (!tour.TryVerify(count))
             {
-                    throw new System.Exception("Tour probably invalid: enumerates more visits then it's supposed to.");
+                throw new System.Exception("Tour probably invalid: enumerates more visits then it's supposed to.");
             }
 #endif
         }
@@ -136,12 +195,12 @@ namespace Itinero.Optimization.Tours
 #if DEBUG
             var enumerator = tour.GetEnumerator();
             var enumCount = 0;
-            while(enumerator.MoveNext())
+            while (enumerator.MoveNext())
             {
                 enumCount++;
                 if (enumCount > count)
                 {
-                    return false;
+                return false;
                 }
             }
 #endif

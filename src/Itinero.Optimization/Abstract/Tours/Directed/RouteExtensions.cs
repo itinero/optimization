@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms.Directed;
 using System;
 
-namespace Itinero.Optimization.Tours.TurningWeights
+namespace Itinero.Optimization.Abstract.Tours.TurningWeights
 {
     /// <summary>
     /// Extensions methods for a route containing turns.

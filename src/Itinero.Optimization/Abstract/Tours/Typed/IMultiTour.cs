@@ -18,7 +18,7 @@
  
 using Itinero.Optimization.Algorithms;
 
-namespace Itinero.Optimization.Tours.Typed
+namespace Itinero.Optimization.Abstract.Tours.Typed
 {
     /// <summary>
     /// An abstract definition of a tour with multiple subtours.

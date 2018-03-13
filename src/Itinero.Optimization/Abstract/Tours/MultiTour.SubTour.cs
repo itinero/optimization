@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Itinero.Optimization.Algorithms;
 
-namespace Itinero.Optimization.Tours
+namespace Itinero.Optimization.Abstract.Tours
 {
     /// <summary>
     /// An asymetric dynamically sizeable mutliple routes object.

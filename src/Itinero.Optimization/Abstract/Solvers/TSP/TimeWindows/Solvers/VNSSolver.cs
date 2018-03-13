@@ -18,7 +18,7 @@
 
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.Algorithms.Solvers.VNS;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Solvers.Operators;
 
 namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows.Solvers

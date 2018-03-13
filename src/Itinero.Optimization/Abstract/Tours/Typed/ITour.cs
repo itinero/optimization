@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Tours.Typed
+namespace Itinero.Optimization.Abstract.Tours.Typed
 {
     /// <summary>
     /// Abstract representation of a route or a sequence of customers.

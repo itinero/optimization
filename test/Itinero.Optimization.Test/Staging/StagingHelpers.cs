@@ -19,7 +19,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Itinero.Optimization.Tours;
+using GeoAPI.Geometries;
+using Itinero.Optimization.Abstract.Models.Costs;
+using Itinero.Optimization.Abstract.Tours;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 
@@ -110,6 +112,11 @@ namespace Itinero.Optimization.Test.Staging
             foreach (var feature in features.Features)
             {
                 var multiLineString = feature.Geometry as MultiLineString;
+                if (multiLineString == null)
+                { // ignore geometries that are not multilinestrings.
+                    continue;
+                }
+
                 attributes = feature.Attributes;
                 if (multiLineString != null)
                 {
@@ -148,6 +155,62 @@ namespace Itinero.Optimization.Test.Staging
         }
 
         /// <summary>
+        /// Builds visit costs from points in the given feature collection.
+        /// </summary>
+        /// <param name="features">The feature(s).</param>
+        /// <param name="locations">The locations.</param>
+        /// <returns>The visit costs as defined in the attributes.</returns>
+        public static List<VisitCosts> BuildVisitCosts(this FeatureCollection features, List<Itinero.LocalGeo.Coordinate> locations)
+        {
+            var visitCosts = new List<VisitCosts>();
+            foreach (var feature in features.Features)
+            {
+                var point = feature.Geometry as Point;
+                if (point == null)
+                { // ignore geometries that are not multilinestrings.
+                    continue;
+                }
+
+                var attributes = feature.Attributes;
+                if (attributes.TryGetValueString("type", out string type) &&
+                    type == "visitcost")
+                {
+                    var visit = locations.GetExistingLocation(new Itinero.LocalGeo.Coordinate(
+                        (float)point.Coordinate.Y, (float)point.Coordinate.X));
+                    if (visit < 0)
+                    {
+                        continue;
+                    }
+
+                    foreach (var key in feature.Attributes.GetNames())
+                    {
+                        if (key == "type")
+                        {
+                            continue;
+                        }
+                        
+                        if (attributes.TryGetValueSingle(key, out float cost))
+                        {
+                            var visitCost = visitCosts.FirstOrDefault(x => x.Name == key);
+                            if (visitCost == null)
+                            {
+                                visitCost = new VisitCosts()
+                                {
+                                    Name = key,
+                                    Costs = new float[locations.Count]
+                                };
+                                visitCosts.Add(visitCost);
+                            }
+                            visitCost.Costs[visit] = cost;
+                        }
+                    }
+                }
+            }
+
+            return visitCosts;
+        }
+
+        /// <summary>
         /// Adds the given location but not if there is already another location nearby. Returns the new or existing ID.
         /// </summary>
         public static int AddAndCheckDuplicates(this List<Itinero.LocalGeo.Coordinate> locations, GeoAPI.Geometries.Coordinate location, int meters = 10)
@@ -160,6 +223,20 @@ namespace Itinero.Optimization.Test.Staging
         /// </summary>
         public static int AddAndCheckDuplicates(this List<Itinero.LocalGeo.Coordinate> locations, Itinero.LocalGeo.Coordinate location, int meters = 10)
         {
+            var locationId = locations.GetExistingLocation(location, meters);
+            if (locationId >= 0)
+            {
+                return locationId;
+            }
+            locations.Add(location);
+            return locations.Count - 1;
+        }
+
+        /// <summary>
+        /// Gets a location nearby. Returns the existing ID or -1.
+        /// </summary>
+        public static int GetExistingLocation(this List<Itinero.LocalGeo.Coordinate> locations, Itinero.LocalGeo.Coordinate location, int meters = 10)
+        {
             for (var i = 0; i  < locations.Count; i++)
             {
                 if (Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(locations[i], location) < meters)
@@ -167,8 +244,7 @@ namespace Itinero.Optimization.Test.Staging
                     return i;
                 }
             }
-            locations.Add(location);
-            return locations.Count - 1;
+            return -1;
         }
 
         /// <summary>
@@ -204,6 +280,45 @@ namespace Itinero.Optimization.Test.Staging
                 }
             }
             return box.Value;
+        }
+
+        /// <summary>
+        /// Builds a feature for the given tour.
+        /// </summary>
+        public static Feature BuildFeature(this ITour tour, IList<Itinero.LocalGeo.Coordinate> locations)
+        {
+            var coordinates = new List<Coordinate>();
+            foreach (var visit in tour)
+            {
+                coordinates.Add(new Coordinate(locations[visit].Longitude, 
+                    locations[visit].Latitude));
+            }
+            if (tour.IsClosed())
+            {
+                coordinates.Add(new Coordinate(locations[tour.Last.Value].Longitude, 
+                    locations[tour.Last.Value].Latitude));
+            }
+
+            var attributes = new AttributesTable();
+            return new Feature(new LineString(
+                coordinates.ToArray()), attributes);
+        }
+
+        /// <summary>
+        /// Builds a features for the given tours.
+        /// </summary>
+        public static FeatureCollection BuildFeatures(this IEnumerable<ITour> tours, IList<Itinero.LocalGeo.Coordinate> locations)
+        {
+            var features = new FeatureCollection();
+            var tourIdx = 0;
+            foreach (var tour in tours)
+            {
+                var feature = tour.BuildFeature(locations);
+                feature.Attributes.AddAttribute("tour", tourIdx);
+                features.Features.Add(feature);
+                tourIdx++;
+            }
+            return features;
         }
     }
 }

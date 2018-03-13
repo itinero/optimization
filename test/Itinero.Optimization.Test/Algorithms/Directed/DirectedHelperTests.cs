@@ -17,7 +17,7 @@
  */
 
 using Itinero.Optimization.Algorithms.Directed;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using NUnit.Framework;
 
 namespace Itinero.Optimization.Test.Algorithms.Directed

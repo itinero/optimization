@@ -20,7 +20,7 @@ using Itinero.Algorithms;
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using System.Collections.Generic;
 
 namespace Itinero.Optimization.Sequence.Directed

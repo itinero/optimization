@@ -20,7 +20,7 @@ using Itinero.Algorithms;
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers.TSP.Directed
 {
@@ -39,7 +39,7 @@ namespace Itinero.Optimization.Abstract.Solvers.TSP.Directed
         /// Creates a new TSP router.
         /// </summary>
         public TSPRouter(IDirectedWeightMatrixAlgorithm<float> weightMatrixAlgorithm, float turnPenalty, int first, int? last = null,
-            SolverBase<float, TSProblem, TSPObjective, Itinero.Optimization.Tours.Tour, float> solver = null)
+            SolverBase<float, TSProblem, TSPObjective, Itinero.Optimization.Abstract.Tours.Tour, float> solver = null)
         {
             _turnPenalty = turnPenalty;
             _first = first;

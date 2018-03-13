@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Tours.Sequences
+namespace Itinero.Optimization.Abstract.Tours.Sequences
 {
     /// <summary>
     /// Enumerates all sequences of given length.

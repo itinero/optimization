@@ -18,7 +18,7 @@
 
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Tours
+namespace Itinero.Optimization.Abstract.Tours
 {
     /// <summary>
     /// Enumerates all triples in an IRoute.

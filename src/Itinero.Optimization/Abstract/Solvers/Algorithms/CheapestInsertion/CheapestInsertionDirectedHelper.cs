@@ -18,7 +18,7 @@
 
 using Itinero.Algorithms.Weights;
 using Itinero.Optimization.Algorithms.Directed;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using Itinero.Profiles;
 
 namespace Itinero.Optimization.Algorithms.CheapestInsertion

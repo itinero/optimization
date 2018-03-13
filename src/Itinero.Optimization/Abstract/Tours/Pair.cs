@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Tours
+namespace Itinero.Optimization.Abstract.Tours
 {
     /// <summary>
     /// Represents a pair (or a connection between two adjacent customers).

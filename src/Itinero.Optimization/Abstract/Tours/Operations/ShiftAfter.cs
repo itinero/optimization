@@ -18,7 +18,7 @@
 
 using Itinero.Optimization.Abstract.Solvers.TSP;
 
-namespace Itinero.Optimization.Tours.Operations
+namespace Itinero.Optimization.Abstract.Tours.Operations
 {
     /// <summary>
     /// Contains general shiftafter operations.

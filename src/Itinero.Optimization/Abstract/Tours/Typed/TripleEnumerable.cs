@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Tours.Typed
+namespace Itinero.Optimization.Abstract.Tours.Typed
 {
     /// <summary>
     /// A typed triple enumerable.

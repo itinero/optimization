@@ -18,7 +18,7 @@
 
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Tours.Cycles
+namespace Itinero.Optimization.Abstract.Tours.Cycles
 {
     /// <summary>
     /// Asymmetric cycles.

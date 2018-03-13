@@ -17,7 +17,7 @@
  */
 
 using Itinero.Algorithms.Weights;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using Itinero.Profiles;
 using System;
 

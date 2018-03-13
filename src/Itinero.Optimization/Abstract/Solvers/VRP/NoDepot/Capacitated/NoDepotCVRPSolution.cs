@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {

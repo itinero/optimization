@@ -1,6 +1,6 @@
 using System;
 using Itinero.LocalGeo;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Test.Functional.TSP
 {

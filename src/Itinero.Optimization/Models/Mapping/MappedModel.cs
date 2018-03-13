@@ -19,7 +19,7 @@
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.Optimization.Abstract.Models;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Models.Mapping
 {

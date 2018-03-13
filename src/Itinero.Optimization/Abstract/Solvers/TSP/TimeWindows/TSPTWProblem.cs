@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Abstract.Models.TimeWindows;
 
 namespace Itinero.Optimization.Abstract.Solvers.TSP.TimeWindows

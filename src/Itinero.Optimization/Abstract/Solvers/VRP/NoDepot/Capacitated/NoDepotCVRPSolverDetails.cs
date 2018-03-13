@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using Itinero.Optimization.Abstract.Models;
 using Itinero.Optimization.Models.Mapping;
 using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated;
-using Itinero.Optimization.Tours;
-using Itinero.Optimization.Tours.Typed;
+using Itinero.Optimization.Abstract.Tours;
+using Itinero.Optimization.Abstract.Tours.Typed;
 using Itinero.Optimization.Abstract.Models.Costs;
 using System;
 

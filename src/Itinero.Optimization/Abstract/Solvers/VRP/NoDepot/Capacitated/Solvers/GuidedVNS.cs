@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.General;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
 {
@@ -99,8 +99,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                         var worstPenalty = -1f;
                         while (true)
                         { // keep penalizing->improving->penalizing until penalization exceeds bounds.
-                            var tour1Before = solution.Contents[t1].Weight;  // objective.Calculate(problem, solution, t1);
-                            var tour2Before = solution.Contents[t2].Weight;  //objective.Calculate(problem, solution, t2);
+                            var tour1Before = solution.Contents[t1].Weight;
+                            var tour2Before = solution.Contents[t2].Weight;
 
                             // select and execute next penalization.
                             var nextPenalty = PenalizeNext(problem, tour1, tour2, penalizations);
@@ -133,8 +133,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                             // verifiy against original if there are improvements.
                             var totalPenalty = ResetPenalizations(problem, penalizations);
 
-                            var tour1After = localSolution.Contents[t1].Weight; //objective.Calculate(problem, localSolution, t1);
-                            var tour2After = localSolution.Contents[t2].Weight; //objective.Calculate(problem, localSolution, t2);
+                            var tour1After = localSolution.Contents[t1].Weight;
+                            var tour2After = localSolution.Contents[t2].Weight;
 
                             if (tour1Before + tour2Before > tour1After + tour2After)
                             { // new solution is better, yay!
@@ -218,8 +218,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                 { // keep looping when there is improvement.
                     improvement = false;
 
-                    var tour1Weight = solution.Contents[tour1Idx].Weight; //objective.Calculate(problem, solution, tour1Idx);
-                    var tour2Weight = solution.Contents[tour2Idx].Weight; //objective.Calculate(problem, solution, tour2Idx);
+                    var tour1Weight = solution.Contents[tour1Idx].Weight;
+                    var tour2Weight = solution.Contents[tour2Idx].Weight;
                     var totalBefore = tour1Weight + tour2Weight;
 
                     float delta;
@@ -228,8 +228,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                         improvement = true;
                         globalImprovement = true;
 
-                        tour1Weight = solution.Contents[tour1Idx].Weight; //objective.Calculate(problem, solution, tour1Idx);
-                        tour2Weight = solution.Contents[tour2Idx].Weight; //objective.Calculate(problem, solution, tour2Idx);
+                        tour1Weight = solution.Contents[tour1Idx].Weight;
+                        tour2Weight = solution.Contents[tour2Idx].Weight;
                         var totalAfter = tour1Weight + tour2Weight;
 
                         // Itinero.Logging.Logger.Log("G-VNS", Itinero.Logging.TraceEventType.Information,

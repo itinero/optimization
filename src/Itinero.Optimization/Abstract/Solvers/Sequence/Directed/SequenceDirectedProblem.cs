@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Sequence.Directed.Solver;
 using Itinero.Optimization.Sequence.Directed.Solver.Operators;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Sequence.Directed
 {

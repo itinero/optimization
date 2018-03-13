@@ -19,7 +19,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Tours.Operations
+namespace Itinero.Optimization.Abstract.Tours.Operations
 {
     /// <summary>
     /// Represents a shifted after tour.

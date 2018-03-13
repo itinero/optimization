@@ -19,6 +19,7 @@
 using System;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
@@ -65,9 +66,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             var weight = 0f;
             var tour = solution.Tour(tourIdx);
 
+            Pair? last = null;
             foreach (var pair in tour.Pairs())
             {
+                weight += problem.GetVisitCost(pair.From);
                 weight += problem.Weights[pair.From][pair.To];
+            }
+            if (last.HasValue && !tour.IsClosed())
+            {
+                weight += problem.GetVisitCost(last.Value.To);
             }
 
             return weight;
@@ -98,6 +105,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 { // there is no previous visit, this is the first one.
                     cumul[idx] = 0;
                 }
+
+                time += problem.GetVisitCost(visit1);
 
                 idx++; // increase the index.
                 previous = visit1; // prepare for next loop.

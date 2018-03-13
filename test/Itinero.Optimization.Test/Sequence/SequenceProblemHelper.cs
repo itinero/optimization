@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
- using Itinero.Optimization.Tours;
+ using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Test.Sequence
 {

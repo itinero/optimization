@@ -19,7 +19,7 @@
 using System;
 using Itinero.Optimization.Algorithms;
 
-namespace Itinero.Optimization.Tours.Typed
+namespace Itinero.Optimization.Abstract.Tours.Typed
 {
     /// <summary>
     /// A typed multi tour.

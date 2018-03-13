@@ -17,7 +17,7 @@
  */
 
 using Itinero.LocalGeo;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using System;
 using System.IO;
 using System.Collections.Generic;

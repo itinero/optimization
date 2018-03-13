@@ -17,9 +17,9 @@
  */
 
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms.Directed;
-using Itinero.Optimization.Tours.TurningWeights;
+using Itinero.Optimization.Abstract.Tours.TurningWeights;
 
 namespace Itinero.Optimization.Sequence.Directed.Solver.Operators
 {

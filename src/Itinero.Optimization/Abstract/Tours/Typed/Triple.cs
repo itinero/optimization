@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Tours.Typed
+namespace Itinero.Optimization.Abstract.Tours.Typed
 {
     /// <summary>
     /// Represents a triple (or a connection between three adjacent customers).

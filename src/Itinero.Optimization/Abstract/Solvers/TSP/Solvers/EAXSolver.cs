@@ -19,7 +19,7 @@
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.GA;
 using Itinero.Logging;
-using Itinero.Optimization.Tours;
+using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Abstract.Solvers.TSP.Solvers.Operators;
 
 namespace Itinero.Optimization.Abstract.Solvers.TSP.Solvers
