@@ -28,13 +28,14 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
     {
         public static void Run()
         {
-            // Run1Wechelderzande();
-            // Run1WechelderzandeCapacitated();
+            Run1Wechelderzande();
+            Run1WechelderzandeCapacitated();
             Run2Spijkenisse();
-            // Run2SpijkenisseCapacitated();
-            // Run3DeHague();
-            // Run4Rotterdam();
-            // Run5Rotterdam();
+            Run2SpijkenisseCapacitated();
+            Run2SpijkenisseVisitCosts();
+            Run3DeHague();
+            Run4Rotterdam();
+            Run5Rotterdam();
         }
 
         public static void Run1Wechelderzande()
@@ -168,6 +169,53 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             for (var l = 0; l < locations.Length; l++)
             {
                 visitCostWeight.Costs[l] = 100;
+            }
+            var visitCosts = new VisitCosts[]
+            {
+                visitCostWeight
+            };
+
+            // 
+            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, 
+                capacityConstraint, visitCosts));
+            var routes = func.TestPerf("No-Depot Capacitated VRP (Spijkenisse - Capacitated)");
+
+//#if DEBUG
+            routes.WriteGeoJson("spijkenisse-capacitated-{0}.geojson");
+//#endif
+        }
+
+        public static void Run2SpijkenisseVisitCosts()
+        {
+            // SPIJKENISSE
+            // build routerdb and save the result.
+            var spijkenisse = Staging.RouterDbBuilder.Build("query4");
+            var vehicle = spijkenisse.GetSupportedVehicle("car");
+            var router = new Router(spijkenisse);
+
+            // build problem.
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem2-spijkenisse.geojson"));
+
+            // build capacity constraints
+            var capacityConstraint = new CapacityConstraint[]
+            {
+                new CapacityConstraint()
+                {
+                    Name = Itinero.Optimization.Models.Metrics.Time,
+                    Capacity = 3600 * 4
+                }
+            };
+
+            // build visit costs.
+            var visitCostWeight = new VisitCosts()
+            {
+                Name = Itinero.Optimization.Models.Metrics.Time,
+                Costs = new float[locations.Length]
+            };
+            for (var l = 0; l < locations.Length; l++)
+            {
+                visitCostWeight.Costs[l] = 180;
             }
             var visitCosts = new VisitCosts[]
             {

@@ -72,16 +72,21 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 throw new Exception("Travel costs not found but model was declared valid.");
             }
 
-            // get the time constraint.
-            Itinero.Optimization.Abstract.Models.Vehicles.Constraints.CapacityConstraint timeConstraint = null;
+            // get the travel cost related constraint.
+            Itinero.Optimization.Abstract.Models.Vehicles.Constraints.CapacityConstraint travelCostConstraint = null;
             for (var i = 0; i < vehicle.CapacityConstraints.Length; i++)
             {
-                if (vehicle.CapacityConstraints[i].Name == 
-                        Itinero.Optimization.Models.Metrics.Time)
+                if (vehicle.CapacityConstraints[i].Name == metric)
                 {
-                    timeConstraint = vehicle.CapacityConstraints[i];
+                    travelCostConstraint = vehicle.CapacityConstraints[i];
                     break;
                 }
+            }
+
+            // get travel cost visits costs if any.
+            if (!model.TryGetVisitCostsForMetric(metric, out VisitCosts travelCostVisitCosts))
+            {
+                travelCostVisitCosts = null;
             }
 
             // get the other constraints.
@@ -91,7 +96,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 var c = 0;
                 foreach (var constraint in vehicle.CapacityConstraints)
                 {
-                    if (constraint.Name == Itinero.Optimization.Models.Metrics.Time)
+                    if (constraint.Name == metric)
                     {
                         continue;
                     }
@@ -108,17 +113,22 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     };
                     c++;
                 }
-            } 
+            }
             
             var problem = new NoDepotCVRProblem()
             {
                 Weights = travelCosts.Costs,
                 Capacity = new Capacity()
                 {
-                    Max = timeConstraint.Capacity,
+                    Max = travelCostConstraint.Capacity,
                     Constraints = constraints
                 }
             };
+
+            if (travelCostConstraint != null)
+            {
+                problem.VisitCosts = travelCostVisitCosts.Costs;
+            }
             return new Result<NoDepotCVRProblem>(problem);
         }
 
