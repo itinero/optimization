@@ -189,7 +189,7 @@ namespace Itinero.Optimization.Models.Mapping
         /// Builds the routes in segments divided by routes between customers in the given tour.
         /// </summary>
         /// <returns></returns>
-        public static List<Result<Route>> TryBuildRoutes<T>(this IWeightMatrixAlgorithm<T> algorithm, Tour tour)
+        public static List<Result<Route>> TryBuildRoutes<T>(this IWeightMatrixAlgorithm<T> algorithm, ITour tour)
         {
             var routes = new List<Result<Route>>();
             foreach (var pair in tour.Pairs())
@@ -204,7 +204,7 @@ namespace Itinero.Optimization.Models.Mapping
         /// Builds the result route in segments divided by routes between customers.
         /// </summary>
         /// <returns></returns>
-        public static List<Route> BuildRoutes<T>(this IWeightMatrixAlgorithm<T> algorithm, Tour tour)
+        public static List<Route> BuildRoutes<T>(this IWeightMatrixAlgorithm<T> algorithm, ITour tour)
         {
             var routes = new List<Route>();
             foreach (var pair in tour.Pairs())
@@ -278,7 +278,7 @@ namespace Itinero.Optimization.Models.Mapping
         /// Builds the result route in segments divided by routes between customers.
         /// </summary>
         /// <returns></returns>
-        public static List<Result<Route>> TryBuildRoutes<T>(this IDirectedWeightMatrixAlgorithm<T> algorithm, Tour tour)
+        public static List<Result<Route>> TryBuildRoutes<T>(this IDirectedWeightMatrixAlgorithm<T> algorithm, ITour tour)
         {
             var routes = new List<Result<Route>>();
             // TODO: check what to do here, use the cached version or not?
@@ -312,7 +312,7 @@ namespace Itinero.Optimization.Models.Mapping
         /// Builds the result route in segments divided by routes between customers.
         /// </summary>
         /// <returns></returns>
-        public static List<Route> BuildRoutes<T>(this IDirectedWeightMatrixAlgorithm<T> algorithm, Tour tour)
+        public static List<Route> BuildRoutes<T>(this IDirectedWeightMatrixAlgorithm<T> algorithm, ITour tour)
         {
             var routes = new List<Route>();
             // TODO: check what to do here, use the cached version or not?
