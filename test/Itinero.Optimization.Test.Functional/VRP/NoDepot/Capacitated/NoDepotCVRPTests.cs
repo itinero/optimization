@@ -26,16 +26,18 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 {
     public static class NoDepotCVRPTests
     {
+        private static string Name = "guided-vns-";
+
         public static void Run()
         {
-            Run1Wechelderzande();
-            Run1WechelderzandeCapacitated();
-            Run2Spijkenisse();
-            Run2SpijkenisseCapacitated();
+            //Run1Wechelderzande();
+            //Run1WechelderzandeCapacitated();
+            //Run2Spijkenisse();
+            //Run2SpijkenisseCapacitated();
             Run2SpijkenisseVisitCosts();
-            Run3DeHague();
-            Run4Rotterdam();
-            Run5Rotterdam();
+            //Run3DeHague();
+            //Run4Rotterdam();
+            //Run5Rotterdam();
         }
 
         public static void Run1Wechelderzande()
@@ -54,8 +56,11 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, 900));
             var routes = func.TestPerf("No-Depot Capacitated VRP (Wechelderzande)");
 
-//#if DEBUG
-            routes.WriteGeoJson("lille-{0}.geojson");
+            //#if DEBUG
+
+            // write info about result.
+            WriteStats(routes);
+            routes.WriteGeoJson(NoDepotCVRPTests.Name + "lille-{0}.geojson");
 //#endif
         }
 
@@ -106,8 +111,11 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
                 visitCosts));
             var routes = func.TestPerf("No-Depot Capacitated VRP (Wechelderzande - Capacitated)");
 
-//#if DEBUG
-            routes.WriteGeoJson("lille-capacitated-{0}.geojson");
+            //#if DEBUG
+
+            // write info about result.
+            WriteStats(routes);
+            routes.WriteGeoJson(NoDepotCVRPTests.Name + "lille-capacitated-{0}.geojson");
 //#endif
         }
 
@@ -128,8 +136,13 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max));
             var routes = func.TestPerf("No-Depot Capacitated VRP (Spijkenisse)");
 
-//#if DEBUG
-            routes.WriteGeoJson("spijkenisse-{0}.geojson");
+            //#if DEBUG
+
+            // write info about result.
+            WriteStats(routes);
+            var filename = NoDepotCVRPTests.Name + "spijkenisse-{0}";
+            routes.WriteGeoJson(filename + ".geojson");
+            routes.WriteJson(filename + ".json");
 //#endif
         }
 
@@ -180,8 +193,11 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
                 capacityConstraint, visitCosts));
             var routes = func.TestPerf("No-Depot Capacitated VRP (Spijkenisse - Capacitated)");
 
-//#if DEBUG
-            routes.WriteGeoJson("spijkenisse-capacitated-{0}.geojson");
+            //#if DEBUG
+
+            // write info about result.
+            WriteStats(routes);
+            routes.WriteGeoJson(NoDepotCVRPTests.Name + "spijkenisse-capacitated-{0}.geojson");
 //#endif
         }
 
@@ -227,8 +243,13 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
                 capacityConstraint, visitCosts));
             var routes = func.TestPerf("No-Depot Visit Costs VRP (Spijkenisse - Capacitated)");
 
-//#if DEBUG
-            routes.WriteGeoJson("spijkenisse-visit-costs-{0}.geojson");
+            //#if DEBUG
+
+            // write info about result.
+            WriteStats(routes);
+            var filename = NoDepotCVRPTests.Name + "spijkenisse-visit-costs-{0}";
+            routes.WriteGeoJson(filename + ".geojson");
+            routes.WriteJson(filename + ".json");
 //#endif
         }
 
@@ -249,8 +270,11 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max));
             var routes = func.TestPerf("No-Depot Capacitated VRP (De Haque)");
 
-//#if DEBUG
-            routes.WriteGeoJson("de-hague-{0}.geojson");
+            //#if DEBUG
+
+            // write info about result.
+            WriteStats(routes);
+            routes.WriteGeoJson(NoDepotCVRPTests.Name + "de-hague-{0}.geojson");
 //#endif
         }
 
@@ -271,8 +295,11 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max));
             var routes = func.TestPerf("No-Depot Capacitated VRP (Rotterdam4)");
 
-//#if DEBUG
-            routes.WriteGeoJson("rotterdam4-{0}.geojson");
+            //#if DEBUG
+
+            // write info about result.
+            WriteStats(routes);
+            routes.WriteGeoJson(NoDepotCVRPTests.Name + "rotterdam4-{0}.geojson");
 //#endif 
         }
 
@@ -293,9 +320,47 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max));
             var routes = func.TestPerf("No-Depot Capacitated VRP (Rotterdam5)");
 
-//#if DEBUG
-            routes.WriteGeoJson("rotterdam5-{0}.geojson");
+            //#if DEBUG
+
+            // write info about result.
+            WriteStats(routes);
+            routes.WriteGeoJson(NoDepotCVRPTests.Name + "rotterdam5-{0}.geojson");
 //#endif 
+        }
+
+        /// <summary>
+        /// Writes stats about the given routes.
+        /// </summary>
+        /// <param name="routes"></param>
+        public static void WriteStats(IList<Route> routes)
+        {
+            Console.WriteLine("# routes: {0}", routes.Count);
+
+            var totalStops = 0;
+            var totalDistance = 0f;
+            var totalTime = 0f;
+            for (var i = 0; i < routes.Count; i++)
+            {
+                Console.Write("route_{0}:", i);
+                if (routes[i] == null)
+                {
+                    Console.WriteLine("null");
+                    continue;
+                }
+                Console.Write("{0}s | ", routes[i].TotalTime);
+                Console.Write("{0}m | ", routes[i].TotalDistance);
+                Console.Write("{0}stops", routes[i].Stops.Length - 1);
+                totalStops += routes[i].Stops.Length - 1;
+                totalDistance += routes[i].TotalDistance;
+                totalTime += routes[i].TotalTime;
+                Console.WriteLine();
+            }
+
+            Console.Write("total:");
+            Console.Write("{0}s | ", totalTime);
+            Console.Write("{0}m | ", totalDistance);
+            Console.Write("{0}stops", totalStops);
+            Console.WriteLine();
         }
     }
 }

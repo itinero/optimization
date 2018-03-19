@@ -108,7 +108,7 @@ namespace Itinero.Optimization.Abstract.Tours
         public static IEnumerable<int[]> SeqAndSmaller(this IEnumerable<int> tour, int minSize, int maxSize, bool isClosed = false, bool loopAround = true)
         {
             var enumerable = System.Linq.Enumerable.Empty<int[]>();
-            for (var i = minSize; i <= maxSize; i++)
+            for (var i = maxSize; i >= minSize; i--)
             {
                 enumerable = enumerable.Concat(tour.Seq(i, isClosed, loopAround));
             }

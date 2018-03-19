@@ -95,6 +95,26 @@ namespace Itinero.Optimization.Abstract.Models
             travelCosts = null;
             return false;
         }
+
+        /// <summary>
+        /// Serializes this model to json.
+        /// </summary>
+        /// <remarks>The <see cref="IO.Json.JsonSerializer"/> needs to be setup properly.</remarks>
+        /// <returns></returns>
+        public string ToJson()
+        {
+            return IO.Json.JsonSerializer.ToJsonFunc(this);
+        }
+
+        /// <summary>
+        /// Deserializes a model from json.
+        /// </summary>
+        /// <param name="json">The json.</param>
+        /// <returns></returns>
+        public static AbstractModel FromJson(string json)
+        {
+            return IO.Json.JsonSerializer.FromJsonFunc(json, typeof(AbstractModel)) as AbstractModel;
+        }
     }
 
     /// <summary>

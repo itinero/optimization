@@ -24,6 +24,8 @@ using Itinero.Optimization.Abstract.Models.Costs;
 using Itinero.Optimization.Abstract.Tours;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
+using Itinero.Optimization.Abstract.Models;
+using Itinero.Optimization.Models;
 
 namespace Itinero.Optimization.Test.Staging
 {
@@ -33,6 +35,52 @@ namespace Itinero.Optimization.Test.Staging
     public static class StagingHelpers
     {
         public static string EmbeddedResourceRoot = "Itinero.Optimization.Test.";
+
+        /// <summary>
+        /// Deserializes a model from the given embedded resource.
+        /// </summary>
+        public static Model GetModel(this string embeddedResourcePath)
+        {
+            // setup json stuff.
+            Itinero.Optimization.IO.Json.JsonSerializer.ToJsonFunc = o =>
+            {
+                return Newtonsoft.Json.JsonConvert.SerializeObject(o);
+            };
+            Itinero.Optimization.IO.Json.JsonSerializer.FromJsonFunc = (o, t) =>
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject(o, t);
+            };
+
+            using (var stream = typeof(NotSoRandomGenerator).Assembly.GetManifestResourceStream(EmbeddedResourceRoot + embeddedResourcePath))
+            using (var streamReader = new StreamReader(stream))
+            {
+                var json = streamReader.ReadToEnd();
+                return Model.FromJson(json);
+            }
+        }
+
+        /// <summary>
+        /// Deserializes a model from the given embedded resource.
+        /// </summary>
+        public static AbstractModel GetAbstractModel(this string embeddedResourcePath)
+        {
+            // setup json stuff.
+            Itinero.Optimization.IO.Json.JsonSerializer.ToJsonFunc = o =>
+            {
+                return Newtonsoft.Json.JsonConvert.SerializeObject(o);
+            };
+            Itinero.Optimization.IO.Json.JsonSerializer.FromJsonFunc = (o, t) =>
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject(o, t);
+            };
+
+            using (var stream = typeof(NotSoRandomGenerator).Assembly.GetManifestResourceStream(EmbeddedResourceRoot + embeddedResourcePath))
+            using (var streamReader = new StreamReader(stream))
+            {
+                var json = streamReader.ReadToEnd();
+                return AbstractModel.FromJson(json);
+            }
+        }
 
         /// <summary>
         /// Gets a feature collection for the given embedded resource.

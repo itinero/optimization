@@ -110,12 +110,12 @@ namespace Itinero.Optimization.Algorithms.CheapestInsertion
                 var first = tour.First;
                 if (tour.IsClosed())
                 {
-                    visit = weights.CalculateCheapest(first, first, visits, out bestCost);
+                    visit = weights.CalculateCheapest(first, first, visits, out bestCost, costFunc);
                     location = new Pair(first, first);
                 }
                 else
                 {
-                    visit = weights.CalculateCheapestTo(first, visits, out bestCost);
+                    visit = weights.CalculateCheapestTo(first, visits, out bestCost, costFunc);
                     location = new Pair(first, int.MaxValue);
                 }
 

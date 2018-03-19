@@ -51,5 +51,25 @@ namespace Itinero.Optimization.Models
         /// </summary>
         /// <returns></returns>
         public VehiclePool VehiclePool { get; set; }
+
+        /// <summary>
+        /// Serializes this model to json.
+        /// </summary>
+        /// <remarks>The <see cref="IO.Json.JsonSerializer"/> needs to be setup properly.</remarks>
+        /// <returns></returns>
+        public string ToJson()
+        {
+            return IO.Json.JsonSerializer.ToJsonFunc(this);
+        }
+
+        /// <summary>
+        /// Deserializes a model from json.
+        /// </summary>
+        /// <param name="json">The json.</param>
+        /// <returns></returns>
+        public static Model FromJson(string json)
+        {
+            return IO.Json.JsonSerializer.FromJsonFunc(json, typeof(Model)) as Model;
+        }
     }
 }

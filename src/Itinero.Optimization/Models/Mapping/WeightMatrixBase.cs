@@ -19,6 +19,7 @@
 using System;
 using Itinero.Algorithms;
 using Itinero.Optimization.Abstract.Tours;
+using Itinero.Attributes;
 
 namespace Itinero.Optimization.Models.Mapping
 {
@@ -59,7 +60,7 @@ namespace Itinero.Optimization.Models.Mapping
         /// <summary>
         /// Builds a real-world route based on the given tour.
         /// </summary>
-        public abstract Route BuildRoute(ITour tour);
+        public abstract Route BuildRoute(ITour tour, Func<int, IAttributeCollection, float> customizeVisit);
 
         /// <summary>
         /// Returns true if the two tours geographically overlaps.

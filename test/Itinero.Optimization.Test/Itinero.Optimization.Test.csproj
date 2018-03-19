@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="data\regression\abstract\*.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Itinero.Optimization\Itinero.Optimization.csproj" />
   </ItemGroup>
 

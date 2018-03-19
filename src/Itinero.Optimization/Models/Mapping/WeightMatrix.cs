@@ -17,8 +17,10 @@
  */
 
 using Itinero.Algorithms.Matrices;
+using Itinero.Attributes;
 using Itinero.Optimization.Abstract.Models.Costs;
 using Itinero.Optimization.Abstract.Tours;
+using System;
 
 namespace Itinero.Optimization.Models.Mapping
 {
@@ -57,9 +59,9 @@ namespace Itinero.Optimization.Models.Mapping
         /// <summary>
         /// Builds a real-world route based on the given tour.
         /// </summary>
-        public override Route BuildRoute(ITour tour)
+        public override Route BuildRoute(ITour tour, Func<int, IAttributeCollection, float> customizeVisit)
         {
-            return _weightMatrixAlgorithm.BuildRoute(tour);
+            return _weightMatrixAlgorithm.BuildRoute(tour, customizeVisit);
         }
 
         /// <summary>

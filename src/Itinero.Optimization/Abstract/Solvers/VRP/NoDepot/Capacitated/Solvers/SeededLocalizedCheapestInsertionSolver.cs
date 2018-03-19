@@ -51,8 +51,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
         /// <param name="thresholdPercentage">The percentage of unplaced visits to try and place in existing tours.</param>
         /// <param name="localizationFactor">The factor to take into account the weight to the seed visit.</param>
         public SeededLocalizedCheapestInsertionSolver(Func<NoDepotCVRProblem, IList<int>, int> selectSeed, 
-            Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlaps, int k = 10, float slackPercentage = 5, 
-            float thresholdPercentage = 10, float localizationFactor = 0.5f)
+            Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlaps, int k = 100, float slackPercentage = 5, 
+            float thresholdPercentage = 15, float localizationFactor = 1f)
         {
             _selectSeed = selectSeed;
             _overlaps = overlaps;
@@ -67,37 +67,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
 
             // register the default inter improvement operators.
             _interImprovements = new List<IInterTourImprovementOperator>(4);
-            _interImprovements.Add(new Operators.ExchangeInterImprovementOperator());
-            _interImprovements.Add(new Operators.RelocateImprovementOperator());
-            _interImprovements.Add(new Operators.RelocateExchangeInterImprovementOperator(5));
-            _interImprovements.Add(new Operators.CrossExchangeInterImprovementOperator(5));
-        }
+            //_interImprovements.Add(new Operators.RelocateImprovementOperator());
+            //_interImprovements.Add(new Operators.RelocateExchangeInterImprovementOperator(5));
 
-        /// <summary>
-        /// Creates a new solver.
-        /// </summary>
-        /// <param name="selectSeed">The seed selection heuristic.</param>
-        /// <param name="intraImprovements">The tour improvement operators.</param>
-        /// <param name="interImprovements">The tour exhange improvement operators.</param>
-        /// <param name="overlaps">Function to calculate tour overlaps.</param>
-        /// <param name="k">The # of visits to place before apply intra improvements.</param>
-        /// <param name="slackPercentage">The percentage of space to leave for future improvements.</param>
-        /// <param name="thresholdPercentage">The percentage of unplaced visits to try and place in existing tours.</param>
-        /// <param name="localizationFactor">The factor to take into account the weight to the seed visit.</param>
-        public SeededLocalizedCheapestInsertionSolver(Func<NoDepotCVRProblem, IList<int>, int> selectSeed, 
-            IEnumerable<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>> intraImprovements,
-            IEnumerable<IInterTourImprovementOperator> interImprovements,
-            Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlaps, int k = 10, float slackPercentage = 5, 
-            float thresholdPercentage = 10, float localizationFactor = 0.75f)
-        {
-            _selectSeed = selectSeed;
-            _intraImprovements = new List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>>(intraImprovements);
-            _interImprovements = new List<IInterTourImprovementOperator>(_interImprovements);
-            _overlaps = overlaps;
-            _k = k;
-            _slackPercentage = slackPercentage / 100f;
-            _thresholdPercentage = thresholdPercentage / 100f;
-            _localizationFactor = localizationFactor;
+            var crossMultiAllPairs = new Operators.CrossExchangeInterImprovementOperator(10, true, true);
+            var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
+                crossMultiAllPairs, 10, true);
+
+            _interImprovements.Add(crossMultiAllPairs);
+            _interImprovements.Add(new Operators.ExchangeInterImprovementOperator());
         }
 
         /// <summary>
@@ -144,8 +122,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                     if (_localizationFactor != 0)
                     { // create a function to add the localized effect (relative to the seed) to the CI algorithm
                        // if lambda is set.
-                        lambdaCostFunc = (v) => problem.Weights[seed][v] + 
-                                problem.Weights[v][seed];
+                        lambdaCostFunc = (v) => (problem.Weights[seed][v] + 
+                                problem.Weights[v][seed]) * _localizationFactor;
                     }
 
                     // start a route r.
@@ -263,8 +241,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                     if (_localizationFactor != 0)
                     { // create a function to add the localized effect (relative to the seed) to the CI algorithm
                         // if lambda is set.
-                        lambdaCostFunc = (v) => problem.Weights[seed][v] + 
-                        problem.Weights[v][seed];
+                        lambdaCostFunc = (v) => (problem.Weights[seed][v] + 
+                            problem.Weights[v][seed]) * _localizationFactor;
                     }
 
                     // run CI algorithm.
@@ -285,8 +263,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                 if (_localizationFactor != 0)
                 { // create a function to add the localized effect (relative to the seed) to the CI algorithm
                     // if lambda is set.
-                    lambdaCostFunc = (v) => problem.Weights[bestTour.First][v] + 
-                    problem.Weights[v][bestTour.First];
+                    lambdaCostFunc = (v) => (problem.Weights[bestTour.First][v] + 
+                        problem.Weights[v][bestTour.First]) * _localizationFactor;
                     actualIncrease -= lambdaCostFunc(bestVisit);
                 }
 

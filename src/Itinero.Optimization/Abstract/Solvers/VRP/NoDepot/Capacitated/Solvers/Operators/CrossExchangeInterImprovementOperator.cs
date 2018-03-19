@@ -25,6 +25,7 @@ using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.General;
+using Itinero.Optimization.Abstract.Solvers.General;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.Operators
 {
@@ -36,26 +37,29 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
     /// 
     /// The algorithm works as follows:
     /// 
-    /// - Select 2 random tours.
+    /// - Select 2 tours (random, given or all pairs once).
     /// - Loop over all edge-ranges in tour1.
     ///   - Loop over all edge-ranges in tour2.
     ///     - Check if a swap between tours improves things.
     /// 
-    /// The search stops from the moment any improvement is found.
+    /// The search stops from the moment any improvement is found unless configured to keep testing all tour pairs.
     /// </remarks>
     public class CrossExchangeInterImprovementOperator : IInterTourImprovementOperator
     {
         private const float E = 0.001f;
         private readonly int _maxWindowSize = 8;
         private readonly bool _tryReversed = true;
+        private readonly bool _tryAll = false;
 
         /// <summary>
         /// Creates a new improvement operator.
         /// </summary>
         /// <param name="maxWindowSize">The maximum window size to search for sequences to exchange.</param>
         /// <param name="tryReversed">True when exchanged sequenced also need to be reversed before testing.</param>
-        public CrossExchangeInterImprovementOperator(int maxWindowSize = 8, bool tryReversed = true)
+        /// <param name="tryAll">True when all tour pairs need to be tested.</param>
+        public CrossExchangeInterImprovementOperator(int maxWindowSize = 8, bool tryReversed = true, bool tryAll = false)
         {
+            _tryAll = tryAll;
             _maxWindowSize = maxWindowSize;
             _tryReversed = tryReversed;
         }
@@ -63,7 +67,22 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
         /// <summary>
         /// Gets the name of this operator.
         /// </summary>
-        public string Name => "CROSS";
+        public string Name
+        {
+            get
+            {
+                var name = string.Format("CROSS-MUL-{0}", _maxWindowSize);
+                if (_tryAll)
+                {
+                    name += "_(ALL)";
+                }
+                if (_tryReversed)
+                {
+                    name += "_(REV)";
+                }
+                return name;
+            }
+        }
 
         /// <summary>
         /// Returns true if it doesn't matter if tour indexes are switched.
@@ -85,23 +104,53 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
         /// </summary>
         public bool Apply(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution, out float delta)
         {
-            // check if solution has at least two tours.
-            if (solution.Count < 2)
+            if (_tryAll)
             {
                 delta = 0;
-                return false;
-            }
+                //bool improved = true;
+                //while (improved)
+                //{
+                //    improved = false;
+                    for (var t1 = 0; t1 < solution.Count; t1++)
+                    {
+                        for (var t2 = 0; t2 < t1; t2++)
+                        {
+                            if (t1 == t2)
+                            {
+                                continue;
+                            }
 
-            // choose two random routes.
-            var random = RandomGeneratorExtensions.GetRandom();
-            var tourIdx1 = random.Generate(solution.Count);
-            var tourIdx2 = random.Generate(solution.Count - 1);
-            if (tourIdx2 >= tourIdx1)
-            {
-                tourIdx2++;
-            }
+                            if (this.Apply(problem, objective, solution, t1, t2, out float localDelta))
+                            { // success!
+                                delta += localDelta;
+                                //improved = true;
+                            }
+                        }
+                    }
+                //}
 
-            return Apply(problem, objective, solution, tourIdx1, tourIdx2, out delta);
+                return delta != 0;
+            }
+            else
+            { // just choose random routes.
+                // check if solution has at least two tours.
+                if (solution.Count < 2)
+                {
+                    delta = 0;
+                    return false;
+                }
+
+                // choose two random routes.
+                var random = RandomGeneratorExtensions.GetRandom();
+                var tourIdx1 = random.Generate(solution.Count);
+                var tourIdx2 = random.Generate(solution.Count - 1);
+                if (tourIdx2 >= tourIdx1)
+                {
+                    tourIdx2++;
+                }
+
+                return Apply(problem, objective, solution, tourIdx1, tourIdx2, out delta);
+            }
         }
 
         /// <summary>
@@ -242,6 +291,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
                     return false;
                 }
 
+                Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
+                    "Improvement found {0}({1})->{2}({3})",
+                        tour1Idx, s1.SeqToString(), tour2Idx, s2.SeqToString());
+
                 // exchange is possible and there is improvement, do the improvement.
                 var tour1 = solution.Tour(tour1Idx);
                 var tour2 = solution.Tour(tour2Idx);
@@ -278,39 +331,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.
             delta = 0;
             return false;
         }
-
-        // private IEnumerable<LocalSeq> EnumerateAugemented(ITour tour, int maxWindowSize, bool doReverse)
-        // {        
-        //     if (doReverse)
-        //     {
-        //         return this.EnumerateAugementedForward(tour, maxWindowSize).Concat(this.EnumerateAugementedForward(tour, maxWindowSize));
-        //     }
-        //     return this.EnumerateAugementedForward(tour, maxWindowSize);
-        // }
-
-        // private IEnumerable<LocalSeq> EnumerateAugementedForward(ITour tour, int maxWindowSize)
-        // {
-        //     foreach (var seq in tour.SeqAndSmaller(4, maxWindowSize + 2, tour.IsClosed(), false))
-        //     {
-        //         yield return new LocalSeq()
-        //         {
-        //             Seq = seq,
-        //             Forward = true
-        //         };
-        //     }
-        // }
-
-        // private IEnumerable<LocalSeq> EnumerateAugementedBackward(ITour tour, int maxWindowSize)
-        // {
-        //     foreach (var seq in tour.SeqAndSmaller(4, maxWindowSize + 2, tour.IsClosed(), false).SeqReversed())
-        //     {
-        //         yield return new LocalSeq()
-        //         {
-        //             Seq = seq,
-        //             Forward = false
-        //         };
-        //     }
-        // }
 
         private struct LocalSeq
         {

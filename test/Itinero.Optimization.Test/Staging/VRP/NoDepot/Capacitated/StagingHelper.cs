@@ -71,7 +71,7 @@ namespace Itinero.Optimization.Test.Staging.VRP.NoDepot.Capacitated
             {
                 foreach (var visitCost in visitCosts)
                 {
-                    if (visitCost.Name == Models.Metrics.Distance)
+                    if (visitCost.Name == Itinero.Optimization.Models.Metrics.Distance)
                     {
                         problem.VisitCosts = visitCost.Costs;
                         visitCosts.Remove(visitCost);

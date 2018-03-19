@@ -37,11 +37,13 @@ namespace Itinero.Optimization.Test.Functional
 
             // invoke case-specific tests.
 
-            TSP.TSPTests.Run();
-            STSP.STSPTests.Run();
-            TSP_TW.TSPTWTests.Run();
+            //TSP.TSPTests.Run();
+            //STSP.STSPTests.Run();
+            //TSP_TW.TSPTWTests.Run();
 
             VRP.NoDepot.Capacitated.NoDepotCVRPTests.Run();
+
+            Console.ReadLine();
         }
 
         private static void EnableLogging()
@@ -55,10 +57,11 @@ namespace Itinero.Optimization.Test.Functional
                     "RestrictionProcessor",
                     "NodeIndex",
                     "RouterDb",
-                    "SeededLocalizedCheapestInsertionSolver",
+                    //"SeededLocalizedCheapestInsertionSolver",
                     "3OHC_(NN)_(DL)",
-                    "IterativeSolver",
-                    "VNSSolver" });
+                    "IterativeSolver"
+                    //"VNSSolver"
+                });
             OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
                 if (loggingBlacklist.Contains(o))

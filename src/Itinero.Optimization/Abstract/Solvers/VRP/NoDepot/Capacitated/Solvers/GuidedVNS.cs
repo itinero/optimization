@@ -56,8 +56,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
             _interImprovements = new List<IInterTourImprovementOperator>(4);
             _interImprovements.Add(new Operators.RelocateImprovementOperator());
             _interImprovements.Add(new Operators.ExchangeInterImprovementOperator());
-            _interImprovements.Add(new Operators.RelocateExchangeInterImprovementOperator(10));
-            _interImprovements.Add(new Operators.CrossExchangeInterImprovementOperator(10));
+            _interImprovements.Add(new Operators.RelocateExchangeInterImprovementOperator(5));
+            _interImprovements.Add(new Operators.CrossExchangeInterImprovementOperator(10, false));
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
         /// <returns></returns>
         public override NoDepotCVRPSolution Solve(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, out float fitness)
         {
-            var worstFactor = 10;
+            var worstFactor = 5;
 
             // construct initial solution.
             var solution = _constructionHeuristic.Solve(problem, objective);
@@ -86,6 +86,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                 improved = false;
 
                 for (var t1 = 0; t1 < solution.Count; t1++)
+                {
                     for (var t2 = t1 + 1; t2 < solution.Count; t2++)
                     {
                         var tour1 = solution.Tour(t1);
@@ -104,9 +105,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
 
                             // select and execute next penalization.
                             var nextPenalty = PenalizeNext(problem, tour1, tour2, penalizations);
+                            if (!nextPenalty.HasValue)
+                            { // penalty was impossible, move on.
+                                break;
+                            }
                             if (worstPenalty < 0)
                             { // keep the first penalized weight.
-                                worstPenalty = nextPenalty.Original;
+                                worstPenalty = nextPenalty.Value.Original;
                             }
 
                             // apply penalizations again.
@@ -133,6 +138,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                             // verifiy against original if there are improvements.
                             var totalPenalty = ResetPenalizations(problem, penalizations);
 
+                            localSolution.Contents[t1].Weight = objective.Calculate(problem, solution, t1);
+                            localSolution.Contents[t2].Weight = objective.Calculate(problem, solution, t2);
+
                             var tour1After = localSolution.Contents[t1].Weight;
                             var tour2After = localSolution.Contents[t2].Weight;
 
@@ -145,12 +153,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                                 solution = localSolution;
                                 improved = true;
                             }
-                            else
-                            {
-                                // Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
-                                //     "No improvement found {0}-{1} : {2}->{3} : Penalty: {4}/{5}", t1, t2, tour1Before + tour2Before, tour1After + tour2After,
-                                //         totalPenalty, worstPenalty * worstFactor);
-                            }
 
                             if (totalPenalty > worstPenalty * worstFactor)
                             {
@@ -158,6 +160,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                             }
                         }
                     }
+                }
             }
 
             fitness = objective.Calculate(problem, solution);
@@ -269,7 +272,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
             return totalPenalty;
         }
 
-        private Penalty PenalizeNext(NoDepotCVRProblem problem, ITour tour1, ITour tour2, Dictionary<Pair, Penalty> penalizations)
+        private Penalty? PenalizeNext(NoDepotCVRProblem problem, ITour tour1, ITour tour2, Dictionary<Pair, Penalty> penalizations)
         {
             // choose best next edge to penalize.
             var worstCost = 0f;
@@ -313,6 +316,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                 }
             }
 
+            if (!worstPair.HasValue)
+            { // no pairs found.
+                return null;
+            }
             penalizations[worstPair.Value] = worstPenalty.Value;
             return worstPenalty.Value;
         }

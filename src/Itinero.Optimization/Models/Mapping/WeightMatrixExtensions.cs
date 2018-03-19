@@ -25,6 +25,8 @@ using Itinero.Data.Network;
 using Itinero.LocalGeo;
 using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms.Directed;
+using Itinero.Attributes;
+using System;
 
 namespace Itinero.Optimization.Models.Mapping
 {
@@ -143,7 +145,8 @@ namespace Itinero.Optimization.Models.Mapping
         /// Builds a route from a given tour.
         /// </summary>
         /// <returns></returns>
-        public static Route BuildRoute<T>(this IWeightMatrixAlgorithm<T> algorithm, ITour tour)
+        public static Route BuildRoute<T>(this IWeightMatrixAlgorithm<T> algorithm, ITour tour, 
+            Func<int, IAttributeCollection, float> customizeVisit = null)
         {
             Route route = null;
             foreach (var pair in tour.Pairs())
@@ -151,12 +154,14 @@ namespace Itinero.Optimization.Models.Mapping
                 var localRoute = algorithm.Router.Calculate(algorithm.Profile, algorithm.RouterPoints[pair.From],
                     algorithm.RouterPoints[pair.To]);
                 if (localRoute.Stops != null &&
-                    localRoute.Stops.Length == 2)
-                {
-                    localRoute.Stops[0].Attributes.AddOrReplace("stop", 
-                        pair.From.ToInvariantString());
-                    localRoute.Stops[1].Attributes.AddOrReplace("stop",
-                        pair.To.ToInvariantString());
+                    localRoute.Stops.Length == 2 &&
+                    customizeVisit != null)
+                { // customize stops that represent visits.
+                    // ignore travel time increase for the first one.
+                    customizeVisit(pair.From, localRoute.Stops[0].Attributes);
+                    // customize and add any extra travel time.
+                    localRoute.TotalTime +=
+                        customizeVisit(pair.To, localRoute.Stops[1].Attributes);
                 }
 
                 if (route == null)
@@ -256,7 +261,7 @@ namespace Itinero.Optimization.Models.Mapping
                 if (localRoute.Stops != null &&
                     localRoute.Stops.Length == 2)
                 {
-                    localRoute.Stops[0].Attributes.AddOrReplace("stop", 
+                    localRoute.Stops[0].Attributes.AddOrReplace("stop",
                         pair.From.ToInvariantString());
                     localRoute.Stops[1].Attributes.AddOrReplace("stop",
                         pair.To.ToInvariantString());

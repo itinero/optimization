@@ -15,8 +15,33 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+ 
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-using System.Reflection;
+namespace Itinero.Optimization.IO.Json
+{
+    /// <summary>
+    /// A collection of functions to serialize/deserialize json.
+    /// </summary>
+    public static class JsonSerializer
+    {
+        /// <summary>
+        /// A function to serialize the given object to json.
+        /// </summary>
+        public static Func<object, string> ToJsonFunc
+        {
+            get; set;
+        }
 
-[assembly: AssemblyVersion("0.17.4")]
-[assembly: AssemblyInformationalVersion("0.17.4-beta")]
+        /// <summary>
+        /// A function to deserialize json.
+        /// </summary>
+        public static Func<string, Type, object> FromJsonFunc
+        {
+            get;
+            set;
+        }
+    }
+}

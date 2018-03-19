@@ -20,6 +20,7 @@ using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.Optimization.Abstract.Models;
 using Itinero.Optimization.Abstract.Tours;
+using System.Linq;
 
 namespace Itinero.Optimization.Models.Mapping
 {
@@ -113,7 +114,26 @@ namespace Itinero.Optimization.Models.Mapping
         /// <returns></returns>
         public Route BuildRoute(ITour tour)
         {
-            return _weightMatrix.BuildRoute(tour);
+            if (this.Model.VisitCosts != null &&
+                this.Model.VisitCosts.Length > 0)
+            { // there are visit costs, perhaps needed in route construction.
+                var timeCosts = this.Model.VisitCosts.FirstOrDefault(x => x.Name == Metrics.Time);
+
+                return _weightMatrix.BuildRoute(tour, (v, a) =>
+                {
+                    foreach (var visitCost in this.Model.VisitCosts)
+                    {
+                        a.AddOrReplace("cost_" + visitCost.Name, visitCost.Costs[v].ToInvariantString());
+                    }
+
+                    if (timeCosts != null)
+                    {
+                        return timeCosts.Costs[v];
+                    }
+                    return 0;
+                });
+            }
+            return _weightMatrix.BuildRoute(tour, (v, a) => 0);
         }
 
         /// <summary>

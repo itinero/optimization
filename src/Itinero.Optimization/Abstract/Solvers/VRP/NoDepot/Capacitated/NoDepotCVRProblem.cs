@@ -22,6 +22,8 @@ using Itinero.Algorithms.Matrices;
 using Itinero.Optimization.General;
 using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers;
+using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.Operators;
+using Itinero.Optimization.Algorithms.Solvers;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
@@ -64,16 +66,30 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// Gets the seed heuristic.
         /// </summary>
         /// <returns></returns>
-        public Func<NoDepotCVRProblem, IList<int>, int> SelectSeedHeuristic
+        public Func<NoDepotCVRProblem, IList<int>, int> SelectSeedWithCloseNeighboursHeuristic
+        {
+            get
+            {
+                return (problem, visits) =>
+                {
+                    var weights = problem.Weights;
+                    
+                    return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
+                         weights, visits);
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets the seed heuristic.
+        /// </summary>
+        /// <returns></returns>
+        public Func<NoDepotCVRProblem, IList<int>, int> SelectRandomSeedHeuristic
         {
             get
             {
                 return (problem, visits) => 
                 {
-                    var weights = problem.Weights;
-
-                    //return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-                    //     weights, visits);
                     return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
                 };
             }
@@ -85,8 +101,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns></returns>
         public NoDepotCVRPSolution Solve()
         {
-            return this.Solve(new SeededLocalizedCheapestInsertionSolver(
-                this.SelectSeedHeuristic, (p, x, y) => true));
+            return this.Solve((p, x, y) => true);
         }
 
         /// <summary>
@@ -95,16 +110,19 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns></returns>
         public NoDepotCVRPSolution Solve(Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc)
         {
-            // var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-            //     new SeededLocalizedCheapestInsertionSolver(this.SelectSeedHeuristic, overlapsFunc), 20);
-            // var solver = new GuidedVNS(constructionHeuristic, overlapsFunc, 10 * 60);
+
+
+            //var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
+            //    new SeededLocalizedCheapestInsertionSolver(this.SelectSeedHeuristic, overlapsFunc), 1,
+            //        );
+            //var solver = new GuidedVNS(constructionHeuristic, overlapsFunc, 4 * 60);
+            //var iterate = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
+            //    solver, 10);
 
             var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-                new SeededLocalizedCheapestInsertionSolver(this.SelectSeedHeuristic, overlapsFunc), 20);
-            //var constructionHeuristic = new SeededLocalizedCheapestInsertionSolver(this.SelectSeedHeuristic, overlapsFunc);
-            var solver = new GuidedVNS(constructionHeuristic, overlapsFunc, 4 * 60);
+                new SeededLocalizedCheapestInsertionSolver(this.SelectRandomSeedHeuristic, overlapsFunc), 10);
 
-            return this.Solve(solver);
+            return this.Solve(constructionHeuristic);
         }
 
         /// <summary>
