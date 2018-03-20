@@ -18,7 +18,7 @@
 
 using System;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
-using Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Solvers;
+using Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solvers;
 using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
 {
     /// <summary>
     /// An objective of a CVRP.

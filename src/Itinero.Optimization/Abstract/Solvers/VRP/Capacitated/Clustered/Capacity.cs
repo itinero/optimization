@@ -18,7 +18,7 @@
 
 using Itinero.Algorithms.Matrices;
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
 {
     /// <summary>
     /// Represent the capacity of a vehicle.

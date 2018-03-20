@@ -19,13 +19,13 @@
 using System.Collections.Generic;
 using Itinero.Optimization.Abstract.Models;
 using Itinero.Optimization.Models.Mapping;
-using Itinero.Optimization.Abstract.Solvers.VRP.Capacitated;
+using Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered;
 using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Abstract.Tours.Typed;
 using Itinero.Optimization.Abstract.Models.Costs;
 using System;
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
 {
     /// <summary>
     /// Hooks the solver up to the solver registry by defining solver details.

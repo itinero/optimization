@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using Itinero.Algorithms.Matrices;
-using Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Solvers;
+using Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solvers;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
@@ -28,7 +28,7 @@ using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.General;
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
 {
     /// <summary>
     /// The capacitated VRP.
@@ -39,6 +39,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated
         /// Gets or sets the vehicle capacity.
         /// </summary>
         public Capacity Capacity { get; set; }
+
+        /// <summary>
+        /// Gets or sets the depot.
+        /// </summary>
+        public int Depot { get; set; }
 
         /// <summary>
         /// Gets the weights.

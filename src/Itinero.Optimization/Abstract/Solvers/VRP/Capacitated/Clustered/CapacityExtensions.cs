@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solvers
 {
     /// <summary>
     /// Contains extension methods to handle capacity.

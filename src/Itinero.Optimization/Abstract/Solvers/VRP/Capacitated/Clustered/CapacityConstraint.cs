@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
 {
     /// <summary>
     /// A generic max capacity constraint, this can be weight, # of items or cubic centimeters of example.

@@ -29,7 +29,7 @@ using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solvers
 {
     /// <summary>
     /// A seeded localized cheapest insertion solver.
