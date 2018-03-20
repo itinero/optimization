@@ -42,7 +42,7 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated.Sol
         {
             var problem = "data.geometric.problem1.geojson".BuildProblem(out var solution, out var locations);
 
-            var solver = new SeededLocalizedCheapestInsertionSolver(problem.SelectSeedHeuristic, 
+            var solver = new SeededLocalizedCheapestInsertionSolver(problem.SelectRandomSeedHeuristic, 
                 (p, t1, t2) => {
                     return locations.ToursOverlap(t1, t2);
                 });
@@ -58,7 +58,7 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated.Sol
         {
             var problem = "data.geometric.problem2.geojson".BuildProblem(out var solution, out var locations);
 
-            var solver = new SeededLocalizedCheapestInsertionSolver(problem.SelectSeedHeuristic, 
+            var solver = new SeededLocalizedCheapestInsertionSolver(problem.SelectRandomSeedHeuristic, 
                 (p, t1, t2) => {
                     return locations.ToursOverlap(t1, t2);
                 });

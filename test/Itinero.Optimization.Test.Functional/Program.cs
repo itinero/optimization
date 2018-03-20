@@ -16,10 +16,7 @@
  *  limitations under the License.
  */
 
-using Itinero.LocalGeo;
-using Itinero.Optimization.Abstract.Tours;
 using System;
-using System.IO;
 using System.Collections.Generic;
 using Itinero.Logging;
 
@@ -37,13 +34,14 @@ namespace Itinero.Optimization.Test.Functional
 
             // invoke case-specific tests.
 
-            //TSP.TSPTests.Run();
-            //STSP.STSPTests.Run();
-            //TSP_TW.TSPTWTests.Run();
+            TSP.TSPTests.Run();
+            STSP.STSPTests.Run();
+            TSP_TW.TSPTWTests.Run();
 
             VRP.NoDepot.Capacitated.NoDepotCVRPTests.Run();
-
+#if DEBUG
             Console.ReadLine();
+#endif
         }
 
         private static void EnableLogging()
@@ -57,11 +55,17 @@ namespace Itinero.Optimization.Test.Functional
                     "RestrictionProcessor",
                     "NodeIndex",
                     "RouterDb",
-                    //"SeededLocalizedCheapestInsertionSolver",
+                    "SeededLocalizedCheapestInsertionSolver",
                     "3OHC_(NN)_(DL)",
-                    "IterativeSolver"
-                    //"VNSSolver"
+                    "IterativeSolver",
+                    "VNSSolver",
+                    "CROSS-MUL-10_(ALL)_(REV)",
+                    "CROSS-MUL-10_(REV)",
+                    "G-VNS"
                 });
+#if DEBUG
+            loggingBlacklist.Clear();
+#endif
             OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
                 if (loggingBlacklist.Contains(o))

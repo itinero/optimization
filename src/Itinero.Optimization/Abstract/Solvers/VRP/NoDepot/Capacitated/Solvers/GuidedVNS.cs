@@ -57,7 +57,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
             _interImprovements.Add(new Operators.RelocateImprovementOperator());
             _interImprovements.Add(new Operators.ExchangeInterImprovementOperator());
             _interImprovements.Add(new Operators.RelocateExchangeInterImprovementOperator(5));
-            _interImprovements.Add(new Operators.CrossExchangeInterImprovementOperator(10, false));
+            _interImprovements.Add(new Operators.CrossExchangeInterImprovementOperator(10, true));
         }
 
         /// <summary>

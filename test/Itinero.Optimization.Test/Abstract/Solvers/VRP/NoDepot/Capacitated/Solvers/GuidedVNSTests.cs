@@ -48,7 +48,7 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated.Sol
             };
             float fitness;
             var solver = new GuidedVNS(
-                new SeededLocalizedCheapestInsertionSolver(problem.SelectSeedHeuristic, 
+                new SeededLocalizedCheapestInsertionSolver(problem.SelectRandomSeedHeuristic, 
                     toursOverlap), toursOverlap, 120);
             var result = solver.Solve(problem, new NoDepotCVRPObjective(), out fitness);
             var json = result.BuildFeatures(locations).ToGeoJson();

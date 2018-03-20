@@ -51,8 +51,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
         /// <param name="thresholdPercentage">The percentage of unplaced visits to try and place in existing tours.</param>
         /// <param name="localizationFactor">The factor to take into account the weight to the seed visit.</param>
         public SeededLocalizedCheapestInsertionSolver(Func<NoDepotCVRProblem, IList<int>, int> selectSeed, 
-            Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlaps, int k = 100, float slackPercentage = 5, 
-            float thresholdPercentage = 15, float localizationFactor = 1f)
+            Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlaps, int k = 10, float slackPercentage = 5, 
+            float thresholdPercentage = 20, float localizationFactor = 1f)
         {
             _selectSeed = selectSeed;
             _overlaps = overlaps;
@@ -66,16 +66,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
             _intraImprovements.Add(new TSP.Solvers.HillClimbing3OptSolver());
 
             // register the default inter improvement operators.
-            _interImprovements = new List<IInterTourImprovementOperator>(4);
-            //_interImprovements.Add(new Operators.RelocateImprovementOperator());
-            //_interImprovements.Add(new Operators.RelocateExchangeInterImprovementOperator(5));
-
-            var crossMultiAllPairs = new Operators.CrossExchangeInterImprovementOperator(10, true, true);
-            var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-                crossMultiAllPairs, 10, true);
-
-            _interImprovements.Add(crossMultiAllPairs);
+            _interImprovements = new List<IInterTourImprovementOperator>(4);            
+            _interImprovements.Add(new Operators.CrossExchangeInterImprovementOperator(10));
             _interImprovements.Add(new Operators.ExchangeInterImprovementOperator());
+            _interImprovements.Add(new Operators.RelocateImprovementOperator());
+            _interImprovements.Add(new Operators.RelocateExchangeInterImprovementOperator(5));
         }
 
         /// <summary>
@@ -165,7 +160,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                             // improve if needed.
                             if (((problem.Weights.Length - visits.Count) % _k) == 0)
                             { // an improvement is decided.
-                                // apply the inter-route improvements.
+                                // apply the intra-route improvements.
                                 content.Weight = this.ImproveIntraRoute(problem.Weights, currentTour,
                                     content.Weight);
 
@@ -176,6 +171,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                         }
                         else
                         {// ok we are done!
+                            // apply the intra-route improvements on last time.
+                            content.Weight = this.ImproveIntraRoute(problem.Weights, currentTour,
+                                content.Weight);
+
                             // run the inter-improvements one last time.
                             this.Improve(problem, objective, solution, solution.Count - 1);
 
