@@ -12,14 +12,16 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
         /// <summary>
         /// Creates a new and empty solution.
         /// </summary>
-        /// <returns></returns>
-        TSolution NewSolution();
+        /// <param name="problem">The problem.</param>
+        /// <returns>A new empty solution.</returns>
+        TSolution NewSolution(TProblem problem);
 
         /// <summary>
         /// Gets a list of potential visits.
         /// </summary>
-        /// <returns></returns>
-        IList<int> PotentialVisits();
+        /// <param name="problem">The problem.</param>
+        /// <returns>The list of visits to be visited, except potentially those uniquely used as seeds.</returns>
+        IList<int> PotentialVisits(TProblem problem);
 
         // TODO: check if this is needed, the visit list could be derived from the solution or included there as 'unplaced' list or something like that.
 
@@ -30,22 +32,23 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
         /// <param name="solution">The solution.</param>
         /// <param name="visits">The visit list.</param>
         /// <returns></returns>
-        ITour SeedNext(TProblem problem, TSolution solution, IList<int> visits);
+        int SeedNext(TProblem problem, TSolution solution, IList<int> visits);
 
         /// <summary>
         /// Tries to place any of the visits in the given visit list in the given tour.
         /// </summary>
         /// <param name="problem">The problem.</param>
-        /// <param name="tour">The problem.</param>
+        /// <param name="solution">The solution.</param>
+        /// <param name="t">The tour.</param>
         /// <param name="visits">The visit list.</param>
         /// <returns></returns>
-        bool TryPlaceAny(TProblem problem, ITour tour, IList<int> visits);
+        bool TryPlaceAny(TProblem problem, TSolution solution, int t, IList<int> visits);
 
         /// <summary>
         /// /// Tries to place any of the visits in the given visit list.
         /// </summary>
         /// <param name="problem">The problem.</param>
-        /// <param name="solution">The tour.</param>
+        /// <param name="solution">The solution.</param>
         /// <param name="visits">The visits to try.</param>
         /// <returns></returns>
         bool TryPlaceAny(TProblem problem, TSolution solution, IList<int> visits);

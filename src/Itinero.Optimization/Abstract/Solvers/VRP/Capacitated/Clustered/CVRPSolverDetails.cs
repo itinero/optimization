@@ -38,7 +38,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
         /// <returns></returns>
         public static SolverDetails Default = new SolverDetails()
         {
-            Name = "TSP",
+            Name = "CVRP",
             TrySolve = TrySolve
         };
 

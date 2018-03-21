@@ -11,7 +11,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
     /// </summary>
     public class SeededCheapestInsertion<TProblem, TObjective, TSolution> : SolverBase<float, TProblem, TObjective, TSolution, float>
         where TSolution : ISeededCheapestInsertionSolution
-        where TObjective : ObjectiveBase<TProblem, TSolution, float>, ISeededCheapestInsertionObjective<TProblem, TSolution>
+    where TObjective : ObjectiveBase<TProblem, TSolution, float>, ISeededCheapestInsertionObjective<TProblem, TSolution>
     {
         private readonly float _interImprovementsThreshold; // the threshold for when the apply inter-route improvements.
         private readonly IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float> _intraImprovements; // holds the intra-route improvements;
@@ -53,10 +53,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
         public override TSolution Solve(TProblem problem, TObjective objective, out float fitness)
         {
             // create the solution.
-            var solution = objective.NewSolution();
+            var solution = objective.NewSolution(problem);
 
             // get the list of potential visits.
-            var visits = objective.PotentialVisits();
+            var visits = objective.PotentialVisits(problem);
             var totalVisits = visits.Count;
 
             // calculate absolute thresholds.
@@ -75,31 +75,36 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
                 }
 
                 // start a new tour.
-                var tour = objective.SeedNext(problem, solution, visits);
+                var t = objective.SeedNext(problem, solution, visits);
+                var tour = solution.Tour(t);
 
-                // try and place the next visit.
-                if (objective.TryPlaceAny(problem, tour, visits))
-                { // placement succeeded.
-                    if (((totalVisits - visits.Count) % interImprovementThreshold) == 0)
-                    { // apply improvement local search if threshold reached.
+                while (visits.Count > 0)
+                { // fill up this tour until there are no more visits.
+
+                    // try and place the next visit.
+                    if (objective.TryPlaceAny(problem, solution, t, visits))
+                    { // placement succeeded.
+                        if (((totalVisits - visits.Count) % interImprovementThreshold) == 0)
+                        { // apply improvement local search if threshold reached.
+                            // apply the intra-route improvements.
+                            this.ApplyIntra(problem, objective, tour);
+
+                            // apply the inter-route improvements.
+                            this.ApplyInter(problem, objective, solution, t);
+                        }
+                    }
+                    else
+                    { // ok we are done!
                         // apply the intra-route improvements.
                         this.ApplyIntra(problem, objective, tour);
 
                         // apply the inter-route improvements.
-                        this.ApplyInter(problem, objective, solution, solution.Count - 1);
+                        this.ApplyInter(problem, objective, solution, t);
+
+                        // move to the next tour.
+                        // TODO: what if we suddenly have more space left? perhaps check if the two above succeed and try once more.
+                        break;
                     }
-                }
-                else
-                { // ok we are done!
-                    // apply the intra-route improvements.
-                    this.ApplyIntra(problem, objective, tour);
-
-                    // apply the inter-route improvements.
-                    this.ApplyInter(problem, objective, solution, solution.Count - 1);
-
-                    // move to the next tour.
-                    // TODO: what if we suddenly have more space left? perhaps check if the two above succeed and try once more.
-                    break;
                 }
             }
 

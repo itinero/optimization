@@ -135,28 +135,29 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 new TSP.Solvers.HillClimbing3OptSolver(),
                 new IInterTourImprovementOperator<float, CVRProblem, CVRPObjective, CVRPSolution, float>[]
                 {
-                    new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 10),
-                    new ExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(),
-                    new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true),
-                    new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 5)
+                    // new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 10),
+                    // new ExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(),
+                    // new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true),
+                    // new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 5)
                 }
             );
 
-            var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
-                    slci, 1);
-            var iterate = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
-                    constructionHeuristic, 1, crossMultiAllPairsUntil);
-            var solver = new GuidedVNS(iterate, overlapsFunc, 8 * 60);
+            //var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
+            //         slci, 1);
+            // var iterate = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
+            //         constructionHeuristic, 1, crossMultiAllPairsUntil);
+            // var solver = new GuidedVNS(iterate, overlapsFunc, 8 * 60);
 
-            return this.Solve(solver);
+            return this.Solve(slci, new CVRPObjective(this.SelectRandomSeedHeuristic, overlapsFunc));
         }
 
         /// <summary>
         /// Solvers this using the given solver.
         /// </summary>
-        public CVRPSolution Solve(Algorithms.Solvers.ISolver<float, CVRProblem, CVRPObjective, CVRPSolution, float> solver)
+        public CVRPSolution Solve(Algorithms.Solvers.ISolver<float, CVRProblem, CVRPObjective, CVRPSolution, float> solver,
+            CVRPObjective objective)
         {
-            return solver.Solve(this, new CVRPObjective());
+            return solver.Solve(this, objective);
         }
     }
 }
