@@ -37,7 +37,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
     /// An objective of a CVRP.
     /// </summary>
     public class CVRPObjective : ObjectiveBase<CVRProblem, CVRPSolution, float>,
-        IRelocateObjective<CVRProblem, CVRPSolution>, IExchangeObjective<CVRProblem, CVRPSolution>, IMultiExchangeObjective<CVRProblem>,
+        IRelocateObjective<CVRProblem, CVRPSolution>, IExchangeObjective<CVRProblem, CVRPSolution>, IMultiExchangeObjective<CVRProblem, CVRPSolution>,
         IMultiRelocateObjective<CVRProblem, CVRPSolution>, ISeededCheapestInsertionObjective<CVRProblem, CVRPSolution>
         {
             private readonly Func<CVRProblem, IList<int>, int> _seedFunc;
@@ -398,8 +398,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                     yield return new Operators.Seq()
                     {
                         Between = total - first - last,
-                            Total = total,
-                            Visits = s
+                        BetweenOriginal = total - first - last,
+                        Visits = s
                     };
                 }
             }
@@ -419,15 +419,97 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
             /// Tries to swap the given sequences between the two given tours.
             /// </summary>
             /// <param name="problem">The problem.</param>
+            /// <param name="solution">The solution.</param>
             /// <param name="t1">The first tour.</param>
             /// <param name="t2">The second tour.</param>
             /// <param name="s1">The sequence from tour1.</param>
             /// <param name="s2">The sequence from tour2.</param>
             /// <param name="delta">The difference in visit.</param>
             /// <returns>True if the swap succeeded.</returns>   
-            public bool TrySwap(CVRProblem problem, int t1, int t2, Operators.Seq s1, Operators.Seq s2, out float delta)
+            public bool TrySwap(CVRProblem problem, CVRPSolution solution, int t1, int t2,
+                Operators.Seq s1, Operators.Seq s2, out float delta)
             {
-                throw new NotImplementedException();
+                var E = 0.01f;
+
+                var pair1 = new Pair(s1.Visits[0], s1.Visits[s1.Visits.Length - 1]);
+                var pair1Between = new Pair(s1.Visits[1], s1.Visits[s1.Visits.Length - 2]);
+                var pair2 = new Pair(s2.Visits[0], s2.Visits[s2.Visits.Length - 1]);
+                var pair2Between = new Pair(s2.Visits[1], s2.Visits[s2.Visits.Length - 2]);
+
+                var tour1Current = problem.Weights[pair1.From][pair1Between.From] + 
+                    problem.Weights[pair1Between.To][pair1.To] + s1.BetweenOriginal;
+                var tour1Future = problem.Weights[pair1.From][pair2Between.From] + 
+                    problem.Weights[pair2Between.To][pair1.To] + s2.Between;
+
+                var tour2Current = problem.Weights[pair2.From][pair2Between.From] + 
+                    problem.Weights[pair2Between.To][pair2.To] + s2.BetweenOriginal;
+                var tour2Future = problem.Weights[pair2.From][pair1Between.From] + 
+                    problem.Weights[pair1Between.To][pair2.To] + s1.Between;
+
+                var difference = tour1Current - tour1Future + 
+                    tour2Current - tour2Future;
+
+                if (difference <= E)
+                { // new weights are not better.
+                    delta = 0;
+                    return false;
+                }
+
+                var tour1FutureComplete = solution.Contents[t1].Weight - tour1Current + tour1Future;
+                if (tour1FutureComplete > problem.Capacity.Max)
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+
+                var tour2FutureComplete = solution.Contents[t2].Weight - tour2Current + tour2Future;
+                if (tour2FutureComplete > problem.Capacity.Max)
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+
+                if (!problem.Capacity.ExchangeIsPossible(solution.Contents[t1], s1.Visits, s2.Visits))
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+
+                if (!problem.Capacity.ExchangeIsPossible(solution.Contents[t2], s2.Visits, s1.Visits))
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+
+                // do the swap.
+                // s2 -> tour1
+                var tour1 = solution.Tour(t1);
+                var previous = pair1.From;
+                for (var v = 1; v < s2.Visits.Length - 1; v++)
+                {
+                    var visit = s2.Visits[v];
+                    tour1.ReplaceEdgeFrom(previous, visit);
+                    previous = visit;
+                }
+                tour1.ReplaceEdgeFrom(previous, pair1.To);
+
+                // s1 -> tour2
+                var tour2 = solution.Tour(t2);
+                previous = pair2.From;
+                for (var v = 1; v < s1.Visits.Length - 1; v++)
+                {
+                    var visit = s1.Visits[v];
+                    tour2.ReplaceEdgeFrom(previous, visit);
+                    previous = visit;
+                }
+                tour2.ReplaceEdgeFrom(previous, pair2.To);
+                delta = difference;
+
+                problem.Capacity.UpdateExchange(solution.Contents[t1], s1.Visits, s2.Visits);
+                problem.Capacity.UpdateExchange(solution.Contents[t2], s2.Visits, s1.Visits);
+                solution.Contents[t1].Weight = tour1FutureComplete;
+                solution.Contents[t2].Weight = tour2FutureComplete;
+                return true;
             }
 
             /// <summary>
@@ -478,7 +560,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                     return false;
                 }
 
-                if (!problem.Capacity.CanAdd(solution.Contents[t1], seq.Visits, 1, seq.Visits.Length - 1))
+                if (!problem.Capacity.CanAdd(solution.Contents[t1], seq.Visits, 1, seq.Visits.Length - 2))
                 { // constraint violated.
                     delta = 0;
                     return false;
@@ -502,7 +584,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 tour1WeightMoved -= tour1Current;
                 tour1WeightMoved -= seq.Between;
                 tour1WeightMoved += tour1Future;
-                delta = (solution.Contents[t1].Weight - tour1WeightMoved) + 
+                delta = (solution.Contents[t1].Weight - tour1WeightMoved) +
                     (solution.Contents[t2].Weight - tour2WeightMoved);
                 solution.Contents[t1].Weight = tour1WeightMoved;
                 solution.Contents[t2].Weight = tour2WeightMoved;

@@ -25,7 +25,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange
         /// <summary>
         /// Gets the name of this operator.
         /// </summary>
-        public string Name => "EX";
+        public string Name => "CROSS";
 
         /// <summary>
         /// Returns true if it doesn't matter if tour indexes are switched.

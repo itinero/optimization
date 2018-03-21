@@ -19,7 +19,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
     /// The search stops from the moment any improvement is found unless configured to keep testing all tour pairs.
     /// </remarks>
     public class MultiExchangeOperator<TObjective, TProblem, TSolution> : IInterTourImprovementOperator<float, TProblem, TObjective, TSolution, float>
-        where TObjective : IMultiExchangeObjective<TProblem>
+        where TObjective : IMultiExchangeObjective<TProblem, TSolution>
         where TSolution : IMultiExchangeSolution
     {
         private readonly int _maxWindowSize = 8;
@@ -154,7 +154,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                 foreach (var s2 in tour2Enumerable)
                 {
                     // try exchanging without change order.
-                    if (objective.TrySwap(problem, t1, t2, s1, s2, out float localDelta))
+                    if (objective.TrySwap(problem, solution, t1, t2, s1, s2, out float localDelta))
                     { // exchange succeeded.
                         delta = localDelta;
                         return true;
@@ -166,7 +166,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                     }
 
                     // try exchanging with s1 reversed.
-                    if (objective.TrySwap(problem, t1, t2, s1Rev.Value, s2, out localDelta))
+                    if (objective.TrySwap(problem, solution, t1, t2, s1Rev.Value, s2, out localDelta))
                     { // exchange succeeded.
                         delta = localDelta;
                         return true;
@@ -176,14 +176,14 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                     var s2Rev = objective.Reverse(problem, s2);
 
                     // try exchanging with s2 reversed.
-                    if (objective.TrySwap(problem, t1, t2, s1, s2Rev, out localDelta))
+                    if (objective.TrySwap(problem, solution, t1, t2, s1, s2Rev, out localDelta))
                     { // exchange succeeded.
                         delta = localDelta;
                         return true;
                     }
 
                     // try exchanging with both reversed.
-                    if (objective.TrySwap(problem, t1, t2, s1Rev.Value, s2Rev, out localDelta))
+                    if (objective.TrySwap(problem, solution, t1, t2, s1Rev.Value, s2Rev, out localDelta))
                     { // exchange succeeded.
                         delta = localDelta;
                         return true;

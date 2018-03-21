@@ -179,7 +179,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
                 }
 
                 if (diff < 0)
-                { // if quanity goes down, no need to check constraint.
+                { // if quantity goes down, no need to check constraint.
                     continue;
                 }
                 var q = content.Quantities[c] + diff;
