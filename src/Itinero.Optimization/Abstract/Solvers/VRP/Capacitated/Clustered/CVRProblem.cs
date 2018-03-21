@@ -136,8 +136,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 new IInterTourImprovementOperator<float, CVRProblem, CVRPObjective, CVRPSolution, float>[]
                 {
                     // new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 10),
-                    // new ExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(),
-                    new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true),
+                    new ExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(),
+                    // new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true),
                     // new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 5)
                 }
             );

@@ -37,7 +37,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
     /// An objective of a CVRP.
     /// </summary>
     public class CVRPObjective : ObjectiveBase<CVRProblem, CVRPSolution, float>,
-        IRelocateObjective<CVRProblem, CVRPSolution>, IExchangeObjective<CVRProblem>, IMultiExchangeObjective<CVRProblem>,
+        IRelocateObjective<CVRProblem, CVRPSolution>, IExchangeObjective<CVRProblem, CVRPSolution>, IMultiExchangeObjective<CVRProblem>,
         IMultiRelocateObjective<CVRProblem>, ISeededCheapestInsertionObjective<CVRProblem, CVRPSolution>
         {
             private readonly Func<CVRProblem, IList<int>, int> _seedFunc;
@@ -277,15 +277,95 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
             /// Tries to swap the given visits between the two given tours.
             /// </summary>
             /// <param name="problem">The problem.</param>
+            /// <param name="solution">The solution.</param>
             /// <param name="t1">The first tour.</param>
             /// <param name="t2">The second tour.</param>
             /// <param name="visit1">The visit from tour1.</param>
             /// <param name="visit2">The visit from tour2.</param>
             /// <param name="delta">The difference in visit.</param>
-            /// <returns></returns>        
-            public bool TrySwap(CVRProblem problem, int t1, int t2, Triple visit1, Triple visit2, out float delta)
+            /// <returns></returns>
+            public bool TrySwap(CVRProblem problem, CVRPSolution solution, int t1, int t2, Triple visit1, Triple visit2,
+                out float delta)
             {
-                throw new NotImplementedException();
+                var E = 0.01f;
+
+                var tour1 = solution.Tour(t1);
+                var tour2 = solution.Tour(t2);
+
+                if (tour1.First == visit1.Along ||
+                    tour2.First == visit2.Along)
+                { // for now we cannot move the first visit.
+                    // TODO: enable this objective to move the first visit.
+                    delta = 0;
+                    return false;
+                }
+
+                var weight1 = problem.Weights[visit1.From][visit1.Along] +
+                    problem.Weights[visit1.Along][visit1.To];
+                var weight2 = problem.Weights[visit2.From][visit2.Along] +
+                    problem.Weights[visit2.Along][visit2.To];
+
+                var weight1Swapped = problem.Weights[visit1.From][visit2.Along] +
+                    problem.Weights[visit2.Along][visit1.To];
+                var weight2Swapped = problem.Weights[visit2.From][visit1.Along] +
+                    problem.Weights[visit1.Along][visit2.To];
+
+                var difference = (weight1 + weight2) - (weight1Swapped + weight2Swapped);
+                if (difference <= E)
+                { // new weights are not better.
+                    delta = 0;
+                    return false;
+                }
+                var visit1Cost = problem.GetVisitCost(visit1.Along);
+                var visit2Cost = problem.GetVisitCost(visit2.Along);
+
+                var tour1WeightSwapped = solution.Contents[t1].Weight - weight1 +
+                    weight1Swapped - visit1Cost + visit2Cost;
+                if (tour1WeightSwapped > problem.Capacity.Max)
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+                var tour2WeightSwapped = solution.Contents[t2].Weight - weight2 +
+                    weight2Swapped - visit2Cost + visit1Cost;
+                if (tour2WeightSwapped > problem.Capacity.Max)
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+
+                // check constraints if any.
+                if (!problem.Capacity.ExchangeIsPossible(solution.Contents[t1],
+                        visit1.Along, visit2.Along))
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+                if (!problem.Capacity.ExchangeIsPossible(solution.Contents[t2],
+                        visit2.Along, visit1.Along))
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+
+                // exchange visit.
+                tour1.ReplaceEdgeFrom(visit1.From, visit2.Along);
+                tour1.ReplaceEdgeFrom(visit2.Along, visit1.To);
+                tour2.ReplaceEdgeFrom(visit2.From, visit1.Along);
+                tour2.ReplaceEdgeFrom(visit1.Along, visit2.To);
+
+                // update content.
+                problem.Capacity.UpdateExchange(solution.Contents[t1], visit1.Along, visit2.Along);
+                problem.Capacity.UpdateExchange(solution.Contents[t2], visit2.Along, visit1.Along);
+                solution.Contents[t1].Weight = tour1WeightSwapped;
+                solution.Contents[t2].Weight = tour2WeightSwapped;
+
+                // automatically removed in release mode.
+                tour1.Verify(problem.Weights.Length);
+                tour2.Verify(problem.Weights.Length);
+
+                delta = difference;
+                return true;
             }
 
             /// <summary>
@@ -489,8 +569,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
 
                 // try to do the actual insert
                 var tourTime = solution.Contents[bestT].Weight; //objective.Calculate(problem, solution, bestTourIdx);
-                if (!problem.Capacity.UpdateAndCheckCosts(solution.Contents[bestT], tourTime + actualIncrease, 
-                    bestPlacement.Value.Along))
+                if (!problem.Capacity.UpdateAndCheckCosts(solution.Contents[bestT], tourTime + actualIncrease,
+                        bestPlacement.Value.Along))
                 { // insertion not possible.
                     return false;
                 }

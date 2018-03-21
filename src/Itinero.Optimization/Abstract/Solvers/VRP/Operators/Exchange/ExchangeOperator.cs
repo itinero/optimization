@@ -18,7 +18,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange
     /// The search stops from the moment any improvement is found.
     /// </remarks>
     public class ExchangeOperator<TObjective, TProblem, TSolution> : IInterTourImprovementOperator<float, TProblem, TObjective, TSolution, float>
-        where TObjective : IExchangeObjective<TProblem>
+        where TObjective : IExchangeObjective<TProblem, TSolution>
         where TProblem : IExchangeProblem
         where TSolution : IExchangeSolution
     {
@@ -80,7 +80,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange
             {
                 foreach (var triple2 in tour2.Triples())
                 {
-                    if (objective.TrySwap(problem, t1, t2, triple1, triple2, out float localDelta))
+                    if (objective.TrySwap(problem, solution, t1, t2, triple1, triple2, out float localDelta))
                     { // swap succeeded.
                         delta = localDelta;
                         return true;
