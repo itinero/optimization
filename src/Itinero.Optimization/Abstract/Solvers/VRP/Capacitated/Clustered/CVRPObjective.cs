@@ -232,7 +232,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                     return false;
                 }
 
-                // calculate the removal gain of the customer.
+                var tour1 = solution.Tour(t1);
+                if (tour1.First == visit.Along)
+                { // for now we cannot move the first visit.
+                    // TODO: enable this objective to move the first visit.
+                    delta = 0;
+                    return false;
+                }
+
+                // calculate the removal gain of the visit.
                 var removalGain = problem.Weights[visit.From][visit.Along] + problem.Weights[visit.Along][visit.To] -
                     problem.Weights[visit.From][visit.To];
                 if (removalGain > E)
@@ -247,6 +255,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                     { // there is a gain in relocating this visit.
                         tour2.ReplaceEdgeFrom(location.From, visit.Along);
                         tour2.ReplaceEdgeFrom(visit.Along, location.To);
+
+                        // in this model of the solution we need to remove the visit.
+                        tour1.Remove(visit.Along);
 
                         // update weights and capacities.
                         problem.Capacity.Remove(solution.Contents[t1], visit.Along);

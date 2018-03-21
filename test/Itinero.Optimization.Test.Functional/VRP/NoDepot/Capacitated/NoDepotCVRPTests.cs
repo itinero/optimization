@@ -30,11 +30,11 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
         public static void Run()
         {
-            Run1Wechelderzande();
-            // Run1WechelderzandeCapacitated();
+            //Run1Wechelderzande();
+            //Run1WechelderzandeCapacitated();
             // Run2Spijkenisse();
             // Run2SpijkenisseCapacitated();
-            // Run2SpijkenisseVisitCosts();
+            Run2SpijkenisseVisitCosts();
             // Run3DeHague();
             // Run4Rotterdam();
             // Run5Rotterdam();
@@ -57,7 +57,6 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             var routes = func.TestPerf("No-Depot Capacitated VRP (Wechelderzande)");
 
 #if DEBUG
-
             // write info about result.
             WriteStats(routes);
             routes.WriteGeoJson(NoDepotCVRPTests.Name + "lille-{0}.geojson");

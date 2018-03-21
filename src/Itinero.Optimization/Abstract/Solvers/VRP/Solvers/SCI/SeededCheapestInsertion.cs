@@ -36,12 +36,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
             _interImprovements = new List<IInterTourImprovementOperator<float, TProblem, TObjective, TSolution, float>>(interImprovements);
         }
 
+        // TODO: expand the name to include the improvement operators.
+
         /// <summary>
         /// Gets the name of this solver.
         /// </summary>
         /// <returns></returns>
-        public override string Name =>
-        throw new System.NotImplementedException();
+        public override string Name => "SC";
 
         /// <summary>
         /// Solves the given problem using the given objective.
@@ -193,8 +194,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
                         improvement = true;
                         globalImprovement = true;
 
-                        Itinero.Logging.Logger.Log("SeededLocalizedCheapestInsertionSolver", Itinero.Logging.TraceEventType.Information,
-                            "Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
+                        Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
+                            "Inter-improvement found {0}<->{1}: {2}",
                             t1, t2, improvementOperation.Name);
                     }
                     else if (!improvementOperation.IsSymmetric &&
@@ -203,7 +204,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
                         improvement = true;
                         globalImprovement = true;
 
-                        Itinero.Logging.Logger.Log("SeededLocalizedCheapestInsertionSolver", Itinero.Logging.TraceEventType.Information,
+                        Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
                             "Inter-improvement found {0}<->{1}: {2}",
                             t1, t2, improvementOperation.Name);
                     }
