@@ -40,7 +40,7 @@ namespace Itinero.Optimization.Test.Functional
 
             VRP.NoDepot.Capacitated.NoDepotCVRPTests.Run();
 #if DEBUG
-            Console.ReadLine();
+            //Console.ReadLine();
 #endif
         }
 

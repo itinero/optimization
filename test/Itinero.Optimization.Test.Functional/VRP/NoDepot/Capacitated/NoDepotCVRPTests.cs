@@ -242,14 +242,14 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
                 capacityConstraint, visitCosts));
             var routes = func.TestPerf("No-Depot Visit Costs VRP (Spijkenisse - Capacitated)");
 
-#if DEBUG
+//#if DEBUG
 
             // write info about result.
             WriteStats(routes);
             var filename = NoDepotCVRPTests.Name + "spijkenisse-visit-costs-{0}";
             routes.WriteGeoJson(filename + ".geojson");
             routes.WriteJson(filename + ".json");
-#endif
+//#endif
         }
 
         public static void Run3DeHague()

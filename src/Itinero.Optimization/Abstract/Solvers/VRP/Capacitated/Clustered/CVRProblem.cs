@@ -137,18 +137,18 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 {
                     new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 5),
                     new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true),
-                    new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 10, false),
+                    //new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 5, true),
                     new ExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>()
                 }
             );
 
-            //var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
-            //         slci, 1);
+            var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
+                     slci, 100);
             // var iterate = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
             //         constructionHeuristic, 1, crossMultiAllPairsUntil);
             // var solver = new GuidedVNS(iterate, overlapsFunc, 8 * 60);
 
-            return this.Solve(slci, new CVRPObjective(this.SelectRandomSeedHeuristic, overlapsFunc));
+            return this.Solve(constructionHeuristic, new CVRPObjective(this.SelectRandomSeedHeuristic, overlapsFunc, 1));
         }
 
         /// <summary>

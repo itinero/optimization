@@ -18,9 +18,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
         public float Between { get; set; }
 
         /// <summary>
-        /// The original weight excluding the travel cost from the first visit and to the last visit.
+        /// The total original weight.
         /// </summary>
         /// <returns></returns>
-        public float BetweenOriginal { get; set; }
+        public float TotalOriginal { get; set; }
     }
 }
