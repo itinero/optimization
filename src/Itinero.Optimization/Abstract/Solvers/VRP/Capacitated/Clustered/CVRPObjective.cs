@@ -38,7 +38,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
     /// </summary>
     public class CVRPObjective : ObjectiveBase<CVRProblem, CVRPSolution, float>,
         IRelocateObjective<CVRProblem, CVRPSolution>, IExchangeObjective<CVRProblem, CVRPSolution>, IMultiExchangeObjective<CVRProblem>,
-        IMultiRelocateObjective<CVRProblem>, ISeededCheapestInsertionObjective<CVRProblem, CVRPSolution>
+        IMultiRelocateObjective<CVRProblem, CVRPSolution>, ISeededCheapestInsertionObjective<CVRProblem, CVRPSolution>
         {
             private readonly Func<CVRProblem, IList<int>, int> _seedFunc;
             private readonly Func<CVRProblem, int, int, float> _localizationCostFunc;
@@ -378,7 +378,30 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
             /// <returns>An enumerable with sequences.</returns>
             public IEnumerable<Operators.Seq> SeqAndSmaller(CVRProblem problem, IEnumerable<int> tour, int minSize, int maxSize)
             {
-                throw new NotImplementedException();
+                foreach (var s in tour.SeqAndSmaller(minSize, maxSize, true, false))
+                {
+                    if (s.Length < 3)
+                    {
+                        continue;
+                    }
+
+                    var travelCost = problem.Weights.Seq(s);
+                    var visitCosts = 0f;
+                    if (problem.VisitCosts != null)
+                    {
+                        visitCosts = problem.VisitCosts.Seq(1, s.Length - 2, s);
+                    }
+                    var first = problem.Weights[s[0]][s[1]];
+                    var last = problem.Weights[s[s.Length - 2]][s[s.Length - 1]];
+                    var total = travelCost + visitCosts;
+
+                    yield return new Operators.Seq()
+                    {
+                        Between = total - first - last,
+                            Total = total,
+                            Visits = s
+                    };
+                }
             }
 
             /// <summary>
@@ -411,15 +434,79 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
             /// Tries to move the given sequence from t1 in between the given pair in t2.
             /// </summary>
             /// <param name="problem">The problem.</param>
+            /// <param name="solution">The solution.</param>
             /// <param name="t1">The first tour.</param>
             /// <param name="t2">The second tour.</param>
             /// <param name="seq">The sequence.</param>
             /// <param name="pair">The pair.</param>
             /// <param name="delta">The difference in visit.</param>
             /// <returns></returns>        
-            public bool TryMove(CVRProblem problem, int t1, int t2, Operators.Seq seq, Pair pair, out float delta)
+            public bool TryMove(CVRProblem problem, CVRPSolution solution, int t1, int t2, Operators.Seq seq, Pair pair, out float delta)
             {
-                throw new NotImplementedException();
+                var E = 0.01f;
+
+                var pair1 = new Pair(seq.Visits[0], seq.Visits[seq.Visits.Length - 1]);
+                var pair2 = pair;
+                var sStart = seq.Visits[1];
+                var sEnd = seq.Visits[seq.Visits.Length - 2];
+
+                var tour1Current = problem.Weights[pair1.From][sStart] +
+                    problem.Weights[sEnd][pair1.To];
+                var tour1Future = problem.Weights[pair1.From][pair1.To];
+                var tour2Current = problem.Weights[pair2.From][pair2.To];
+                var tour2Future = problem.Weights[pair2.From][sStart] +
+                    problem.Weights[sEnd][pair2.To];
+                var difference = 0f;
+                difference += tour1Current; // add what's in tour1 currently.
+                difference += tour2Current; // add what's in tour2 currently.
+                difference -= tour1Future; // subtract what would be new in tour1.
+                difference -= tour2Future; // subtract what would be new in tour2.
+                if (difference <= E)
+                { // new weights are not better.
+                    delta = 0;
+                    return false;
+                }
+
+                var tour2WeightMoved = solution.Contents[t2].Weight;
+                tour2WeightMoved -= tour2Current;
+                tour2WeightMoved += seq.Between;
+                tour2WeightMoved += tour2Future;
+
+                if (tour2WeightMoved > problem.Capacity.Max)
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+
+                if (!problem.Capacity.CanAdd(solution.Contents[t1], seq.Visits, 1, seq.Visits.Length - 1))
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+
+                // move the sequence.
+                var tour1 = solution.Tour(t1);
+                var tour2 = solution.Tour(t2);
+                var previous = pair.From;
+                for (var v = 1; v < seq.Visits.Length - 1; v++)
+                {
+                    var visit = seq.Visits[v];
+                    tour1.Remove(visit);
+                    tour2.ReplaceEdgeFrom(previous, visit);
+                    previous = visit;
+                }
+                tour2.ReplaceEdgeFrom(previous, pair.To);
+
+                // update weights.
+                var tour1WeightMoved = solution.Contents[t1].Weight;
+                tour1WeightMoved -= tour1Current;
+                tour1WeightMoved -= seq.Between;
+                tour1WeightMoved += tour1Future;
+                delta = (solution.Contents[t1].Weight - tour1WeightMoved) + 
+                    (solution.Contents[t2].Weight - tour2WeightMoved);
+                solution.Contents[t1].Weight = tour1WeightMoved;
+                solution.Contents[t2].Weight = tour2WeightMoved;
+                return true;
             }
 
             /// <summary>

@@ -274,6 +274,34 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
         }
 
         /// <summary>
+        /// Returns true if the given visits can be added without violating the constraints.
+        /// </summary>
+        public static bool CanAdd(this Capacity capacity, Content content, int[] visits, int first, int last)
+        {
+            if (capacity.Constraints == null)
+            {
+                return true;
+            }
+
+            for (var c = 0; c < capacity.Constraints.Length; c++)
+            {
+                var constraint = capacity.Constraints[c];
+                var q = content.Quantities[c];
+                
+                for (var v = first; v <= last; v++)
+                {
+                    var visit = visits[v];
+                    q += constraint.Values[visit];
+                    if (q > constraint.Max)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Adds the given visits.
         /// </summary>
         public static void Add(this Capacity capacity, Content content, int visit)

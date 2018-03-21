@@ -20,7 +20,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi
     /// The search stops from the moment any improvement is found.
     /// </remarks>
     public class MultiRelocateOperator<TObjective, TProblem, TSolution> : IInterTourImprovementOperator<float, TProblem, TObjective, TSolution, float>
-        where TObjective : IMultiRelocateObjective<TProblem>
+        where TObjective : IMultiRelocateObjective<TProblem, TSolution>
         where TSolution : IMultiRelocateSolution
     {
         private readonly int _minWindowSize = 2;
@@ -104,7 +104,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi
             {
                 foreach (var pair in tour2.Pairs())
                 {
-                    if (objective.TryMove(problem, t1, t2, s, pair, out float localDelta))
+                    if (objective.TryMove(problem, solution, t1, t2, s, pair, out float localDelta))
                     { // move succeeded.
                         delta = localDelta;
                         return true;
@@ -118,7 +118,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi
                 {
                     foreach (var pair in tour1.Pairs())
                     {
-                        if (objective.TryMove(problem, t2, t1, s, pair, out float localDelta))
+                        if (objective.TryMove(problem, solution, t2, t1, s, pair, out float localDelta))
                         { // move succeeded.
                             delta = localDelta;
                             return true;
@@ -127,7 +127,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi
                 }
             }
             delta = 0;
-            return true;
+            return false;
         }
 
         /// <summary>
