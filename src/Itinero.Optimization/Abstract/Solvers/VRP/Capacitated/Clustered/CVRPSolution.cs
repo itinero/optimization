@@ -23,6 +23,7 @@ using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
+using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
 using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms;
 
@@ -31,7 +32,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
     /// <summary>
     /// Represents a solution to a capacitated no-depot VRP.
     /// </summary>
-    public class CVRPSolution : ISolution, IRelocateSolution, IExchangeSolution, IMultiExchangeSolution, IMultiRelocateSolution
+    public class CVRPSolution : ISolution, IRelocateSolution, IExchangeSolution, IMultiExchangeSolution, IMultiRelocateSolution,
+        ISeededCheapestInsertionSolution
     {
         private readonly List<Solvers.CapacityExtensions.Content> _contents;
         private readonly List<Tour> _tours;

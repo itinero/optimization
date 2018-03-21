@@ -27,6 +27,8 @@ using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using System.Collections.Generic;
 using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
+using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
+using Itinero.Optimization.Abstract.Solvers.TSP;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
 {
@@ -35,7 +37,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
     /// </summary>
     public class CVRPObjective : ObjectiveBase<CVRProblem, CVRPSolution, float>, 
         IRelocateObjective<CVRProblem, CVRPSolution>, IExchangeObjective<CVRProblem>, IMultiExchangeObjective<CVRProblem>,
-        IMultiRelocateObjective<CVRProblem>
+        IMultiRelocateObjective<CVRProblem>, ISeededCheapestInsertionObjective<CVRProblem, CVRPSolution>
     {
         /// <summary>
         /// Gets the name.
@@ -299,6 +301,84 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
         /// <param name="delta">The difference in visit.</param>
         /// <returns></returns>        
         public bool TryMove(CVRProblem problem, int t1, int t2, Operators.Seq seq, Pair pair, out float delta)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Creates a new and empty solution.
+        /// </summary>
+        /// <returns></returns>
+        public CVRPSolution NewSolution()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Gets a list of potential visits.
+        /// </summary>
+        /// <returns></returns>
+        public IList<int> PotentialVisits()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Seeds the next tour.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="solution">The solution.</param>
+        /// <param name="visits">The visit list.</param>
+        /// <returns></returns>
+        public ITour SeedNext(CVRProblem problem, CVRPSolution solution, IList<int> visits)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Tries to place any of the visits in the given visit list in the given tour.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="tour">The problem.</param>
+        /// <param name="visits">The visit list.</param>
+        /// <returns></returns>
+        public bool TryPlaceAny(CVRProblem problem, ITour tour, IList<int> visits)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// /// Tries to place any of the visits in the given visit list.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="solution">The tour.</param>
+        /// <param name="visits">The visits to try.</param>
+        /// <returns></returns>
+        public bool TryPlaceAny(CVRProblem problem, CVRPSolution solution, IList<int> visits)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Builds a TSP for the given tour.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="tour">The tour.</param>
+        /// <returns></returns>
+        public ITSProblem BuildSubTourTSP(CVRProblem problem, ITour tour)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns true if the two tours could benifit from inter-improvement optimizations.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="solution">The solution.</param>
+        /// <param name="t1">The first tour.</param>
+        /// <param name="t2">The second tour.</param>
+        /// <returns></returns>
+        public bool HaveToTryInter(CVRProblem problem, CVRPSolution solution, int t1, int t2)
         {
             throw new NotImplementedException();
         }

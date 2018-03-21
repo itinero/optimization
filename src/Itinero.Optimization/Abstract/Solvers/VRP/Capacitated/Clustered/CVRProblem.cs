@@ -20,10 +20,12 @@ using System;
 using System.Collections.Generic;
 using Itinero.Algorithms.Matrices;
 using Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solvers;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
+using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
 using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.General;
@@ -128,11 +130,20 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
             //var solver = new GuidedVNS(constructionHeuristic, overlapsFunc, 4 * 60);
             //var iterate = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
             //    solver, 10);
+            
+            var slci = new SeededCheapestInsertion<CVRProblem, CVRPObjective, CVRPSolution>(
+                new TSP.Solvers.HillClimbing3OptSolver(),
+                new IInterTourImprovementOperator<float, CVRProblem, CVRPObjective, CVRPSolution, float>[]
+                {
+                    new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 10),
+                    new ExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(),
+                    new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true),
+                    new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 5)
+                }
+            );
 
             var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
-                    new SeededLocalizedCheapestInsertionSolver(this.SelectSeedWithCloseNeighboursHeuristic, overlapsFunc), 1);
-            //var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-            //    new SeededLocalizedCheapestInsertionSolver(this.SelectRandomSeedHeuristic, overlapsFunc), 10);
+                    slci, 1);
             var iterate = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
                     constructionHeuristic, 1, crossMultiAllPairsUntil);
             var solver = new GuidedVNS(iterate, overlapsFunc, 8 * 60);
