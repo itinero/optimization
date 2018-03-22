@@ -437,6 +437,75 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
             }
 
             /// <summary>
+            /// Simulates a swap of the given sequences between the two given tours.
+            /// </summary>
+            /// <param name="problem">The problem.</param>
+            /// <param name="solution">The solution.</param>
+            /// <param name="t1">The first tour.</param>
+            /// <param name="t2">The second tour.</param>
+            /// <param name="s1">The sequence from tour1.</param>
+            /// <param name="s2">The sequence from tour2.</param>
+            /// <param name="delta">The difference in fitness.</param>
+            /// <returns>True if the swap is possible.</returns>   
+            public bool SimulateSwap(CVRProblem problem, CVRPSolution solution, int t1, int t2,
+                Operators.Seq s1, Operators.Seq s2, out float delta)
+            {
+                var E = 0.01f;
+
+                var pair1 = new Pair(s1.Visits[0], s1.Visits[s1.Visits.Length - 1]);
+                var pair1Between = new Pair(s1.Visits[1], s1.Visits[s1.Visits.Length - 2]);
+                var pair2 = new Pair(s2.Visits[0], s2.Visits[s2.Visits.Length - 1]);
+                var pair2Between = new Pair(s2.Visits[1], s2.Visits[s2.Visits.Length - 2]);
+
+                var tour1Current = s1.TotalOriginal;
+                var tour1Future = problem.Weights[pair1.From][pair2Between.From] +
+                    problem.Weights[pair2Between.To][pair1.To] + s2.Between;
+
+                var tour2Current = s2.TotalOriginal;
+                var tour2Future = problem.Weights[pair2.From][pair1Between.From] +
+                    problem.Weights[pair1Between.To][pair2.To] + s1.Between;
+
+                var difference = tour1Current - tour1Future +
+                    tour2Current - tour2Future;
+
+                if (difference <= E)
+                { // new weights are not better.
+                    delta = 0;
+                    return false;
+                }
+
+                var tour1FutureComplete = solution.Contents[t1].Weight - tour1Current + tour1Future;
+                if (tour1FutureComplete > problem.Capacity.Max)
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+
+                var tour2FutureComplete = solution.Contents[t2].Weight - tour2Current + tour2Future;
+                if (tour2FutureComplete > problem.Capacity.Max)
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+
+                if (!problem.Capacity.ExchangeIsPossible(solution.Contents[t1], s1.Visits, s2.Visits))
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+
+                if (!problem.Capacity.ExchangeIsPossible(solution.Contents[t2], s2.Visits, s1.Visits))
+                { // constraint violated.
+                    delta = 0;
+                    return false;
+                }
+
+                // don't do the swap.
+                delta = difference;
+                return true;
+            }
+
+            /// <summary>
             /// Tries to swap the given sequences between the two given tours.
             /// </summary>
             /// <param name="problem">The problem.</param>
@@ -445,7 +514,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
             /// <param name="t2">The second tour.</param>
             /// <param name="s1">The sequence from tour1.</param>
             /// <param name="s2">The sequence from tour2.</param>
-            /// <param name="delta">The difference in visit.</param>
+            /// <param name="delta">The difference in fitness.</param>
             /// <returns>True if the swap succeeded.</returns>   
             public bool TrySwap(CVRProblem problem, CVRPSolution solution, int t1, int t2,
                 Operators.Seq s1, Operators.Seq s2, out float delta)
@@ -464,9 +533,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 var tour2Current = s2.TotalOriginal;
                 var tour2Future = problem.Weights[pair2.From][pair1Between.From] +
                     problem.Weights[pair1Between.To][pair2.To] + s1.Between;
-
-                var before1 = this.Calculate(problem, solution, t1);
-                var before2 = this.Calculate(problem, solution, t2);
 
                 var difference = tour1Current - tour1Future +
                     tour2Current - tour2Future;
@@ -529,15 +595,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
 
                 problem.Capacity.UpdateExchange(solution.Contents[t1], s1.Visits, s2.Visits);
                 problem.Capacity.UpdateExchange(solution.Contents[t2], s2.Visits, s1.Visits);
-
-                var ref1 = this.Calculate(problem, solution, t1);
-                var ref2 = this.Calculate(problem, solution, t2);
-
-                if ((System.Math.Abs(ref1 - tour1FutureComplete) > 1) ||
-                    (System.Math.Abs(ref2 - tour2FutureComplete) > 1))
-                    {
-                        System.Diagnostics.Debug.WriteLine(string.Empty);
-                    }
 
                 solution.Contents[t1].Weight = tour1FutureComplete;
                 solution.Contents[t2].Weight = tour2FutureComplete;

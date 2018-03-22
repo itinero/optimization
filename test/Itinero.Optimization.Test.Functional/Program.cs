@@ -57,7 +57,7 @@ namespace Itinero.Optimization.Test.Functional
                     "RouterDb",
                     "SeededLocalizedCheapestInsertionSolver",
                     "3OHC_(NN)_(DL)",
-                    "IterativeSolver",
+                    "SC",
                     "VNSSolver",
                     "CROSS-MUL-10_(ALL)_(REV)",
                     "CROSS-MUL-10_(REV)",
@@ -65,6 +65,7 @@ namespace Itinero.Optimization.Test.Functional
                 });
 #if DEBUG
             loggingBlacklist.Clear();
+            loggingBlacklist.Add("SC");
 #endif
             OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {

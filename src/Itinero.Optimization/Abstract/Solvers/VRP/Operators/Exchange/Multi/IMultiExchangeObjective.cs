@@ -35,8 +35,21 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
         /// <param name="t2">The second tour.</param>
         /// <param name="s1">The sequence from tour1.</param>
         /// <param name="s2">The sequence from tour2.</param>
-        /// <param name="delta">The difference in visit.</param>
+        /// <param name="delta">The difference in fitness.</param>
         /// <returns>True if the swap succeeded.</returns>        
         bool TrySwap(TProblem problem, TSolution solution, int t1, int t2, Seq s1, Seq s2, out float delta);
+
+        /// <summary>
+        /// Simulates a swap of the given sequences between the two given tours.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="solution">The solution.</param>
+        /// <param name="t1">The first tour.</param>
+        /// <param name="t2">The second tour.</param>
+        /// <param name="s1">The sequence from tour1.</param>
+        /// <param name="s2">The sequence from tour2.</param>
+        /// <param name="delta">The difference in fitness.</param>
+        /// <returns>True if the swap is possible.</returns>        
+        bool SimulateSwap(TProblem problem, TSolution solution, int t1, int t2, Seq s1, Seq s2, out float delta);
     }
 }

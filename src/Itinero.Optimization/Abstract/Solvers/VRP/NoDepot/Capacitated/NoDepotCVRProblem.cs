@@ -75,7 +75,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     var weights = problem.Weights;
                     
                     return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-                         weights, visits);
+                         weights, new Algorithms.NearestNeighbour.NearestNeigbourArray(this.Weights), visits);
                 };
             }
         }

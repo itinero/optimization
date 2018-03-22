@@ -110,7 +110,7 @@ namespace Itinero.Optimization.Test.Algorithms.Seeds
             var visits = Enumerable.Range(0, weights.Length).ToList();
 
             Assert.AreEqual(GetSeedWithCloseNeighbours(locations), 
-                SeedHeuristics.GetSeedWithCloseNeighbours(weights, visits));
+                SeedHeuristics.GetSeedWithCloseNeighbours(weights, new Optimization.Algorithms.NearestNeighbour.NearestNeigbourArray(weights), visits));
         }
 
         private static int GetSeedWithCloseNeighbours(List<Coordinate> locations)

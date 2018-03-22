@@ -16,8 +16,8 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.Algorithms.Solvers.Objective;
 using System;
+using Itinero.Optimization.Algorithms.Solvers.Objective;
 
 namespace Itinero.Optimization.Algorithms.Solvers
 {
@@ -26,7 +26,7 @@ namespace Itinero.Optimization.Algorithms.Solvers
     /// </summary>
     public class IterativeOperator<TWeight, TProblem, TObjective, TSolution, TFitness> : IOperator<TWeight, TProblem, TObjective, TSolution, TFitness>
         where TWeight : struct
-        where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
+    where TObjective : ObjectiveBase<TProblem, TSolution, TFitness>
     {
         private readonly IOperator<TWeight, TProblem, TObjective, TSolution, TFitness> _operator;
         private readonly int _n;
@@ -58,7 +58,7 @@ namespace Itinero.Optimization.Algorithms.Solvers
         /// </summary>
         public bool Supports(TObjective objective)
         {
-            return _operator.Supports(objective);
+            return _operator .Supports(objective);
         }
 
         /// <summary>
@@ -71,16 +71,19 @@ namespace Itinero.Optimization.Algorithms.Solvers
             var bestFitness = objective.Calculate(problem, solution);
             delta = objective.Zero;
             var success = false;
-            for(var i = 0; i < _n; i++)
+            for (var i = 0; i < _n; i++)
             {
                 TFitness localDelta;
-                if (_operator.Apply(problem, objective, solution, out localDelta))
+                if (_operator .Apply(problem, objective, solution, out localDelta))
                 {
                     delta = objective.Add(problem, delta, localDelta);
                     bestFitness = objective.Subtract(problem, bestFitness, localDelta);
                     success = true;
+
+                    Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
+                        "Improvement found {0}/{1}: {2}", i + 1, _n, bestFitness);
                 }
-                else if(_stopAtFail)
+                else if (_stopAtFail)
                 { // stop at first fail.
                     break;
                 }

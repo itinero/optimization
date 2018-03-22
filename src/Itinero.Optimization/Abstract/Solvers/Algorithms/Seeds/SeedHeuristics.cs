@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using Itinero.Optimization.Algorithms.NearestNeighbour;
 
 namespace Itinero.Optimization.Algorithms.Seeds
 {
@@ -50,17 +51,17 @@ namespace Itinero.Optimization.Algorithms.Seeds
                 {
                     localDistance += weights[pooledVisit][visit];
                 }
-                
+
                 if (localDistance > distance)
                 {
                     seed = pooledVisit;
                     distance = localDistance;
                 }
             }
-            
+
             return seed;
         }
-        
+
         /// <summary>
         /// Select a visit closest to a given visit. This is a deterministic heuristic.
         /// </summary>
@@ -85,14 +86,14 @@ namespace Itinero.Optimization.Algorithms.Seeds
                 {
                     localDistance += weights[pooledVisit][visit];
                 }
-                
+
                 if (localDistance < distance)
                 {
                     seed = pooledVisit;
                     distance = localDistance;
                 }
             }
-            
+
             return seed;
         }
 
@@ -111,52 +112,56 @@ namespace Itinero.Optimization.Algorithms.Seeds
         }
 
         /// <summary>
-        /// Selects a seed with the minimum average weight to the closest 'n' nearest neighbours. This heuristic is deterministic.
+        /// Selects a seed with the minimum average weight to the closest 'n' nearest neighbours. This heuristic is deterministic if p = 1.
         /// </summary>
         /// <param name="weights">The weights.</param>
+        /// <param name="nnArray">The nearest neighbour array.</param>
         /// <param name="visitPool">The pool of visits to choose from.</param>
-        /// <returns></returns>
-        public static int GetSeedWithCloseNeighbours(float[][] weights, IList<int> visitPool)
+        /// <param name="neighbourCount">The # of neighbours to count.</param>
+        /// <param name="neighbourVisitedPentaly">The penalty to assign if on of the neigbours has already been visited.</param>
+        /// <param name="p">The probablity a visit will be considered.</param>
+        /// <returns>A selected seed from the visit pool.</returns>
+        public static int GetSeedWithCloseNeighbours(float[][] weights, NearestNeigbourArray nnArray, IList<int> visitPool,
+            int neighbourCount = 10, float neighbourVisitedPentaly = 0, float p = 1)
         {
+            var visitPoolSet = new HashSet<int>(visitPool);
+            var neighbours = new int[nnArray.N];
+
+            var random = Itinero.Optimization.Algorithms.Random.RandomGeneratorExtensions.GetRandom();
+
             int seed = Constants.NOT_SET;
             var maxWeight = float.MaxValue;
             foreach (int pooledVisit in visitPool)
             {
-                var neighbours = new Collections.SortedDictionary<float, List<int>>();
-                for (int idx = 0; idx < visitPool.Count; idx++)
-                {
-                    int visit = visitPool[idx];
-                    if (visit != pooledVisit)
-                    {
-                        var weight = weights[pooledVisit][visit] +
-                            weights[pooledVisit][visit];
-                        List<int> visitList = null;
-                        if (!neighbours.TryGetValue(weight, out visitList))
-                        {
-                            visitList = new List<int>();
-                            neighbours.Add(weight, visitList);
-                        }
-                        visitList.Add(visit);
-                    }
+                if (p < 1 && random.Generate(1f) > p)
+                { // oeps, skip this one.
+                    continue;
                 }
 
+                nnArray.CopyTo(pooledVisit, neighbours);
+
                 var nearestNeighbourAverage = 0f;
-                int neirgbourCount = 20;
                 int neighbourCounted = 0;
-                foreach (var pair in neighbours)
+
+                foreach (var neighbour in neighbours)
                 {
-                    foreach (int customer in pair.Value)
+                    if (visitPoolSet.Contains(neighbour))
                     {
-                        if (neighbourCounted < neirgbourCount)
+                        if (neighbourCounted < neighbourCount)
                         {
                             neighbourCounted++;
                             nearestNeighbourAverage = nearestNeighbourAverage +
-                                pair.Key;
+                                weights[pooledVisit][neighbour] + weights[neighbour][pooledVisit];
                         }
                         else
                         {
                             break;
                         }
+                    }
+                    else if (neighbourVisitedPentaly > 0)
+                    { // just add this as a penalty.
+                        nearestNeighbourAverage = nearestNeighbourAverage +
+                            (weights[pooledVisit][neighbour] + weights[neighbour][pooledVisit]) * neighbourVisitedPentaly;
                     }
                 }
 
@@ -166,6 +171,13 @@ namespace Itinero.Optimization.Algorithms.Seeds
                     seed = pooledVisit;
                 }
             }
+
+            if (seed == Constants.NOT_SET)
+            { // if p is too small things get close to random anyway.
+                // if there are but a few visits left.
+                seed = SeedHeuristics.GetSeedRandom(visitPool);
+            }
+
             return seed;
         }
     }

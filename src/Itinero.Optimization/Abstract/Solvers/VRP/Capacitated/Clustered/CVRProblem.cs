@@ -27,6 +27,7 @@ using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
 using Itinero.Optimization.Abstract.Tours;
+using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.General;
 
@@ -73,6 +74,27 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
         }
 
         /// <summary>
+        /// Holds the nearest neigbours in travel cost.
+        /// </summary>
+        private NearestNeigbourArray _nNTravelCost = null;
+
+        /// <summary>
+        /// Gets the nearest neigbours in travel cost.
+        /// </summary>
+        /// <returns></returns>
+        public NearestNeigbourArray NearestNeigboursTravelCost
+        {
+            get
+            {
+                if (_nNTravelCost == null)
+                {
+                    _nNTravelCost = new NearestNeigbourArray(this.Weights);
+                }
+                return _nNTravelCost;
+            }
+        }
+
+        /// <summary>
         /// Gets the seed heuristic.
         /// </summary>
         /// <returns></returns>
@@ -85,7 +107,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                     var weights = problem.Weights;
 
                     return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-                        weights, visits);
+                        weights, this.NearestNeigboursTravelCost, visits);
                 };
             }
         }
@@ -120,9 +142,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
         /// <returns></returns>
         public CVRPSolution Solve(Delegates.OverlapsFunc<CVRProblem, ITour> overlapsFunc)
         {
-            var crossMultiAllPairs = new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 20, true, true);
+            var crossMultiAllPairs = new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 15, true, true, true);
             var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
-                    crossMultiAllPairs, 1, true);
+                    crossMultiAllPairs, 20, true);
 
             //var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
             //    new SeededLocalizedCheapestInsertionSolver(this.SelectSeedHeuristic, overlapsFunc), 1,
@@ -135,19 +157,26 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 new TSP.Solvers.HillClimbing3OptSolver(),
                 new IInterTourImprovementOperator<float, CVRProblem, CVRPObjective, CVRPSolution, float>[]
                 {
-                    new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 5),
+                    new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 3),
                     new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true),
+                    new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 4, true, false, true),
                     new ExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>()
                 }
             );
 
             var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
-                     slci, 1000);
+                     slci, 10);
             var iterate = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
                     constructionHeuristic, 1, crossMultiAllPairsUntil);
             // var solver = new GuidedVNS(iterate, overlapsFunc, 8 * 60);
 
-            return this.Solve(iterate, new CVRPObjective(this.SelectRandomSeedHeuristic, overlapsFunc, 1, 0.1f));
+            return this.Solve(iterate, new CVRPObjective((problem, visits) =>
+                {
+                    var weights = problem.Weights;
+
+                    return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
+                        weights, this.NearestNeigboursTravelCost, visits, 20, 0.75f, 0.5f);
+                }, overlapsFunc, 1f, 0.15f));
         }
 
         /// <summary>
