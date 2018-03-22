@@ -157,10 +157,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 new TSP.Solvers.HillClimbing3OptSolver(),
                 new IInterTourImprovementOperator<float, CVRProblem, CVRPObjective, CVRPSolution, float>[]
                 {
-                    new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 3),
+                    new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 4),
                     new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true),
-                    new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 3, true, false, true),
-                    new ExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>()
+                    new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 4, true, false, true)
                 }
             );
 
