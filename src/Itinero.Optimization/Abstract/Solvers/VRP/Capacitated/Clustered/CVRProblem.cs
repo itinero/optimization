@@ -120,7 +120,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
         /// <returns></returns>
         public CVRPSolution Solve(Delegates.OverlapsFunc<CVRProblem, ITour> overlapsFunc)
         {
-            var crossMultiAllPairs = new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 10, true, true);
+            var crossMultiAllPairs = new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 20, true, true);
             var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
                     crossMultiAllPairs, 1, true);
 
@@ -137,18 +137,17 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 {
                     new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 5),
                     new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true),
-                    //new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 5, true),
                     new ExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>()
                 }
             );
 
             var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
-                     slci, 100);
-            // var iterate = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
-            //         constructionHeuristic, 1, crossMultiAllPairsUntil);
+                     slci, 1000);
+            var iterate = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
+                    constructionHeuristic, 1, crossMultiAllPairsUntil);
             // var solver = new GuidedVNS(iterate, overlapsFunc, 8 * 60);
 
-            return this.Solve(constructionHeuristic, new CVRPObjective(this.SelectRandomSeedHeuristic, overlapsFunc, 1));
+            return this.Solve(iterate, new CVRPObjective(this.SelectRandomSeedHeuristic, overlapsFunc, 1, 0.1f));
         }
 
         /// <summary>

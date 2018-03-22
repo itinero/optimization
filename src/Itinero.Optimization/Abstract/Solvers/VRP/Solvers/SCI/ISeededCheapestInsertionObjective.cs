@@ -23,6 +23,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
         /// <returns>The list of visits to be visited, except potentially those uniquely used as seeds.</returns>
         IList<int> PotentialVisits(TProblem problem);
 
+        /// <summary>
+        /// Creates a new instance of the given problem that has tighter constraints.
+        /// </summary>
+        /// <param name="problem">The original problem.</param>
+        /// <returns>A problem that has a tighter constraints.</returns>
+        TProblem ProblemWithSlack(TProblem problem);
+
         // TODO: check if this is needed, the visit list could be derived from the solution or included there as 'unplaced' list or something like that.
 
         /// <summary>

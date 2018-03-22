@@ -44,6 +44,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
             private readonly Func<CVRProblem, int, int, float> _localizationCostFunc;
 
             private readonly Delegates.OverlapsFunc<CVRProblem, ITour> _overlapsFunc;
+            private readonly float _slackPercentage;
 
             /// <summary>
             /// Creates a new objective.
@@ -51,10 +52,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
             /// <param name="seedFunc">The seed function.</param>
             /// <param name="overlapsFunc">The overlaps function.</param>
             /// <param name="localizationFactor">The localization factor.</param>
-            public CVRPObjective(Func<CVRProblem, IList<int>, int> seedFunc, Delegates.OverlapsFunc<CVRProblem, ITour> overlapsFunc, float localizationFactor = 0.5f)
+            /// <param name="slackPercentage">The slack percentage.</param>
+            public CVRPObjective(Func<CVRProblem, IList<int>, int> seedFunc, Delegates.OverlapsFunc<CVRProblem, ITour> overlapsFunc, 
+                float localizationFactor = 0.5f, float slackPercentage = .05f)
             {
                 _seedFunc = seedFunc;
                 _overlapsFunc = overlapsFunc;
+                _slackPercentage = slackPercentage;
 
                 _localizationCostFunc = null;
                 if (localizationFactor != 0)
@@ -807,5 +811,21 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 }
                 return _overlapsFunc(problem, solution.Tour(t1), solution.Tour(t2));
             }
+
+        /// <summary>
+        /// Creates a new instance of the given problem that has tighter constraints.
+        /// </summary>
+        /// <param name="problem">The original problem.</param>
+        /// <returns>A problem that has a tighter constraints.</returns>
+        public CVRProblem ProblemWithSlack(CVRProblem problem)
+        {
+            // create a new problem definition, taking into account the slack percentage.
+            return new CVRProblem()
+            {
+                Capacity = problem.Capacity.Scale(1 - _slackPercentage),
+                Weights = problem.Weights,
+                VisitCosts = problem.VisitCosts
+            };
         }
+    }
 }

@@ -60,6 +60,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
             var visits = objective.PotentialVisits(problem);
             var totalVisits = visits.Count;
 
+            // create a new instance of the problem with a little more slack.
+            var originalProblem = problem;
+            problem = objective.ProblemWithSlack(problem);
+
             // calculate absolute thresholds.
             var interImprovementThreshold = (int) (visits.Count * _interImprovementsThreshold);
             var remainingThreshold = (int) (visits.Count * _remainingThreshold);
@@ -69,7 +73,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
 
                 if (visits.Count < remainingThreshold)
                 { // try and distribute the remaining visits if there are only a few left.
-                    if (this.TryPlaceRemaining(problem, objective, solution, visits))
+                    // this is done with the original problem to increase the chances of success.
+                    if (this.TryPlaceRemaining(originalProblem, objective, solution, visits))
                     { // all remaining where placed.
                         break;
                     }
