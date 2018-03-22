@@ -142,29 +142,22 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
         /// <returns></returns>
         public CVRPSolution Solve(Delegates.OverlapsFunc<CVRProblem, ITour> overlapsFunc)
         {
-            var crossMultiAllPairs = new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 15, true, true, true);
+            var crossMultiAllPairs = new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 20, true, true, true);
             var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
                     crossMultiAllPairs, 20, true);
-
-            //var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-            //    new SeededLocalizedCheapestInsertionSolver(this.SelectSeedHeuristic, overlapsFunc), 1,
-            //        );
-            //var solver = new GuidedVNS(constructionHeuristic, overlapsFunc, 4 * 60);
-            //var iterate = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-            //    solver, 10);
             
             var slci = new SeededCheapestInsertion<CVRProblem, CVRPObjective, CVRPSolution>(
                 new TSP.Solvers.HillClimbing3OptSolver(),
                 new IInterTourImprovementOperator<float, CVRProblem, CVRPObjective, CVRPSolution, float>[]
                 {
-                    new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 4),
+                    new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 5),
                     new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true),
-                    new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 4, true, false, true)
+                    new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 5, true, false, true)
                 }
             );
 
             var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
-                     slci, 10);
+                     slci, 10, new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 10, true, true, true));
             var iterate = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
                     constructionHeuristic, 1, crossMultiAllPairsUntil);
             // var solver = new GuidedVNS(iterate, overlapsFunc, 8 * 60);

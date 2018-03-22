@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -97,7 +98,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
         /// <summary>
         /// Updates the quantities with the given sequence exchange.
         /// </summary>
-        public static void UpdateExchange(this Capacity capacity, Content content, int[] s1, int[] s2)
+        public static void UpdateExchange(this Capacity capacity, Content content, Seq s1, Seq s2)
         {
             if (capacity.Constraints == null)
             {
@@ -158,7 +159,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
         /// <summary>
         /// Returns true if the exchange of the of the two sequences is possible within the given capacity constraints.
         /// </summary>
-        public static bool ExchangeIsPossible(this Capacity capacity, Content content, int[] s1, int[] s2)
+        public static bool ExchangeIsPossible(this Capacity capacity, Content content, Seq s1, Seq s2)
         {
             if (capacity.Constraints == null)
             {
@@ -276,7 +277,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
         /// <summary>
         /// Returns true if the given visits can be added without violating the constraints.
         /// </summary>
-        public static bool CanAdd(this Capacity capacity, Content content, int[] visits, int first, int last)
+        public static bool CanAdd(this Capacity capacity, Content content, Seq seq)
         {
             if (capacity.Constraints == null)
             {
@@ -288,9 +289,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
                 var constraint = capacity.Constraints[c];
                 var q = content.Quantities[c];
                 
-                for (var v = first; v <= last; v++)
+                for (var v = 1; v < seq.Length - 1; v++)
                 {
-                    var visit = visits[v];
+                    var visit = seq[v];
                     q += constraint.Values[visit];
                     if (q > constraint.Max)
                     {

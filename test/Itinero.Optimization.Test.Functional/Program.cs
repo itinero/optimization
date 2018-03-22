@@ -39,9 +39,9 @@ namespace Itinero.Optimization.Test.Functional
             // TSP_TW.TSPTWTests.Run();
 
             VRP.NoDepot.Capacitated.NoDepotCVRPTests.Run();
-#if DEBUG
-            //Console.ReadLine();
-#endif
+//#if DEBUG
+            Console.ReadLine();
+//#endif
         }
 
         private static void EnableLogging()
