@@ -193,17 +193,24 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                                 }
 
                                 // try exchanging with s1 reversed.
-                                if (objective.SimulateSwap(problem, solution, t1, t2, s1Rev.Value, s2, out localDelta) &&
-                                    localDelta > bestDelta)
-                                { // exchange succeeded.
-                                    bestDelta = localDelta;
-                                    bestT1 = t1;
-                                    bestT2 = t2;
-                                    bestS1 = s1Rev.Value;
-                                    bestS2 = s2;
+                                if (s1.Visits.Length > 3)
+                                {
+                                    if (objective.SimulateSwap(problem, solution, t1, t2, s1Rev.Value, s2, out localDelta) &&
+                                        localDelta > bestDelta)
+                                    { // exchange succeeded.
+                                        bestDelta = localDelta;
+                                        bestT1 = t1;
+                                        bestT2 = t2;
+                                        bestS1 = s1Rev.Value;
+                                        bestS2 = s2;
+                                    }
                                 }
 
                                 // reverse s2.
+                                if (s2.Visits.Length <= 3)
+                                { // not need to check reverse for single-visit sequences.
+                                    continue;
+                                }
                                 var s2Rev = objective.Reverse(problem, s2);
 
                                 // try exchanging with s2 reversed.
@@ -218,14 +225,17 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                                 }
 
                                 // try exchanging with both reversed.
-                                if (objective.SimulateSwap(problem, solution, t1, t2, s1Rev.Value, s2Rev, out localDelta) &&
-                                    localDelta > bestDelta)
-                                { // exchange succeeded.
-                                    bestDelta = localDelta;
-                                    bestT1 = t1;
-                                    bestT2 = t2;
-                                    bestS1 = s1Rev.Value;
-                                    bestS2 = s2Rev;
+                                if (s1.Visits.Length > 3)
+                                {
+                                    if (objective.SimulateSwap(problem, solution, t1, t2, s1Rev.Value, s2Rev, out localDelta) &&
+                                        localDelta > bestDelta)
+                                    { // exchange succeeded.
+                                        bestDelta = localDelta;
+                                        bestT1 = t1;
+                                        bestT2 = t2;
+                                        bestS1 = s1Rev.Value;
+                                        bestS2 = s2Rev;
+                                    }
                                 }
                             }
                         }
@@ -293,15 +303,22 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                             }
 
                             // try exchanging with s1 reversed.
-                            if (objective.SimulateSwap(problem, solution, t1, t2, s1Rev.Value, s2, out localDelta) &&
-                                localDelta > bestDelta)
-                            { // exchange succeeded.
-                                bestDelta = localDelta;
-                                bestS1 = s1Rev.Value;
-                                bestS2 = s2;
+                            if (s1.Visits.Length > 3)
+                            {
+                                if (objective.SimulateSwap(problem, solution, t1, t2, s1Rev.Value, s2, out localDelta) &&
+                                    localDelta > bestDelta)
+                                { // exchange succeeded.
+                                    bestDelta = localDelta;
+                                    bestS1 = s1Rev.Value;
+                                    bestS2 = s2;
+                                }
                             }
 
                             // reverse s2.
+                            if (s2.Visits.Length <= 3)
+                            { // not need to check reverse for single-visit sequences.
+                                continue;
+                            }
                             var s2Rev = objective.Reverse(problem, s2);
 
                             // try exchanging with s2 reversed.
@@ -314,12 +331,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                             }
 
                             // try exchanging with both reversed.
-                            if (objective.SimulateSwap(problem, solution, t1, t2, s1Rev.Value, s2Rev, out localDelta) &&
-                                localDelta > bestDelta)
-                            { // exchange succeeded.
-                                bestDelta = localDelta;
-                                bestS1 = s1Rev.Value;
-                                bestS2 = s2Rev;
+                            if (s1.Visits.Length > 3)
+                            {
+                                if (objective.SimulateSwap(problem, solution, t1, t2, s1Rev.Value, s2Rev, out localDelta) &&
+                                    localDelta > bestDelta)
+                                { // exchange succeeded.
+                                    bestDelta = localDelta;
+                                    bestS1 = s1Rev.Value;
+                                    bestS2 = s2Rev;
+                                }
                             }
                         }
                     }
@@ -358,13 +378,20 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                             }
 
                             // try exchanging with s1 reversed.
-                            if (objective.TrySwap(problem, solution, t1, t2, s1Rev.Value, s2, out localDelta))
-                            { // exchange succeeded.
-                                delta = localDelta;
-                                return true;
+                            if (s1.Visits.Length > 3)
+                            {
+                                if (objective.TrySwap(problem, solution, t1, t2, s1Rev.Value, s2, out localDelta))
+                                { // exchange succeeded.
+                                    delta = localDelta;
+                                    return true;
+                                }
                             }
 
                             // reverse s2.
+                            if (s2.Visits.Length <= 3)
+                            { // not need to check reverse for single-visit sequences.
+                                continue;
+                            }
                             var s2Rev = objective.Reverse(problem, s2);
 
                             // try exchanging with s2 reversed.
@@ -375,10 +402,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                             }
 
                             // try exchanging with both reversed.
-                            if (objective.TrySwap(problem, solution, t1, t2, s1Rev.Value, s2Rev, out localDelta))
-                            { // exchange succeeded.
-                                delta = localDelta;
-                                return true;
+                            if (s1.Visits.Length > 3)
+                            {
+                                if (objective.TrySwap(problem, solution, t1, t2, s1Rev.Value, s2Rev, out localDelta))
+                                { // exchange succeeded.
+                                    delta = localDelta;
+                                    return true;
+                                }
                             }
                         }
                     }

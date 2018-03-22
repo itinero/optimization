@@ -142,7 +142,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
         /// <returns></returns>
         public CVRPSolution Solve(Delegates.OverlapsFunc<CVRProblem, ITour> overlapsFunc)
         {
-            var crossMultiAllPairs = new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 15, true, true, true);
+            var crossMultiAllPairs = new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 15, true, true, true);
             var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
                     crossMultiAllPairs, 20, true);
 
@@ -159,7 +159,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 {
                     new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 3),
                     new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true),
-                    new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 4, true, false, true),
+                    new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 3, true, false, true),
                     new ExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>()
                 }
             );
