@@ -152,7 +152,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 {
                     new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 5),
                     new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true),
-                    new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 5, true, false, true)
+                    new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 10, true, false, true)
                 }
             );
 

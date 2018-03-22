@@ -186,7 +186,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 weight += this.Calculate(problem, solution, t);
             }
 
-            return weight;
+            return weight * solution.Count;
         }
 
         /// <summary>
