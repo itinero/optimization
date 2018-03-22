@@ -157,7 +157,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
             );
 
             var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
-                     slci, 10, new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 10, true, true, true));
+                     slci, 40, new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(1, 10, true, true, true));
             var iterate = new Algorithms.Solvers.IterativeSolver<float, CVRProblem, CVRPObjective, CVRPSolution, float>(
                     constructionHeuristic, 1, crossMultiAllPairsUntil);
             // var solver = new GuidedVNS(iterate, overlapsFunc, 8 * 60);
@@ -166,8 +166,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 {
                     var weights = problem.Weights;
 
+                    //return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
                     return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-                        weights, this.NearestNeigboursTravelCost, visits, 20, 0.75f, 0.5f);
+                        weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
                 }, overlapsFunc, 1f, 0.15f));
         }
 

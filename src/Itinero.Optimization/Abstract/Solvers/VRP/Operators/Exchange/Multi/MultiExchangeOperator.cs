@@ -99,6 +99,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                             continue;
                         }
 
+                        if (!objective.HaveToTryInter(problem, solution, t1, t2))
+                        { // tours have a potential exchange.
+                            continue;
+                        }
+
                         if (this.Apply(problem, objective, solution, t1, t2, out float localDelta))
                         { // success!
                             delta += localDelta;
@@ -156,6 +161,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                 {
                     if (t1 == t2)
                     {
+                        continue;
+                    }
+
+                    if (!objective.HaveToTryInter(problem, solution, t1, t2))
+                    { // tours have a potential exchange.
                         continue;
                     }
 

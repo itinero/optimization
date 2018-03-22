@@ -390,15 +390,16 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered
                 }
 
                 var between = problem.Weights.SeqRange(1, s.Length - 2, s);
-                var betweenReversed = problem.Weights.SeqReversed(1, s.Length - 2, s);
 
                 var start = problem.Weights[s[0]][s[1]];
                 var end = problem.Weights[s[s.Length - 2]][s[s.Length - 1]];
 
-                //if (between + start + end < problem.Weights[s[0]][s[s.Length - 1]] * 1.5f)
-                //{
-                //    continue;
-                //}
+                if (between + start + end < problem.Weights[s[0]][s[s.Length - 1]] * 2f)
+                {
+                   continue;
+                }
+                
+                var betweenReversed = problem.Weights.SeqReversed(1, s.Length - 2, s);
 
                 var visitCost = 0f;
                 if (problem.VisitCosts != null)

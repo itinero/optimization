@@ -51,5 +51,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
         /// <param name="delta">The difference in fitness.</param>
         /// <returns>True if the swap is possible.</returns>        
         bool SimulateSwap(TProblem problem, TSolution solution, int t1, int t2, Seq s1, Seq s2, out float delta);
+
+        /// <summary>
+        /// Returns true if the two tours have potential exchanges.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="solution">The solution.</param>
+        /// <param name="t1">The first tour.</param>
+        /// <param name="t2">The second tour.</param>
+        /// <returns>True if the two tours have potential improvements.</returns>
+        bool HaveToTryInter(TProblem problem, TSolution solution, int t1, int t2);
     }
 }
