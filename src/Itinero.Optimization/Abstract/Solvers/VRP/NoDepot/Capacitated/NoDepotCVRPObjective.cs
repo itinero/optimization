@@ -387,6 +387,14 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             int minSize, int maxSize, bool wrap)
         {
             var visits = tour.ToArray();
+            if (maxSize > visits.Length)
+            {
+                maxSize = visits.Length;
+            }
+            if (minSize > visits.Length)
+            { // make sure not to enumerate anything.
+                maxSize = -1;
+            }
             var tourSequence = new Sequence(visits);
             for (var length = maxSize; length >= minSize; length--)
             {

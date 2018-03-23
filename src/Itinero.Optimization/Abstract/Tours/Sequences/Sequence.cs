@@ -143,6 +143,15 @@ namespace Itinero.Optimization.Abstract.Tours.Sequences
         /// <returns></returns>
         public IEnumerable<Sequence> SubSequences(int minLength, int maxLength, bool wrap)
         {
+            if (maxLength > _length)
+            {
+                maxLength = _length;
+            }
+            if (minLength > _length)
+            {
+                minLength = _length;
+            }
+
             for (var length = maxLength; length >= minLength; length--)
             {
                 var maxStart = _length;

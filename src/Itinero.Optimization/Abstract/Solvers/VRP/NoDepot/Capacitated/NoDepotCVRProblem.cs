@@ -166,7 +166,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     //return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
                     return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
                         weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
-                }, overlapsFunc, 1f, 0.15f));
+                }, overlapsFunc, 1f, 0.05f));
         }
 
         /// <summary>
