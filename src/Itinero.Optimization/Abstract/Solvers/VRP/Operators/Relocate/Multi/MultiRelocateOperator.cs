@@ -99,7 +99,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi
             var tour1 = solution.Tour(t1);
             var tour2 = solution.Tour(t2);
 
-            var tour1Enumerable = objective.SeqAndSmaller(problem, tour1, _minWindowSize + 2, _maxWindowSize + 2);
+            var tour1Enumerable = objective.SeqAndSmaller(problem, tour1, _minWindowSize + 2, _maxWindowSize + 2, false);
             foreach (var s in tour1Enumerable)
             {
                 foreach (var pair in tour2.Pairs())
@@ -113,7 +113,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi
             }
             if (_tryReverse)
             { // also try t2 -> t1
-                var tour2Enumerable = objective.SeqAndSmaller(problem, tour2, _minWindowSize + 2, _maxWindowSize + 2);
+                var tour2Enumerable = objective.SeqAndSmaller(problem, tour2, _minWindowSize + 2, _maxWindowSize + 2, false);
                 foreach (var s in tour2Enumerable)
                 {
                     foreach (var pair in tour1.Pairs())

@@ -40,4 +40,4 @@ packages/*
 *.osm.pbf
 TestResult*.xml
 
-test/Itinero.Optimization.Test.Functional/*.geojson
+test/Itinero.Optimization.Test.Functional/result/*

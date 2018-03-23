@@ -36,21 +36,21 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         ISeededCheapestInsertionSolution
     {
         private readonly List<CapacityExtensions.Content> _contents;
-        private readonly List<Tour> _tours;
+        private readonly List<ITour> _tours;
 
         /// <summary>
         /// Creates a new solution.
         /// </summary>
         public NoDepotCVRPSolution(int size)
         {
-            _tours = new List<Tour>(size);
+            _tours = new List<ITour>(size);
             _contents = new List<CapacityExtensions.Content>(size);
         }
 
         /// <summary>
         /// Creates a new solution by deep-copying what's given.
         /// </summary>
-        protected NoDepotCVRPSolution(List<Tour> tours, List<CapacityExtensions.Content> contents)
+        protected NoDepotCVRPSolution(List<ITour> tours, List<CapacityExtensions.Content> contents)
         {
             // make a deep-copy of the contents.
             _contents = new List<CapacityExtensions.Content>(contents.Count);
@@ -67,7 +67,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             }
 
             // make a deep-copy of the tours.
-            _tours = new List<Tour>();
+            _tours = new List<ITour>();
             foreach (var tour in tours)
             {
                 _tours.Add(tour.Clone() as Tour);
@@ -104,6 +104,16 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         public ITour Tour(int i)
         {
             return _tours[i];
+        }
+
+        /// <summary>
+        /// Replaces the given tour at the given index.
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="tour"></param>
+        public void ReplaceTour(int i, ITour tour)
+        {
+            _tours[i] = tour;
         }
 
         /// <summary>

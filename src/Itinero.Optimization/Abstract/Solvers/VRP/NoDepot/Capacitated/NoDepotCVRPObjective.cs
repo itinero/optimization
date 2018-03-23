@@ -184,7 +184,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
             for (var t = 0; t < solution.Count; t++)
             {
-                weight += this.Calculate(problem, solution, t);
+                weight += solution.Contents[t].Weight;
             }
 
             return weight * solution.Count;
@@ -237,19 +237,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 return false;
             }
 
-            var tour1 = solution.Tour(t1);
-            if (tour1.First == visit.Along)
-            { // for now we cannot move the first visit.
-              // TODO: enable this objective to move the first visit.
-                delta = 0;
-                return false;
-            }
-
             // calculate the removal gain of the visit.
             var removalGain = problem.Weights[visit.From][visit.Along] + problem.Weights[visit.Along][visit.To] -
                 problem.Weights[visit.From][visit.To];
             if (removalGain > E)
             { // calculate cheapest placement.
+
                 var tour2 = solution.Tour(t2);
                 var visitCost = problem.GetVisitCost(visit.Along);
 
@@ -258,6 +251,14 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 if (result < removalGain - E &&
                     solution.Contents[t2].Weight + result + visitCost < problem.Capacity.Max)
                 { // there is a gain in relocating this visit.
+                    var tour1 = solution.Tour(t1);
+                    if (tour1.First == visit.Along)
+                    {  // move first.
+                        var newTour1 = new Tour(tour1.From(visit.To), visit.To);
+                        solution.ReplaceTour(t1, newTour1);
+                        tour1 = newTour1;
+                    }
+
                     tour2.ReplaceEdgeFrom(location.From, visit.Along);
                     tour2.ReplaceEdgeFrom(visit.Along, location.To);
 
@@ -380,8 +381,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="tour">The tour.</param>
         /// <param name="minSize">The minimum size.</param>
         /// <param name="maxSize">The maximum size.</param>
+        /// <param name="wrap">Wrap around first if true.</param>
         /// <returns>An enumerable with sequences.</returns>
-        public IEnumerable<Operators.Seq> SeqAndSmaller(NoDepotCVRProblem problem, IEnumerable<int> tour, int minSize, int maxSize)
+        public IEnumerable<Operators.Seq> SeqAndSmaller(NoDepotCVRProblem problem, IEnumerable<int> tour, 
+            int minSize, int maxSize, bool wrap)
         {
             var visits = tour.ToArray();
             var tourSequence = new Sequence(visits);
@@ -392,7 +395,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 float? between = null;
                 float betweenReversed = 0;
                 var visitCost = 0f;
-                foreach (var s in tourSequence.SubSequences(length, length))
+                foreach (var s in tourSequence.SubSequences(length, length, wrap))
                 {
                     if (between == null)
                     { // first sequence of this length.
@@ -586,9 +589,24 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 return false;
             }
 
+            var tour1 = solution.Tour(t1);
+            if (s1.Wraps)
+            { // move first.
+                var newTour1 = new Tour(tour1.From(s1[s1.Length - 1]), s1[s1.Length - 1]);
+                solution.ReplaceTour(t1, newTour1);
+                tour1 = newTour1;
+            }
+
+            var tour2 = solution.Tour(t2);
+            if (s2.Wraps)
+            { // move first.
+                var newTour2 = new Tour(tour2.From(s2[s2.Length - 1]), s2[s2.Length - 1]);
+                solution.ReplaceTour(t2, newTour2);
+                tour2 = newTour2;
+            }
+
             // do the swap.
             // s2 -> tour1
-            var tour1 = solution.Tour(t1);
             var previous = pair1.From;
             for (var v = 1; v < s2.Length - 1; v++)
             {
@@ -599,7 +617,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             tour1.ReplaceEdgeFrom(previous, pair1.To);
 
             // s1 -> tour2
-            var tour2 = solution.Tour(t2);
             previous = pair2.From;
             for (var v = 1; v < s1.Length - 1; v++)
             {
@@ -671,9 +688,16 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 delta = 0;
                 return false;
             }
+            
+            var tour1 = solution.Tour(t1);
+            if (seq.Wraps)
+            { // move first.
+                var newTour1 = new Tour(tour1.From(seq[seq.Length - 1]), seq[seq.Length - 1]);
+                solution.ReplaceTour(t1, newTour1);
+                tour1 = newTour1;
+            }
 
             // move the sequence.
-            var tour1 = solution.Tour(t1);
             var tour2 = solution.Tour(t2);
             tour1.ReplaceEdgeFrom(pair1.From, pair1.To);
             var previous = pair.From;

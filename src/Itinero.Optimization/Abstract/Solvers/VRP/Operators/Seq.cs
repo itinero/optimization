@@ -108,6 +108,17 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
         }
 
         /// <summary>
+        /// Returns true if this sequence wraps the first.
+        /// </summary>
+        public bool Wraps
+        {
+            get
+            {
+                return this.Visits.Wraps;
+            }
+        }
+
+        /// <summary>
         /// Returns a proper description of this sequence.
         /// </summary>
         /// <returns></returns>

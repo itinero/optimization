@@ -154,7 +154,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
             for (var t1 = 0; t1 < solution.Count; t1++)
             {
                 var tour1 = solution.Tour(t1);
-                var tour1Enumerable = objective.SeqAndSmaller(problem, tour1, _minWindowSize + 2, _maxWindowSize + 2);
+                var tour1Enumerable = objective.SeqAndSmaller(problem, tour1, _minWindowSize + 2, _maxWindowSize + 2, false);
                 enumerations.Add(tour1Enumerable);
 
                 for (var t2 = 0; t2 < t1; t2++)
@@ -302,8 +302,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
             var tour1 = solution.Tour(t1);
             var tour2 = solution.Tour(t2);
 
-            var tour1Enumerable = objective.SeqAndSmaller(problem, tour1, _minWindowSize + 2, _maxWindowSize + 2);
-            var tour2Enumerable = objective.SeqAndSmaller(problem, tour2, _minWindowSize + 2, _maxWindowSize + 2);
+            var tour1Enumerable = objective.SeqAndSmaller(problem, tour1, _minWindowSize + 2, _maxWindowSize + 2, true);
+            var tour2Enumerable = objective.SeqAndSmaller(problem, tour2, _minWindowSize + 2, _maxWindowSize + 2, true);
 
             if (_bestImprovement)
             { // go over all combinations and choose the best.

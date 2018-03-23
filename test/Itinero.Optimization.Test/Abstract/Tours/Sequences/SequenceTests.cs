@@ -35,7 +35,7 @@ namespace Itinero.Optimization.Test.Abstract.Tours.Sequences
         public void TestSize1()
         {
             var s = new Sequence(new int[] { 0, 1, 2, 3, 4, 5 }, 0, 6);
-            var enumeration = new List<Sequence>(s.SubSequences(1, 1));
+            var enumeration = new List<Sequence>(s.SubSequences(1, 1, false));
             Assert.AreEqual(6, enumeration.Count);
             Assert.AreEqual("0", enumeration[0].ToString());
             Assert.AreEqual("1", enumeration[1].ToString());
@@ -52,13 +52,22 @@ namespace Itinero.Optimization.Test.Abstract.Tours.Sequences
         public void TestSize2()
         {
             var s = new Sequence(new int[] { 0, 1, 2, 3, 4, 5 }, 0, 6);
-            var enumeration = new List<Sequence>(s.SubSequences(2, 2));
+            var enumeration = new List<Sequence>(s.SubSequences(2, 2, false));
             Assert.AreEqual(5, enumeration.Count);
             Assert.AreEqual("0->1", enumeration[0].ToString());
             Assert.AreEqual("1->2", enumeration[1].ToString());
             Assert.AreEqual("2->3", enumeration[2].ToString());
             Assert.AreEqual("3->4", enumeration[3].ToString());
             Assert.AreEqual("4->5", enumeration[4].ToString());
+
+            enumeration = new List<Sequence>(s.SubSequences(2, 2, true));
+            Assert.AreEqual(6, enumeration.Count);
+            Assert.AreEqual("0->1", enumeration[0].ToString());
+            Assert.AreEqual("1->2", enumeration[1].ToString());
+            Assert.AreEqual("2->3", enumeration[2].ToString());
+            Assert.AreEqual("3->4", enumeration[3].ToString());
+            Assert.AreEqual("4->5", enumeration[4].ToString());
+            Assert.AreEqual("5->0", enumeration[5].ToString());
         }
     }
 }

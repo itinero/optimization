@@ -18,11 +18,17 @@ namespace Itinero.Optimization.Test.Functional
         /// </summary>
         public static void WriteGeoJson(this IList<Route> routes, string fileName)
         {
+            var directory = new DirectoryInfo("result");
+            if (!directory.Exists)
+            {
+                directory.Create();
+            }
             for (var i = 0; i < routes.Count; i++)
             {
                 if (routes[i] != null)
                 {
-                    File.WriteAllText(string.Format(fileName, i), routes[i].ToGeoJson());
+                    File.WriteAllText(Path.Combine(directory.FullName, 
+                        string.Format(fileName, i)), routes[i].ToGeoJson());
                 }
             }
         }
@@ -32,11 +38,17 @@ namespace Itinero.Optimization.Test.Functional
         /// </summary>
         public static void WriteJson(this IList<Route> routes, string fileName)
         {
+            var directory = new DirectoryInfo("result");
+            if (!directory.Exists)
+            {
+                directory.Create();
+            }
             for (var i = 0; i < routes.Count; i++)
             {
                 if (routes[i] != null)
                 {
-                    File.WriteAllText(string.Format(fileName, i), routes[i].ToJson());
+                    File.WriteAllText(Path.Combine(directory.FullName, 
+                        string.Format(fileName, i)), routes[i].ToJson());
                 }
             }
         }

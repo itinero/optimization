@@ -16,7 +16,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi
         /// <param name="minSize">The minimum size.</param>
         /// <param name="maxSize">The maximum size.</param>
         /// <returns>An enumerable with sequences.</returns>
-        IEnumerable<Seq> SeqAndSmaller(TProblem problem, IEnumerable<int> tour, int minSize, int maxSize);
+        IEnumerable<Seq> SeqAndSmaller(TProblem problem, IEnumerable<int> tour, int minSize, int maxSize, bool wrap);
 
         /// <summary>
         /// Tries to move the given sequence from t1 in between the given pair in t2.

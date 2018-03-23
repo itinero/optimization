@@ -48,6 +48,35 @@ namespace Itinero.Optimization.Abstract.Tours
             return tour.Last.HasValue &&
                 tour.Last.Value == tour.First;
         }
+        
+        /// <summary>
+        /// Enumerates all visits starting at the given vist.
+        /// </summary>
+        public static IEnumerable<int> From(this ITour tour, int visit)
+        {
+            var started = false;
+            foreach (var v in tour)
+            {
+                if (!started)
+                {
+                    if (v != visit)
+                    {
+                        continue;
+                    }
+                    started = true;
+                }
+
+                yield return v;
+            }
+            foreach(var v in tour)
+            {
+                if (v == visit)
+                {
+                    break;
+                }
+                yield return v;
+            }
+        }
 
         /// <summary>
         /// Generates pairs based on the given IEnumerable representing a tour.

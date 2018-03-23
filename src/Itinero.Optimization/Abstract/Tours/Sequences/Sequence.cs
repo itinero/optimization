@@ -91,6 +91,17 @@ namespace Itinero.Optimization.Abstract.Tours.Sequences
         }
 
         /// <summary>
+        /// Returns true when this sequence wraps around the beginning of the source sequence.
+        /// </summary>
+        public bool Wraps
+        {
+            get
+            {
+                return _start + _length > _visits.Length;
+            }
+        }
+
+        /// <summary>
         /// Returns the visit at the given index.
         /// </summary>
         /// <param name="i">The index.</param>
@@ -128,12 +139,18 @@ namespace Itinero.Optimization.Abstract.Tours.Sequences
         /// </summary>
         /// <param name="minLength">The minimum length.</param>
         /// <param name="maxLength">The maximum length.</param>
+        /// <param name="wrap">Wrap around the beginning of the sequence if true.</param>
         /// <returns></returns>
-        public IEnumerable<Sequence> SubSequences(int minLength, int maxLength)
+        public IEnumerable<Sequence> SubSequences(int minLength, int maxLength, bool wrap)
         {
             for (var length = maxLength; length >= minLength; length--)
             {
-                for (var s = 0; s < _length - (length  -1); s++)
+                var maxStart = _length;
+                if (!wrap)
+                {
+                    maxStart = _length - (length - 1);
+                }
+                for (var s = 0; s < maxStart; s++)
                 {
                     yield return new Sequence(_visits, s, length);
                 }
