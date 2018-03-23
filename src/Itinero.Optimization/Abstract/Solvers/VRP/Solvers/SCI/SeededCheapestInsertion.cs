@@ -27,7 +27,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
         /// <param name="intraImprovement">The intra-improvement operator.</param>
         /// <param name="interImprovements">The inter-improvement operator.</param>
         public SeededCheapestInsertion(IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float> intraImprovement,
-            IEnumerable<IInterTourImprovementOperator<float, TProblem, TObjective, TSolution, float>> interImprovements, float remainingThreshold = 0.03f, float interImprovementsThreshold = 0.25f)
+            IEnumerable<IInterTourImprovementOperator<float, TProblem, TObjective, TSolution, float>> interImprovements, 
+                float remainingThreshold = 0.03f, 
+                float interImprovementsThreshold = 0.25f)
         {
             _remainingThreshold = remainingThreshold;
             _interImprovementsThreshold = interImprovementsThreshold;
