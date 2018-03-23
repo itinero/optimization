@@ -93,7 +93,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
                         if (((totalVisits - visits.Count) % interImprovementThreshold) == 0)
                         { // apply improvement local search if threshold reached.
                             // apply the intra-route improvements.
-                            this.ApplyIntra(problem, objective, tour);
+                            this.ApplyIntra(problem, objective, solution, t);
 
                             // apply the inter-route improvements.
                             this.ApplyInter(problem, objective, solution, t);
@@ -102,10 +102,16 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
                     else
                     { // ok we are done!
                         // apply the intra-route improvements.
-                        this.ApplyIntra(problem, objective, tour);
+                        if (this.ApplyIntra(problem, objective, solution, t))
+                        { // try placing another visit, there was an improvement.
+                            continue;
+                        }
 
                         // apply the inter-route improvements.
-                        this.ApplyInter(problem, objective, solution, t);
+                        if (this.ApplyInter(problem, objective, solution, t))
+                        {// try placing another visit, there was an improvement.
+                            continue;
+                        }
 
                         // move to the next tour.
                         // TODO: what if we suddenly have more space left? perhaps check if the two above succeed and try once more.
@@ -136,12 +142,28 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
         /// </summary>
         /// <param name="problem">The problem.</param>
         /// <param name="objective">The objective.</param>
-        /// <param name="tour">The tour.</param>
-        private void ApplyIntra(TProblem problem, TObjective objective, ITour tour)
+        /// <param name="solution">The solution.</param>
+        /// <param name="t">The tour.</param>
+        private bool ApplyIntra(TProblem problem, TObjective objective, TSolution solution, int t)
         {
+            var tour = solution.Tour(t);
             var tsp = objective.BuildSubTourTSP(problem, tour);
 
-            _intraImprovements.ApplyUntil(tsp, TSP.TSPObjective.Default, tour, out float localDelta);
+            var convertedTour = tsp.Map(tour);
+
+            if (_intraImprovements.ApplyUntil(tsp, TSP.TSPObjective.Default, convertedTour, out float localDelta))
+            {
+                foreach (var pair in convertedTour.Pairs())
+                {
+                    tour.ReplaceEdgeFrom(tsp.Original(pair.From), tsp.Original(pair.To));
+                }
+
+                Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Verbose,
+                    "Intra-improvement found {0}: {1}",
+                    t, _intraImprovements.Name);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

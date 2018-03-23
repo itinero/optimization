@@ -19,6 +19,7 @@
 using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Abstract.Tours;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Itinero.Optimization.Abstract.Solvers.TSP
 {
@@ -56,6 +57,38 @@ namespace Itinero.Optimization.Abstract.Solvers.TSP
             {
                 _forwardMap[backwardMapping.Value] = backwardMapping.Key;
             }
+
+            if (tour.Last.HasValue)
+            {
+                this.Last = _backwardMap[tour.Last.Value];
+            }
+
+            this.Count = _backwardMap.Count;
+        }
+
+        /// <summary>
+        /// Returns the original visit for the given visit.
+        /// </summary>
+        /// <param name="visit"></param>
+        /// <returns></returns>
+        public int Original(int visit)
+        {
+            return _forwardMap[visit];
+        }
+
+        /// <summary>
+        /// Maps the given tour to this convert problem.
+        /// </summary>
+        /// <param name="original"></param>
+        /// <returns></returns>
+        public ITour Map(ITour original)
+        {
+            int? last = null;
+            if (original.Last.HasValue)
+            {
+                last = _backwardMap[original.Last.Value];
+            }
+            return new Tour(original.Select(x => _backwardMap[x]), last);
         }
         
         /// <summary>

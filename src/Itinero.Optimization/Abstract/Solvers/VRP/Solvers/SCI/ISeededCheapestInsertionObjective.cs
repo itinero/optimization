@@ -66,7 +66,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
         /// <param name="problem">The problem.</param>
         /// <param name="tour">The tour.</param>
         /// <returns></returns>
-        TSP.ITSProblem BuildSubTourTSP(TProblem problem, ITour tour);
+        TSP.TSPSubProblem BuildSubTourTSP(TProblem problem, ITour tour);
 
         /// <summary>
         /// Returns true if the two tours could benifit from inter-improvement optimizations.

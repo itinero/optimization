@@ -864,9 +864,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="problem">The problem.</param>
         /// <param name="tour">The tour.</param>
         /// <returns>A TSP that can be solved by a TSP solver to optimize the given tour.</returns>
-        public ITSProblem BuildSubTourTSP(NoDepotCVRProblem problem, ITour tour)
+        public TSP.TSPSubProblem BuildSubTourTSP(NoDepotCVRProblem problem, ITour tour)
         {
-            return new TSP.TSPSubProblem(tour, problem.Weights);
+            var newProblem = new TSP.TSPSubProblem(tour, problem.Weights);
+            return newProblem;
         }
 
         /// <summary>

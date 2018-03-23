@@ -34,7 +34,10 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             // Run1WechelderzandeCapacitated();
             // Run2Spijkenisse();
             // Run2SpijkenisseCapacitated();
-            Run2SpijkenisseVisitCosts();
+            for (var i = 0; i < 10; i++)
+            {
+                Run2SpijkenisseVisitCosts();
+            }
             // Run3DeHague();
             // Run4Rotterdam();
             // Run5Rotterdam();
