@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -97,7 +98,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
         /// <summary>
         /// Updates the quantities with the given sequence exchange.
         /// </summary>
-        public static void UpdateExchange(this Capacity capacity, Content content, int[] s1, int[] s2)
+        public static void UpdateExchange(this Capacity capacity, Content content, Seq s1, Seq s2)
         {
             if (capacity.Constraints == null)
             {
@@ -158,7 +159,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
         /// <summary>
         /// Returns true if the exchange of the of the two sequences is possible within the given capacity constraints.
         /// </summary>
-        public static bool ExchangeIsPossible(this Capacity capacity, Content content, int[] s1, int[] s2)
+        public static bool ExchangeIsPossible(this Capacity capacity, Content content, Seq s1, Seq s2)
         {
             if (capacity.Constraints == null)
             {
@@ -179,7 +180,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                 }
 
                 if (diff < 0)
-                { // if quanity goes down, no need to check constraint.
+                { // if quantity goes down, no need to check constraint.
                     continue;
                 }
                 var q = content.Quantities[c] + diff;
@@ -263,6 +264,34 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                 
                 foreach (var visit in visits)
                 {
+                    q += constraint.Values[visit];
+                    if (q > constraint.Max)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if the given visits can be added without violating the constraints.
+        /// </summary>
+        public static bool CanAdd(this Capacity capacity, Content content, Seq seq)
+        {
+            if (capacity.Constraints == null)
+            {
+                return true;
+            }
+
+            for (var c = 0; c < capacity.Constraints.Length; c++)
+            {
+                var constraint = capacity.Constraints[c];
+                var q = content.Quantities[c];
+                
+                for (var v = 1; v < seq.Length - 1; v++)
+                {
+                    var visit = seq[v];
                     q += constraint.Values[visit];
                     if (q > constraint.Max)
                     {

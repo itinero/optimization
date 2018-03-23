@@ -19,23 +19,34 @@
 using System;
 using System.Collections.Generic;
 using Itinero.Algorithms.Matrices;
-using Itinero.Optimization.General;
-using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers;
-using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers.Operators;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
+using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
+using Itinero.Optimization.Abstract.Tours;
+using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
+using Itinero.Optimization.General;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
     /// <summary>
-    /// The no-depot capacitated VRP.
+    /// The capacitated VRP.
     /// </summary>
-    public class NoDepotCVRProblem
+    public class NoDepotCVRProblem : IRelocateProblem, IExchangeProblem
     {
         /// <summary>
         /// Gets or sets the vehicle capacity.
         /// </summary>
         public Capacity Capacity { get; set; }
+
+        /// <summary>
+        /// Gets or sets the depot.
+        /// </summary>
+        public int Depot { get; set; }
 
         /// <summary>
         /// Gets the weights.
@@ -63,6 +74,27 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
+        /// Holds the nearest neigbours in travel cost.
+        /// </summary>
+        private NearestNeigbourArray _nNTravelCost = null;
+
+        /// <summary>
+        /// Gets the nearest neigbours in travel cost.
+        /// </summary>
+        /// <returns></returns>
+        public NearestNeigbourArray NearestNeigboursTravelCost
+        {
+            get
+            {
+                if (_nNTravelCost == null)
+                {
+                    _nNTravelCost = new NearestNeigbourArray(this.Weights);
+                }
+                return _nNTravelCost;
+            }
+        }
+
+        /// <summary>
         /// Gets the seed heuristic.
         /// </summary>
         /// <returns></returns>
@@ -73,9 +105,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 return (problem, visits) =>
                 {
                     var weights = problem.Weights;
-                    
+
                     return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-                         weights, new Algorithms.NearestNeighbour.NearestNeigbourArray(this.Weights), visits);
+                        weights, this.NearestNeigboursTravelCost, visits);
                 };
             }
         }
@@ -88,7 +120,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         {
             get
             {
-                return (problem, visits) => 
+                return (problem, visits) =>
                 {
                     return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
                 };
@@ -110,34 +142,43 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns></returns>
         public NoDepotCVRPSolution Solve(Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc)
         {
-            var crossMultiAllPairs = new CrossExchangeInterImprovementOperator(10, true, true);
+            var crossMultiAllPairs = new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 20, true, true, true);
             var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-                crossMultiAllPairs, 1, true);
-
-            //var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-            //    new SeededLocalizedCheapestInsertionSolver(this.SelectSeedHeuristic, overlapsFunc), 1,
-            //        );
-            //var solver = new GuidedVNS(constructionHeuristic, overlapsFunc, 4 * 60);
-            //var iterate = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-            //    solver, 10);
+                    crossMultiAllPairs, 20, true);
+            
+            var slci = new SeededCheapestInsertion<NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution>(
+                new TSP.Solvers.HillClimbing3OptSolver(),
+                new IInterTourImprovementOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>[]
+                {
+                    new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 5),
+                    new RelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(true),
+                    new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, false, true)
+                }
+            );
 
             var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-                new SeededLocalizedCheapestInsertionSolver(this.SelectSeedWithCloseNeighboursHeuristic, overlapsFunc), 1);
-            //var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-            //    new SeededLocalizedCheapestInsertionSolver(this.SelectRandomSeedHeuristic, overlapsFunc), 10);
+                     slci, 40, new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, true, true));
             var iterate = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-                constructionHeuristic, 1, crossMultiAllPairsUntil);
-            var solver = new GuidedVNS(iterate, overlapsFunc, 8 * 60);
+                    constructionHeuristic, 1, crossMultiAllPairsUntil);
+            // var solver = new GuidedVNS(iterate, overlapsFunc, 8 * 60);
 
-            return this.Solve(solver);
+            return this.Solve(iterate, new NoDepotCVRPObjective((problem, visits) =>
+                {
+                    var weights = problem.Weights;
+
+                    //return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
+                    return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
+                        weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
+                }, overlapsFunc, 1f, 0.15f));
         }
 
         /// <summary>
         /// Solvers this using the given solver.
         /// </summary>
-        public NoDepotCVRPSolution Solve(Algorithms.Solvers.ISolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float> solver)
+        public NoDepotCVRPSolution Solve(Algorithms.Solvers.ISolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float> solver,
+            NoDepotCVRPObjective objective)
         {
-            return solver.Solve(this, new NoDepotCVRPObjective());
+            return solver.Solve(this, objective);
         }
     }
 }

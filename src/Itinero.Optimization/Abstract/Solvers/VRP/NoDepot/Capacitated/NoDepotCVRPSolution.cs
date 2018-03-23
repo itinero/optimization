@@ -19,31 +19,38 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
+using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
 using Itinero.Optimization.Abstract.Tours;
+using Itinero.Optimization.Algorithms;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
     /// <summary>
     /// Represents a solution to a capacitated no-depot VRP.
     /// </summary>
-    public class NoDepotCVRPSolution : MultiTour
+    public class NoDepotCVRPSolution : ISolution, IRelocateSolution, IExchangeSolution, IMultiExchangeSolution, IMultiRelocateSolution,
+        ISeededCheapestInsertionSolution
     {
-        private readonly List<Solvers.CapacityExtensions.Content> _contents
-            = new List<Solvers.CapacityExtensions.Content>();
+        private readonly List<Solvers.CapacityExtensions.Content> _contents;
+        private readonly List<Tour> _tours;
 
         /// <summary>
         /// Creates a new solution.
         /// </summary>
-        public NoDepotCVRPSolution(int size) : base(size)
+        public NoDepotCVRPSolution(int size)
         {
-
+            _tours = new List<Tour>(size);
+            _contents = new List<Solvers.CapacityExtensions.Content>(size);
         }
 
         /// <summary>
-        /// Creates a new dynamic route by creating shallow copy of the array(s) given.
+        /// Creates a new solution by deep-copying what's given.
         /// </summary>
-        protected NoDepotCVRPSolution(IEnumerable<SubTour> first, int[] nextArray, List<Solvers.CapacityExtensions.Content> contents)
-            : base(first, nextArray)
+        protected NoDepotCVRPSolution(List<Tour> tours, List<Solvers.CapacityExtensions.Content> contents)
         {
             // make a deep-copy of the contents.
             _contents = new List<Solvers.CapacityExtensions.Content>(contents.Count);
@@ -57,6 +64,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 {
                     _contents[c].Quantities = contents[c].Quantities.Clone() as float[];
                 }
+            }
+
+            // make a deep-copy of the tours.
+            _tours = new List<Tour>();
+            foreach (var tour in tours)
+            {
+                _tours.Add(tour.Clone() as Tour);
             }
         }
 
@@ -72,12 +86,55 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
+        /// Gets the # of tours.
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                return _tours.Count;
+            }
+        }
+
+        /// <summary>
+        /// Gets the tour at the given index.
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        public ITour Tour(int i)
+        {
+            return _tours[i];
+        }
+
+        /// <summary>
+        /// Adds a new tour.
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="last"></param>
+        /// <returns></returns>
+        public ITour Add(int first, int? last)
+        {
+            var tour = new Tour(new int[] { first} , last);
+            _tours.Add(tour);
+            return tour;
+        }
+
+        /// <summary>
         /// Clones this solution.
         /// </summary>
         /// <returns></returns>
-        public override object Clone()
+        public object Clone()
         {
-            return new NoDepotCVRPSolution(_subtours, _nextArray, _contents);
+            return new NoDepotCVRPSolution(_tours, _contents);
+        }
+
+        /// <summary>
+        /// Overwrites what's in this solution by what's in the given solution.
+        /// </summary>
+        /// <param name="solution"></param>
+        public void CopyFrom(ISolution solution)
+        {
+            throw new NotImplementedException();
         }
     }
 }

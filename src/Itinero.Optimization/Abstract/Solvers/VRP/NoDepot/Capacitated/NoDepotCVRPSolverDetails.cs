@@ -69,7 +69,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// Converts the given abstract model to a NoDepotCVRP problem.
+        /// Converts the given abstract model to a CVRP problem.
         /// </summary>
         public static Result<NoDepotCVRProblem> TryToNoDepotCVRP(this AbstractModel model)
         {

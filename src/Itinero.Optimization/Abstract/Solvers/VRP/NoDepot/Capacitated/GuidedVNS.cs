@@ -27,18 +27,18 @@ using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solvers
+namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
 {
     /// <summary>
     /// A Guided VNS search applying intra-tour improvements until no improvements can be found.
     /// </summary>
-    public class GuidedVNS : SolverBase<float, CVRProblem, CVRPObjective, CVRPSolution, float>
+    public class GuidedVNS : SolverBase<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>
     {
         private readonly float _lambda; // hold the lambda value, define a better name.
-        private readonly SolverBase<float, CVRProblem, CVRPObjective, CVRPSolution, float> _constructionHeuristic;
-        private readonly Delegates.OverlapsFunc<CVRProblem, ITour> _overlaps; // holds the overlap function.
+        private readonly SolverBase<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float> _constructionHeuristic;
+        private readonly Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> _overlaps; // holds the overlap function.
         private readonly List<IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float>> _intraImprovements;
-        private readonly List<IInterTourImprovementOperator<float, CVRProblem, CVRPObjective, CVRPSolution, float>> _interImprovements; // holds the inter-route improvements.
+        private readonly List<IInterTourImprovementOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>> _interImprovements; // holds the inter-route improvements.
 
         /// <summary>
         /// Creates a new solver.
@@ -46,8 +46,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
         /// <param name="constructionHeuristic">The construction heurstic.</param>
         /// <param name="overlaps">The overlaps function.</param>
         /// <param name="lambda">The lambda parameter.</param>
-        public GuidedVNS(SolverBase<float, CVRProblem, CVRPObjective, CVRPSolution, float> constructionHeuristic,
-            Delegates.OverlapsFunc<CVRProblem, ITour> overlaps, float lambda)
+        public GuidedVNS(SolverBase<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float> constructionHeuristic,
+            Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlaps, float lambda)
         {
             _constructionHeuristic = constructionHeuristic;
             _overlaps = overlaps;
@@ -58,11 +58,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
             _intraImprovements.Add(new TSP.Solvers.HillClimbing3OptSolver());
 
             // register the default inter improvement operators.
-            _interImprovements = new List<IInterTourImprovementOperator<float, CVRProblem, CVRPObjective, CVRPSolution, float>>(4);
-            _interImprovements.Add(new RelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(true));
-            _interImprovements.Add(new ExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>());
-            _interImprovements.Add(new MultiRelocateOperator<CVRPObjective, CVRProblem, CVRPSolution>(2 ,5));
-            _interImprovements.Add(new MultiExchangeOperator<CVRPObjective, CVRProblem, CVRPSolution>(2, 10, true));
+            _interImprovements = new List<IInterTourImprovementOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>>(4);
+            _interImprovements.Add(new RelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(true));
+            _interImprovements.Add(new ExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>());
+            _interImprovements.Add(new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2 ,5));
+            _interImprovements.Add(new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 10, true));
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
         /// <param name="objective">The objective for a solution.</param>
         /// <param name="fitness">The resulting fitness value.</param>
         /// <returns></returns>
-        public override CVRPSolution Solve(CVRProblem problem, CVRPObjective objective, out float fitness)
+        public override NoDepotCVRPSolution Solve(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, out float fitness)
         {
             var worstFactor = 5;
 
@@ -120,7 +120,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
                             }
 
                             // apply penalizations again.
-                            var localSolution = solution.Clone() as CVRPSolution;
+                            var localSolution = solution.Clone() as NoDepotCVRPSolution;
                             foreach (var penalty in penalizations)
                             {
                                 var e = penalty.Key;
@@ -210,7 +210,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
         /// <summary>
         /// Apply some improvements between the given routes and returns the resulting weight.
         /// </summary>
-        private bool ImproveInterRoute(CVRProblem problem, CVRPObjective objective, CVRPSolution solution,
+        private bool ImproveInterRoute(NoDepotCVRProblem problem, NoDepotCVRPObjective objective, NoDepotCVRPSolution solution,
             int tour1Idx, int tour2Idx)
         {
             // get the routes.
@@ -263,7 +263,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
             return globalImprovement;
         }
 
-        private float ResetPenalizations(CVRProblem problem, Dictionary<Pair, Penalty> penalizations)
+        private float ResetPenalizations(NoDepotCVRProblem problem, Dictionary<Pair, Penalty> penalizations)
         {
             var totalPenalty = 0f;
             foreach (var pair in penalizations)
@@ -277,7 +277,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Capacitated.Clustered.Solver
             return totalPenalty;
         }
 
-        private Penalty? PenalizeNext(CVRProblem problem, ITour tour1, ITour tour2, Dictionary<Pair, Penalty> penalizations)
+        private Penalty? PenalizeNext(NoDepotCVRProblem problem, ITour tour1, ITour tour2, Dictionary<Pair, Penalty> penalizations)
         {
             // choose best next edge to penalize.
             var worstCost = 0f;

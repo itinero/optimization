@@ -39,9 +39,9 @@ namespace Itinero.Optimization.Test.Functional
             // TSP_TW.TSPTWTests.Run();
 
             VRP.NoDepot.Capacitated.NoDepotCVRPTests.Run();
-//#if DEBUG
+#if DEBUG
             Console.ReadLine();
-//#endif
+#endif
         }
 
         private static void EnableLogging()
@@ -65,7 +65,6 @@ namespace Itinero.Optimization.Test.Functional
                 });
 #if DEBUG
             loggingBlacklist.Clear();
-            loggingBlacklist.Add("SC");
 #endif
             OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
@@ -73,6 +72,12 @@ namespace Itinero.Optimization.Test.Functional
                 {
                     return;
                 }
+#if RELEASE
+                if (level != "error" || level != "critical" || level != "warning")
+                {
+                    return;
+                }
+#endif
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
             };
             Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
@@ -81,6 +86,12 @@ namespace Itinero.Optimization.Test.Functional
                 {
                     return;
                 }
+#if RELEASE
+                if (level != "error" || level != "critical" || level != "warning")
+                {
+                    return;
+                }
+#endif
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
             };
         }
