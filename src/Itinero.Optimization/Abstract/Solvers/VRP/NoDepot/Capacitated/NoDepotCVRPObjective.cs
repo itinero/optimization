@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Itinero.Optimization.Abstract.Solvers.TSP;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
@@ -26,6 +27,7 @@ using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
 using Itinero.Optimization.Abstract.Tours;
+using Itinero.Optimization.Abstract.Tours.Sequences;
 using Itinero.Optimization.Algorithms.CheapestInsertion;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using Itinero.Optimization.General;
@@ -381,14 +383,17 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns>An enumerable with sequences.</returns>
         public IEnumerable<Operators.Seq> SeqAndSmaller(NoDepotCVRProblem problem, IEnumerable<int> tour, int minSize, int maxSize)
         {
-            foreach (var s in tour.SeqAndSmaller(minSize, maxSize, true, false))
+            var visits = tour.ToArray();
+            var tourSequence = new Sequence(visits);
+            foreach (var s in tourSequence.SubSequences(minSize, maxSize))
             {
                 if (s.Length < 3)
                 {
                     continue;
                 }
 
-                var between = problem.Weights.SeqRange(1, s.Length - 2, s);
+                var betweenSeq = s.SubSequence(1, s.Length - 2);
+                var between = problem.Weights.Seq(betweenSeq);
 
                 var start = problem.Weights[s[0]][s[1]];
                 var end = problem.Weights[s[s.Length - 2]][s[s.Length - 1]];
@@ -398,12 +403,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                    continue;
                 }
                 
-                var betweenReversed = problem.Weights.SeqReversed(1, s.Length - 2, s);
+                var betweenReversed = problem.Weights.SeqReversed(betweenSeq);
 
                 var visitCost = 0f;
                 if (problem.VisitCosts != null)
                 {
-                    visitCost = problem.VisitCosts.Seq(1, s.Length - 2, s);
+                    visitCost = problem.VisitCosts.Seq(betweenSeq);
                 }
 
                 yield return new Operators.Seq(s)

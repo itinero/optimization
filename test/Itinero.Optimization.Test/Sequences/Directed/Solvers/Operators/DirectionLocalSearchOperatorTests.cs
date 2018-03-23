@@ -19,7 +19,7 @@
 using Itinero.Optimization.Abstract.Tours;
 using NUnit.Framework;
 
-namespace Itinero.Optimization.Test.Sequence.Directed.Solvers.Operators
+namespace Itinero.Optimization.Test.Sequences.Directed.Solvers.Operators
 {
     /// <summary>
     /// Contains tests for the direction local search operator.
@@ -36,21 +36,21 @@ namespace Itinero.Optimization.Test.Sequence.Directed.Solvers.Operators
             var problem = SequenceProblemHelper.Create(new Tour(new int[] { 0, 1, 2, 3 }, 0), 4, 60, 360);
             var tour = new Tour(new int[] { 0, 4, 8, 12 }, 0);
 
-            var op = new Itinero.Optimization.Sequence.Directed.Solver.Operators.DirectionLocalSearchOperator();
+            var op = new Itinero.Optimization.Sequences.Directed.Solver.Operators.DirectionLocalSearchOperator();
             float delta;
-            Assert.IsFalse(op.Apply(problem, new Optimization.Sequence.Directed.SequenceDirectedObjective(), tour, out delta));
+            Assert.IsFalse(op.Apply(problem, new Optimization.Sequences.Directed.SequenceDirectedObjective(), tour, out delta));
             Assert.AreEqual(0, delta);
 
             tour = new Tour(new int[] { 0, 5, 8, 12 }, 0);
-            Assert.IsTrue(op.Apply(problem, new Optimization.Sequence.Directed.SequenceDirectedObjective(), tour, out delta));
+            Assert.IsTrue(op.Apply(problem, new Optimization.Sequences.Directed.SequenceDirectedObjective(), tour, out delta));
             Assert.AreEqual(96, delta);
 
             tour = new Tour(new int[] { 0, 4, 9, 12 }, 0);
-            Assert.IsTrue(op.Apply(problem, new Optimization.Sequence.Directed.SequenceDirectedObjective(), tour, out delta));
+            Assert.IsTrue(op.Apply(problem, new Optimization.Sequences.Directed.SequenceDirectedObjective(), tour, out delta));
             Assert.AreEqual(96, delta);
 
             tour = new Tour(new int[] { 0, 4, 8, 13 }, 0);
-            Assert.IsTrue(op.Apply(problem, new Optimization.Sequence.Directed.SequenceDirectedObjective(), tour, out delta));
+            Assert.IsTrue(op.Apply(problem, new Optimization.Sequences.Directed.SequenceDirectedObjective(), tour, out delta));
             Assert.AreEqual(96, delta);
         }
 
@@ -63,21 +63,21 @@ namespace Itinero.Optimization.Test.Sequence.Directed.Solvers.Operators
             var problem = SequenceProblemHelper.Create(new Tour(new int[] { 0, 1, 2, 3 }, 3), 4, 60, 360);
             var tour = new Tour(new int[] { 0, 4, 8, 12 }, 12);
 
-            var op = new Itinero.Optimization.Sequence.Directed.Solver.Operators.DirectionLocalSearchOperator();
+            var op = new Itinero.Optimization.Sequences.Directed.Solver.Operators.DirectionLocalSearchOperator();
             float delta;
-            Assert.IsFalse(op.Apply(problem, new Optimization.Sequence.Directed.SequenceDirectedObjective(), tour, out delta));
+            Assert.IsFalse(op.Apply(problem, new Optimization.Sequences.Directed.SequenceDirectedObjective(), tour, out delta));
             Assert.AreEqual(0, delta);
 
             tour = new Tour(new int[] { 0, 5, 8, 12 }, 12);
-            Assert.IsTrue(op.Apply(problem, new Optimization.Sequence.Directed.SequenceDirectedObjective(), tour, out delta));
+            Assert.IsTrue(op.Apply(problem, new Optimization.Sequences.Directed.SequenceDirectedObjective(), tour, out delta));
             Assert.AreEqual(96, delta);
 
             tour = new Tour(new int[] { 0, 4, 9, 12 }, 12);
-            Assert.IsTrue(op.Apply(problem, new Optimization.Sequence.Directed.SequenceDirectedObjective(), tour, out delta));
+            Assert.IsTrue(op.Apply(problem, new Optimization.Sequences.Directed.SequenceDirectedObjective(), tour, out delta));
             Assert.AreEqual(96, delta);
 
             tour = new Tour(new int[] { 0, 4, 8, 14 }, 14);
-            Assert.IsTrue(op.Apply(problem, new Optimization.Sequence.Directed.SequenceDirectedObjective(), tour, out delta));
+            Assert.IsTrue(op.Apply(problem, new Optimization.Sequences.Directed.SequenceDirectedObjective(), tour, out delta));
             Assert.AreEqual(96, delta);
         }
     }

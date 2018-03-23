@@ -17,11 +17,11 @@
  */
 
 using Itinero.Optimization.Algorithms.Solvers;
-using Itinero.Optimization.Sequence.Directed.Solver;
-using Itinero.Optimization.Sequence.Directed.Solver.Operators;
+using Itinero.Optimization.Sequences.Directed.Solver;
+using Itinero.Optimization.Sequences.Directed.Solver.Operators;
 using Itinero.Optimization.Abstract.Tours;
 
-namespace Itinero.Optimization.Sequence.Directed
+namespace Itinero.Optimization.Sequences.Directed
 {
     /// <summary>
     /// Defines a directed sequence problem.

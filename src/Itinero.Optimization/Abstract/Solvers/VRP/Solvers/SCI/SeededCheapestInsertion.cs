@@ -199,7 +199,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
                         improvement = true;
                         globalImprovement = true;
 
-                        Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
+                        Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Verbose,
                             "Inter-improvement found {0}<->{1}: {2}",
                             t1, t2, improvementOperation.Name);
                     }
@@ -209,7 +209,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
                         improvement = true;
                         globalImprovement = true;
 
-                        Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
+                        Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Verbose,
                             "Inter-improvement found {0}<->{1}: {2}",
                             t1, t2, improvementOperation.Name);
                     }

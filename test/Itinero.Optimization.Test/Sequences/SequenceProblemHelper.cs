@@ -18,14 +18,14 @@
 
  using Itinero.Optimization.Abstract.Tours;
 
-namespace Itinero.Optimization.Test.Sequence
+namespace Itinero.Optimization.Test.Sequences
 {
     public static class SequenceProblemHelper
     {
         /// <summary>
         /// Creates a new STSP.
         /// </summary>
-        public static Optimization.Sequence.Directed.SequenceDirectedProblem Create(Tour sequence, int size, float turnPenalty, float defaultWeight)
+        public static Optimization.Sequences.Directed.SequenceDirectedProblem Create(Tour sequence, int size, float turnPenalty, float defaultWeight)
         {
             var weights = new float[size * 2][];
             for (int x = 0; x < size * 2; x++)
@@ -52,7 +52,7 @@ namespace Itinero.Optimization.Test.Sequence
                     }
                 }
             }
-            return new Optimization.Sequence.Directed.SequenceDirectedProblem(sequence, weights, turnPenalty);
+            return new Optimization.Sequences.Directed.SequenceDirectedProblem(sequence, weights, turnPenalty);
         }
     }
 }

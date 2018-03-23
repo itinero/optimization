@@ -21,7 +21,7 @@ using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Algorithms.Random;
 
-namespace Itinero.Optimization.Sequence.Directed.Solver
+namespace Itinero.Optimization.Sequences.Directed.Solver
 {
     /// <summary>
     /// A heuristic to construct a decent solution to the best turns in a directed sequence.

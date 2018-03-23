@@ -1,4 +1,5 @@
 using System.Text;
+using Itinero.Optimization.Abstract.Tours.Sequences;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
 {
@@ -11,7 +12,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
         /// Creates a new sequence with the given visits.
         /// </summary>
         /// <param name="visits"></param>
-        public Seq(int[] visits)
+        public Seq(Sequence visits)
         {
             this.Visits = visits;
             this.TotalOriginal = 0;
@@ -25,7 +26,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
         /// Gets or sets the visits.
         /// </summary>
         /// <returns></returns>
-        private int[] Visits { get; set; }
+        private Sequence Visits { get; set; }
 
         /// <summary>
         /// The weight including the travel cost from the first visit and to the last visit.
@@ -116,7 +117,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
             res.Append(this[0]);
             res.Append("->");
             res.Append("[");
-            for (var i = 1; i < this.Length - 2; i++)
+            for (var i = 1; i < this.Length - 1; i++)
             {
                 res.Append("->");
                 res.Append(this[i]);
@@ -147,6 +148,59 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
             for (var i = start + 1; i <= end; i++)
             {
                 res += weights[seq[i - 1]][seq[i]];
+            }
+            return res;
+        }
+        
+        /// <summary>
+        /// Calculates the weight of a sequence.
+        /// </summary>
+        /// <param name="weights">The weight matrix.</param>
+        /// <param name="seq">The sequence.</param>
+        /// <returns></returns>
+        public static float Seq(this float[][] weights, Sequence seq)
+        {
+            var res = 0f;
+            for (var i = 1; i < seq.Length; i++)
+            {
+                res += weights[seq[i - 1]][seq[i]];
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// Calculates the weight of a sequence if it were reversed.
+        /// </summary>
+        /// <param name="weights">The weight matrix.</param>
+        /// <param name="seq">The sequence.</param>
+        /// <returns></returns>
+        public static float SeqReversed(this float[][] weights, Sequence seq)
+        {
+            var res = 0f;
+            for (var i = 1; i < seq.Length; i++)
+            {
+                res += weights[seq[i]][seq[i - 1]];
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// Calculates the cost of a sequence.
+        /// </summary>
+        /// <param name="costs">The costs.</param>
+        /// <param name="seq">The sequence.</param>
+        /// <returns></returns>
+        public static float Seq(this float[] costs, Sequence seq)
+        {
+            if (costs == null)
+            {
+                return 0f;
+            }
+            
+            var res = 0f;
+            for (var i = 0; i < seq.Length; i++)
+            {
+                res += costs[seq[i]];
             }
             return res;
         }

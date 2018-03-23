@@ -17,13 +17,13 @@
  */
 
 using Itinero.Optimization.Algorithms.Directed;
-using Itinero.Optimization.Sequence.Directed;
-using Itinero.Optimization.Sequence.Directed.Solver;
+using Itinero.Optimization.Sequences.Directed;
+using Itinero.Optimization.Sequences.Directed.Solver;
 using Itinero.Optimization.Abstract.Tours;
 using NUnit.Framework;
 using System.Linq;
 
-namespace Itinero.Optimization.Test.Sequence.Directed.Solvers
+namespace Itinero.Optimization.Test.Sequences.Directed.Solvers
 {
     /// <summary>
     /// Contains construction solver tests.

@@ -46,34 +46,10 @@ namespace Itinero.Optimization.Test.Functional
 
         private static void EnableLogging()
         {
-            var loggingBlacklist = new HashSet<string>(
-                new string[] { 
-                    "StreamProgress",
-                    "RouterDbStreamTarget",
-                    "RouterBaseExtensions",
-                    "HierarchyBuilder",
-                    "RestrictionProcessor",
-                    "NodeIndex",
-                    "RouterDb",
-                    "SeededLocalizedCheapestInsertionSolver",
-                    "3OHC_(NN)_(DL)",
-                    "SC",
-                    "VNSSolver",
-                    "CROSS-MUL-10_(ALL)_(REV)",
-                    "CROSS-MUL-10_(REV)",
-                    "G-VNS"
-                });
-#if DEBUG
-            loggingBlacklist.Clear();
-#endif
             OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
-                if (loggingBlacklist.Contains(o))
-                {
-                    return;
-                }
 #if RELEASE
-                if (level != "error" || level != "critical" || level != "warning")
+                if (level == "verbose")
                 {
                     return;
                 }
@@ -82,12 +58,8 @@ namespace Itinero.Optimization.Test.Functional
             };
             Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
-                if (loggingBlacklist.Contains(o))
-                {
-                    return;
-                }
 #if RELEASE
-                if (level != "error" || level != "critical" || level != "warning")
+                if (level == "verbose")
                 {
                     return;
                 }

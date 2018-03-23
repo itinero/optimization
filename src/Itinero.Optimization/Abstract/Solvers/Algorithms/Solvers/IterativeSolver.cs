@@ -110,7 +110,7 @@ namespace Itinero.Optimization.Algorithms.Solvers
             {
                 TFitness nextFitness;
 
-                Itinero.Logging.Logger.Log("IterativeSolver", Itinero.Logging.TraceEventType.Information,
+                Itinero.Logging.Logger.Log("IterativeSolver", Itinero.Logging.TraceEventType.Verbose,
                     "Started iteration {0}: {1}", i, bestFitness);
 
                 // execute solver.
@@ -118,7 +118,7 @@ namespace Itinero.Optimization.Algorithms.Solvers
                 if (objective.IsBetterThan(problem, nextFitness, bestFitness) ||
                     best == null)
                 { // yep, found a better solution!
-                    Itinero.Logging.Logger.Log("IterativeSolver", Itinero.Logging.TraceEventType.Information,
+                    Itinero.Logging.Logger.Log("IterativeSolver", Itinero.Logging.TraceEventType.Verbose,
                         "Found a better solution at iteration {0}: {1} -> {2}", i, bestFitness, nextFitness);
 
                     best = (TSolution)nextSolution.Clone();

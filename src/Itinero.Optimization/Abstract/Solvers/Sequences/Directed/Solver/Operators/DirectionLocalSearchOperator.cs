@@ -21,7 +21,7 @@ using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Optimization.Abstract.Tours.TurningWeights;
 
-namespace Itinero.Optimization.Sequence.Directed.Solver.Operators
+namespace Itinero.Optimization.Sequences.Directed.Solver.Operators
 {
     /// <summary>
     /// A local search operator trying to improve the solution by switching directions.

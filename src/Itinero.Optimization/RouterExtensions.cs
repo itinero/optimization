@@ -19,7 +19,7 @@
 using System.Collections.Generic;
 using Itinero.Algorithms.Matrices;
 using Itinero.LocalGeo;
-using Itinero.Optimization.Sequence.Directed;
+using Itinero.Optimization.Sequences.Directed;
 using Itinero.Optimization.Abstract.Solvers.STSP;
 using Itinero.Optimization.Models.TimeWindows;
 using Itinero.Optimization.Abstract.Tours;

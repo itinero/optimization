@@ -23,7 +23,7 @@ using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Abstract.Tours;
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Sequence.Directed
+namespace Itinero.Optimization.Sequences.Directed
 {
     /// <summary>
     /// An algorithm to calculate u-turn aware sequences solutions.
