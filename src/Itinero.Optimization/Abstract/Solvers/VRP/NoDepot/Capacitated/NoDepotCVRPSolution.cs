@@ -35,7 +35,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
     public class NoDepotCVRPSolution : ISolution, IRelocateSolution, IExchangeSolution, IMultiExchangeSolution, IMultiRelocateSolution,
         ISeededCheapestInsertionSolution
     {
-        private readonly List<Solvers.CapacityExtensions.Content> _contents;
+        private readonly List<CapacityExtensions.Content> _contents;
         private readonly List<Tour> _tours;
 
         /// <summary>
@@ -44,19 +44,19 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         public NoDepotCVRPSolution(int size)
         {
             _tours = new List<Tour>(size);
-            _contents = new List<Solvers.CapacityExtensions.Content>(size);
+            _contents = new List<CapacityExtensions.Content>(size);
         }
 
         /// <summary>
         /// Creates a new solution by deep-copying what's given.
         /// </summary>
-        protected NoDepotCVRPSolution(List<Tour> tours, List<Solvers.CapacityExtensions.Content> contents)
+        protected NoDepotCVRPSolution(List<Tour> tours, List<CapacityExtensions.Content> contents)
         {
             // make a deep-copy of the contents.
-            _contents = new List<Solvers.CapacityExtensions.Content>(contents.Count);
+            _contents = new List<CapacityExtensions.Content>(contents.Count);
             for (var c = 0; c < contents.Count; c++)
             {
-                _contents.Add(new Solvers.CapacityExtensions.Content()
+                _contents.Add(new CapacityExtensions.Content()
                 {
                     Weight = contents[c].Weight
                 });
@@ -77,7 +77,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <summary>
         /// Gets or sets the contents of each tour.
         /// </summary>
-        public List<Solvers.CapacityExtensions.Content> Contents
+        public List<CapacityExtensions.Content> Contents
         {
             get
             {

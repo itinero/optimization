@@ -19,7 +19,6 @@
 using System;
 using System.Collections.Generic;
 using Itinero.Optimization.Abstract.Solvers.TSP;
-using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
@@ -167,7 +166,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 if (t >= solution.Contents.Count)
                 {
-                    solution.Contents.Add(new Solvers.CapacityExtensions.Content());
+                    solution.Contents.Add(new CapacityExtensions.Content());
                 }
                 solution.Contents[t].Weight = this.Calculate(problem, solution, t);
                 problem.Capacity.UpdateCosts(solution.Contents[t], solution.Tour(t));
