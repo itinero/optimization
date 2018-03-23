@@ -151,7 +151,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
 
                             if (tour1Before + tour2Before > tour1After + tour2After)
                             { // new solution is better, yay!
-                                Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
+                                Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Verbose,
                                     "Improvement found {0}-{1} : {2}->{3} : Penalty: {4}/{5}", t1, t2, tour1Before + tour2Before, tour1After + tour2After,
                                         totalPenalty, worstPenalty * worstFactor);
 

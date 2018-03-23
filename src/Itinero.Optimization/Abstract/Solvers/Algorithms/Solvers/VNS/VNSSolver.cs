@@ -94,12 +94,12 @@ namespace Itinero.Optimization.Algorithms.Solvers.VNS
         {
             var zero = objective.Zero;
 
-            _log.Log(Logging.TraceEventType.Information, "Started generating initial solution...");
+            _log.Log(Logging.TraceEventType.Verbose, "Started generating initial solution...");
 
             TFitness globalBestFitness;
             var globalBest = _generator.Solve(problem, objective, out globalBestFitness);
 
-            _log.Log(Logging.TraceEventType.Information, "Initial solution generated: {0}.", globalBestFitness);
+            _log.Log(Logging.TraceEventType.Verbose, "Initial solution generated: {0}.", globalBestFitness);
 
             // report new solution.
             this.ReportIntermidiateResult(globalBest);
@@ -109,7 +109,7 @@ namespace Itinero.Optimization.Algorithms.Solvers.VNS
             { // localsearch leads to better solution, adjust the fitness.
                 globalBestFitness = objective.Subtract(problem, globalBestFitness, difference);
 
-                _log.Log(Logging.TraceEventType.Information, "Improvement found by local search: {0}.", globalBestFitness);
+                _log.Log(Logging.TraceEventType.Verbose, "Improvement found by local search: {0}.", globalBestFitness);
 
                 // report new solution.
                 this.ReportIntermidiateResult(globalBest);
@@ -147,7 +147,7 @@ namespace Itinero.Optimization.Algorithms.Solvers.VNS
                     globalBest = perturbedSolution;
                     level = 1; // reset level.
 
-                    _log.Log(Logging.TraceEventType.Information, "Improvement found by perturber and local search: {0}.", globalBestFitness);
+                    _log.Log(Logging.TraceEventType.Verbose, "Improvement found by perturber and local search: {0}.", globalBestFitness);
 
                     // report new solution.
                     this.ReportIntermidiateResult(globalBest);
@@ -158,7 +158,7 @@ namespace Itinero.Optimization.Algorithms.Solvers.VNS
                 }
             }
 
-            _log.Log(Logging.TraceEventType.Information, "Stop condition reached, best: {0}.", globalBestFitness);
+            _log.Log(Logging.TraceEventType.Verbose, "Stop condition reached, best: {0}.", globalBestFitness);
 
             fitness = globalBestFitness;
             return globalBest;

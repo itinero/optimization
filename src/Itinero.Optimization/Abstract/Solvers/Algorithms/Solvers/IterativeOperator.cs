@@ -80,7 +80,7 @@ namespace Itinero.Optimization.Algorithms.Solvers
                     bestFitness = objective.Subtract(problem, bestFitness, localDelta);
                     success = true;
 
-                    Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Information,
+                    Itinero.Logging.Logger.Log(this.Name, Itinero.Logging.TraceEventType.Verbose,
                         "Improvement found {0}/{1}: {2}", i + 1, _n, bestFitness);
                 }
                 else if (_stopAtFail)

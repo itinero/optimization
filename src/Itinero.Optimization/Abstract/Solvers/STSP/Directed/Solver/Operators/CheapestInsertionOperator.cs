@@ -50,7 +50,7 @@ namespace Itinero.Optimization.Abstract.Solvers.STSP.Directed.Solvers.Operators
         {
             get
             {
-                return string.Format("CI_{0}");
+                return "CI";
             }
         }
 
