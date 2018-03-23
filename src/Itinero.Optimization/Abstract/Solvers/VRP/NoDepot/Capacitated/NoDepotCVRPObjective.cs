@@ -385,39 +385,57 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         {
             var visits = tour.ToArray();
             var tourSequence = new Sequence(visits);
-            foreach (var s in tourSequence.SubSequences(minSize, maxSize))
+            for (var length = maxSize; length >= minSize; length--)
             {
-                if (s.Length < 3)
-                {
-                    continue;
-                }
-
-                var betweenSeq = s.SubSequence(1, s.Length - 2);
-                var between = problem.Weights.Seq(betweenSeq);
-
-                var start = problem.Weights[s[0]][s[1]];
-                var end = problem.Weights[s[s.Length - 2]][s[s.Length - 1]];
-
-                if (between + start + end < problem.Weights[s[0]][s[s.Length - 1]] * 2f)
-                {
-                   continue;
-                }
-                
-                var betweenReversed = problem.Weights.SeqReversed(betweenSeq);
-
+                float start = 0;
+                float end = 0;
+                float? between = null;
+                float betweenReversed = 0;
                 var visitCost = 0f;
-                if (problem.VisitCosts != null)
+                foreach (var s in tourSequence.SubSequences(length, length))
                 {
-                    visitCost = problem.VisitCosts.Seq(betweenSeq);
-                }
+                    if (between == null)
+                    { // first sequence of this length.
+                        var betweenSeq = s.SubSequence(1, s.Length - 2);
+                        between = problem.Weights.Seq(betweenSeq);
+                        start = problem.Weights[s[0]][s[1]];
+                        end = problem.Weights[s[s.Length - 2]][s[s.Length - 1]];
+                        betweenReversed = problem.Weights.SeqReversed(betweenSeq);
+                        if (problem.VisitCosts != null)
+                        {
+                            visitCost = problem.VisitCosts.Seq(betweenSeq);
+                        }
+                    }
+                    else
+                    { // move weights along.
+                        var newStart = problem.Weights[s[0]][s[1]];
+                        var newEnd = problem.Weights[s[s.Length - 2]][s[s.Length - 1]];
+                        between -= newStart;
+                        between += end;
+                        betweenReversed -= problem.Weights[s[1]][s[0]];
+                        betweenReversed +=  problem.Weights[s[s.Length - 2]][s[s.Length - 3]];
+                        start = newStart;
+                        end = newEnd;
+                        if (problem.VisitCosts != null)
+                        {
+                            visitCost -= problem.VisitCosts[s[0]];
+                            visitCost += problem.VisitCosts[s[s.Length - 2]];
+                        }
+                    }
 
-                yield return new Operators.Seq(s)
-                {
-                    BetweenTravelCost = between,
-                    BetweenTravelCostReversed = betweenReversed,
-                    BetweenVisitCost = visitCost,
-                    TotalOriginal = between + end + start + visitCost
-                };
+                    if (between + start + end < problem.Weights[s[0]][s[s.Length - 1]] * 2f)
+                    {
+                        continue;
+                    }
+
+                    yield return new Operators.Seq(s)
+                    {
+                        BetweenTravelCost = between.Value,
+                        BetweenTravelCostReversed = betweenReversed,
+                        BetweenVisitCost = visitCost,
+                        TotalOriginal = between.Value + end + start + visitCost
+                    };
+                }
             }
         }
 
