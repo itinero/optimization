@@ -44,11 +44,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         public Capacity Capacity { get; set; }
 
         /// <summary>
-        /// Gets or sets the depot.
-        /// </summary>
-        public int Depot { get; set; }
-
-        /// <summary>
         /// Gets the weights.
         /// </summary>
         public float[][] Weights { get; set; }
