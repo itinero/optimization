@@ -89,38 +89,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             }
         }
 
-        /// <summary>
-        /// Gets the seed heuristic.
-        /// </summary>
-        /// <returns></returns>
-        public Func<NoDepotCVRProblem, IList<int>, int> SelectSeedWithCloseNeighboursHeuristic
-        {
-            get
-            {
-                return (problem, visits) =>
-                {
-                    var weights = problem.Weights;
-
-                    return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-                        weights, this.NearestNeigboursTravelCost, visits);
-                };
-            }
-        }
-
-        /// <summary>
-        /// Gets the seed heuristic.
-        /// </summary>
-        /// <returns></returns>
-        public Func<NoDepotCVRProblem, IList<int>, int> SelectRandomSeedHeuristic
-        {
-            get
-            {
-                return (problem, visits) =>
-                {
-                    return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
-                };
-            }
-        }
 
         /// <summary>
         /// Solves this using a default solver.
