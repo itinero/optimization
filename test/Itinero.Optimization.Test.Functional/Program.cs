@@ -34,11 +34,13 @@ namespace Itinero.Optimization.Test.Functional
 
             // invoke case-specific tests.
 
-            TSP.TSPTests.Run();
+          /*  TSP.TSPTests.Run();
             STSP.STSPTests.Run();
             TSP_TW.TSPTWTests.Run();
-
             VRP.NoDepot.Capacitated.NoDepotCVRPTests.Run();
+
+*/
+            VRP.Depot.Capacitated.DepotCVRPTests.Run();
 #if DEBUG
             Console.ReadLine();
 #endif

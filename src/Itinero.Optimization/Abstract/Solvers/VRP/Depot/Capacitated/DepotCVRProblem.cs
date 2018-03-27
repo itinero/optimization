@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using Itinero.Algorithms.Matrices;
+using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated;
 using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
@@ -31,12 +32,12 @@ using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.General;
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
 {
     /// <summary>
     /// The capacitated VRP.
     /// </summary>
-    public class NoDepotCVRProblem : IRelocateProblem, IExchangeProblem
+    public class DepotCVRProblem : IRelocateProblem, IExchangeProblem
     {
         /// <summary>
         /// Gets or sets the vehicle capacity.
@@ -44,12 +45,18 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         public Capacity Capacity { get; set; }
 
         /// <summary>
-        /// Gets the weights. This is the time it takes to get from a point A to a point B
+        /// Gets the weights.
         /// </summary>
         public float[][] Weights { get; set; }
 
         /// <summary>
-        /// Gets or sets the visit costs. This is the handling time at a certain spot
+        /// Depot of the vehicle, thus the visit where it has to start its round and stop again
+        /// </summary>
+        /// <returns></returns>
+        public int Depot { get; set; }
+
+        /// <summary>
+        /// Gets or sets the visit costs.
         /// </summary>
         /// <returns></returns>
         public float[] VisitCosts { get; set; }
@@ -69,7 +76,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// Holds the nearest neigbours in travel cost. Only used for the caching.
+        /// Holds the nearest neigbours in travel cost.
         /// </summary>
         private NearestNeigbourArray _nNTravelCost = null;
 
@@ -94,7 +101,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// Solves this using a default solver.
         /// </summary>
         /// <returns></returns>
-        public NoDepotCVRPSolution Solve()
+        public DepotCVRPSolution Solve()
         {
             return this.Solve((p, x, y) => true);
         }
@@ -103,45 +110,31 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// Solves this using a default solver.
         /// </summary>
         /// <returns></returns>
-        public NoDepotCVRPSolution Solve(Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc)
+        public DepotCVRPSolution Solve(Delegates.OverlapsFunc<DepotCVRProblem, ITour> overlapsFunc)
         {
-            var crossMultiAllPairs = new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, true, true);
-            var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
+            var crossMultiAllPairs = new MultiExchangeOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>(1, 10, true, true, true);
+            var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>(
                     crossMultiAllPairs, 20, true);
-            
-            var slci = new SeededCheapestInsertion<NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution>(
+
+            var slci = new SeededCheapestInsertion<DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution>(
                 new TSP.Solvers.HillClimbing3OptSolver(),
-                new IInterTourImprovementOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>[]
-                {
-                    new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 5),
-                    new RelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(true),
-                    new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 5, true, false, true)
-                }, 0.03f, .25f
+                new IInterTourImprovementOperator<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>[]
+                { }, 0.03f, .25f
             );
 
-            var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-                     slci, 20, new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, true, true));
-            var iterate = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-                    constructionHeuristic, 1,
-                        new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 20, true, true, true),
-                        crossMultiAllPairs);
-            // var solver = new GuidedVNS(iterate, overlapsFunc, 8 * 60);
+            DepotCVRPObjective objective = new DepotCVRPObjective(0.05f);
 
-            return this.Solve(iterate, new NoDepotCVRPObjective((problem, visits) =>
-                {
-                    var weights = problem.Weights;
+            float f = 0.0f; // not used
+            return slci.Solve(this, objective, out f);
 
-                    //return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
-                    return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-                        weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
-                }, overlapsFunc, 1f, 0.05f));
         }
 
         /// <summary>
         /// Solvers this using the given solver.
         /// </summary>
-        public NoDepotCVRPSolution Solve(Algorithms.Solvers.ISolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float> solver,
-            NoDepotCVRPObjective objective)
+        public DepotCVRPSolution Solve(
+            Algorithms.Solvers.ISolver<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float> solver,
+            DepotCVRPObjective objective)
         {
             return solver.Solve(this, objective);
         }

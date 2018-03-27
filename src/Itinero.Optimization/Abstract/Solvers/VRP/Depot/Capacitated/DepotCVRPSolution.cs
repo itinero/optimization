@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
@@ -27,22 +28,21 @@ using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
 using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms;
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
 {
     /// <summary>
     /// Represents a solution to a capacitated no-depot VRP.
     /// </summary>
-    public class NoDepotCVRPSolution : ISolution, IRelocateSolution, IExchangeSolution, IMultiExchangeSolution, IMultiRelocateSolution,
+    public class DepotCVRPSolution : ISolution, IRelocateSolution, IExchangeSolution, IMultiExchangeSolution, IMultiRelocateSolution,
         ISeededCheapestInsertionSolution
     {
         private readonly List<CapacityExtensions.Content> _contents;
-        private readonly List<ITour> _tours; // does not use multitour, as some problems require the same depot to be visited multiple times
-        
+        private readonly List<ITour> _tours;
 
         /// <summary>
         /// Creates a new solution.
         /// </summary>
-        public NoDepotCVRPSolution(int size)
+        public DepotCVRPSolution(int size)
         {
             _tours = new List<ITour>(size);
             _contents = new List<CapacityExtensions.Content>(size);
@@ -51,7 +51,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <summary>
         /// Creates a new solution by deep-copying what's given.
         /// </summary>
-        protected NoDepotCVRPSolution(List<ITour> tours, List<CapacityExtensions.Content> contents)
+        protected DepotCVRPSolution(List<ITour> tours, List<CapacityExtensions.Content> contents)
         {
             // make a deep-copy of the contents.
             _contents = new List<CapacityExtensions.Content>(contents.Count);
@@ -136,7 +136,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns></returns>
         public object Clone()
         {
-            return new NoDepotCVRPSolution(_tours, _contents);
+            return new DepotCVRPSolution(_tours, _contents);
         }
 
         /// <summary>
