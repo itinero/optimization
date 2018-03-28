@@ -49,10 +49,11 @@ namespace Itinero.Optimization.Algorithms.Solvers
         /// Creates a new iterative improvement solver.
         /// </summary>
         /// <param name="solver">The solver.</param>
-        /// <param name="n">The # of iterations.</param>
+        /// <param name="n">The numbers of iterations.</param>
         /// <param name="stopCondition">The stop condition.</param>
         /// <param name="operators">The operators to apply.</param>
-        public IterativeSolver(ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> solver, int n,
+        public IterativeSolver(ISolver<TWeight, TProblem, TObjective, TSolution, TFitness> solver,
+         int n,
             SolverDelegates.StopConditionDelegate<TProblem, TObjective, TSolution> stopCondition,
             params IOperator<TWeight, TProblem, TObjective, TSolution, TFitness>[] operators)
         {

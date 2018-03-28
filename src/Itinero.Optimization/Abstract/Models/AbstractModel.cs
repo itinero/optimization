@@ -161,11 +161,12 @@ namespace Itinero.Optimization.Abstract.Models
         /// 
         /// </summary>
         /// <returns>true if all constrains can be met.</returns>
-        public static bool sanityCheck(this AbstractModel model, out string failReason, out int[] faultyVisitids)
+        public static bool SanityCheck(this AbstractModel model, out string failReason, out int[] faultyVisitids)
         {
             failReason = "";
             faultyVisitids = new int[0];
 
+            
 
 
             return false;

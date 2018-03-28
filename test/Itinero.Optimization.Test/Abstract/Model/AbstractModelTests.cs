@@ -165,6 +165,7 @@ namespace Itinero.Optimization.Test.Abstract.Models
         public void TestInsaneRequirements()
         {
             // setup json stuff.
+            Console.WriteLine("HELLO WORLD");
             Itinero.Optimization.IO.Json.JsonSerializer.ToJsonFunc = o =>
             {
                 return Newtonsoft.Json.JsonConvert.SerializeObject(o);
@@ -178,8 +179,9 @@ namespace Itinero.Optimization.Test.Abstract.Models
             var json = "{\"TravelCosts\":[{\"Name\":\"time\",\"Costs\":[[0.0,10.0,10.0],[10.0,0.0,10.0],[10.0,10.0,0.0]],\"Directed\":false}],\"TimeWindows\":[{\"Min\":1.0,\"Max\":10.0},{\"Min\":1.0,\"Max\":10.0},{\"Min\":1.0,\"Max\":10.0}],\"VisitCosts\":[{\"Name\":\"weight\",\"Costs\":[10.0,10.0,10.0]}],\"VehiclePool\":{\"Vehicles\":[{\"Metric\":\"time\",\"CapacityConstraints\":[{\"Name\":\"weight\",\"Capacity\":100.0}],\"Departure\":null,\"Arrival\":null,\"TurnPentalty\":0.0}],\"Reusable\":false}}";
             var model = AbstractModel.FromJson(json);
 
-            TestContext.WriteLine(model.ToString());
-
+            string reason;
+            int[] ids;
+            bool res = model.SanityCheck(out reason, out ids);
 
 
 

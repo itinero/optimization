@@ -112,27 +112,46 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
         /// <returns></returns>
         public DepotCVRPSolution Solve(Delegates.OverlapsFunc<DepotCVRProblem, ITour> overlapsFunc)
         {
-            var crossMultiAllPairs = new MultiExchangeOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>(1, 10, true, true, true);
-            var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>(
-                    crossMultiAllPairs, 20, true);
+            // Declaration of some of the operators
+            var crossMultiAllPairs10 = new MultiExchangeOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
+                                            (1, 10, true, true, true, false);
+            var crossMultiAllPairs20 = new MultiExchangeOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
+                                            (1, 20, true, true, true, false);
+            var crossMultiSomePairs5 = new MultiExchangeOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
+                                            (1, 5, true, false, true, false);
+             var crossMultiSomePairs10 = new MultiExchangeOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
+                                            (1, 10, true, false, true, false);
+           
+            var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>
+                                            (crossMultiAllPairs10, 20, stopAtFail: true);
+
+            var relocMulti = new MultiRelocateOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
+                                            (2, 5);
+            var reloc = new RelocateOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
+                                            (true, wrapAround: false /*no wrap around to preserve the depot*/);
 
             var slci = new SeededCheapestInsertion<DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution>(
                 new TSP.Solvers.HillClimbing3OptSolver(),
                 new IInterTourImprovementOperator<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>[]
                 {
-                   new MultiRelocateOperator <DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>(2, 5),
-                   new RelocateOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>(true, false /*no wrap around to preserve the depot*/),
-                   new MultiExchangeOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>(1, 5,
-                    tryReversed:true, tryAll:false, bestImprovement:true, wrapAround:false /*Depots*/) 
-
+                  relocMulti,
+                  reloc,
+                  crossMultiSomePairs5
                  }, 0.03f, .25f
             );
 
             DepotCVRPObjective objective = new DepotCVRPObjective(0.05f);
 
-            float f = 0.0f; // not used
-            return slci.Solve(this, objective, out f);
 
+            var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>
+            (slci, 20, crossMultiSomePairs10);
+
+            var iterate = new Algorithms.Solvers.IterativeSolver<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>(
+                    constructionHeuristic, 1,
+                        crossMultiAllPairs20,
+                        crossMultiAllPairs10);
+
+            return this.Solve(iterate, objective);
         }
 
         /// <summary>
