@@ -820,7 +820,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// /// Tries to place any of the visits in the given visit list.
+        /// Tries to place any of the visits in the given visit list.
         /// </summary>
         /// <param name="problem">The problem.</param>
         /// <param name="solution">The tour.</param>
@@ -865,11 +865,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             // calculate the actual increase if an extra cost was added.
             var bestTour = solution.Tour(bestT);
             var actualIncrease = bestIncrease;
-            costFunc = null;
             if (_localizationCostFunc != null)
             {
-                costFunc = (v) => _localizationCostFunc(problem, bestTour.First, v);
-                actualIncrease -= costFunc(bestPlacement.Value.Along);
+                actualIncrease -= _localizationCostFunc(problem, bestTour.First, bestPlacement.Value.Along);
             }
 
             // add the visit cost.

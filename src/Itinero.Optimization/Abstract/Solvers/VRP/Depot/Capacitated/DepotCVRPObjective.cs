@@ -45,13 +45,37 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
         private readonly float _slackPercentage;
 
         /// <summary>
+        /// The seedFunction gives a starting point for the subtour, the visists will try to stay geographically close to it.
+        /// This way, the visists are clustered neatly, which pleases humans
+        /// </summary>
+        private readonly Func<DepotCVRProblem, IList<int>, int> _seedFunc;
+
+
+
+        private readonly Func<DepotCVRProblem, int, int, float> _localizationCostFunc;
+
+
+
+        /// <summary>
         /// Creates a new objective.
         /// </summary>
+        /// <param name="seedFunc"> The seedFunction gives a starting point for the subtour, the visists will try to stay geographically close to it        This way, the visists are clustered neatly, which pleases humans</param>
+        /// <param name="localizationFactor">How hard a first destitation clusters the tour around it. Use 0 if not at all</param>
         /// <param name="slackPercentage">The slack percentage.</param>
-        public DepotCVRPObjective(
+        public DepotCVRPObjective(Func<DepotCVRProblem, IList<int>, int> seedFunc,
+         float localizationFactor = 0.0f,
             float slackPercentage = .05f)
         {
+            _seedFunc = seedFunc;
             _slackPercentage = slackPercentage;
+
+            _localizationCostFunc = null;
+            if (localizationFactor != 0)
+            { // create a function to add the localized effect (relative to the seed) to the CI algorithm
+              // if lambda is set.
+                _localizationCostFunc = (p, s, v) => (p.Weights[s][v] +
+                    p.Weights[v][s]) * localizationFactor; // the cost is the roundtrip to/from the seed
+            }
         }
 
         /// <summary>
@@ -755,14 +779,21 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
         /// <returns>The index of the new tour.</returns>
         public int SeedNext(DepotCVRProblem problem, DepotCVRPSolution solution, IList<int> visits)
         {
-            var seed = problem.Depot;
+            var seed = _seedFunc(problem, visits);
             visits.Remove(seed);
+            solution.Seeds.Add(seed);
+
             var content = problem.Capacity.Empty();
             content.Weight += problem.GetVisitCost(seed);
+            content.Weight += problem.GetVisitCost(problem.Depot);
             problem.Capacity.Add(content, seed);
+            problem.Capacity.Add(content, problem.Depot);
             solution.Contents.Add(content);
-            solution.Add(seed, seed);
-            return solution.Count - 1;
+
+            var t = solution.Add(problem.Depot, problem.Depot);
+            t.InsertAfter(problem.Depot, seed);
+
+            return solution.Count - 1; // return tour ID
         }
 
         /// <summary>
@@ -777,11 +808,23 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
         {
             var tour = solution.Tour(t);
 
+            Func<int, float> costFunc = null;
+            if (_localizationCostFunc != null)
+            {
+                costFunc = (v) => _localizationCostFunc(problem, solution.Seeds[t], v);
+            }
+
             Pair location;
             int visit;
             var increase = tour.CalculateCheapestAny(problem.Weights, visits,
-                out location, out visit);
+                out location, out visit, costFunc);
             // TODO: if placement is not possible in an empty tour -> constraints are to hard
+
+            // calculate the actual increase of cost. CalculateCheapestAny has a distorted reality due to the costFunc
+            if (costFunc != null)
+            {
+                increase -= costFunc(visit);
+            }
 
             // get the visit cost.
             var visitCost = problem.GetVisitCost(visit);
@@ -813,7 +856,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
         /// <returns></returns>
         public bool TryPlaceAny(DepotCVRProblem problem, DepotCVRPSolution solution, IList<int> visits)
         {
-            Func<int, float> costFunc = null;
 
             // loop over all tours and find visit and the place to insert with the lowest cost.
             var bestIncrease = float.MaxValue;
@@ -824,10 +866,22 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
                 var tour = solution.Tour(t);
                 var seed = tour.First;
 
+
+
+                Func<int, float> costFunc = null;
+                if (_localizationCostFunc != null)
+                {
+                    costFunc = (v) => _localizationCostFunc(problem, solution.Seeds[t], v);
+                }
+
+
                 // run CI algorithm.
                 var increase = tour.CalculateCheapestAny(problem.Weights, visits,
                     out Pair location, out int visit,
                     costFunc);
+
+
+
                 if (increase < bestIncrease)
                 {
                     bestIncrease = increase;
@@ -844,7 +898,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
             // calculate the actual increase if an extra cost was added.
             var bestTour = solution.Tour(bestT);
             var actualIncrease = bestIncrease;
-     
+ if (_localizationCostFunc != null)
+            {
+                actualIncrease -= _localizationCostFunc(problem, bestTour.First, bestPlacement.Value.Along);
+            }
             // add the visit cost.
             actualIncrease += problem.GetVisitCost(bestPlacement.Value.Along);
 

@@ -161,12 +161,12 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
                 new CapacityConstraint()
                 {
                     Name = Itinero.Optimization.Models.Metrics.Time,
-                    Capacity = 5400
+                    Capacity = 15000
                 },
                 new CapacityConstraint()
                 {
                     Name = Itinero.Optimization.Models.Metrics.Weight,
-                    Capacity = 3000
+                    Capacity = 9000
                 }
             };
 

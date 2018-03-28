@@ -15,7 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -38,6 +38,16 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
     {
         private readonly List<CapacityExtensions.Content> _contents;
         private readonly List<ITour> _tours;
+        private List<int> _seeds;
+
+        /// <summary>
+        /// Keeps track of a 'seed' for each tour, around which the tour should be centered
+        /// </summary>
+        /// <returns></returns>
+        public List<int> Seeds
+        {
+            get => _seeds; set => _seeds = value;
+        }
 
         /// <summary>
         /// Creates a new solution.
@@ -46,6 +56,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
         {
             _tours = new List<ITour>(size);
             _contents = new List<CapacityExtensions.Content>(size);
+            _seeds = new List<int>(size);
         }
 
         /// <summary>
@@ -125,7 +136,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
         /// <returns></returns>
         public ITour Add(int first, int? last)
         {
-            var tour = new Tour(new int[] { first} , last);
+            var tour = new Tour(new int[] { first }, last);
             _tours.Add(tour);
             return tour;
         }
