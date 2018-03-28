@@ -137,5 +137,29 @@ namespace Itinero.Optimization.Algorithms.Random
                 list[n] = value;
             }
         }
+
+        /// <summary>
+        /// Selects two random routes from the solution.
+        /// Returns false if no routes can be selected (because the solution has only one route)
+        /// </summary>
+        public static bool randomRoutes(int solutionCount, out int t1, out int t2){
+            if(solutionCount < 2){
+                t1 = 0;
+                t2 = 0;
+                return false;
+            }
+
+            var random = RandomGeneratorExtensions.GetRandom();
+            t1 = random.Generate(solutionCount);
+            t2 = random.Generate(solutionCount - 1);
+            if (t2 >= t1)
+            {
+            // Move all tourIDs away, no overlap possible while still maintaining an even chance distribution
+                t2++;
+            }
+
+            return true;
+
+        }
     }
 }

@@ -502,9 +502,9 @@ namespace Itinero.Optimization.Abstract.Tours
         /// Returns an enumerable that enumerates all visit triples that occur in the tour as 1->2-3. If the tour is a round the tuples that contain last->first are also included.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Triple> Triples()
+        public IEnumerable<Triple> Triples(bool wrapAround=true)
         {
-            return new TripleEnumerable(this);
+            return new TripleEnumerable(this, wrapAround);
         }
 
         #endregion

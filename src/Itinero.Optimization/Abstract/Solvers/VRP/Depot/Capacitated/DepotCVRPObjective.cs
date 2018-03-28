@@ -781,6 +781,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
             int visit;
             var increase = tour.CalculateCheapestAny(problem.Weights, visits,
                 out location, out visit);
+            // TODO: if placement is not possible in an empty tour -> constraints are to hard
 
             // get the visit cost.
             var visitCost = problem.GetVisitCost(visit);

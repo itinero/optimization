@@ -31,12 +31,19 @@ namespace Itinero.Optimization.Abstract.Tours
         private ITour _tour;
 
         /// <summary>
+        /// If true and the tour is a closed way, then the triples (x, last, first) are included as well
+        /// </summary>
+        private bool _wrapAround;
+
+        /// <summary>
         /// Creates a new triple enumerable.
         /// </summary>
-        /// <param name="tour"></param>
-        public TripleEnumerable(ITour tour)
+        /// <param name="tour">The tour to enumerate triples from</param>
+        /// <param name="wrapAround">If true and the tour is a closed way, also inlcude the triples (x, last, first) and (last, first, y)</param>
+        public TripleEnumerable(ITour tour, bool wrapAround)
         {
             _tour = tour;
+            _wrapAround = wrapAround;
         }
 
         private class TripleEnumerator : IEnumerator<Triple>
@@ -49,11 +56,14 @@ namespace Itinero.Optimization.Abstract.Tours
 
             private IEnumerator<int> _enumerator;
 
-            public TripleEnumerator(IEnumerator<int> enumerator, int first)
+            private bool _wrapAround;
+
+            public TripleEnumerator(IEnumerator<int> enumerator, int first, bool wrapAround)
             {
                 _current = new Triple(-1, -1, -1);
                 _enumerator = enumerator;
                 _first = first;
+                _wrapAround = wrapAround;
             }
 
             public Triple Current
@@ -78,7 +88,7 @@ namespace Itinero.Optimization.Abstract.Tours
             public bool MoveNext()
             {
                 if (_current.From == -1 && _current.To == -1 && _current.Along == -1)
-                {
+                {   // the case that we have to seed the first tuple
                     if (_enumerator.MoveNext())
                     {
                         _current.From = _enumerator.Current;
@@ -106,7 +116,11 @@ namespace Itinero.Optimization.Abstract.Tours
                     {
                         return false;
                     }
+                    return true;
                 }
+
+
+
                 else if (_current.To != _second && _current.From >= 0 && _current.To >= 0)
                 {
                     if (_enumerator.MoveNext())
@@ -116,7 +130,12 @@ namespace Itinero.Optimization.Abstract.Tours
                         _current.To = _enumerator.Current;
                     }
                     else if (_first >= 0 && _current.To != _first)
-                    { // last customer has been reach, include the first one as 'to'.
+                    {
+                        if (!_wrapAround)
+                        {
+                            return false; // wrap around is disabled; we just return
+                        }
+                        // last customer has been reached, include the first one as 'to'.
                         _current.From = _current.Along;
                         _current.Along = _current.To;
                         _current.To = _first;
@@ -152,11 +171,20 @@ namespace Itinero.Optimization.Abstract.Tours
         /// <returns></returns>
         public IEnumerator<Triple> GetEnumerator()
         {
+            return GetEnumerator(true);
+        }
+
+        /// <summary>
+        /// Returns an enumerator. Wraparound can be specified here.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<Triple> GetEnumerator(bool wrapAround = true)
+        {
             if (_tour.First == _tour.Last)
             {
-                return new TripleEnumerator(_tour.GetEnumerator(), _tour.First);
+                return new TripleEnumerator(_tour.GetEnumerator(), _tour.First, wrapAround);
             }
-            return new TripleEnumerator(_tour.GetEnumerator(), -1);
+            return new TripleEnumerator(_tour.GetEnumerator(), -1, wrapAround);
         }
 
         /// <summary>

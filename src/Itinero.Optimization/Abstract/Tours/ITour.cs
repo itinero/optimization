@@ -186,16 +186,20 @@ namespace Itinero.Optimization.Abstract.Tours
         IEnumerator<int> GetEnumerator(int visit);
 
         /// <summary>
-        /// Returns an enumerable that enumerates all visit pairs that occur in the route as 1->2. If the route is a tour the pair that contains last->first is also included.
+        /// Returns an enumerable that enumerates all visit pairs that occur in the route as 1->2.
+        /// If the route is a closed tour the pair that contains last->first is also included.
         /// </summary>
         /// <returns>An enumerable that enumerates all visit pairs that occur in the route as 1->2. If the route is a tour the pair that contains last->first is also included.</returns>
         IEnumerable<Pair> Pairs();
 
         /// <summary>
-        /// Returns an enumerable that enumerates all visit triples that occur in the route as 1->2->3. If the route is a tour the tuples that contain last->first are also included.
+        /// Returns an enumerable that enumerates all visit triples that occur in the route as 1->2->3.
+        /// 
+        /// If the route is a closed tour (and wrapAround is true), 
+        /// then the tuples that contain last->first are also included.
         /// </summary>
         /// <returns>An enumerable that enumerates all visit triples that occur in the route as 1->2->3. If the route is a tour the tuples that contain last->first are also included.</returns>
-        IEnumerable<Triple> Triples();
+        IEnumerable<Triple> Triples(bool wrapAround = true);
 
         /// <summary>
         /// Removes all customers in this route except the first one.

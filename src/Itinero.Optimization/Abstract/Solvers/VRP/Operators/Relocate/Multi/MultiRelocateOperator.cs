@@ -66,22 +66,14 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi
         /// <returns></returns>
         public bool Apply(TProblem problem, TObjective objective, TSolution solution, out float delta)
         {
-            // check if solution has at least two tours.
-            if (solution.Count < 2)
+            int t1, t2;
+            if (!RandomGeneratorExtensions.randomRoutes(solution.Count, out t1, out t2))
             {
                 delta = 0;
                 return false;
             }
 
-            // choose two random routes.
-            var random = RandomGeneratorExtensions.GetRandom ();
-            var tourIdx1 = random.Generate (solution.Count);
-            var tourIdx2 = random.Generate (solution.Count - 1);
-            if (tourIdx2 >= tourIdx1) {
-                tourIdx2++;
-            }
-
-            return Apply(problem, objective, solution, tourIdx1, tourIdx2, out delta);
+            return Apply(problem, objective, solution, t1, t2, out delta);
         }
 
         /// <summary>
@@ -99,6 +91,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi
             var tour1 = solution.Tour(t1);
             var tour2 = solution.Tour(t2);
 
+            // wrap around is false; thus depots can not be switched
             var tour1Enumerable = objective.SeqAndSmaller(problem, tour1, _minWindowSize + 2, _maxWindowSize + 2, false);
             foreach (var s in tour1Enumerable)
             {

@@ -25,6 +25,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
     {
         private readonly int _maxWindowSize = 8;
         private readonly int _minWindowSize = 2;
+        private readonly bool _wrapAround;
         private readonly bool _tryReversed = true;
         private readonly bool _tryAll = false;
         private readonly bool _bestImprovement = false;
@@ -37,13 +38,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
         /// <param name="tryReversed">True when exchanged sequenced also need to be reversed before testing.</param>
         /// <param name="tryAll">True when all tour pairs need to be tested.</param>
         /// <param name="bestImprovement">When true the best-improvement is chosen, not the first.</param>
-        public MultiExchangeOperator(int minWindowSize = 2, int maxWindowSize = 8, bool tryReversed = true, bool tryAll = false, bool bestImprovement = false)
+        /// <param name="wrapAround">Include the first and last stops of each route in the calculations. Set to false if working with a depot</param>
+        public MultiExchangeOperator(int minWindowSize = 2, int maxWindowSize = 8, bool tryReversed = true, bool tryAll = false, bool bestImprovement = false, bool wrapAround = true)
         {
             _tryAll = tryAll;
             _minWindowSize = minWindowSize;
             _maxWindowSize = maxWindowSize;
             _tryReversed = tryReversed;
             _bestImprovement = bestImprovement;
+            _wrapAround = wrapAround;
         }
 
         /// <summary>
@@ -100,14 +103,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                         }
 
                         if (!objective.HaveToTryInter(problem, solution, t1, t2))
-                        { // tours have a potential exchange.
+                        { // tours don't have a potential exchange. We skip
                             continue;
                         }
 
                         if (this.Apply(problem, objective, solution, t1, t2, out float localDelta))
                         { // success!
                             delta += localDelta;
-                            //improved = true;
                         }
                     }
                 }
@@ -115,24 +117,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                 return delta != 0;
             }
             else
-            { // just choose random routes.
-              // check if solution has at least two tours.
-                if (solution.Count < 2)
-                {
-                    delta = 0;
-                    return false;
-                }
-
-                // choose two random routes.
-                var random = RandomGeneratorExtensions.GetRandom();
-                var tourIdx1 = random.Generate(solution.Count);
-                var tourIdx2 = random.Generate(solution.Count - 1);
-                if (tourIdx2 >= tourIdx1)
-                {
-                    tourIdx2++;
-                }
-
-                return Apply(problem, objective, solution, tourIdx1, tourIdx2, out delta);
+            { // just choose random routes and delegate to apply
+                int t1, t2;
+                RandomGeneratorExtensions.randomRoutes(solution.Count, out t1, out t2);
+                return Apply(problem, objective, solution, t1, t2, out delta);
             }
         }
 
@@ -154,7 +142,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
             for (var t1 = 0; t1 < solution.Count; t1++)
             {
                 var tour1 = solution.Tour(t1);
-                var tour1Enumerable = objective.SeqAndSmaller(problem, tour1, _minWindowSize + 2, _maxWindowSize + 2, false);
+                var tour1Enumerable = objective.SeqAndSmaller(problem, tour1, _minWindowSize + 2, _maxWindowSize + 2, _wrapAround);
                 enumerations.Add(tour1Enumerable);
 
                 for (var t2 = 0; t2 < t1; t2++)
@@ -165,7 +153,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
                     }
 
                     if (!objective.HaveToTryInter(problem, solution, t1, t2))
-                    { // tours have a potential exchange.
+                    { // tours don't a potential exchange.
                         continue;
                     }
 
@@ -180,7 +168,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
 
                     // loop over all sequences of size 4->maxWindowSize + 2. 
                     // - A minimum of 4 because otherwise we exchange just one visit.
-                    // - The edge to be exchanged are also included.
+                    // - The edges to be exchanged are also included.
                     foreach (var s1 in tour1Enumerable)
                     {
                         // switch s1.
@@ -224,7 +212,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
 
                             // reverse s2.
                             if (s2.Length <= 3)
-                            { // not need to check reverse for single-visit sequences.
+                            { // no need to check the reverse for single-visit sequences.
                                 continue;
                             }
                             var s2Rev = objective.Reverse(problem, s2);
@@ -302,8 +290,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
             var tour1 = solution.Tour(t1);
             var tour2 = solution.Tour(t2);
 
-            var tour1Enumerable = objective.SeqAndSmaller(problem, tour1, _minWindowSize + 2, _maxWindowSize + 2, true);
-            var tour2Enumerable = objective.SeqAndSmaller(problem, tour2, _minWindowSize + 2, _maxWindowSize + 2, true);
+            var tour1Enumerable = objective.SeqAndSmaller(problem, tour1, _minWindowSize + 2, _maxWindowSize + 2, _wrapAround);
+            var tour2Enumerable = objective.SeqAndSmaller(problem, tour2, _minWindowSize + 2, _maxWindowSize + 2, _wrapAround);
 
             if (_bestImprovement)
             { // go over all combinations and choose the best.

@@ -32,7 +32,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
         {
             Console.WriteLine("Running Depot Capacitated VRP");
             Run1WechelderzandeCapacitated();
-           
+           Console.WriteLine("Done");
            /* Run1Wechelderzande();
             Run4Rotterdam();
             Run2Spijkenisse();

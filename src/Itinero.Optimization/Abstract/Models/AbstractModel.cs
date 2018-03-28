@@ -39,7 +39,7 @@ namespace Itinero.Optimization.Abstract.Models
         /// </summary>
         /// <returns></returns>
         public TimeWindow[] TimeWindows { get; set; }
-    
+
         /// <summary>
         /// Gets or sets the visit costs.
         /// </summary>
@@ -149,6 +149,27 @@ namespace Itinero.Optimization.Abstract.Models
             }
             reasonIfNot = string.Empty;
             return true;
+        }
+
+
+        /// <summary>
+        /// Checks that the constraints are possible: e.g. that no visit requires hauling 1000kg if the max load each vehicle is less.
+        /// 
+        /// If such faulty visits are detected, this is returned via the out-parameters.
+        /// 
+        /// If a departure or arrival is included in the vehicle, this is taken into account as well
+        /// 
+        /// </summary>
+        /// <returns>true if all constrains can be met.</returns>
+        public static bool sanityCheck(this AbstractModel model, out string failReason, out int[] faultyVisitids)
+        {
+            failReason = "";
+            faultyVisitids = new int[0];
+
+
+
+            return false;
+
         }
     }
 }

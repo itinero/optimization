@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System;
 using Itinero.Optimization.Abstract.Models;
 using Itinero.Optimization.Abstract.Models.Costs;
 using Itinero.Optimization.Abstract.Models.TimeWindows;
@@ -157,6 +158,31 @@ namespace Itinero.Optimization.Test.Abstract.Models
             var model = AbstractModel.FromJson(json);
 
             Assert.IsNotNull(model);
+        }
+
+
+        [Test]
+        public void TestInsaneRequirements()
+        {
+            // setup json stuff.
+            Itinero.Optimization.IO.Json.JsonSerializer.ToJsonFunc = o =>
+            {
+                return Newtonsoft.Json.JsonConvert.SerializeObject(o);
+            };
+            Itinero.Optimization.IO.Json.JsonSerializer.FromJsonFunc = (o, t) =>
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject(o, t);
+            };
+
+
+            var json = "{\"TravelCosts\":[{\"Name\":\"time\",\"Costs\":[[0.0,10.0,10.0],[10.0,0.0,10.0],[10.0,10.0,0.0]],\"Directed\":false}],\"TimeWindows\":[{\"Min\":1.0,\"Max\":10.0},{\"Min\":1.0,\"Max\":10.0},{\"Min\":1.0,\"Max\":10.0}],\"VisitCosts\":[{\"Name\":\"weight\",\"Costs\":[10.0,10.0,10.0]}],\"VehiclePool\":{\"Vehicles\":[{\"Metric\":\"time\",\"CapacityConstraints\":[{\"Name\":\"weight\",\"Capacity\":100.0}],\"Departure\":null,\"Arrival\":null,\"TurnPentalty\":0.0}],\"Reusable\":false}}";
+            var model = AbstractModel.FromJson(json);
+
+            TestContext.WriteLine(model.ToString());
+
+
+
+
         }
     }
 }

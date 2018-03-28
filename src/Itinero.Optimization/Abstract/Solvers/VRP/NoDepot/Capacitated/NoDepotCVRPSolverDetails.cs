@@ -91,8 +91,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 throw new Exception("Travel costs not found but model was declared valid.");
             }
 
-            // TODO
-
             // get the travel cost related constraint.
             Itinero.Optimization.Abstract.Models.Vehicles.Constraints.CapacityConstraint travelCostConstraint = null;
             for (var i = 0; i < vehicle.CapacityConstraints.Length; i++)

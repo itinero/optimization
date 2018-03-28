@@ -119,7 +119,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
             var slci = new SeededCheapestInsertion<DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution>(
                 new TSP.Solvers.HillClimbing3OptSolver(),
                 new IInterTourImprovementOperator<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>[]
-                { }, 0.03f, .25f
+                {
+                   new MultiRelocateOperator <DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>(2, 5),
+                   new RelocateOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>(true, false /*no wrap around to preserve the depot*/),
+                   new MultiExchangeOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>(1, 5,
+                    tryReversed:true, tryAll:false, bestImprovement:true, wrapAround:false /*Depots*/) 
+
+                 }, 0.03f, .25f
             );
 
             DepotCVRPObjective objective = new DepotCVRPObjective(0.05f);

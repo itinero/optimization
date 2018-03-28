@@ -29,12 +29,20 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate
         private readonly bool _tryBothDirections;
 
         /// <summary>
+        /// Wrap around when generating triples. Should be false if the problem has a depot
+        /// </summary>
+        private readonly bool _wrapAround;
+
+        /// <summary>
         /// Creates a new relocate operator.
         /// </summary>
         /// <param name="tryBothDirections">Relocate in both directions when true.</param>
-        public RelocateOperator(bool tryBothDirections = true)
+        /// <param name="wrapAround">Searches over the last->fist boundary in a closed route. Set to false if you are working with a depot</param>
+
+        public RelocateOperator(bool tryBothDirections = true, bool wrapAround = true)
         {
             _tryBothDirections = tryBothDirections;
+            _wrapAround = wrapAround;
         }
 
         /// <summary>
@@ -58,22 +66,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate
         /// <returns></returns>
         public bool Apply(TProblem problem, TObjective objective, TSolution solution, out float delta)
         {
-            // check if solution has at least two tours.
-            if (solution.Count < 2)
+            // if at least two routes: select two random routes;
+            int t1, t2;
+            if (!RandomGeneratorExtensions.randomRoutes(solution.Count, out t1, out t2))
             {
                 delta = 0;
                 return false;
             }
-
-            // choose two random routes.
-            var random = RandomGeneratorExtensions.GetRandom();
-            var t1 = random.Generate(solution.Count);
-            var t2 = random.Generate(solution.Count - 1);
-            if (t2 >= t1)
-            {
-                t2++;
-            }
-
             return Apply(problem, objective, solution, t1, t2, out delta);
         }
 
@@ -90,9 +89,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate
         public bool Apply(TProblem problem, TObjective objective, TSolution solution, int t1, int t2, out float delta)
         {
             var tour1 = solution.Tour(t1);
-            
+
             // try t1 -> t2.
-            foreach (var triple in tour1.Triples())
+            foreach (var triple in tour1.Triples(_wrapAround))
             {
                 if (objective.TryMove(problem, solution, t1, t2, triple, out float localDelta))
                 { // move succeeded.
@@ -104,7 +103,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate
             if (_tryBothDirections)
             { // try t2 -> t1.
                 var tour2 = solution.Tour(t2);
-                foreach (var triple in tour2.Triples())
+                foreach (var triple in tour2.Triples(_wrapAround))
                 {
                     if (objective.TryMove(problem, solution, t2, t1, triple, out float localDelta))
                     { // move succeeded.
