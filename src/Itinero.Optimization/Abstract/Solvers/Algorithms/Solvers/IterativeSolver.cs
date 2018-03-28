@@ -112,7 +112,7 @@ namespace Itinero.Optimization.Algorithms.Solvers
                 TFitness nextFitness;
 
                 Itinero.Logging.Logger.Log("IterativeSolver", Itinero.Logging.TraceEventType.Verbose,
-                    "Started iteration {0}: {1}", i, bestFitness);
+                    "Started iteration {0}: fitness is {1}", i, bestFitness);
 
                 // execute solver.
                 var nextSolution = _solver.Solve(problem, objective, out nextFitness);
