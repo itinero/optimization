@@ -41,7 +41,7 @@ namespace Itinero.Optimization.Test.Functional
               VRP.NoDepot.Capacitated.NoDepotCVRPTests.Run();
 
   */
-            // VRP.Depot.Capacitated.DepotCVRPTests.Run();
+            VRP.Depot.Capacitated.DepotCVRPTests.Run();
 
 
     }

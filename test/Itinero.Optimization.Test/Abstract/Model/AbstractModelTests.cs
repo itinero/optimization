@@ -211,7 +211,7 @@ namespace Itinero.Optimization.Test.Abstract.Models
 
                  string reason;
                  List<int> ids;
-                 bool res = model.SanityCheck(out reason, out ids);
+                 bool res = model.HasSaneConstraints(out reason, out ids);
                  Console.WriteLine(res);
                  Console.WriteLine(reason);
                 if(res != expected){

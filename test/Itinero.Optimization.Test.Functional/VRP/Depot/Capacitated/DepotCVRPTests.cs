@@ -33,10 +33,9 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
             Console.WriteLine("Running Depot Capacitated VRP");
             //Run1Wechelderzande();
             Run1WechelderzandeCapacitated();
-            Console.WriteLine("Done");
             //Run4Rotterdam();
             //Run2Spijkenisse();
-            Run2SpijkenisseCapacitated();
+          //  Run2SpijkenisseCapacitated();
            // Run2SpijkenisseVisitCosts();
            // Run3DeHague();
            // Run5Rotterdam(); */
@@ -82,7 +81,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
                 new CapacityConstraint()
                 {
                     Name = Itinero.Optimization.Models.Metrics.Time,
-                    Capacity = 4500 // seconds
+                    Capacity = 10 // seconds
                 },
                 new CapacityConstraint()
                 {
