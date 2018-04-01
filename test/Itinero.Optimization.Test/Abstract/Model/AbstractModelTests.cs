@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Itinero.Optimization.Abstract.Models;
 using Itinero.Optimization.Abstract.Models.Costs;
 using Itinero.Optimization.Abstract.Models.TimeWindows;
@@ -164,8 +165,7 @@ namespace Itinero.Optimization.Test.Abstract.Models
         [Test]
         public void TestInsaneRequirements()
         {
-            // setup json stuff.
-            Console.WriteLine("HELLO WORLD");
+  Console.WriteLine("HELLO WORLD");
             Itinero.Optimization.IO.Json.JsonSerializer.ToJsonFunc = o =>
             {
                 return Newtonsoft.Json.JsonConvert.SerializeObject(o);
@@ -176,14 +176,55 @@ namespace Itinero.Optimization.Test.Abstract.Models
             };
 
 
-            var json = "{\"TravelCosts\":[{\"Name\":\"time\",\"Costs\":[[0.0,10.0,10.0],[10.0,0.0,10.0],[10.0,10.0,0.0]],\"Directed\":false}],\"TimeWindows\":[{\"Min\":1.0,\"Max\":10.0},{\"Min\":1.0,\"Max\":10.0},{\"Min\":1.0,\"Max\":10.0}],\"VisitCosts\":[{\"Name\":\"weight\",\"Costs\":[10.0,10.0,10.0]}],\"VehiclePool\":{\"Vehicles\":[{\"Metric\":\"time\",\"CapacityConstraints\":[{\"Name\":\"weight\",\"Capacity\":100.0}],\"Departure\":null,\"Arrival\":null,\"TurnPentalty\":0.0}],\"Reusable\":false}}";
-            var model = AbstractModel.FromJson(json);
+            var json0 = "{\"TravelCosts\":[" +
+                "{\"Name\":\"time\",\"Costs\":[[0.0,10.0,10.0],[10.0,0.0,10.0],[10.0,10.0,0.0]],\"Directed\":false}]," +
+                "\"VisitCosts\":[{\"Name\":\"weight\",\"Costs\":[10.0,100.0,10.0]}]," + // One of the costs is more then the vehicle can handle
+                "\"VehiclePool\":{\"" +
+                  "Vehicles\":[" +
+                      "{\"Metric\":\"time\",\"CapacityConstraints\":[{\"Name\":\"weight\",\"Capacity\":50.0}],\"Departure\":null,\"Arrival\":null,\"TurnPentalty\":0.0}," +
+                      "{\"Metric\":\"time\",\"CapacityConstraints\":[{\"Name\":\"weight\",\"Capacity\":75.0}],\"Departure\":null,\"Arrival\":null,\"TurnPentalty\":0.0}" +
+                      "],\"Reusable\":false}}"
+                  ;
+            var json1 = "{\"TravelCosts\":[" +
+                "{\"Name\":\"time\",\"Costs\":[[0.0,10.0,10.0],[10.0,0.0,10.0],[10.0,10.0,0.0]],\"Directed\":false}]," +
+                "\"VisitCosts\":[{\"Name\":\"time\",\"Costs\":[0.0,90.0,10.0]}]," + // The 90 value can be handled by a vehicle, but not with the depot
+                "\"VehiclePool\":{\"" +
+                  "Vehicles\":[" +
+                      "{\"Metric\":\"time\",\"CapacityConstraints\":[{\"Name\":\"time\",\"Capacity\":50.0}],\"Departure\":0,\"Arrival\":0,\"TurnPentalty\":0.0}," +
+                      "{\"Metric\":\"time\",\"CapacityConstraints\":[{\"Name\":\"time\",\"Capacity\":100.0}],\"Departure\":0,\"Arrival\":0,\"TurnPentalty\":0.0}" +
+                      "],\"Reusable\":false}}"
+                  ;
 
-            string reason;
-            int[] ids;
-            bool res = model.SanityCheck(out reason, out ids);
+            var json2 = "{\"TravelCosts\":[" +
+                "{\"Name\":\"time\",\"Costs\":[[0.0,10.0,10.0],[10.0,0.0,10.0],[10.0,10.0,0.0]],\"Directed\":false}]," +
+                "\"VisitCosts\":[{\"Name\":\"weight\",\"Costs\":[0.0,90.0,10.0]}]," + // The 90 value can be handled by a vehicle, but not with the depot
+                "\"VehiclePool\":{\"" +
+                  "Vehicles\":[" +
+                      "{\"Metric\":\"time\",\"CapacityConstraints\":[{\"Name\":\"time\",\"Capacity\":50.0}],\"Departure\":0,\"Arrival\":0,\"TurnPentalty\":0.0}," +
+                      "{\"Metric\":\"time\",\"CapacityConstraints\":[{\"Name\":\"time\",\"Capacity\":100.0}],\"Departure\":0,\"Arrival\":0,\"TurnPentalty\":0.0}" +
+                      "],\"Reusable\":false}}"
+                  ;
+
+            Func<string, bool, bool> test = (json, expected) =>
+             {
+                 var model = AbstractModel.FromJson(json);
+
+                 string reason;
+                 List<int> ids;
+                 bool res = model.SanityCheck(out reason, out ids);
+                 Console.WriteLine(res);
+                 Console.WriteLine(reason);
+                if(res != expected){
+                    throw new Exception("Test failed");
+                }
 
 
+                 return true;
+             };
+
+            test(json0, false);
+            test(json1, false);
+            test(json2, true);
 
         }
     }
