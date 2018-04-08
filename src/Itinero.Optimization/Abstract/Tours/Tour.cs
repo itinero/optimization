@@ -234,7 +234,7 @@ namespace Itinero.Optimization.Abstract.Tours
             }
             if (from == visit)
             { // the visit are identical.
-                throw new ArgumentException("Cannot add a visit after itself.");
+                throw new ArgumentException("Cannot add a visit after itself. You tried to add visit "+visit+" after itself");
             }
 
             _count = -1;

@@ -165,8 +165,12 @@ namespace Itinero.Optimization.Abstract.Models
         /// <returns>true if all constrains can be met.</returns>
         public static bool HasSaneConstraints(this AbstractModel model, out string failReason, out List<int> faultyVisitids)
         {
+
             failReason = "";
             faultyVisitids = new List<int>();
+            if(model.VisitCosts == null || model.VisitCosts.Length == 0){
+                return true; // No constraints. We're done!
+            }
 
             bool allgood = true;
             for (int visitID = 0; visitID < model.VisitCosts[0].Costs.Length; visitID++)

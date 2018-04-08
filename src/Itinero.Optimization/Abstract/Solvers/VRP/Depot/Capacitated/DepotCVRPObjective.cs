@@ -957,7 +957,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
             {
                 Capacity = problem.Capacity.Scale(1 - _slackPercentage),
                 Weights = problem.Weights,
-                VisitCosts = problem.VisitCosts
+                Depot = problem.Depot
             };
         }
     }

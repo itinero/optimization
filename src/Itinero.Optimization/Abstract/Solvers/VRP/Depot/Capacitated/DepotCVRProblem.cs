@@ -53,7 +53,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
         /// Depot of the vehicle, thus the visit where it has to start its round and stop again
         /// </summary>
         /// <returns></returns>
-        public int Depot { get; set; }
+        public int Depot
+        {
+            get; set;
+        }
 
         /// <summary>
         /// Gets or sets the visit costs.
@@ -79,6 +82,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
         /// Holds the nearest neigbours in travel cost.
         /// </summary>
         private NearestNeigbourArray _nNTravelCost = null;
+        private int _depot;
 
         /// <summary>
         /// Gets the nearest neigbours in travel cost.
@@ -130,13 +134,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
             var reloc = new RelocateOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
                                             (true, wrapAround: false /*no wrap around to preserve the depot*/);
 
+
+
             var slci = new SeededCheapestInsertion<DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution>(
                 new TSP.Solvers.HillClimbing3OptSolver(),
                 new IInterTourImprovementOperator<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>[]
                 {
-                  reloc,
-                  relocMulti,
-                  crossMultiSomePairs5
+               //   reloc,
+               //   relocMulti,
+               //   crossMultiSomePairs5
                  }, 0.03f, .25f
             );
 
@@ -144,7 +150,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
                 {
                     var weights = problem.Weights;
                     return Algorithms.Seeds.SeedHeuristics.GetSeedFarthest(
-                        weights: problem.Weights, visitPool: visits, visit: problem.Depot);
+                         weights: problem.Weights, visitPool: visits, visit: problem.Depot);
                     // return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
                     //return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
                     //    weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
@@ -158,10 +164,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
 
             var iterate = new Algorithms.Solvers.IterativeSolver<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>(
                     constructionHeuristic, 1,
-                        crossMultiAllPairs20,
-                        crossMultiAllPairs10);
+                    crossMultiAllPairs20,
+                    crossMultiAllPairs10);
 
-            return this.Solve(iterate, objective);
+            return this.Solve(constructionHeuristic, objective);
         }
 
         /// <summary>
