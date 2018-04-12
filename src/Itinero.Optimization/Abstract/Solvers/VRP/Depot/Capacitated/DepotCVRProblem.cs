@@ -55,7 +55,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
         /// <returns></returns>
         public int Depot
         {
-            get; set;
+            get;
+            set;
         }
 
         /// <summary>
@@ -100,7 +101,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
             }
         }
 
-
         /// <summary>
         /// Solves this using a default solver.
         /// </summary>
@@ -118,49 +118,46 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
         {
             // Declaration of some of the operators
             var crossMultiAllPairs10 = new MultiExchangeOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
-                                            (1, 10, true, true, true, false);
+                (1, 10, true, true, true, false);
             var crossMultiAllPairs20 = new MultiExchangeOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
-                                            (1, 20, true, true, true, false);
+                (1, 20, true, true, true, false);
             var crossMultiSomePairs5 = new MultiExchangeOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
-                                            (1, 5, true, false, true, false);
+                (1, 5, true, false, true, false);
             var crossMultiSomePairs10 = new MultiExchangeOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
-                                           (1, 10, true, false, true, false);
+                (1, 10, true, false, true, false);
 
             var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>
-                                            (crossMultiAllPairs10, 20, stopAtFail: true);
+                (crossMultiAllPairs10, 20, stopAtFail : true);
 
             var relocMulti = new MultiRelocateOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
-                                            (2, 5);
+                (2, 5);
             var reloc = new RelocateOperator<DepotCVRPObjective, DepotCVRProblem, DepotCVRPSolution>
-                                            (true, wrapAround: false /*no wrap around to preserve the depot*/);
-
-
+                (true, wrapAround : false /*no wrap around to preserve the depot*/ );
 
             var slci = new SeededCheapestInsertion<DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution>(
-                new TSP.Solvers.HillClimbing3OptSolver(),
-                new IInterTourImprovementOperator<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>[]
-                {
-               //   reloc,
-               //   relocMulti,
-               //   crossMultiSomePairs5
-                 }, 0.03f, .25f
-            );
+                    new TSP.Solvers.HillClimbing3OptSolver(),
+                    new IInterTourImprovementOperator<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>[]
+                    {
+                        //   reloc,
+                        //   relocMulti,
+                        //   crossMultiSomePairs5
+                    }, 0.03f, .25f
+                );
 
             Func<DepotCVRProblem, IList<int>, int> seedFunc = (problem, visits) =>
-                {
-                    var weights = problem.Weights;
-                    return Algorithms.Seeds.SeedHeuristics.GetSeedFarthest(
-                         weights: problem.Weights, visitPool: visits, visit: problem.Depot);
-                    // return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
-                    //return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-                    //    weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
-                };
+            {
+                var weights = problem.Weights;
+                return Algorithms.Seeds.SeedHeuristics.GetSeedFarthest(
+                    weights : problem.Weights, visitPool : visits, visit : problem.Depot);
+                // return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
+                //return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
+                //    weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
+            };
 
-            DepotCVRPObjective objective = new DepotCVRPObjective(seedFunc, localizationFactor: 0.9f);
-
+            DepotCVRPObjective objective = new DepotCVRPObjective(seedFunc, localizationFactor : 0.9f);
 
             var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>
-            (slci, 20, crossMultiSomePairs10);
+                (slci, 20, crossMultiSomePairs10);
 
             var iterate = new Algorithms.Solvers.IterativeSolver<float, DepotCVRProblem, DepotCVRPObjective, DepotCVRPSolution, float>(
                     constructionHeuristic, 1,

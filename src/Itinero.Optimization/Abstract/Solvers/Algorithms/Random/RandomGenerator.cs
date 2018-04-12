@@ -142,7 +142,7 @@ namespace Itinero.Optimization.Algorithms.Random
         /// Selects two random routes from the solution.
         /// Returns false if no routes can be selected (because the solution has only one route)
         /// </summary>
-        public static bool randomRoutes(int solutionCount, out int t1, out int t2){
+        public static bool RandomRoutes(int solutionCount, out int t1, out int t2){
             if(solutionCount < 2){
                 t1 = 0;
                 t2 = 0;
