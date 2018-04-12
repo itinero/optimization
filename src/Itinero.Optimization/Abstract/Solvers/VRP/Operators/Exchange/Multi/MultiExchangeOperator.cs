@@ -119,7 +119,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi
             else
             { // just choose random routes and delegate to apply
                 int t1, t2;
-                RandomGeneratorExtensions.randomRoutes(solution.Count, out t1, out t2);
+                RandomGeneratorExtensions.RandomRoutes(solution.Count, out t1, out t2);
                 return Apply(problem, objective, solution, t1, t2, out delta);
             }
         }

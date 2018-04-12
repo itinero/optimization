@@ -68,7 +68,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate
         {
             // if at least two routes: select two random routes;
             int t1, t2;
-            if (!RandomGeneratorExtensions.randomRoutes(solution.Count, out t1, out t2))
+            if (!RandomGeneratorExtensions.RandomRoutes(solution.Count, out t1, out t2))
             {
                 delta = 0;
                 return false;
