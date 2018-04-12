@@ -51,7 +51,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         public Capacity Capacity { get; set; }
 
         /// <summary>
-        /// Gets the weights.
+        /// Gets the weights of travelling between two visits. Indexed [from][to]
         /// </summary>
         public float[][] Weights { get; set; }
 

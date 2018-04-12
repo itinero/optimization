@@ -15,7 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -38,6 +38,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         private readonly List<CapacityExtensions.Content> _contents;
         private readonly List<ITour> _tours;
 
+        /// The visit-ID _after_ which the depot is visited
+        private readonly List<int> _depotPoint;
+
+        /// The cost of visiting the depot, at this location
+        private readonly List<int> _depotCost;
+
         /// <summary>
         /// Creates a new solution.
         /// </summary>
@@ -45,15 +51,21 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         {
             _tours = new List<ITour>(size);
             _contents = new List<CapacityExtensions.Content>(size);
+
+
         }
 
         /// <summary>
         /// Creates a new solution by deep-copying what's given.
         /// </summary>
-        protected NoDepotCVRPSolution(List<ITour> tours, List<CapacityExtensions.Content> contents)
+        protected NoDepotCVRPSolution(NoDepotCVRPSolution toCopy)
         {
+            List<ITour> tours = toCopy._tours;
+            _contents = new List<CapacityExtensions.Content>(toCopy._contents.Count);
+            _tours = new List<ITour>();
+
             // make a deep-copy of the contents.
-            _contents = new List<CapacityExtensions.Content>(contents.Count);
+            List<CapacityExtensions.Content> contents = toCopy._contents;
             for (var c = 0; c < contents.Count; c++)
             {
                 _contents.Add(new CapacityExtensions.Content()
@@ -67,12 +79,45 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             }
 
             // make a deep-copy of the tours.
-            _tours = new List<ITour>();
-            foreach (var tour in tours)
+            foreach (var tour in toCopy._tours)
             {
                 _tours.Add(tour.Clone() as Tour);
             }
+
+            _depotPoint.AddRange(toCopy._depotPoint);
+            _depotCost.AddRange(toCopy._depotCost);
+
         }
+
+
+        /// <summary>
+        /// Calculates the weight of the given tour.
+        /// </summary>
+        public float CalculateWeightOf(NoDepotCVRProblem problem, int tourIdx)
+        {
+            var weight = 0f;
+            var tour = this.Tour(tourIdx);
+
+            Pair? last = null;
+            foreach (var pair in tour.Pairs())
+            {
+                weight += problem.GetVisitCost(pair.From);
+                weight += problem.Weights[pair.From][pair.To];
+            }
+            if (last.HasValue && !tour.IsClosed())
+            {
+                weight += problem.GetVisitCost(last.Value.To);
+            }
+
+            return weight;
+        }
+
+
+
+
+
+
+
 
         /// <summary>
         /// Gets or sets the contents of each tour.
@@ -86,7 +131,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// Gets the # of tours.
+        /// Gets the number of tours.
         /// </summary>
         public int Count
         {
@@ -95,6 +140,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 return _tours.Count;
             }
         }
+
 
         /// <summary>
         /// Gets the tour at the given index.
@@ -124,7 +170,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns></returns>
         public ITour Add(int first, int? last)
         {
-            var tour = new Tour(new int[] { first} , last);
+            var tour = new Tour(new int[] { first }, last);
             _tours.Add(tour);
             return tour;
         }
@@ -135,7 +181,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns></returns>
         public object Clone()
         {
-            return new NoDepotCVRPSolution(_tours, _contents);
+            return new NoDepotCVRPSolution(this);
         }
 
         /// <summary>

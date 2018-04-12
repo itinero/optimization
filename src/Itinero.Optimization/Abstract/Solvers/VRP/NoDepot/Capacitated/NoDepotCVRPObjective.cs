@@ -35,7 +35,10 @@ using Itinero.Optimization.General;
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
     /// <summary>
-    /// An objective of a CVRP.
+    /// An objective of a CVRP, without a depot.
+    /// 
+    /// If a depot is given, this depot is only used to calculate the extra cost between the cluster and the depot (and to calculate the cheapest point in the cluster to visit the depot)
+    /// 
     /// </summary>
     public class NoDepotCVRPObjective : ObjectiveBase<NoDepotCVRProblem, NoDepotCVRPSolution, float>,
         IRelocateObjective<NoDepotCVRProblem, NoDepotCVRPSolution>, IExchangeObjective<NoDepotCVRProblem, NoDepotCVRPSolution>, IMultiExchangeObjective<NoDepotCVRProblem, NoDepotCVRPSolution>,
@@ -78,6 +81,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
         /// <summary>
         /// Returns true if this is non-continuous.
+        /// 
+        /// If a problem is continuous, an update in fitness can happen by taking the local differences and having a delta.
+        /// This is not possible here, fitness should always be recalculated by taking everything into account.
+        /// 
         /// </summary>
         /// <returns></returns>
         public override bool IsNonContinuous => false;
@@ -101,82 +108,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// Calculates the weight of the given tour.
-        /// </summary>
-        public float Calculate(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int tourIdx)
-        {
-            var weight = 0f;
-            var tour = solution.Tour(tourIdx);
-
-            Pair? last = null;
-            foreach (var pair in tour.Pairs())
-            {
-                weight += problem.GetVisitCost(pair.From);
-                weight += problem.Weights[pair.From][pair.To];
-            }
-            if (last.HasValue && !tour.IsClosed())
-            {
-                weight += problem.GetVisitCost(last.Value.To);
-            }
-
-            return weight;
-        }
-
-        /// <summary>
-        /// Calculate the cumulative weights.
-        /// </summary>
-        public float[] CalculateCumul(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int tourIdx)
-        {
-            var tour = solution.Tour(tourIdx);
-
-            // intialize the result array.
-            var cumul = new float[tour.Count + 1];
-
-            int previous = -1; // the previous visit.
-            float time = 0; // the current weight.
-            int idx = 0; // the current index.
-            foreach (int visit1 in tour)
-            { // loop over all visits.
-                if (previous >= 0)
-                { // there is a previous visit.
-                  // add one visit and the distance to the previous visit.
-                    time = time + problem.Weights[previous][visit1];
-                    cumul[idx] = time;
-                }
-                else
-                { // there is no previous visit, this is the first one.
-                    cumul[idx] = 0;
-                }
-
-                time += problem.GetVisitCost(visit1);
-
-                idx++; // increase the index.
-                previous = visit1; // prepare for next loop.
-            }
-            // handle the edge last->first.
-            time = time + problem.Weights[previous][tour.First];
-            cumul[idx] = time;
-            return cumul;
-        }
-
-        /// <summary>
-        /// Updates all content properly.
-        /// </summary>
-        public void UpdateContent(NoDepotCVRProblem problem, NoDepotCVRPSolution solution)
-        {
-            for (var t = 0; t < solution.Count; t++)
-            {
-                if (t >= solution.Contents.Count)
-                {
-                    solution.Contents.Add(new CapacityExtensions.Content());
-                }
-                solution.Contents[t].Weight = this.Calculate(problem, solution, t);
-                problem.Capacity.UpdateCosts(solution.Contents[t], solution.Tour(t));
-            }
-        }
-
-        /// <summary>
-        /// Calulates the total weight.
+        /// Calulates the total weight of the solution.
         /// </summary>
         public override float Calculate(NoDepotCVRProblem problem, NoDepotCVRPSolution solution)
         {
@@ -186,8 +118,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 weight += solution.Contents[t].Weight;
             }
+            if (solution.Count == 0)
+            {
+                return float.MaxValue;
+            }
 
-            return weight * solution.Count;
+            return weight * solution.Count; // tries to limit the number of vehicles
         }
 
         /// <summary>
@@ -268,8 +204,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     // update weights and capacities.
                     problem.Capacity.Remove(solution.Contents[t1], visit.Along);
                     problem.Capacity.Add(solution.Contents[t2], visit.Along);
-                    solution.Contents[t1].Weight = this.Calculate(problem, solution, t1);
-                    solution.Contents[t2].Weight = this.Calculate(problem, solution, t2);
+                    solution.Contents[t1].Weight = solution.CalculateWeightOf(problem, t1);
+                    solution.Contents[t2].Weight = solution.CalculateWeightOf(problem, t2);
 
                     delta = removalGain - result;
                     return true;
@@ -383,7 +319,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="maxSize">The maximum size.</param>
         /// <param name="wrap">Wrap around first if true.</param>
         /// <returns>An enumerable with sequences.</returns>
-        public IEnumerable<Operators.Seq> SeqAndSmaller(NoDepotCVRProblem problem, IEnumerable<int> tour, 
+        public IEnumerable<Operators.Seq> SeqAndSmaller(NoDepotCVRProblem problem, IEnumerable<int> tour,
             int minSize, int maxSize, bool wrap)
         {
             var visits = tour.ToArray();
@@ -424,7 +360,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                         between -= newStart;
                         between += end;
                         betweenReversed -= problem.Weights[s[1]][s[0]];
-                        betweenReversed +=  problem.Weights[s[s.Length - 2]][s[s.Length - 3]];
+                        betweenReversed += problem.Weights[s[s.Length - 2]][s[s.Length - 3]];
                         start = newStart;
                         end = newEnd;
                         if (problem.VisitCosts != null)
@@ -696,7 +632,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 delta = 0;
                 return false;
             }
-            
+
             var tour1 = solution.Tour(t1);
             if (seq.Wraps)
             { // move first.
@@ -820,7 +756,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// /// Tries to place any of the visits in the given visit list.
+        /// Tries to place any of the visits in the given visit list.
         /// </summary>
         /// <param name="problem">The problem.</param>
         /// <param name="solution">The tour.</param>
@@ -845,7 +781,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     costFunc = (v) => _localizationCostFunc(problem, seed, v);
                 }
 
-                // run CI algorithm.
+                // run cheapest insertion algorithm.
                 var increase = tour.CalculateCheapestAny(problem.Weights, visits,
                     out Pair location, out int visit,
                     costFunc);
@@ -931,7 +867,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 Capacity = problem.Capacity.Scale(1 - _slackPercentage),
                 Weights = problem.Weights,
-                VisitCosts = problem.VisitCosts
+                VisitCosts = problem.VisitCosts,
+                Depot = problem.Depot
             };
         }
     }

@@ -143,8 +143,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers
                             // verifiy against original if there are improvements.
                             var totalPenalty = ResetPenalizations(problem, penalizations);
 
-                            localSolution.Contents[t1].Weight = objective.Calculate(problem, solution, t1);
-                            localSolution.Contents[t2].Weight = objective.Calculate(problem, solution, t2);
+                            localSolution.Contents[t1].Weight = solution.CalculateWeightOf(problem, t1);
+                            localSolution.Contents[t2].Weight = solution.CalculateWeightOf(problem, t2);
 
                             var tour1After = localSolution.Contents[t1].Weight;
                             var tour2After = localSolution.Contents[t2].Weight;
