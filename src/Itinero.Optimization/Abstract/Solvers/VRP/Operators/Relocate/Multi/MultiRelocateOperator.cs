@@ -67,7 +67,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi
         public bool Apply(TProblem problem, TObjective objective, TSolution solution, out float delta)
         {
             int t1, t2;
-            if (!RandomGeneratorExtensions.randomRoutes(solution.Count, out t1, out t2))
+            if (!RandomGeneratorExtensions.RandomRoutes(solution.Count, out t1, out t2))
             {
                 delta = 0;
                 return false;
