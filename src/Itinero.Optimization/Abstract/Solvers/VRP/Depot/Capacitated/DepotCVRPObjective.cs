@@ -126,44 +126,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
 
                 return weight;
             }
-
-            /// <summary>
-            /// Calculate the cumulative weights.
-            /// </summary>
-            public float[] CalculateCumul(DepotCVRProblem problem, DepotCVRPSolution solution, int tourIdx)
-            {
-                var tour = solution.Tour(tourIdx);
-
-                // intialize the result array.
-                var cumul = new float[tour.Count + 1];
-
-                int previous = -1; // the previous visit.
-                float time = 0; // the current weight.
-                int idx = 0; // the current index.
-                foreach (int visit1 in tour)
-                { // loop over all visits.
-                    if (previous >= 0)
-                    { // there is a previous visit.
-                        // add one visit and the distance to the previous visit.
-                        time = time + problem.Weights[previous][visit1];
-                        cumul[idx] = time;
-                    }
-                    else
-                    { // there is no previous visit, this is the first one.
-                        cumul[idx] = 0;
-                    }
-
-                    time += problem.GetVisitCost(visit1);
-
-                    idx++; // increase the index.
-                    previous = visit1; // prepare for next loop.
-                }
-                // handle the edge last->first.
-                time = time + problem.Weights[previous][tour.First];
-                cumul[idx] = time;
-                return cumul;
-            }
-
+            
             /// <summary>
             /// Updates all content properly.
             /// </summary>
