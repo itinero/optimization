@@ -26,7 +26,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
     public class Capacity
     {
         /// <summary>
-        /// The maximum travel time.
+        /// The maximum travel time. Distinct because a timeconstraint also eats in the travel time
         /// </summary>
         public float Max { get; set; }
 

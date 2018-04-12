@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using Itinero.Logging;
+using Itinero.Optimization.Abstract.Models;
 
 namespace Itinero.Optimization.Test.Functional
 {
@@ -34,38 +35,40 @@ namespace Itinero.Optimization.Test.Functional
 
             // invoke case-specific tests.
 
-            TSP.TSPTests.Run();
-            STSP.STSPTests.Run();
-            TSP_TW.TSPTWTests.Run();
+            /*  TSP.TSPTests.Run();
+              STSP.STSPTests.Run();
+              TSP_TW.TSPTWTests.Run();
+              VRP.NoDepot.Capacitated.NoDepotCVRPTests.Run();
 
-            VRP.NoDepot.Capacitated.NoDepotCVRPTests.Run();
-#if DEBUG
-            Console.ReadLine();
-#endif
-        }
+  */
+            VRP.Depot.Capacitated.DepotCVRPTests.Run();
 
-        private static void EnableLogging()
-        {
-            OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
-            {
-#if RELEASE
-                if (level == "verbose")
-                {
-                    return;
-                }
-#endif
-                Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
-            };
-            Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
-            {
-#if RELEASE
-                if (level == "verbose")
-                {
-                    return;
-                }
-#endif
-                Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
-            };
-        }
+
     }
+
+
+    private static void EnableLogging()
+    {
+        OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
+        {
+#if RELEASE
+                if (level == "verbose")
+                {
+                    return;
+                }
+#endif
+            Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
+        };
+        Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
+        {
+#if RELEASE
+                if (level == "verbose")
+                {
+                    return;
+                }
+#endif
+            Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
+        };
+    }
+}
 }

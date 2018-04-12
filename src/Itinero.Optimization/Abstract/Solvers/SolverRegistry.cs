@@ -40,7 +40,8 @@ namespace Itinero.Optimization.Abstract.Solvers
                 TSP.Directed.TSPSolverDetails.Default,
                 STSP.Directed.STSPSolverDetails.Default,
                 TSP.TimeWindows.Directed.TSPTWSolverDetails.Default,
-                VRP.NoDepot.Capacitated.NoDepotCVRPSolverDetails.Default
+                VRP.Depot.Capacitated.DepotCVRPSolverDetails.Default,
+         //       VRP.NoDepot.Capacitated.NoDepotCVRPSolverDetails.Default
             });
 
         /// <summary>
@@ -63,6 +64,10 @@ namespace Itinero.Optimization.Abstract.Solvers
         /// <param name="model">The model to solve.</param>
         public static IList<ITour> Solve(MappedModel model)
         {
+            if(!model.BuildAbstract().HasSaneConstraints(out string failReason, out List<int> faultyVisists)){
+                throw new Exception("The given model can never be solved, it has insane constraints:\n"+failReason);
+            }
+
             var reasonsWhy = new StringBuilder();
             for (var i = 0; i < _solvers.Count; i++)
             {

@@ -25,12 +25,12 @@ using Itinero.Optimization.Abstract.Tours.Typed;
 using Itinero.Optimization.Abstract.Models.Costs;
 using System;
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
 {
     /// <summary>
     /// Hooks the solver up to the solver registry by defining solver details.
     /// </summary>
-    public static class NoDepotCVRPSolverDetails
+    public static class DepotCVRPSolverDetails
     {
         /// <summary>
         /// Gets the default solver details.
@@ -38,8 +38,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns></returns>
         public static SolverDetails Default = new SolverDetails()
         {
-            Name = "NoDepotCVRP",
-            // assign the function noDepotCVRPSolverDetails.TrySolve into the variable of the new SolverDetails object
+            Name = "DepotCVRP",
             TrySolve = TrySolve
         };
 
@@ -47,15 +46,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         {
             var model = mappedModel.BuildAbstract();
 
-            // build the no-depot vrp.
-            var result = model.TryToNoDepotCVRP();
+            // build the depot vrp.
+            var result = model.TryToDepotCVRP();
             if (result.IsError)
             {
                 return result.ConvertError<IList<ITour>>();
             }
-            
+
             // call solver.
-            var solution = result.Value.Solve((p, tour1, tour2) => 
+            var solution = result.Value.Solve((p, tour1, tour2) =>
             {
                 return mappedModel.Overlaps(tour1, tour2);
             });
@@ -72,13 +71,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <summary>
         /// Converts the given abstract model to a CVRP problem.
         /// </summary>
-        public static Result<NoDepotCVRProblem> TryToNoDepotCVRP(this AbstractModel model)
+        public static Result<DepotCVRProblem> TryToDepotCVRP(this AbstractModel model)
         {
             // check if the model is valid.
             string reasonWhenFailed;
-            if (!model.IsNoDepotCVRP(out reasonWhenFailed))
+            if (!model.IsDepotCVRP(out reasonWhenFailed))
             {
-                return new Result<NoDepotCVRProblem>("Model is not a No-Depot VRP: " +
+                return new Result<DepotCVRProblem>("Model is not a Depot VRP: " +
                     reasonWhenFailed);
             }
 
@@ -133,14 +132,16 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     c++;
                 }
             }
-            
-            var problem = new NoDepotCVRProblem()
+
+            var problem = new DepotCVRProblem()
             {
                 Weights = travelCosts.Costs,
+                Depot = vehicle.Departure.Value,
                 Capacity = new Capacity()
                 {
                     Max = travelCostConstraint.Capacity,
-                    Constraints = constraints
+                    Constraints = constraints,
+
                 }
             };
 
@@ -148,7 +149,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 problem.VisitCosts = travelCostVisitCosts.Costs;
             }
-            return new Result<NoDepotCVRProblem>(problem);
+            return new Result<DepotCVRProblem>(problem);
         }
 
         /// <summary>
@@ -156,10 +157,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public static bool IsNoDepotCVRP(this AbstractModel model)
+        public static bool IsDepotCVRP(this AbstractModel model)
         {
             string reasonIfNot;
-            return model.IsNoDepotCVRP(out reasonIfNot);
+            return model.IsDepotCVRP(out reasonIfNot);
         }
 
         /// <summary>
@@ -168,7 +169,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="model">The model.</param>
         /// <param name="reasonIfNot">The reason if it's not considered solvable.</param>
         /// <returns></returns>
-        public static bool IsNoDepotCVRP(this AbstractModel model, out string reasonIfNot)
+        public static bool IsDepotCVRP(this AbstractModel model, out string reasonIfNot)
         {
             if (!model.IsValid(out reasonIfNot))
             {
@@ -199,6 +200,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 // TODO: check if timewindows are there but are all set to max.
                 reasonIfNot = "Timewindows detected, not supported.";
+                return false;
+            }
+            if (!(vehicle.Departure == vehicle.Arrival && vehicle.Departure.HasValue))
+            {
+                reasonIfNot = "The vehicle does not have a depot (a departure and arrival which are the same)";
                 return false;
             }
             return true;

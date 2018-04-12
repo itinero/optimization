@@ -17,9 +17,11 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Itinero.Optimization.Abstract.Models.Costs;
 using Itinero.Optimization.Abstract.Models.TimeWindows;
 using Itinero.Optimization.Abstract.Models.Vehicles;
+using Itinero.Optimization.Models;
 
 namespace Itinero.Optimization.Abstract.Models
 {
@@ -39,7 +41,7 @@ namespace Itinero.Optimization.Abstract.Models
         /// </summary>
         /// <returns></returns>
         public TimeWindow[] TimeWindows { get; set; }
-    
+
         /// <summary>
         /// Gets or sets the visit costs.
         /// </summary>
@@ -149,6 +151,100 @@ namespace Itinero.Optimization.Abstract.Models
             }
             reasonIfNot = string.Empty;
             return true;
+        }
+
+
+        /// <summary>
+        /// Checks that the constraints are possible: e.g. that no visit requires hauling 1000kg if the max load each vehicle is less.
+        /// 
+        /// If such faulty visits are detected, this is returned via the out-parameters.
+        /// 
+        /// If a departure or arrival is included in the vehicle, this is taken into account as well
+        /// 
+        /// </summary>
+        /// <returns>true if all constrains can be met.</returns>
+        public static bool HasSaneConstraints(this AbstractModel model, out string failReason, out List<int> faultyVisitids)
+        {
+
+            failReason = "";
+            faultyVisitids = new List<int>();
+            if(model.VisitCosts == null || model.VisitCosts.Length == 0){
+                return true; // No constraints. We're done!
+            }
+
+            bool allgood = true;
+            for (int visitID = 0; visitID < model.VisitCosts[0].Costs.Length; visitID++)
+            {
+                bool vehFound = false;
+                string vehFailReasons = "";
+                foreach (var vehicle in model.VehiclePool.Vehicles)
+                {
+                    string failR = "";
+                    bool vehCanHandle = model.CanVehicleHandleVisit(vehicle, visitID, out failR);
+                    if (vehCanHandle)
+                    {
+                        vehFound = true;
+                        break;
+                    }
+                    vehFailReasons += "   " + failR + "\n";
+                }
+
+                if (!vehFound)
+                {
+                    faultyVisitids.Add(visitID);
+                    failReason += "Visit " + visitID + " can not be visisted by any vehicle:\n" + vehFailReasons;
+                    allgood = false;
+                }
+            }
+            return allgood;
+
+        }
+
+
+        private static bool CanVehicleHandleVisit(this AbstractModel model, Vehicle vehicle, int visitID, out string failReason)
+        {
+            failReason = "";
+            foreach (var visitCost in model.VisitCosts)
+            {
+                foreach (var vehConstr in vehicle.CapacityConstraints)
+                {
+                    if (vehConstr.Name == visitCost.Name)
+                    {   // The visitcost is the same as the vehicleconstraint we are checking
+
+                        // what can be visited by this vehicle
+                        float maxCost = vehConstr.Capacity;
+
+                        // cost of the visit itself
+                        float totalCost = visitCost.Costs[visitID];
+
+                        foreach (var travelCosts in model.TravelCosts)
+                        {
+                            if (travelCosts.Name == vehConstr.Name)
+                            {
+                                // As vehicleMetric is the same as the visit cost metric, we have to add the travelcosts as well
+                                if (vehicle.Departure != null)
+                                {
+                                    totalCost += travelCosts.Costs[(int)vehicle.Departure][visitID];
+                                }
+
+                                if (vehicle.Departure != null)
+                                {
+                                    totalCost += travelCosts.Costs[visitID][(int)vehicle.Arrival];
+                                }
+                            }
+                        }
+
+                        if (totalCost > maxCost)
+                        {
+                            failReason = "Vehicle with metric " + vehConstr.Name + " and capacity "+ vehConstr.Capacity+" "+vehConstr.Name + " can not handle visit " + visitID + " as total cost is " + totalCost + " " + vehConstr.Name;
+                            return false;
+                        }
+                    }
+
+                }
+            }
+            return true;
+
         }
     }
 }

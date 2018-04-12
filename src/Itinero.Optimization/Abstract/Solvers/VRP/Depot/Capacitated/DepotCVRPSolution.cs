@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
@@ -27,45 +28,44 @@ using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
 using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms;
 
-namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
+namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
 {
     /// <summary>
     /// Represents a solution to a capacitated no-depot VRP.
     /// </summary>
-    public class NoDepotCVRPSolution : ISolution, IRelocateSolution, IExchangeSolution, IMultiExchangeSolution, IMultiRelocateSolution,
+    public class DepotCVRPSolution : ISolution, IRelocateSolution, IExchangeSolution, IMultiExchangeSolution, IMultiRelocateSolution,
         ISeededCheapestInsertionSolution
     {
         private readonly List<CapacityExtensions.Content> _contents;
-        private readonly List<ITour> _tours; // does not use multitour, as some problems require the same depot to be visited multiple times
-        
+        private readonly List<ITour> _tours;
+        private List<int> _seeds;
 
-        /// The visit-ID _after_ which the depot is visited
-        private readonly List<int> _depotPoint;
-
-        /// The cost of visiting the depot, at this location
-        private readonly List<int> _depotCost;
+        /// <summary>
+        /// Keeps track of a 'seed' for each tour, around which the tour should be centered
+        /// </summary>
+        /// <returns></returns>
+        public List<int> Seeds
+        {
+            get => _seeds; set => _seeds = value;
+        }
 
         /// <summary>
         /// Creates a new solution.
         /// </summary>
-        public NoDepotCVRPSolution(int size)
+        public DepotCVRPSolution(int size)
         {
             _tours = new List<ITour>(size);
             _contents = new List<CapacityExtensions.Content>(size);
-            _depotCost = new List<int>(size);
-            _depotPoint = new List<int>(size);
-
+            _seeds = new List<int>(size);
         }
 
         /// <summary>
         /// Creates a new solution by deep-copying what's given.
         /// </summary>
-        protected NoDepotCVRPSolution(NoDepotCVRPSolution toCopy)
-            : this(toCopy._contents.Count)
+        protected DepotCVRPSolution(List<ITour> tours, List<CapacityExtensions.Content> contents)
         {
-
             // make a deep-copy of the contents.
-            List<CapacityExtensions.Content> contents = toCopy._contents;
+            _contents = new List<CapacityExtensions.Content>(contents.Count);
             for (var c = 0; c < contents.Count; c++)
             {
                 _contents.Add(new CapacityExtensions.Content()
@@ -79,45 +79,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             }
 
             // make a deep-copy of the tours.
-            foreach (var tour in toCopy._tours)
+            _tours = new List<ITour>();
+            foreach (var tour in tours)
             {
                 _tours.Add(tour.Clone() as Tour);
             }
-
-            _depotPoint.AddRange(toCopy._depotPoint);
-            _depotCost.AddRange(toCopy._depotCost);
-
         }
-
-
-        /// <summary>
-        /// Calculates the weight of the given tour.
-        /// </summary>
-        public float CalculateWeightOf(NoDepotCVRProblem problem, int tourIdx)
-        {
-            var weight = 0f;
-            var tour = this.Tour(tourIdx);
-
-            Pair? last = null;
-            foreach (var pair in tour.Pairs())
-            {
-                weight += problem.GetVisitCost(pair.From);
-                weight += problem.Weights[pair.From][pair.To];
-            }
-            if (last.HasValue && !tour.IsClosed())
-            {
-                weight += problem.GetVisitCost(last.Value.To);
-            }
-
-            return weight;
-        }
-
-
-
-
-
-
-
 
         /// <summary>
         /// Gets or sets the contents of each tour.
@@ -131,7 +98,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// Gets the number of tours.
+        /// Gets the # of tours.
         /// </summary>
         public int Count
         {
@@ -140,7 +107,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 return _tours.Count;
             }
         }
-
 
         /// <summary>
         /// Gets the tour at the given index.
@@ -181,7 +147,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns></returns>
         public object Clone()
         {
-            return new NoDepotCVRPSolution(this);
+            return new DepotCVRPSolution(_tours, _contents);
         }
 
         /// <summary>

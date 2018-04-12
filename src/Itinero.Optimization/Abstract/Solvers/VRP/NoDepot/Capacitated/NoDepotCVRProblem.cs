@@ -51,12 +51,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         public Capacity Capacity { get; set; }
 
         /// <summary>
-        /// Gets the weights of travelling between two visits. Indexed [from][to]
+        /// Gets the weights. This is the travelling time it takes to get from a point A to a point B. Indexed with [from][to]
         /// </summary>
         public float[][] Weights { get; set; }
 
         /// <summary>
-        /// Gets or sets the visit costs.
+        /// Gets or sets the visit costs. This is the handling time at a certain spot
         /// </summary>
         /// <returns></returns>
         public float[] VisitCosts { get; set; }
@@ -82,7 +82,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// Holds the nearest neigbours in travel cost.
+        /// Holds the nearest neigbours in travel cost. Only used for the caching.
         /// </summary>
         private NearestNeigbourArray _nNTravelCost = null;
 
@@ -103,7 +103,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// Gets the seed heuristic.
+        /// A seed heuristic.
         /// </summary>
         /// <returns></returns>
         public Func<NoDepotCVRProblem, IList<int>, int> SelectSeedWithCloseNeighboursHeuristic
@@ -116,7 +116,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// Gets the seed heuristic.
+        /// A seed heuristic.
         /// </summary>
         /// <returns></returns>
         public Func<NoDepotCVRProblem, IList<int>, int> SelectRandomSeedHeuristic
