@@ -16,11 +16,11 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.Algorithms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Itinero.Optimization.Algorithms;
 
 namespace Itinero.Optimization.Abstract.Tours
 {
@@ -48,8 +48,7 @@ namespace Itinero.Optimization.Abstract.Tours
         /// <summary>
         /// Creates a new closed tour using a preexisting sequence.
         /// </summary>
-        public Tour(IEnumerable<int> visits)
-            : this(visits, visits.First())
+        public Tour(IEnumerable<int> visits) : this(visits, visits.First())
         {
 
         }
@@ -234,7 +233,7 @@ namespace Itinero.Optimization.Abstract.Tours
             }
             if (from == visit)
             { // the visit are identical.
-                throw new ArgumentException("Cannot add a visit after itself. You tried to add visit "+visit+" after itself");
+                throw new ArgumentException("Cannot add a visit after itself. You tried to add visit" + visit + " after itself");
             }
 
             _count = -1;
@@ -453,7 +452,7 @@ namespace Itinero.Optimization.Abstract.Tours
 
             public bool MoveNext()
             {
-                if(_current == -2)
+                if (_current == -2)
                 {
                     return false;
                 }
@@ -497,12 +496,12 @@ namespace Itinero.Optimization.Abstract.Tours
         {
             return new PairEnumerable<Tour>(this, _first == _last);
         }
-        
+
         /// <summary>
         /// Returns an enumerable that enumerates all visit triples that occur in the tour as 1->2-3. If the tour is a round the tuples that contain last->first are also included.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Triple> Triples(bool wrapAround=true)
+        public IEnumerable<Triple> Triples(bool wrapAround = true)
         {
             return new TripleEnumerable(this, wrapAround);
         }
@@ -542,7 +541,7 @@ namespace Itinero.Optimization.Abstract.Tours
                 {
                     _nextArray[idx] = _nextArray[visit];
                     _nextArray[visit] = Constants.NOT_SET;
-                    if(visit == _internalLast && this.First != this.Last)
+                    if (visit == _internalLast && this.First != this.Last)
                     { // update last if open problem.
                         _internalLast = idx;
                     }
@@ -618,7 +617,7 @@ namespace Itinero.Optimization.Abstract.Tours
                 {
                     oldBefore = idx;
                     oldAfter = _nextArray[visit];
-                    if(oldBefore == before)
+                    if (oldBefore == before)
                     { // nothing to do here!
                         if (this.First == this.Last && oldAfter == Constants.END)
                         { // is closed and oldAfter is END then oldAfter is first.
@@ -781,7 +780,7 @@ namespace Itinero.Optimization.Abstract.Tours
                     result.Append(visit);
                     result.Append(']');
                 }
-                else if(visit != this.Last)
+                else if (visit != this.Last)
                 {
                     result.Append("->");
                     result.Append(visit);
@@ -806,7 +805,7 @@ namespace Itinero.Optimization.Abstract.Tours
             // TODO: why explicity clear everything? also why resize, should be explicit.
             //       see multitour.subtour.
             _nextArray = new int[_first + 1];
-            for(var idx = 0; idx < _nextArray.Length; idx++)
+            for (var idx = 0; idx < _nextArray.Length; idx++)
             {
                 _nextArray[idx] = Constants.NOT_SET;
             }
@@ -876,7 +875,7 @@ namespace Itinero.Optimization.Abstract.Tours
 
                 public bool MoveNext()
                 {
-                    if(_first != _last && _from > _to)
+                    if (_first != _last && _from > _to)
                     {
                         return false;
                     }
@@ -889,7 +888,7 @@ namespace Itinero.Optimization.Abstract.Tours
                         _current = _from;
                         return true;
                     }
-                    if(_current == -1)
+                    if (_current == -1)
                     {
                         _current = _from;
                         return true;
