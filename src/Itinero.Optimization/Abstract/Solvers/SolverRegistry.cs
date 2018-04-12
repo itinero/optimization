@@ -64,9 +64,7 @@ namespace Itinero.Optimization.Abstract.Solvers
         /// <param name="model">The model to solve.</param>
         public static IList<ITour> Solve(MappedModel model)
         {
-            string failReason;
-            List<int> faultyVisists;
-            if(!model.BuildAbstract().HasSaneConstraints(out failReason, out faultyVisists)){
+            if(!model.BuildAbstract().HasSaneConstraints(out string failReason, out List<int> faultyVisists)){
                 throw new Exception("The given model can never be solved, it has insane constraints:\n"+failReason);
             }
 
