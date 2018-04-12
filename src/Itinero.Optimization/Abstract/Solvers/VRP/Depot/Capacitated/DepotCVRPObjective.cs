@@ -126,7 +126,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
 
                 return weight;
             }
-            
+
             /// <summary>
             /// Updates all content properly.
             /// </summary>
@@ -199,7 +199,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
             public bool TryMove(DepotCVRProblem problem,
                 DepotCVRPSolution solution, int t1, int t2, Triple visit, out float delta)
             {
-
                 var E = 0.1f;
                 if (!problem.Capacity.CanAdd(solution.Contents[t2], visit.Along) || visit.Along == problem.Depot)
                 { // capacity doesn't allow placing this visit.
@@ -811,7 +810,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
             /// <returns></returns>
             public bool TryPlaceAny(DepotCVRProblem problem, DepotCVRPSolution solution, IList<int> visits)
             {
-
                 // loop over all tours and find visit and the place to insert with the lowest cost.
                 var bestIncrease = float.MaxValue;
                 Triple? bestPlacement = null;
