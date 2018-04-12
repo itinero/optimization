@@ -51,7 +51,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         {
             _tours = new List<ITour>(size);
             _contents = new List<CapacityExtensions.Content>(size);
-
+            _depotCost = new List<int>(size);
+            _depotPoint = new List<int>(size);
 
         }
 
@@ -59,10 +60,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// Creates a new solution by deep-copying what's given.
         /// </summary>
         protected NoDepotCVRPSolution(NoDepotCVRPSolution toCopy)
+            : this(toCopy._contents.Count)
         {
-            List<ITour> tours = toCopy._tours;
-            _contents = new List<CapacityExtensions.Content>(toCopy._contents.Count);
-            _tours = new List<ITour>();
 
             // make a deep-copy of the contents.
             List<CapacityExtensions.Content> contents = toCopy._contents;
