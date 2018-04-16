@@ -148,6 +148,7 @@ namespace Itinero.Optimization.Models.Mapping
         public static Route BuildRoute<T>(this IWeightMatrixAlgorithm<T> algorithm, ITour tour, 
             Func<int, IAttributeCollection, float> customizeVisit = null)
         {
+            // TODO: what about costs and tours that are closed?
             Route route = null;
             foreach (var pair in tour.Pairs())
             {
@@ -156,12 +157,35 @@ namespace Itinero.Optimization.Models.Mapping
                 if (localRoute.Stops != null &&
                     localRoute.Stops.Length == 2 &&
                     customizeVisit != null)
-                { // customize stops that represent visits.
-                    // ignore travel time increase for the first one.
-                    customizeVisit(pair.From, localRoute.Stops[0].Attributes);
-                    // customize and add any extra travel time.
-                    localRoute.TotalTime +=
-                        customizeVisit(pair.To, localRoute.Stops[1].Attributes);
+                { 
+                    // customize stops that represent visits.
+
+                    // include first extra time because it's not already included in the previous section.
+                    var extraTime = customizeVisit(pair.From, localRoute.Stops[0].Attributes);
+                    if (route == null)
+                    { 
+                        if (localRoute.ShapeMeta != null &&
+                            localRoute.ShapeMeta.Length > 0)
+                        {
+                            for (var sm = 0; sm < localRoute.ShapeMeta.Length; sm++)
+                            {
+                                localRoute.ShapeMeta[sm].Time += extraTime;
+                            }
+                        }
+                        localRoute.TotalTime += extraTime;
+                    }
+
+                    // add any extra travel time for the last stop.
+                    extraTime = customizeVisit(pair.To, localRoute.Stops[1].Attributes);
+                    if (extraTime > 0)
+                    {
+                        if (localRoute.ShapeMeta != null &&
+                            localRoute.ShapeMeta.Length > 0)
+                        {
+                            localRoute.ShapeMeta[localRoute.ShapeMeta.Length - 1].Time += extraTime;
+                        }
+                        localRoute.TotalTime += extraTime;
+                    }
                 }
 
                 if (route == null)

@@ -19,6 +19,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Itinero.Attributes;
+using Itinero.Optimization.Models;
 using Itinero.Optimization.Models.Costs;
 using Itinero.Optimization.Models.Vehicles.Constraints;
 
@@ -58,7 +60,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
 //#if DEBUG
             // write info about result.
-            WriteStats(routes);
+            routes.WriteStats();
             routes.WriteGeoJson(NoDepotCVRPTests.Name + "lille-{0}.geojson");
 //#endif
         }
@@ -113,7 +115,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
+            routes.WriteStats();
             routes.WriteGeoJson(NoDepotCVRPTests.Name + "lille-capacitated-{0}.geojson");
 //#endif
         }
@@ -138,7 +140,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
+            routes.WriteStats();
             var filename = NoDepotCVRPTests.Name + "spijkenisse-{0}";
             routes.WriteGeoJson(filename + ".geojson");
             routes.WriteJson(filename + ".json");
@@ -163,7 +165,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
                 new CapacityConstraint()
                 {
                     Name = Itinero.Optimization.Models.Metrics.Time,
-                    Capacity = 5400
+                    Capacity = 3600
                 },
                 new CapacityConstraint()
                 {
@@ -195,7 +197,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
+            routes.WriteStats();
             routes.WriteGeoJson(NoDepotCVRPTests.Name + "spijkenisse-capacitated-{0}.geojson");
 //#endif
         }
@@ -218,22 +220,37 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
                 new CapacityConstraint()
                 {
                     Name = Itinero.Optimization.Models.Metrics.Time,
-                    Capacity = 3600 * 4
+                    Capacity = 3600 * 7
+                },
+                new CapacityConstraint()
+                {
+                    Name = Itinero.Optimization.Models.Metrics.Weight,
+                    Capacity = 25000
                 }
             };
 
             // build visit costs.
-            var visitCostWeight = new VisitCosts()
+            var visitCostTime = new VisitCosts()
             {
                 Name = Itinero.Optimization.Models.Metrics.Time,
                 Costs = new float[locations.Length]
             };
             for (var l = 0; l < locations.Length; l++)
             {
-                visitCostWeight.Costs[l] = 180;
+                visitCostTime.Costs[l] = 180;
+            }
+            var visitCostWeight = new VisitCosts()
+            {
+                Name = Itinero.Optimization.Models.Metrics.Weight,
+                Costs = new float[locations.Length]
+            };
+            for (var l = 0; l < locations.Length; l++)
+            {
+                visitCostWeight.Costs[l] = 500;
             }
             var visitCosts = new VisitCosts[]
             {
+                visitCostTime,
                 visitCostWeight
             };
 
@@ -245,7 +262,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
+            routes.WriteStats();
             var filename = NoDepotCVRPTests.Name + "spijkenisse-visit-costs-{0}";
             routes.WriteGeoJson(filename + ".geojson");
             routes.WriteJson(filename + ".json");
@@ -272,7 +289,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
+            routes.WriteStats();
             routes.WriteGeoJson(NoDepotCVRPTests.Name + "de-hague-{0}.geojson");
 //#endif
         }
@@ -297,7 +314,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
+            routes.WriteStats();
             routes.WriteGeoJson(NoDepotCVRPTests.Name + "rotterdam4-{0}.geojson");
 //#endif 
         }
@@ -322,44 +339,9 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
+            routes.WriteStats();
             routes.WriteGeoJson(NoDepotCVRPTests.Name + "rotterdam5-{0}.geojson");
 //#endif 
-        }
-
-        /// <summary>
-        /// Writes stats about the given routes.
-        /// </summary>
-        /// <param name="routes"></param>
-        public static void WriteStats(IList<Route> routes)
-        {
-            Console.WriteLine("# routes: {0}", routes.Count);
-
-            var totalStops = 0;
-            var totalDistance = 0f;
-            var totalTime = 0f;
-            for (var i = 0; i < routes.Count; i++)
-            {
-                Console.Write("route_{0}:", i);
-                if (routes[i] == null)
-                {
-                    Console.WriteLine("null");
-                    continue;
-                }
-                Console.Write("{0}s | ", routes[i].TotalTime);
-                Console.Write("{0}m | ", routes[i].TotalDistance);
-                Console.Write("{0}stops", routes[i].Stops.Length - 1);
-                totalStops += routes[i].Stops.Length - 1;
-                totalDistance += routes[i].TotalDistance;
-                totalTime += routes[i].TotalTime;
-                Console.WriteLine();
-            }
-
-            Console.Write("total:");
-            Console.Write("{0}s | ", totalTime);
-            Console.Write("{0}m | ", totalDistance);
-            Console.Write("{0}stops", totalStops);
-            Console.WriteLine();
         }
     }
 }

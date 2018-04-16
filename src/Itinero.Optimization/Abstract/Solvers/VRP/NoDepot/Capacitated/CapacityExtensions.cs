@@ -354,6 +354,33 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
+        /// Adds the given visits.
+        /// </summary>
+        public static void Add(this Capacity capacity, Content content, Seq seq)
+        {
+            if (capacity.Constraints == null)
+            {
+                return;
+            }
+
+            for (var c = 0; c < capacity.Constraints.Length; c++)
+            {
+                var constraint = capacity.Constraints[c];
+                var q = content.Quantities[c];
+
+                for (var i = 1; i < seq.Length - 1; i++)
+                {
+                    q += constraint.Values[seq[i]];
+                    if (q > constraint.Max)
+                    {
+                        throw new Exception("Cannot update quantity, contraint violated.");
+                    }
+                }
+                content.Quantities[c] = q;
+            }
+        }
+
+        /// <summary>
         /// Removes the given visits.
         /// </summary>
         public static void Remove(this Capacity capacity, Content content, int visit)
@@ -391,6 +418,33 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 foreach (var visit in visits)
                 {
                     q -= constraint.Values[visit];
+                }
+                content.Quantities[c] = q;
+            }
+        }
+
+        /// <summary>
+        /// Removes the given visits.
+        /// </summary>
+        public static void Remove(this Capacity capacity, Content content, Seq seq)
+        {
+            if (capacity.Constraints == null)
+            {
+                return;
+            }
+
+            for (var c = 0; c < capacity.Constraints.Length; c++)
+            {
+                var constraint = capacity.Constraints[c];
+                var q = content.Quantities[c];
+
+                for (var i = 1; i < seq.Length - 1; i++)
+                {
+                    q -= constraint.Values[seq[i]];
+                    if (q > constraint.Max)
+                    {
+                        throw new Exception("Cannot update quantity, contraint violated.");
+                    }
                 }
                 content.Quantities[c] = q;
             }
