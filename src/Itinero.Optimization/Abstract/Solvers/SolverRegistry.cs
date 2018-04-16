@@ -41,7 +41,7 @@ namespace Itinero.Optimization.Abstract.Solvers
                 STSP.Directed.STSPSolverDetails.Default,
                 TSP.TimeWindows.Directed.TSPTWSolverDetails.Default,
                 VRP.Depot.Capacitated.DepotCVRPSolverDetails.Default,
-         //       VRP.NoDepot.Capacitated.NoDepotCVRPSolverDetails.Default
+                VRP.NoDepot.Capacitated.NoDepotCVRPSolverDetails.Default
             });
 
         /// <summary>

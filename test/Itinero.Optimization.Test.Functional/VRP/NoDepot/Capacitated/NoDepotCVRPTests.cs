@@ -22,7 +22,7 @@ using System.IO;
 using Itinero.Optimization.Models.Costs;
 using Itinero.Optimization.Models.Vehicles.Constraints;
 
-namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
+namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 {
     public static class NoDepotCVRPTests
     {
