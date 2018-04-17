@@ -71,6 +71,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
         /// <summary>
         /// Converts the given abstract model to a CVRP problem.
+        /// If vehicle[0].Departure is set, this is treated as the depot
         /// </summary>
         public static Result<NoDepotCVRProblem> TryToNoDepotCVRP(this AbstractModel model)
         {
@@ -141,8 +142,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 {
                     Max = travelCostConstraint.Capacity,
                     Constraints = constraints
-                }
+                },
+                Depot = vehicle.Departure
             };
+            vehicle.Departure = null;
 
             if (travelCostVisitCosts != null)
             {

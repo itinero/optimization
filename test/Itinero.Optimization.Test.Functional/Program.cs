@@ -34,23 +34,21 @@ namespace Itinero.Optimization.Test.Functional
 #endif
 
             // invoke case-specific tests.
+         //   TSP.TSPTests.Run();
+         //   STSP.STSPTests.Run();
+         //   TSP_TW.TSPTWTests.Run();
+            VRP.Depot.Capacitated.NoDepotCVRPTests.Run();
 
-            /*  TSP.TSPTests.Run();
-              STSP.STSPTests.Run();
-              TSP_TW.TSPTWTests.Run();
-              VRP.NoDepot.Capacitated.NoDepotCVRPTests.Run();
-
-  */
-            VRP.Depot.Capacitated.DepotCVRPTests.Run();
+         //   VRP.Depot.Capacitated.DepotCVRPTests.Run();
 
 
-    }
+        }
 
 
-    private static void EnableLogging()
-    {
-        OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
+        private static void EnableLogging()
         {
+            OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
+            {
 #if RELEASE
                 if (level == "verbose")
                 {
@@ -58,9 +56,9 @@ namespace Itinero.Optimization.Test.Functional
                 }
 #endif
             Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
-        };
-        Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
-        {
+            };
+            Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
+            {
 #if RELEASE
                 if (level == "verbose")
                 {
@@ -68,7 +66,7 @@ namespace Itinero.Optimization.Test.Functional
                 }
 #endif
             Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
-        };
+            };
+        }
     }
-}
 }

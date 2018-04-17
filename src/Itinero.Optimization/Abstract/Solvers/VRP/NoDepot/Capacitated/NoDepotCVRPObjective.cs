@@ -409,96 +409,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// Enumerates all sequence of the given sizes.
-        /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="tour">The tour.</param>
-        /// <param name="minSize">The minimum size.</param>
-        /// <param name="maxSize">The maximum size.</param>
-        /// <param name="wrap">Wrap around first if true.</param>
-        /// <returns>An enumerable with sequences.</returns>
-        public IEnumerable<Operators.Seq> SeqAndSmaller(NoDepotCVRProblem problem, IEnumerable<int> tour,
-            int minSize, int maxSize, bool wrap)
-        {
-            var visits = tour.ToArray();
-            if (maxSize > visits.Length)
-            {
-                maxSize = visits.Length;
-            }
-            if (minSize > visits.Length)
-            { // make sure not to enumerate anything.
-                maxSize = -1;
-            }
-            var tourSequence = new Sequence(visits);
-            for (var length = maxSize; length >= minSize; length--)
-            {
-                float start = 0;
-                float end = 0;
-                float? between = null;
-                float betweenReversed = 0;
-                var visitCost = 0f;
-                foreach (var s in tourSequence.SubSequences(length, length, wrap))
-                {
-                    if (between == null)
-                    { // first sequence of this length.
-                        var betweenSeq = s.SubSequence(1, s.Length - 2);
-                        between = problem.Weights.Seq(betweenSeq);
-                        start = problem.Weights[s[0]][s[1]];
-                        end = problem.Weights[s[s.Length - 2]][s[s.Length - 1]];
-                        betweenReversed = problem.Weights.SeqReversed(betweenSeq);
-                        if (problem.VisitCosts != null)
-                        {
-                            visitCost = problem.VisitCosts.Seq(betweenSeq);
-                        }
-                    }
-                    else
-                    { // move weights along.
-                        var newStart = problem.Weights[s[0]][s[1]];
-                        var newEnd = problem.Weights[s[s.Length - 2]][s[s.Length - 1]];
-                        between -= newStart;
-                        between += end;
-                        betweenReversed -= problem.Weights[s[1]][s[0]];
-                        betweenReversed += problem.Weights[s[s.Length - 2]][s[s.Length - 3]];
-                        start = newStart;
-                        end = newEnd;
-                        if (problem.VisitCosts != null)
-                        {
-                            visitCost -= problem.VisitCosts[s[0]];
-                            visitCost += problem.VisitCosts[s[s.Length - 2]];
-                        }
-                    }
-
-                    if (between + start + end < problem.Weights[s[0]][s[s.Length - 1]] * 2f)
-                    {
-                        continue;
-                    }
-
-                    yield return new Operators.Seq(s)
-                    {
-                        BetweenTravelCost = between.Value,
-                        BetweenTravelCostReversed = betweenReversed,
-                        BetweenVisitCost = visitCost,
-                        TotalOriginal = between.Value + end + start + visitCost
-                    };
-                }
-            }
-        }
-
-        /// <summary>
-        /// Reverses the given sequence.
-        /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <param name="sequence">The sequence.</param>
-        /// <returns>The reversed sequence.</returns>        
-        public Operators.Seq Reverse(NoDepotCVRProblem problem, Operators.Seq sequence)
-        {
-            // mark as reversed and recalculate travel cost.
-            sequence.Reversed = true;
-
-            return sequence;
-        }
-
-        /// <summary>
         /// Simulates a swap of the given sequences between the two given tours.
         /// </summary>
         /// <param name="problem">The problem.</param>
@@ -764,6 +674,96 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             return true;
         }
 
+                /// <summary>
+        /// Enumerates all sequence of the given sizes.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="tour">The tour.</param>
+        /// <param name="minSize">The minimum size.</param>
+        /// <param name="maxSize">The maximum size.</param>
+        /// <param name="wrap">Wrap around first if true.</param>
+        /// <returns>An enumerable with sequences.</returns>
+        public IEnumerable<Operators.Seq> SeqAndSmaller(NoDepotCVRProblem problem, IEnumerable<int> tour,
+            int minSize, int maxSize, bool wrap)
+        {
+            var visits = tour.ToArray();
+            if (maxSize > visits.Length)
+            {
+                maxSize = visits.Length;
+            }
+            if (minSize > visits.Length)
+            { // make sure not to enumerate anything.
+                maxSize = -1;
+            }
+            var tourSequence = new Sequence(visits);
+            for (var length = maxSize; length >= minSize; length--)
+            {
+                float start = 0;
+                float end = 0;
+                float? between = null;
+                float betweenReversed = 0;
+                var visitCost = 0f;
+                foreach (var s in tourSequence.SubSequences(length, length, wrap))
+                {
+                    if (between == null)
+                    { // first sequence of this length.
+                        var betweenSeq = s.SubSequence(1, s.Length - 2);
+                        between = problem.Weights.Seq(betweenSeq);
+                        start = problem.Weights[s[0]][s[1]];
+                        end = problem.Weights[s[s.Length - 2]][s[s.Length - 1]];
+                        betweenReversed = problem.Weights.SeqReversed(betweenSeq);
+                        if (problem.VisitCosts != null)
+                        {
+                            visitCost = problem.VisitCosts.Seq(betweenSeq);
+                        }
+                    }
+                    else
+                    { // move weights along.
+                        var newStart = problem.Weights[s[0]][s[1]];
+                        var newEnd = problem.Weights[s[s.Length - 2]][s[s.Length - 1]];
+                        between -= newStart;
+                        between += end;
+                        betweenReversed -= problem.Weights[s[1]][s[0]];
+                        betweenReversed += problem.Weights[s[s.Length - 2]][s[s.Length - 3]];
+                        start = newStart;
+                        end = newEnd;
+                        if (problem.VisitCosts != null)
+                        {
+                            visitCost -= problem.VisitCosts[s[0]];
+                            visitCost += problem.VisitCosts[s[s.Length - 2]];
+                        }
+                    }
+
+                    if (between + start + end < problem.Weights[s[0]][s[s.Length - 1]] * 2f)
+                    {
+                        continue;
+                    }
+
+                    yield return new Operators.Seq(s)
+                    {
+                        BetweenTravelCost = between.Value,
+                        BetweenTravelCostReversed = betweenReversed,
+                        BetweenVisitCost = visitCost,
+                        TotalOriginal = between.Value + end + start + visitCost
+                    };
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reverses the given sequence.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="sequence">The sequence.</param>
+        /// <returns>The reversed sequence.</returns>        
+        public Operators.Seq Reverse(NoDepotCVRProblem problem, Operators.Seq sequence)
+        {
+            // mark as reversed and recalculate travel cost.
+            sequence.Reversed = true;
+
+            return sequence;
+        }
+
         /// <summary>
         /// Creates a new and empty solution.
         /// </summary>
@@ -865,6 +865,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         public bool TryPlaceAny(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, IList<int> visits)
         {
             Func<int, float> costFunc = null;
+
+            // Note: this function does not have to take the depot round trip into account
 
             // loop over all tours and find visit and the place to insert with the lowest cost.
             var bestIncrease = float.MaxValue;
