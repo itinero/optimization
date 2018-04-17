@@ -126,7 +126,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 {
                     new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 5),
                     new RelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(true),
-                    new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 5, true, false, true)
+                    new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 5, true, true, true)
                 }
             );
 
@@ -135,7 +135,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             var iterate = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
                     constructionHeuristic, 1,
                         new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 20, true, true, true),
-                        crossMultiAllPairs);
+                        crossMultiAllPairs
+            );
 
             return this.Solve(iterate, new NoDepotCVRPObjective((problem, visits) =>
                 {
@@ -143,7 +144,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
                     //return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
                     return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-                        weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .75f);
+                        weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
                 }, overlapsFunc, 1f, 0.01f, 480 * 2));
         }
 
