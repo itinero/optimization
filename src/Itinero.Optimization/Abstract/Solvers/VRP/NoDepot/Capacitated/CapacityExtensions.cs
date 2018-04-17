@@ -197,10 +197,14 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// </summary>
         public static bool ExchangeIsPossible(this Capacity capacity, Content content, int removedVisit, int addedVisit)
         {
-            return capacity.ExchangeIsPossible(content, removedVisit, addedVisit, null, null);
+            return capacity.ExchangeIsPossible(content, removedVisit, addedVisit, null);
         }
         /// <summary>
         /// Returns true if the exchange of the of the two visits is possible within the given capacity constraints.
+        /// <param name="capacity"></param>
+        /// <param name="content"></param>
+        /// <param name="removedVisit"></param>
+        /// <param name="addedVisit"></param>
         /// <param name="extraCost">The optional 'extra cost' is subtracted from the constraint if its type matches the capacity metric. This is for additional travel costs, such as a depot round trip</param>
         /// </summary>
         public static bool ExchangeIsPossible(this Capacity capacity, Content content, int removedVisit, int addedVisit,
