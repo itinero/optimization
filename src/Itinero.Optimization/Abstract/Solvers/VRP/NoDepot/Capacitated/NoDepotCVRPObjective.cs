@@ -154,8 +154,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             return fitness1 - fitness2;
         }
 
+
+
+
         /// <summary>
-        /// Tries to move the given visit (the middle of the triple) from t1 -> t2.
+        /// Tries to move the given visit (the middle of the triple) from t1 into t2.
         /// </summary>
         /// <param name="problem">The problem.</param>
         /// <param name="solution">The solution.</param>
@@ -166,53 +169,100 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns>True if the move has succeeded.</returns>
         public bool TryMove(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int t1, int t2, Triple visit, out float delta)
         {
+            // Epsilon. An increase should be at least E before being considered
             var E = 0.1f;
+
+            delta = 0;
             if (!problem.Capacity.CanAdd(solution.Contents[t2], visit.Along))
             { // capacity doesn't allow placing this visit.
-                delta = 0;
                 return false;
             }
 
-            // calculate the removal gain of the visit.
+            // calculate the gain of removing visit.Along from t1.
             var removalGain = problem.Weights[visit.From][visit.Along] + problem.Weights[visit.Along][visit.To] -
-                problem.Weights[visit.From][visit.To];
-            if (removalGain > E)
-            { // calculate cheapest placement.
-
-                var tour2 = solution.Tour(t2);
-                var visitCost = problem.GetVisitCost(visit.Along);
-
-                Pair location;
-                var result = tour2.CalculateCheapest(problem.Weights, visit.Along, out location);
-                if (result < removalGain - E &&
-                    solution.Contents[t2].Weight + result + visitCost < problem.Capacity.Max)
-                { // there is a gain in relocating this visit.
-                    var tour1 = solution.Tour(t1);
-                    if (tour1.First == visit.Along)
-                    {  // move first.
-                        var newTour1 = new Tour(tour1.From(visit.To), visit.To);
-                        solution.ReplaceTour(t1, newTour1);
-                        tour1 = newTour1;
-                    }
-
-                    tour2.ReplaceEdgeFrom(location.From, visit.Along);
-                    tour2.ReplaceEdgeFrom(visit.Along, location.To);
-
-                    // in this model of the solution we need to remove the visit.
-                    tour1.ReplaceEdgeFrom(visit.From, visit.To);
-
-                    // update weights and capacities.
-                    problem.Capacity.Remove(solution.Contents[t1], visit.Along);
-                    problem.Capacity.Add(solution.Contents[t2], visit.Along);
-                    solution.Contents[t1].Weight = solution.CalculateWeightOf(problem, t1);
-                    solution.Contents[t2].Weight = solution.CalculateWeightOf(problem, t2);
-
-                    delta = removalGain - result;
-                    return true;
-                }
+                problem.Weights[visit.From][visit.To]; // we do NOT take depotDelta into account here; we do not optimize for this as well
+            if (removalGain <= E)
+            {
+                // to little to gain from this removal. We don't do it
+                return false;
             }
-            delta = 0;
-            return false;
+
+
+
+            // calculate cheapest placement.
+            var tour2 = solution.Tour(t2);
+            var visitCost = problem.GetVisitCost(visit.Along);
+
+            Pair location;
+            var result = tour2.CalculateCheapest(problem.Weights, visit.Along, out location);
+            if (result >= removalGain - E ||
+                solution.Contents[t2].Weight + result + visitCost >= problem.Capacity.Max)
+            {
+                // there is NO a gain in relocating this visit.
+                return false;
+            }
+
+            /* 
+            Keeping track of the constraint 'total cost + driving to the depot < maxAllowed':
+            
+            - Tour 1 loses a point, and will always have a lower cost (especially when the depot has to be, per triangle inequality).
+              Thus we don't have to worry about the extra depot cost going over capacity and we only have to calculate a new cheapest depot if a depot neighbour has moved.
+
+            - Tour 2 will have higher costs (due to the extra point). As long as 'oldCost + newVisitCost + oldDepotCost' is lower then the maximum, there is no problem as well.
+              If the costs raise above the maximum, we might try to place the depot again and hope that 'oldCost + newVisitCost + newDepotCost' falls below the maximum.
+              The newDepotCost can only be lower at this point, as an extra and potentially cheaper point is available.
+            
+            In other words, we can postpone calculating a new depot until we really have to; although we have to check if the constraint is not broken for tour2.
+            * */
+
+            float newDepotCost = solution.SimulateWorstDepotCost(problem, out int newDepotPoint, out bool depotMoved, t2,
+                visit.Along, location.From, null);
+            if (!problem.Capacity.Subtract(newDepotCost).CanAdd(solution.Contents[t2], visit.Along))
+            {
+                // HOUSTON: we have a problem
+                // The capacity constraint is broken
+
+                // Simulate a new best position
+
+                // Try to recover by getting a better depot placement 
+                var newCost = solution.SimulateBestDepotCost(problem, out int newDepot, t2,
+                    visit.Along, location.From, null);
+                if (!problem.Capacity.Subtract(newCost).CanAdd(solution.Contents[t2], visit.Along))
+                {
+                    // still to much to handle. Revert!
+                    return false;
+                }
+                // K, chill, the new depot position works. Lets tell the solution it has to update this, as we commit anyway
+                solution.UpdateDepotPosition(t2, newDepot, newCost);
+            }
+
+            var tour1 = solution.Tour(t1);
+            if (tour1.First == visit.Along)
+            {  // move first.
+                var newTour1 = new Tour(tour1.From(visit.To), visit.To);
+                solution.ReplaceTour(t1, newTour1);
+                tour1 = newTour1;
+            }
+
+            if (visit.Along == solution.DepotPoint(t1) || visit.Along == solution.DepotNeighbour(t1))
+            {
+                // t1 should update the depot position
+                solution.UpdateDepotPosition(problem, t1);
+            }
+
+            // cut out visit.Along from t1
+            tour1.ReplaceEdgeFrom(visit.From, visit.To);
+            // add the visit to t2
+            tour2.InsertAfter(location.From, visit.Along);
+
+            // update weights and capacities.
+            problem.Capacity.Remove(solution.Contents[t1], visit.Along);
+            problem.Capacity.Add(solution.Contents[t2], visit.Along);
+            solution.Contents[t1].Weight = solution.CalculateWeightOf(problem, t1);
+            solution.Contents[t2].Weight = solution.CalculateWeightOf(problem, t2);
+
+            delta = removalGain - result;
+            return true;
         }
 
         /// <summary>
@@ -242,16 +292,19 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 return false;
             }
 
+            // The current weight of visit1.along within t1
             var weight1 = problem.Weights[visit1.From][visit1.Along] +
                 problem.Weights[visit1.Along][visit1.To];
             var weight2 = problem.Weights[visit2.From][visit2.Along] +
                 problem.Weights[visit2.Along][visit2.To];
 
+            // how much weight visit2.along will weigh within t1
             var weight1Swapped = problem.Weights[visit1.From][visit2.Along] +
                 problem.Weights[visit2.Along][visit1.To];
             var weight2Swapped = problem.Weights[visit2.From][visit1.Along] +
                 problem.Weights[visit1.Along][visit2.To];
 
+            // the weight difference
             var difference = (weight1 + weight2) - (weight1Swapped + weight2Swapped);
             if (difference <= E)
             { // new weights are not better.
@@ -263,31 +316,70 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
             var tour1WeightSwapped = solution.Contents[t1].Weight - weight1 +
                 weight1Swapped - visit1Cost + visit2Cost;
-            if (tour1WeightSwapped > problem.Capacity.Max)
+
+            // We have weight difference and know that the new weights are a better solution
+            // Time to check that we don't violate constraints
+            // For this, we also need the depot cost. 
+
+            // Lets get the simulated worst depot costs
+            var tour1depotWeight = solution.SimulateWorstDepotCost(problem, out int newDepotPoint1, out bool depot1Moved, t1,
+                visit2.Along, visit1.From, visit1);
+
+            if (tour1WeightSwapped + tour1depotWeight > problem.Capacity.Max)
             { // constraint violated.
-                delta = 0;
-                return false;
+                // try to recover by having the best depot position
+                tour1depotWeight = solution.SimulateBestDepotCost(problem, out newDepotPoint1, t1,
+                                     visit2.Along, visit1.From, visit1);
+                if (tour1WeightSwapped + tour1depotWeight > problem.Capacity.Max)
+                {
+                    delta = 0;
+                    return false;
+                }
             }
+
+
+            var tour2depotWeight = solution.SimulateWorstDepotCost(problem, out int newDepotPoint2, out bool depot2Moved, t2,
+                visit1.Along, visit2.From, visit2);
             var tour2WeightSwapped = solution.Contents[t2].Weight - weight2 +
                 weight2Swapped - visit2Cost + visit1Cost;
-            if (tour2WeightSwapped > problem.Capacity.Max)
-            { // constraint violated.
-                delta = 0;
-                return false;
+            if (tour2WeightSwapped + tour2depotWeight > problem.Capacity.Max)
+            { // constraint violated. try to recover with a better depot position
+                tour2depotWeight = solution.SimulateWorstDepotCost(problem, out newDepotPoint2, out depot2Moved, t2,
+                visit1.Along, visit2.From, visit2);
+                if (tour2WeightSwapped + tour2depotWeight > problem.Capacity.Max)
+                {
+                    delta = 0;
+                    return false;
+                }
             }
+
+
 
             // check constraints if any.
             if (!problem.Capacity.ExchangeIsPossible(solution.Contents[t1],
-                    visit1.Along, visit2.Along))
-            { // constraint violated.
-                delta = 0;
-                return false;
+                    visit1.Along, visit2.Along, tour1depotWeight))
+            { // constraint violated. Try to recover...
+                tour1depotWeight = solution.SimulateBestDepotCost(problem, out newDepotPoint1, t1,
+                                         visit2.Along, visit1.From, visit1);
+                if (!problem.Capacity.ExchangeIsPossible(solution.Contents[t1],
+                                    visit1.Along, visit2.Along, tour1depotWeight))
+                {
+                    delta = 0;
+                    return false;
+                }
             }
             if (!problem.Capacity.ExchangeIsPossible(solution.Contents[t2],
-                    visit2.Along, visit1.Along))
-            { // constraint violated.
-                delta = 0;
-                return false;
+                    visit2.Along, visit1.Along, tour2depotWeight))
+            { // constraint violated. Try to recover...
+                tour2depotWeight = solution.SimulateWorstDepotCost(problem, out newDepotPoint2, out depot2Moved,
+                t2, visit1.Along, visit2.From, visit2);
+                if (!problem.Capacity.ExchangeIsPossible(solution.Contents[t2],
+                        visit2.Along, visit1.Along, tour2depotWeight))
+                {
+
+                    delta = 0;
+                    return false;
+                }
             }
 
             // exchange visit.
@@ -296,6 +388,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             tour2.ReplaceEdgeFrom(visit2.From, visit1.Along);
             tour2.ReplaceEdgeFrom(visit1.Along, visit2.To);
 
+            solution.UpdateDepotPosition(t1, newDepotPoint1, tour1depotWeight);
+            solution.UpdateDepotPosition(t2, newDepotPoint2, tour2depotWeight);
             // update content.
             problem.Capacity.UpdateExchange(solution.Contents[t1], visit1.Along, visit2.Along);
             problem.Capacity.UpdateExchange(solution.Contents[t2], visit2.Along, visit1.Along);
@@ -701,9 +795,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             content.Weight += problem.GetVisitCost(seed);
             problem.Capacity.Add(content, seed);
             solution.Contents.Add(content);
-            solution.Add(seed, seed);
+            solution.Add(problem, seed); // Seed is both first and last
             return solution.Count - 1;
         }
+
+
 
         /// <summary>
         /// Tries to place any of the visits in the given visit list in the given tour.

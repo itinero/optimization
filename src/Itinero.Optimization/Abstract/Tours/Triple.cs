@@ -16,6 +16,8 @@
  *  limitations under the License.
  */
 
+using System;
+
 namespace Itinero.Optimization.Abstract.Tours
 {
     /// <summary>

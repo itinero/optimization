@@ -11,12 +11,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi
         /// <summary>
         /// Enumerates all sequence of the given sizes.
         /// </summary>
+        /// <returns>An enumerable with sequences.</returns>
         /// <param name="problem">The problem.</param>
         /// <param name="tour">The tour.</param>
         /// <param name="minSize">The minimum size.</param>
         /// <param name="maxSize">The maximum size.</param>
         /// <param name="wrap">If true, sequences where the beginning node is in the middle will be included too</param>
-        /// <returns>An enumerable with sequences.</returns>
         IEnumerable<Seq> SeqAndSmaller(TProblem problem, IEnumerable<int> tour, int minSize, int maxSize, bool wrap);
 
         /// <summary>

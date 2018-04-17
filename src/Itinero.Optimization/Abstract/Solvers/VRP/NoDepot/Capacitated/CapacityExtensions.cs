@@ -145,7 +145,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 var diff = 0f;
                 diff += constraint.Values[visit2];
                 diff -= constraint.Values[visit1];
-                
+
                 var q = content.Quantities[c] + diff;
                 if (q > constraint.Max)
                 {
@@ -195,7 +195,16 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <summary>
         /// Returns true if the exchange of the of the two visits is possible within the given capacity constraints.
         /// </summary>
-        public static bool ExchangeIsPossible(this Capacity capacity, Content content, int visit1, int visit2)
+        public static bool ExchangeIsPossible(this Capacity capacity, Content content, int removedVisit, int addedVisit)
+        {
+            return capacity.ExchangeIsPossible(content, removedVisit, addedVisit, null, null);
+        }
+        /// <summary>
+        /// Returns true if the exchange of the of the two visits is possible within the given capacity constraints.
+        /// <param name="extraCost">The optional 'extra cost' is subtracted from the constraint if its type matches the capacity metric. This is for additional travel costs, such as a depot round trip</param>
+        /// </summary>
+        public static bool ExchangeIsPossible(this Capacity capacity, Content content, int removedVisit, int addedVisit,
+            float? extraCost)
         {
             if (capacity.Constraints == null)
             {
@@ -207,9 +216,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 var constraint = capacity.Constraints[c];
 
                 var diff = 0f;
-                diff += constraint.Values[visit2];
-                diff -= constraint.Values[visit1];
+                diff += constraint.Values[addedVisit];
+                diff -= constraint.Values[removedVisit];
 
+                if (extraCost != null)
+                {
+                    diff += (float)extraCost;
+                }
                 if (diff < 0)
                 { // if quanity goes down, no need to check constraint.
                     continue;
@@ -261,7 +274,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 var constraint = capacity.Constraints[c];
                 var q = content.Quantities[c];
-                
+
                 foreach (var visit in visits)
                 {
                     q += constraint.Values[visit];
@@ -288,7 +301,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 var constraint = capacity.Constraints[c];
                 var q = content.Quantities[c];
-                
+
                 for (var v = 1; v < seq.Length - 1; v++)
                 {
                     var visit = seq[v];
@@ -354,7 +367,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// Removes the given visits.
+        /// Removes the given visit.
         /// </summary>
         public static void Remove(this Capacity capacity, Content content, int visit)
         {

@@ -36,7 +36,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         public CapacityConstraint[] Constraints { get; set; }
 
         /// <summary>
-        /// Scales this capacity by the given ratio [0-1] and returns the result.
+        /// Scales this capacity by the given ratio [0-1] and returns the result as new Capacity.
+        /// Does not change 'this' capacity
         /// </summary>
         /// <param name="ratio">The ratio defined in the range [0-1].</param>
         /// <returns></returns>
@@ -64,5 +65,16 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 Constraints = constraints
             };
         }
+
+
+        /// Subtracts the given value from the maximum allowed load of this capacity, and returns this as a new capacity.
+        public Capacity Subtract(float value){
+            return new Capacity()
+            {
+                Max = this.Max - value,
+                Constraints = this.Constraints
+            };
+        }
+
 }
 }
