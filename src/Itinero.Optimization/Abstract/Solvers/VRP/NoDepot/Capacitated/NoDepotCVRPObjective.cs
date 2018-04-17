@@ -244,10 +244,14 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 tour1 = newTour1;
             }
 
-            if (visit.Along == solution.DepotPoint(t1) || visit.Along == solution.DepotNeighbour(t1))
+            if (problem.Depot != null)
             {
-                // t1 should update the depot position
-                solution.UpdateDepotPosition(problem, t1);
+                if (visit.Along == solution.DepotPoint(t1) || visit.Along == solution.DepotNeighbour(t1))
+                {
+                    // t1 should update the depot position
+                    solution.UpdateDepotPosition(problem, t1);
+                }
+
             }
 
             // cut out visit.Along from t1
