@@ -23,6 +23,7 @@ using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
+using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GVNS;
 using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
 using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms;
@@ -33,7 +34,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
     /// Represents a solution to a capacitated no-depot VRP.
     /// </summary>
     public class NoDepotCVRPSolution : ISolution, IRelocateSolution, IExchangeSolution, IMultiExchangeSolution, IMultiRelocateSolution,
-        ISeededCheapestInsertionSolution
+        ISeededCheapestInsertionSolution, IGuidedVNSSolution
     {
         private readonly List<CapacityExtensions.Content> _contents;
         private readonly List<ITour> _tours; // does not use multitour, as some problems require the same depot to be visited multiple times

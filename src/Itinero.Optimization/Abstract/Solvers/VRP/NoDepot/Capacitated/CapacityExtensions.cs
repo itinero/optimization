@@ -16,10 +16,10 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
@@ -44,14 +44,19 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 content.Quantities = new float[capacity.Constraints.Length];
             }
 
-            foreach (var visit in visits)
+            for (var i = 0; i < capacity.Constraints.Length; i++)
             {
-                for (var i = 0; i < capacity.Constraints.Length; i++)
+                var constraint = capacity.Constraints[i];
+                var q = 0f;
+                foreach (var visit in visits)
                 {
-                    var constraint = capacity.Constraints[i];
-
-                    content.Quantities[i] = content.Quantities[i] + constraint.Values[visit];
+                    q += constraint.Values[visit];
                 }
+                if (constraint.Max < q)
+                {
+                    throw new Exception("Contraints violated.");
+                }
+                content.Quantities[i] = q;
             }
         }
 
@@ -145,7 +150,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 var diff = 0f;
                 diff += constraint.Values[visit2];
                 diff -= constraint.Values[visit1];
-                
+
                 var q = content.Quantities[c] + diff;
                 if (q > constraint.Max)
                 {
@@ -261,7 +266,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 var constraint = capacity.Constraints[c];
                 var q = content.Quantities[c];
-                
+
                 foreach (var visit in visits)
                 {
                     q += constraint.Values[visit];
@@ -288,7 +293,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 var constraint = capacity.Constraints[c];
                 var q = content.Quantities[c];
-                
+
                 for (var v = 1; v < seq.Length - 1; v++)
                 {
                     var visit = seq[v];
@@ -461,13 +466,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 return new Content()
                 {
-                    Weight = 0
+                Weight = 0
                 };
             }
             return new Content()
             {
                 Weight = 0,
-                Quantities = new float[capacity.Constraints.Length]
+                    Quantities = new float[capacity.Constraints.Length]
             };
         }
 
