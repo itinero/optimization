@@ -37,7 +37,7 @@ namespace Itinero.Optimization.Test.Functional
          //   TSP.TSPTests.Run();
          //   STSP.STSPTests.Run();
          //   TSP_TW.TSPTWTests.Run();
-            VRP.Depot.Capacitated.NoDepotCVRPTests.Run();
+            VRP.Depot.Capacitated.ClusteredWithDepotCVRPTests.Run();
 
          //   VRP.Depot.Capacitated.DepotCVRPTests.Run();
 

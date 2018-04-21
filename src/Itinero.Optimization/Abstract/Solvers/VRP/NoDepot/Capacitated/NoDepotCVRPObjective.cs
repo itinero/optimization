@@ -674,7 +674,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             return true;
         }
 
-                /// <summary>
+        /// <summary>
         /// Enumerates all sequence of the given sizes.
         /// </summary>
         /// <param name="problem">The problem.</param>
@@ -781,7 +781,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns>The list of visits to be visited, except potentially those uniquely used as seeds.</returns>
         public IList<int> PotentialVisits(NoDepotCVRProblem problem)
         {
-            return new List<int>(System.Linq.Enumerable.Range(0, problem.Weights.Length));
+            var visits = new List<int>(System.Linq.Enumerable.Range(0, problem.Weights.Length));
+            if (problem.Depot != null)
+            {
+                visits.Remove((int)problem.Depot);
+            }
+            return visits;
         }
 
         /// <summary>

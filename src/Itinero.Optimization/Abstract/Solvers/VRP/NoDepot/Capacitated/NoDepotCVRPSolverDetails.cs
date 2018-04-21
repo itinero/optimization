@@ -53,17 +53,41 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 return result.ConvertError<IList<ITour>>();
             }
-            
+
             // call solver.
-            var solution = result.Value.Solve((p, tour1, tour2) => 
+            var solution = result.Value.Solve((p, tour1, tour2) =>
             {
                 return mappedModel.Overlaps(tour1, tour2);
             });
 
+
+            var problem = result.Value;
             var tours = new List<ITour>();
             for (var t = 0; t < solution.Count; t++)
             {
-                tours.Add(solution.Tour(t));
+                if (problem.Depot == null)
+                {
+                    tours.Add(solution.Tour(t));
+                }
+                else
+                {
+                    int depot = (int) problem.Depot;
+                    // IF there is a depot, then this is the starting point of the tour and we have to copy the points from there
+                    var tour = new Tour(new int[] { depot }, depot);
+
+                    // The tour that the solution gives. We have to shift it around a little
+                    ITour stour = solution.Tour(t);
+
+                    int lastVisit = solution.DepotNeighbour(t);
+                    tour.InsertAfter(depot, lastVisit);
+                    do{
+                        var currentVisit = stour.GetNeigbour(lastVisit);  
+                        tour.InsertAfter(lastVisit, currentVisit);
+                        lastVisit = currentVisit;
+                    }while(lastVisit != solution.DepotPoint(t));
+
+                    tours.Add(tour);
+                }
             }
 
             return new Result<IList<ITour>>(tours);
@@ -134,7 +158,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     c++;
                 }
             }
-            
+
             var problem = new NoDepotCVRProblem()
             {
                 Weights = travelCosts.Costs,
@@ -143,8 +167,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     Max = travelCostConstraint.Capacity,
                     Constraints = constraints
                 },
+                // add the depot if there is one
                 Depot = vehicle.Departure
             };
+            
             vehicle.Departure = null;
 
             if (travelCostVisitCosts != null)

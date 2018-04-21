@@ -65,23 +65,26 @@ namespace Itinero.Optimization.Test.Functional
         /// <param name="locations">The locations.</param>
         /// <param name="max">The maximum travel time per tour.</param>
         /// <returns></returns>
-        public static List<Route> CalculateNoDepotCVRP(this Router router, Profile profile, Coordinate[] locations, float max, int? depot)
+        public static List<Route> CalculateNoDepotCVRP(this Router router, Profile profile, Coordinate[] locations, float max, int? depot = null)
         {
-            return router.TryCalculateNoDepotCVRP(profile, locations, new CapacityConstraint[]
+
+            var constraints =  new CapacityConstraint[]
             {
                 new CapacityConstraint()
                 {
                     Name = Itinero.Optimization.Models.Metrics.Time,
                     Capacity = max
                 }
-            }).Value;
+            };
+
+            return router.TryCalculateNoDepotCVRP(profile, locations,constraints, depot: depot).Value;
         }
 
         /// <returns></returns>
         public static List<Route> CalculateNoDepotCVRP(this Router router, Profile profile, Coordinate[] locations,
-            CapacityConstraint[] capacityConstraints = null, VisitCosts[] costs = null)
+            CapacityConstraint[] capacityConstraints = null, VisitCosts[] costs = null, int? depot = null)
         {
-            return router.TryCalculateNoDepotCVRP(profile, locations, capacityConstraints, costs).Value;
+            return router.TryCalculateNoDepotCVRP(profile, locations, capacityConstraints, costs, depot: depot).Value;
         }
 
         // --------- Depot Shizzle ---------
