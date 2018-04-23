@@ -265,6 +265,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             solution.Contents[t1].Weight = solution.CalculateWeightOf(problem, t1);
             solution.Contents[t2].Weight = solution.CalculateWeightOf(problem, t2);
 
+            // Upate the depot position
+            solution.UpdateDepotPosition(problem, t1);
+            solution.UpdateDepotPosition(problem, t2);
+
             delta = removalGain - result;
             return true;
         }

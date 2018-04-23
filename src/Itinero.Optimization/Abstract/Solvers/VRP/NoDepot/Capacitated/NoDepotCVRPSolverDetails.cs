@@ -71,7 +71,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 }
                 else
                 {
-                    int depot = (int) problem.Depot;
+                    int depot = (int)problem.Depot;
                     // IF there is a depot, then this is the starting point of the tour and we have to copy the points from there
                     var tour = new Tour(new int[] { depot }, depot);
 
@@ -80,11 +80,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
                     int lastVisit = solution.DepotNeighbour(t);
                     tour.InsertAfter(depot, lastVisit);
-                    do{
-                        var currentVisit = stour.GetNeigbour(lastVisit);  
-                        tour.InsertAfter(lastVisit, currentVisit);
-                        lastVisit = currentVisit;
-                    }while(lastVisit != solution.DepotPoint(t));
+                    if (stour.Count > 1)
+                    {
+                        do
+                        {
+                            var currentVisit = stour.GetNeigbour(lastVisit);
+                            tour.InsertAfter(lastVisit, currentVisit);
+                            lastVisit = currentVisit;
+                        } while (lastVisit != solution.DepotPoint(t));
+                    }
 
                     tours.Add(tour);
                 }
@@ -170,7 +174,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 // add the depot if there is one
                 Depot = vehicle.Departure
             };
-            
+
             vehicle.Departure = null;
 
             if (travelCostVisitCosts != null)
