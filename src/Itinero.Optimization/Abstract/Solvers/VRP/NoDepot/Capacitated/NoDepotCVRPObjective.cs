@@ -604,6 +604,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns></returns>        
         public bool TryMove(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int t1, int t2, Operators.Seq seq, Pair pair, out float delta)
         {
+
+            //TODO take depot into account
             var E = 0.01f;
 
             var pair1 = new Pair(seq[0], seq[seq.Length - 1]);
@@ -639,7 +641,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 return false;
             }
 
-            if (!problem.Capacity.CanAdd(solution.Contents[t1], seq))
+            if (!problem.Capacity.CanAdd(solution.Contents[t2], seq))
             { // constraint violated.
                 delta = 0;
                 return false;
@@ -674,7 +676,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 (solution.Contents[t2].Weight - tour2WeightMoved);
             solution.Contents[t1].Weight = tour1WeightMoved;
             solution.Contents[t2].Weight = tour2WeightMoved;
-
+problem.Capacity.Remove(solution.Contents[t1], seq);
+problem.Capacity.Add(solution.Contents[t2], seq);
             return true;
         }
 
