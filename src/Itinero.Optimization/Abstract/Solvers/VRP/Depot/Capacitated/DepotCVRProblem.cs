@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using Itinero.Algorithms.Matrices;
 using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated;
-using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Solvers;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;

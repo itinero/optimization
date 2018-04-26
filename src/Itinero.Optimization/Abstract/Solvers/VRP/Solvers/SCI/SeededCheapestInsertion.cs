@@ -11,7 +11,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
     /// </summary>
     public class SeededCheapestInsertion<TProblem, TObjective, TSolution> : SolverBase<float, TProblem, TObjective, TSolution, float>
         where TSolution : ISeededCheapestInsertionSolution
-    where TObjective : ObjectiveBase<TProblem, TSolution, float>, ISeededCheapestInsertionObjective<TProblem, TSolution>
+        where TObjective : ObjectiveBase<TProblem, TSolution, float>, ISeededCheapestInsertionObjective<TProblem, TSolution>
     {
         private readonly float _interImprovementsThreshold; // the threshold for when the apply inter-route improvements.
         private readonly IOperator<float, TSP.ITSProblem, TSP.TSPObjective, ITour, float> _intraImprovements; // holds the intra-route improvements;

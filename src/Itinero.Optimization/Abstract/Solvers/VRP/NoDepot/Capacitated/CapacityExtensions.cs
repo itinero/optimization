@@ -16,10 +16,10 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
@@ -44,14 +44,19 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 content.Quantities = new float[capacity.Constraints.Length];
             }
 
-            foreach (var visit in visits)
+            for (var i = 0; i < capacity.Constraints.Length; i++)
             {
-                for (var i = 0; i < capacity.Constraints.Length; i++)
+                var constraint = capacity.Constraints[i];
+                var q = 0f;
+                foreach (var visit in visits)
                 {
-                    var constraint = capacity.Constraints[i];
-
-                    content.Quantities[i] = content.Quantities[i] + constraint.Values[visit];
+                    q += constraint.Values[visit];
                 }
+                if (constraint.Max < q)
+                {
+                    throw new Exception("Contraints violated.");
+                }
+                content.Quantities[i] = q;
             }
         }
 
@@ -371,7 +376,34 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
-        /// Removes the given visit.
+        /// Adds the given visits.
+        /// </summary>
+        public static void Add(this Capacity capacity, Content content, Seq seq)
+        {
+            if (capacity.Constraints == null)
+            {
+                return;
+            }
+
+            for (var c = 0; c < capacity.Constraints.Length; c++)
+            {
+                var constraint = capacity.Constraints[c];
+                var q = content.Quantities[c];
+
+                for (var i = 1; i < seq.Length - 1; i++)
+                {
+                    q += constraint.Values[seq[i]];
+                    if (q > constraint.Max)
+                    {
+                        throw new Exception("Cannot update quantity, contraint violated.");
+                    }
+                }
+                content.Quantities[c] = q;
+            }
+        }
+
+        /// <summary>
+        /// Removes the given visits.
         /// </summary>
         public static void Remove(this Capacity capacity, Content content, int visit)
         {
@@ -414,6 +446,33 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
         /// <summary>
+        /// Removes the given visits.
+        /// </summary>
+        public static void Remove(this Capacity capacity, Content content, Seq seq)
+        {
+            if (capacity.Constraints == null)
+            {
+                return;
+            }
+
+            for (var c = 0; c < capacity.Constraints.Length; c++)
+            {
+                var constraint = capacity.Constraints[c];
+                var q = content.Quantities[c];
+
+                for (var i = 1; i < seq.Length - 1; i++)
+                {
+                    q -= constraint.Values[seq[i]];
+                    if (q > constraint.Max)
+                    {
+                        throw new Exception("Cannot update quantity, contraint violated.");
+                    }
+                }
+                content.Quantities[c] = q;
+            }
+        }
+
+        /// <summary>
         /// Generates empty content based on the given capacity.
         /// </summary>
         /// <param name="capacity">The capacity.</param>
@@ -424,13 +483,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 return new Content()
                 {
-                    Weight = 0
+                Weight = 0
                 };
             }
             return new Content()
             {
                 Weight = 0,
-                Quantities = new float[capacity.Constraints.Length]
+                    Quantities = new float[capacity.Constraints.Length]
             };
         }
 

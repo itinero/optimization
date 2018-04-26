@@ -26,6 +26,7 @@ using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
+using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GVNS;
 using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Abstract.Tours.Sequences;
 using Itinero.Optimization.Algorithms.CheapestInsertion;
@@ -42,10 +43,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
     /// </summary>
     public class NoDepotCVRPObjective : ObjectiveBase<NoDepotCVRProblem, NoDepotCVRPSolution, float>,
         IRelocateObjective<NoDepotCVRProblem, NoDepotCVRPSolution>, IExchangeObjective<NoDepotCVRProblem, NoDepotCVRPSolution>, IMultiExchangeObjective<NoDepotCVRProblem, NoDepotCVRPSolution>,
-        IMultiRelocateObjective<NoDepotCVRProblem, NoDepotCVRPSolution>, ISeededCheapestInsertionObjective<NoDepotCVRProblem, NoDepotCVRPSolution>
+        IMultiRelocateObjective<NoDepotCVRProblem, NoDepotCVRPSolution>, ISeededCheapestInsertionObjective<NoDepotCVRProblem, NoDepotCVRPSolution>,
+        IGuidedVNSObjective<NoDepotCVRProblem, NoDepotCVRPSolution, Penalties>
     {
         private readonly Func<NoDepotCVRProblem, IList<int>, int> _seedFunc;
         private readonly Func<NoDepotCVRProblem, int, int, float> _localizationCostFunc;
+        private readonly float _gvnsPenalty; // hold the lambda value, define a better name.
 
         private readonly Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> _overlapsFunc;
         private readonly float _slackPercentage;
@@ -56,14 +59,16 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="seedFunc">The seed function.</param>
         /// <param name="overlapsFunc">The overlaps function.</param>
         /// <param name="localizationFactor">The localization factor.</param>
+        /// <param name="slackPercentage">The slack percentage.</param>        
         /// <param name="slackPercentage">The slack percentage.</param>
+        /// <param name="gvnsPenalty">The penalty value.</param>
         public NoDepotCVRPObjective(Func<NoDepotCVRProblem, IList<int>, int> seedFunc, Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc,
-            float localizationFactor = 0.5f, float slackPercentage = .05f)
+            float localizationFactor = 0.5f, float slackPercentage = .05f, float gvnsPenalty = 8 * 60)
         {
             _seedFunc = seedFunc;
             _overlapsFunc = overlapsFunc;
             _slackPercentage = slackPercentage;
-
+            _gvnsPenalty = gvnsPenalty;
             _localizationCostFunc = null;
             if (localizationFactor != 0)
             { // create a function to add the localized effect (relative to the seed) to the CI algorithm
@@ -107,24 +112,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             return fitness1 + fitness2;
         }
 
-        /// <summary>
-        /// Calulates the total weight of the solution.
-        /// </summary>
-        public override float Calculate(NoDepotCVRProblem problem, NoDepotCVRPSolution solution)
-        {
-            var weight = 0f;
 
-            for (var t = 0; t < solution.Count; t++)
-            {
-                weight += solution.Contents[t].Weight;
-            }
-            if (solution.Count == 0)
-            {
-                return float.MaxValue;
-            }
 
-            return weight * solution.Count; // tries to limit the number of vehicles
-        }
 
         /// <summary>
         /// Compares the two given fitness values.
@@ -154,7 +143,31 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             return fitness1 - fitness2;
         }
 
+        /// <summary>
+        /// Updates the solution after the problem has changed.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="solution">The solution.</param>
+        public void UpdateSolution(NoDepotCVRProblem problem, NoDepotCVRPSolution solution)
+        {
+            this.UpdateContent(problem, solution);
+        }
 
+        /// <summary>
+        /// Updates all content properly.
+        /// </summary>
+        public void UpdateContent(NoDepotCVRProblem problem, NoDepotCVRPSolution solution)
+        {
+            for (var t = 0; t < solution.Count; t++)
+            {
+                if (t >= solution.Contents.Count)
+                {
+                    solution.Contents.Add(new CapacityExtensions.Content());
+                }
+                solution.Contents[t].Weight = this.Calculate(problem, solution, t);
+                problem.Capacity.UpdateCosts(solution.Contents[t], solution.Tour(t));
+            }
+        }
 
 
         /// <summary>
@@ -522,7 +535,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             }
 
             var tour1FutureComplete = solution.Contents[t1].Weight - tour1Current + tour1Future;
-            
+
             var depot1Weight = solution.SimulateWorstDepotCost(problem, );
 
             if (tour1FutureComplete > problem.Capacity.Max)
@@ -666,7 +679,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             var previous = pair.From;
             for (var v = 1; v < seq.Length - 1; v++)
             {
-            // add the sequence to the other tour
+                // add the sequence to the other tour
                 var visit = seq[v];
                 tour2.ReplaceEdgeFrom(previous, visit);
                 previous = visit;
@@ -992,5 +1005,108 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 Depot = problem.Depot
             };
         }
+
+
+        /// <summary>
+        /// Applies a penalty to the given problem.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="penalty">The penalty.</param>
+        /// <param name="solution">The solution.</param>
+        /// <param name="t1">The first tour.</param>
+        /// <param name="t2">The second tour.</param>
+        /// <returns>True if a penalty was applied, false otherwise.</returns>
+        public bool ApplyPenalty(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int t1, int t2, Penalties penalty)
+        {
+            var tour1 = solution.Tour(t1);
+            var tour2 = solution.Tour(t2);
+
+            // choose best next edge to penalize.
+            var worstCost = 0f;
+            Pair? worstPair = null;
+            Penalty? worstPenalty = null;
+            foreach (var e in tour1.Pairs().Concat(tour2.Pairs()))
+            {
+                Penalty p;
+                var cost = 0f;
+                if (!penalty.TryGetValue(e, out p))
+                {
+                    cost = problem.Weights[e.From][e.To];
+
+                    if (worstPair == null ||
+                        worstCost < cost)
+                    {
+                        worstCost = cost;
+                        worstPair = e;
+                        worstPenalty = new Penalty()
+                        {
+                            Count = 1,
+                            Original = cost
+                        };
+                    }
+                }
+                else
+                {
+                    cost = ((_gvnsPenalty * p.Count) + p.Original) / (p.Count + 1);
+
+                    if (worstPair == null ||
+                        worstCost < cost)
+                    {
+                        worstCost = cost;
+                        worstPair = e;
+                        worstPenalty = new Penalty()
+                        {
+                            Count = (byte)(p.Count + 1),
+                            Original = p.Original
+                        };
+                    }
+                }
+            }
+            if (!worstPair.HasValue)
+            { // no pairs found.
+                return false;
+            }
+            if (penalty.Worst == 0)
+            { // keep the worst cost to determine when we stop.
+                penalty.Worst = worstCost;
+            }
+            penalty[worstPair.Value] = worstPenalty.Value;
+            penalty.Total += 1;
+
+            // check if we've penalized enough.
+            if (penalty.Total * _gvnsPenalty > penalty.Worst * 5)
+            { // enough penalties.
+                return false;
+            }
+
+            // apply the penalties.
+            foreach (var pair in penalty)
+            {
+                var e = pair.Key;
+                var p = pair.Value;
+
+                problem.Weights[e.From][e.To] = p.Original + _gvnsPenalty * p.Count;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Resets the penalty applied to the given problem.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="penalty">The penalty.</param>        
+        public void ResetPenalty(NoDepotCVRProblem problem, Penalties penalty)
+        {
+            foreach (var pair in penalty)
+            {
+                var p = pair.Value;
+                var e = pair.Key;
+
+                problem.Weights[e.From][e.To] = p.Original;
+            }
+        }
     }
 }
+}
+    
