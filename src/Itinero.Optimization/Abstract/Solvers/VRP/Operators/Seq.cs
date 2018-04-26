@@ -138,6 +138,14 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
             res.Append(this[this.Length - 1]);
             return res.ToString();
         }
+
+        /// <summary>
+        /// Checks if this visit is a part of the sequence
+        /// </summary>
+        public bool Contains(int visit)
+        {
+            return Visits.Contains(visit);
+        }
     }
 
     /// <summary>
@@ -162,7 +170,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
             }
             return res;
         }
-        
+
         /// <summary>
         /// Calculates the weight of a sequence.
         /// </summary>
@@ -207,7 +215,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
             {
                 return 0f;
             }
-            
+
             var res = 0f;
             for (var i = 0; i < seq.Length; i++)
             {

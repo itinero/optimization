@@ -366,6 +366,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             return newDepotCost;
         }
 
+        public float SimulateWorstDepotCost(NoDepotCVRProblem problem, out Operators.Seq  newDepotPoint, out bool depotMoved, int tour,
+            int? placedVisit, int? after, Triple? removed)
+        {
+
+        }
+
         ///<summary>
         /// Simulates the given changes and how much the depot round trip would cost in that case
         ///</summary>

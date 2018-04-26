@@ -159,6 +159,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
         /// <summary>
         /// Tries to move the given visit (the middle of the triple) from t1 into t2.
+        /// CENTRAL_DEPOT_PROOF
         /// </summary>
         /// <param name="problem">The problem.</param>
         /// <param name="solution">The solution.</param>
@@ -275,6 +276,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
         /// <summary>
         /// Tries to swap the given visits between the two given tours.
+        /// CENTRAL_DEPOT_PROOF
         /// </summary>
         /// <param name="problem">The problem.</param>
         /// <param name="solution">The solution.</param>
@@ -520,6 +522,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             }
 
             var tour1FutureComplete = solution.Contents[t1].Weight - tour1Current + tour1Future;
+            
+            var depot1Weight = solution.SimulateWorstDepotCost(problem, );
+
             if (tour1FutureComplete > problem.Capacity.Max)
             { // constraint violated.
                 delta = 0;
@@ -599,7 +604,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="t1">The first tour.</param>
         /// <param name="t2">The second tour.</param>
         /// <param name="seq">The sequence.</param>
-        /// <param name="pair">The pair.</param>
+        /// <param name="pair">The pair where the sequence will end in between</param>
         /// <param name="delta">The difference in visit.</param>
         /// <returns></returns>        
         public bool TryMove(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int t1, int t2, Operators.Seq seq, Pair pair, out float delta)
@@ -657,10 +662,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
             // move the sequence.
             var tour2 = solution.Tour(t2);
-            tour1.ReplaceEdgeFrom(pair1.From, pair1.To);
+            tour1.ReplaceEdgeFrom(pair1.From, pair1.To); // cut out the sequence
             var previous = pair.From;
             for (var v = 1; v < seq.Length - 1; v++)
             {
+            // add the sequence to the other tour
                 var visit = seq[v];
                 tour2.ReplaceEdgeFrom(previous, visit);
                 previous = visit;
@@ -676,8 +682,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 (solution.Contents[t2].Weight - tour2WeightMoved);
             solution.Contents[t1].Weight = tour1WeightMoved;
             solution.Contents[t2].Weight = tour2WeightMoved;
-problem.Capacity.Remove(solution.Contents[t1], seq);
-problem.Capacity.Add(solution.Contents[t2], seq);
+
+
+
             return true;
         }
 
@@ -827,6 +834,8 @@ problem.Capacity.Add(solution.Contents[t2], seq);
         /// <returns></returns>
         public bool TryPlaceAny(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int t, IList<int> visits)
         {
+            // We ignore the Depot round trip in this method
+
             var tour = solution.Tour(t);
 
             Func<int, float> costFunc = null;

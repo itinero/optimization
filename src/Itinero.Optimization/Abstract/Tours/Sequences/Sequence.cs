@@ -184,5 +184,18 @@ namespace Itinero.Optimization.Abstract.Tours.Sequences
             }
             return res.ToString();
         }
+
+/// <summary>
+/// Checks if the given visit is a part of the sequence
+///</summary>
+        public bool Contains(int visit){
+            for (int i = 0; i < _visits.Length; i++)
+            {
+                if(_visits[i] == visit){
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
