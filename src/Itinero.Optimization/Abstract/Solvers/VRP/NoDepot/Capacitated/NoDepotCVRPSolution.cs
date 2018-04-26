@@ -117,7 +117,20 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
 
 
+        /// <summary>
+        /// Calulates the total weight.
+        /// </summary>
+        public float CalculateTotalWeight()
+        {
+            var weight = 0f;
 
+            for (var t = 0; t < Count; t++)
+            {
+                weight += Contents[t].Weight;
+            }
+
+            return weight * Count;
+        }
 
 
         /// <summary>
@@ -367,10 +380,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             return newDepotCost;
         }
 
-        public float SimulateWorstDepotCost(NoDepotCVRProblem problem, out Operators.Seq  newDepotPoint, out bool depotMoved, int tour,
-            int? placedVisit, int? after, Triple? removed)
+        public float SimulateWorstDepotCost(NoDepotCVRProblem problem, out int newDepotPoint, out bool depotMoved, 
+            int tour,
+            Operators.Seq placedPOints, Pair removedSeq)
         {
-
+            newDepotPoint = DepotPoint(tour);
+            // TODO pickup
+            depotMoved = false;
+            throw new NotImplementedException("TODO");
+            return 0f;
         }
 
         ///<summary>

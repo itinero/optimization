@@ -60,7 +60,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="overlapsFunc">The overlaps function.</param>
         /// <param name="localizationFactor">The localization factor.</param>
         /// <param name="slackPercentage">The slack percentage.</param>        
-        /// <param name="slackPercentage">The slack percentage.</param>
         /// <param name="gvnsPenalty">The penalty value.</param>
         public NoDepotCVRPObjective(Func<NoDepotCVRProblem, IList<int>, int> seedFunc, Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc,
             float localizationFactor = 0.5f, float slackPercentage = .05f, float gvnsPenalty = 8 * 60)
@@ -164,7 +163,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 {
                     solution.Contents.Add(new CapacityExtensions.Content());
                 }
-                solution.Contents[t].Weight = this.Calculate(problem, solution, t);
+                solution.Contents[t].Weight = solution.CalculateWeightOf(problem, t);
                 problem.Capacity.UpdateCosts(solution.Contents[t], solution.Tour(t));
             }
         }
@@ -536,7 +535,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
             var tour1FutureComplete = solution.Contents[t1].Weight - tour1Current + tour1Future;
 
-            var depot1Weight = solution.SimulateWorstDepotCost(problem, );
+            // TODO Pickup var depot1Weight = solution.SimulateWorstDepotCost(problem, );
 
             if (tour1FutureComplete > problem.Capacity.Max)
             { // constraint violated.
@@ -1106,7 +1105,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 problem.Weights[e.From][e.To] = p.Original;
             }
         }
+
+        /// <summary>
+        /// Calculates the total weight of the current solution
+        /// </summary>
+        public override float Calculate(NoDepotCVRProblem problem, NoDepotCVRPSolution solution)
+        {
+            return solution.CalculateTotalWeight();
+        }
     }
 }
-}
-    
