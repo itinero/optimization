@@ -17,6 +17,7 @@
  */
 
 using System;
+using Itinero.Optimization.Abstract.Tours.Sequences;
 
 namespace Itinero.Optimization.Abstract.Tours
 {
@@ -34,25 +35,48 @@ namespace Itinero.Optimization.Abstract.Tours
         public Triple(int from, int along, int to)
             : this()
         {
+            _raw = new int[3] { from, along, to };
+            this._seq = new Sequence(_raw);
             this.From = from;
             this.Along = along;
             this.To = to;
         }
 
+        private Sequence _seq;
+
+        private int[] _raw;
+
+
+        public Sequence AsSequence()
+        {
+            return _seq;
+        }
+
         /// <summary>
         /// Returns the from customer.
         /// </summary>
-        public int From { get; set; }
+        public int From
+        {
+            get
+            {
+                return _raw[0];
+            }
+            set
+            {
+                _raw[0] = value;
+            }
+        }
+
 
         /// <summary>
         /// Returns the along customer.
         /// </summary>
-        public int Along { get; set; }
+        public int Along { get { return _raw[1]; } set { _raw[1] = value; } }
 
         /// <summary>
         /// Returns the to customer.
         /// </summary>
-        public int To { get; set; }
+        public int To { get { return _raw[2]; } set { _raw[2] = value; } }
 
         /// <summary>
         /// Returns a description of this edge.

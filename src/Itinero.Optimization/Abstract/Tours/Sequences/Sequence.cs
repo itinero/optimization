@@ -42,6 +42,16 @@ namespace Itinero.Optimization.Abstract.Tours.Sequences
         }
 
         /// <summary>
+        /// Creates a new with a single visit.
+        /// </summary>
+        /// <param name="visits">The visits.</param>
+        public Sequence(int visit){
+            _visits = new int[1]{visit};
+            _start = 0;
+            _length = 1;
+        }
+
+        /// <summary>
         /// Creates a new sequence.
         /// </summary>
         /// <param name="visits">The visits.</param>
@@ -74,7 +84,7 @@ namespace Itinero.Optimization.Abstract.Tours.Sequences
         {
             get
             {
-                return this [0];
+                return this[0];
             }
         }
 
@@ -86,7 +96,7 @@ namespace Itinero.Optimization.Abstract.Tours.Sequences
         {
             get
             {
-                return this [_length - 1];
+                return this[_length - 1];
             }
         }
 
@@ -105,7 +115,7 @@ namespace Itinero.Optimization.Abstract.Tours.Sequences
         /// Returns the visit at the given index.
         /// </summary>
         /// <param name="i">The index.</param>
-        public int this [int i]
+        public int this[int i]
         {
             get
             {
@@ -175,23 +185,41 @@ namespace Itinero.Optimization.Abstract.Tours.Sequences
             var res = new StringBuilder();
             if (this.Length > 0)
             {
-                res.Append(this [0]);
+                res.Append(this[0]);
                 for (var i = 1; i < this.Length; i++)
                 {
                     res.Append("->");
-                    res.Append(this [i]);
+                    res.Append(this[i]);
                 }
             }
             return res.ToString();
         }
 
-/// <summary>
-/// Checks if the given visit is a part of the sequence
-///</summary>
-        public bool Contains(int visit){
+        /// <summary>
+        /// Checks if the given visit is a part of the sequence
+        ///</summary>
+        public bool Contains(int visit)
+        {
             for (int i = 0; i < _visits.Length; i++)
             {
-                if(_visits[i] == visit){
+                if (_visits[i] == visit)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        /// <summary>
+        /// Checks if this visit is a part of the sequence, **excluding** the first and last element
+        /// </summary>
+        public bool InnerContains(int visit)
+        {
+            for (int i = 1; i < _visits.Length - 1; i++)
+            {
+                if (_visits[i] == visit)
+                {
                     return true;
                 }
             }

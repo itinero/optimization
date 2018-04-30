@@ -83,6 +83,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
         }
 
         /// <summary>
+        /// Checks if this visit is a part of the sequence
+        /// </summary>
+        public bool Contains(int visit)
+        {
+            return Visits.Contains(visit);
+        }
+
+
+        /// <summary>
         /// Gets the visit at the given index (taking into account the reverse flag).
         /// </summary>
         /// <param name="i"></param>
@@ -139,13 +148,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
             return res.ToString();
         }
 
-        /// <summary>
-        /// Checks if this visit is a part of the sequence
-        /// </summary>
-        public bool Contains(int visit)
-        {
-            return Visits.Contains(visit);
-        }
+
     }
 
     /// <summary>

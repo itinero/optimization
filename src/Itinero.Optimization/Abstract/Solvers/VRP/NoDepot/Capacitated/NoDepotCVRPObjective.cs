@@ -465,6 +465,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             }
 
             var tour1FutureComplete = solution.Contents[t1].Weight - tour1Current + tour1Future;
+            var tour1depotCost = solution.SimulateWorstDepotCost(problem, out int newDepotCost, out bool moved, t1, seqPlaces, seqRemoved);
             if (tour1FutureComplete > problem.Capacity.Max)
             { // constraint violated.
                 delta = 0;
@@ -490,7 +491,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 return false;
             }
 
-            // don't do the swap.
+            // do the swap.
             delta = difference;
             return true;
         }

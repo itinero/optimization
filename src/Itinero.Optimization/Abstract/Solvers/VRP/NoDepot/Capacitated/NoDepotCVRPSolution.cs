@@ -5,7 +5,6 @@
  * 
  *  SharpSoftware licenses this file to you under the Apache License, 
  *  Version 2.0 (the "License"); you may not use this file except in 
- *  compliance with the License. You may obtain a copy of the License at
  * 
  *       http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -26,6 +25,7 @@ using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GVNS;
 using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
 using Itinero.Optimization.Abstract.Tours;
+using Itinero.Optimization.Abstract.Tours.Sequences;
 using Itinero.Optimization.Algorithms;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
@@ -238,9 +238,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
         /// <summary>
         /// Calculates where the depot would be cheapest for the given tour.
+        /// <param name="RemovedPoints">If this is given, the tour will consider the shortcut removedPoints.First -> removedPoints.Last to be in the tour and ignore all the inner visits of the seq. This should not cut out the last element.</param>
         /// </summary>
-        public int CheapestDepotPosition(NoDepotCVRProblem problem,
-             int tourIndex, out float cheapestCost)
+        public int CalculateDepotPosition(NoDepotCVRProblem problem,
+             int tourIndex, out float cheapestCost, Operators.Seq? removedPoints = null)
         {
             if (problem.Depot == null)
             {
@@ -256,6 +257,16 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             cheapestCost = float.MaxValue;
             int cheapestPoint = tour.First;
 
+            int? shortcutStart = null;
+            int? shortcutEnd = null;
+            if (removedPoints != null)
+            {
+                var rp = (Operators.Seq)removedPoints;
+                shortcutStart = rp[0];
+                shortcutEnd = rp[rp.Length - 1];
+            }
+
+
             do
             {
                 float currentCost =
@@ -270,8 +281,18 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 }
 
                 current = next;
-                next = current == tour.Last ? tour.First :
-                         tour.GetNeigbour(current);
+                if (current == tour.Last)
+                {
+                    next = tour.First;
+                }
+                else if (shortcutStart != null)
+                {
+                    next = current == (int)shortcutStart ? (int)shortcutEnd : tour.GetNeigbour(current);
+                }
+                else
+                {
+                    next = tour.GetNeigbour(current);
+                }
 
 
             } while (current != tour.First);
@@ -286,7 +307,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// </summary>
         public float UpdateDepotPosition(NoDepotCVRProblem problem, int tour)
         {
-            var depotPoint = CheapestDepotPosition(problem, tour, out float depotCost);
+            var depotPoint = CalculateDepotPosition(problem, tour, out float depotCost);
             UpdateDepotPosition(tour, depotPoint, depotCost);
             return depotCost;
         }
@@ -361,7 +382,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 }
 
                 // Actually calculate the new depot position and cost
-                newDepotPoint = CheapestDepotPosition(problem, tour, out newDepotCost);
+                newDepotPoint = CalculateDepotPosition(problem, tour, out newDepotCost);
 
                 // roll back the changes
                 if (removed != null)
@@ -380,16 +401,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             return newDepotCost;
         }
 
-        public float SimulateWorstDepotCost(NoDepotCVRProblem problem, out int newDepotPoint, out bool depotMoved, 
-            int tour,
-            Operators.Seq placedPOints, Pair removedSeq)
-        {
-            newDepotPoint = DepotPoint(tour);
-            // TODO pickup
-            depotMoved = false;
-            throw new NotImplementedException("TODO");
-            return 0f;
-        }
 
         ///<summary>
         /// Simulates the given changes and how much the depot round trip would cost in that case
@@ -418,7 +429,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             }
 
             // Actually calculate the new depot position and cost
-            newDepotPoint = CheapestDepotPosition(problem, tour, out float newDepotCost);
+            newDepotPoint = CalculateDepotPosition(problem, tour, out float newDepotCost);
 
             // roll back the changes
             if (removed != null)
@@ -433,6 +444,95 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
             return newDepotCost;
 
+        }
+
+        ///<summary>
+        /// Simulates the given changes and calculates the best, new depot point. Gives the new depot cost as return and the Depot Point which it'll be afterwards
+        ///<param name="removedVisits">The visits that are removed. Important: the first element and last element of the sequence are still retained in the tour! Only the elements in between are removed</param>
+        ///<param name="placedVisits">Visits which are inserted in the tour. The are inserted after the 'after' parameter</param>
+        ///<param name="worstOnly">If enabled, the depot will not be searched within the newly placed to speed up the calculation</param>
+        ///<summary>
+        public float SimulateDepotCost(NoDepotCVRProblem problem, out int newDepotPoint, int tour,
+            Sequence? placedVisits, int? after, Sequence? removedVisits, bool worstOnly = false)
+        {
+
+            var dp = DepotPoint(tour); // we need those constantly, so we make a convenient variable for it
+            var dn = DepotNeighbour(tour);
+            var dc = DepotCost(tour);
+            newDepotPoint = dp;
+
+            /* We have a tour, with a depot point, a sequence that is removed and a sequence that is added.
+            * If the depot point or neighbour is in the sequence that is removed, we have to find a new depot point and evaluate everything of the old sequence
+            * Then, we should also evaluate the newly added visits. We inspect them all to determine if a visit there is lower then the current visit.
+            * At last, there is a pesky corner case if the depot point is the border of the newly added visits
+             */
+
+
+            var depotPointRemoved = false;
+            if (removedVisits != null)
+            {
+                var removed = (Sequence)removedVisits;
+                if (removed.InnerContains(dp) || removed.InnerContains(dn))
+                {
+                    // we have to find a new depot 
+                    depotPointRemoved = true;
+                }
+            }
+
+            if (placedVisits != null)
+            {
+                var placed = (Sequence)placedVisits;
+                var aftr = (int)after;
+
+                if (dp == aftr)
+                {
+                    // We should find a new depot as the route now continues with the inserted visits
+                    depotPointRemoved = true;
+                }
+            }
+
+            // Here, we know if we have to search for a new depot point. If so, we search
+            if (depotPointRemoved)
+            {
+                newDepotPoint = CalculateDepotPosition(problem, tour, out dc, removedVisits);
+            }
+
+            // Right now, we have a depot cost (new or old). The new visits might offer a better point
+            if (!worstOnly && placedVisits != null)
+            {
+                var placed = (Sequence)placedVisits;
+                int aftr = (int)after;
+                int depot = (int)problem.Depot;
+                var w = problem.Weights;
+                var lst = placed.Length - 1;
+                var t = Tour(tour);
+                // cost of depot round trip from 'after -> new visits'
+                float depotCostBeforeNew = w[aftr][depot] + w[depot][placed[0]] - w[aftr][placed[0]];
+                if (depotCostBeforeNew < dc)
+                {
+                    dc = depotCostBeforeNew;
+                    newDepotPoint = aftr;
+                }
+                // cost of depot round trip from 'new visits' to 'neighbour(after)'
+                float depotCostAfterNew = w[placed[lst]][depot] + w[depot][t.GetNeigbour(aftr)] - w[placed[lst]][t.GetNeigbour(aftr)];
+
+                if (depotCostAfterNew < dc)
+                {
+                    dc = depotCostAfterNew;
+                    newDepotPoint = placed[lst];
+                }
+
+                // lets start the actual search within the newly placed sequence
+                for (int i = 0; i < placed.Length - 2; i++)
+                {
+                    float cost = w[placed[i]][depot] + w[depot][placed[i + 1]] - w[placed[i]][placed[i + 1]];
+                    if(cost < dc){
+                        dc = cost;
+                        newDepotPoint = placed[i];
+                    }
+                }
+            }
+            return dc;
         }
     }
 }
