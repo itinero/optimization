@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Licensed to SharpSoftware under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for 
  *  additional information regarding copyright ownership.
@@ -28,40 +28,43 @@ using Itinero.Optimization.Models.Vehicles.Constraints;
 
 namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
+
     /// <summary>
-    /// Tests related to the no-depot CVRP solver details.
+    /// Tests related to the no-depot CVRP solution.
     /// </summary>
     [TestFixture]
-    public class NoDepotCVRPSolverDetailsTests
+    public class NoDepotCVRPSolutionTests
     {
-        /// <summary>
-        /// Regression tests for model1, solving this caused the solver to hang.
-        /// </summary>
-        [Test]
-        public void TestRegressionModel1()
-        {
-            var model = "data.regression.abstract.model1.json".GetAbstractModel();
-            var result = NoDepotCVRPSolverDetails.TryToNoDepotCVRP(model);
 
-            for (var i = 0; i < 1; i++)
-            {
-                var solution = result.Value.Solve();
-            }
+        public NoDepotCVRProblem createProblem(int? depot = null){
+              // WECHELDERZANDE - LILLE
+            // build routerdb and save the result.
+            var lille = Staging.RouterDbBuilder.Build("query3");
+            var vehicle = lille.GetSupportedVehicle("car");
+            var router = new Router(lille);
+
+            // build problem1.
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem1.geojson"));
+
+            // 
+            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, 1000, depot));
+            var routes = func.TestPerf("No-Depot Capacitated VRP (Wechelderzande)");
+
+            //#if DEBUG
+            // write info about result.
+            WriteStats(routes);
+            routes.WriteGeoJson(ClusteredWithDepotCVRPTests.Name + "lille-{0}.geojson");
+            //#endif
+
+
+            return problem;
         }
 
-        /// <summary>
-        /// Regression tests for model2, solving this caused the solver to hang.
-        /// </summary>
         [Test]
-        public void TestRegressionModel2()
+        public void TestWeightOf()
         {
-            var model = "data.regression.abstract.model2.json".GetAbstractModel();
-            var result = NoDepotCVRPSolverDetails.TryToNoDepotCVRP(model);
 
-            for (var i = 0; i < 10; i++)
-            {
-                var solution = result.Value.Solve();
-            }
         }
     }
 }

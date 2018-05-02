@@ -18,6 +18,7 @@
 
 using System;
 using Itinero.Optimization.Abstract.Tours.Sequences;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 
 namespace Itinero.Optimization.Abstract.Tours
 {
@@ -36,18 +37,18 @@ namespace Itinero.Optimization.Abstract.Tours
             : this()
         {
             _raw = new int[3] { from, along, to };
-            this._seq = new Sequence(_raw);
+            this._seq = new Solvers.VRP.Operators.Seq(new Sequence(_raw));
             this.From = from;
             this.Along = along;
             this.To = to;
         }
 
-        private Sequence _seq;
+        private Solvers.VRP.Operators.Seq _seq;
 
         private int[] _raw;
 
 
-        public Sequence AsSequence()
+        public Solvers.VRP.Operators.Seq AsSequence()
         {
             return _seq;
         }

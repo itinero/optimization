@@ -321,7 +321,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             _depotPoint[tour] = depotPoint;
         }
 
-        /// <summary>
+
+        ///<summary>
+        /// Simulates the given changes and calculates the best, new depot point. Gives the new depot cost as return and the Depot Point which it'll be afterwards
+        /// If no optional parameters are given, this method returns the already cached values
+        ///
         /// Simulates how much the depot round trip would cost
         /// - if a new visit is placed or
         /// - if a visit is removed
@@ -338,128 +342,31 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         ///     Note that the travel cost of 'A --> Depot --> removed point --> C' is always larger then 'A --> Depot --> C' due to triangle inequality
         ///     Also note that a new egde might have become the new cheapest edge, further lowering the increased cost
         /// 
-        /// This method is only interested in _the worst case_ to check that a constraint might be broken.
-        /// It will thus only return a delta if the cost might have increased.
-        /// If a constraint has been broken due to a to high cost, we can still try to recover by looking for a new lower depot cost. This is not done here
-        /// </summary>
-        public float SimulateWorstDepotCost(NoDepotCVRProblem problem, out int newDepotPoint, out bool depotMoved, int tour,
-            int? placedVisit, int? after, Triple? removed)
-        {
-
-            // Some default out values and sanity check. Do we really have a depot?
-            depotMoved = false;
-            newDepotPoint = 0;
-            if (problem.Depot == null)
-            {
-                return 0;
-            }
-
-            newDepotPoint = DepotPoint(tour);
-            var newDepotCost = DepotCost(tour);
-            var dp = DepotPoint(tour);
-            var dn = DepotNeighbour(tour);
-            var t = Tour(tour);
-
-
-            // we only care about a possible decrease of performance.
-            // This happens when:
-            depotMoved = (placedVisit == null || after == null) ? false :
-                                dp == placedVisit; // case of new point insertion in the depot edge
-            depotMoved = depotMoved ||
-                            (removed == null ? false :
-                                dp == ((Triple)removed).Along || dn == ((Triple)removed).Along); // and the case of a point removal increasing the cost
-
-            if (depotMoved)
-            {
-                // simulate the depot movement, get the best position
-                if (placedVisit != null && after != null)
-                {
-                    t.InsertAfter((int)after, (int)placedVisit);
-                }
-                if (removed != null)
-                {
-                    t.Remove(((Triple)removed).Along);
-                }
-
-                // Actually calculate the new depot position and cost
-                newDepotPoint = CalculateDepotPosition(problem, tour, out newDepotCost);
-
-                // roll back the changes
-                if (removed != null)
-                {
-                    Triple r = (Triple)removed;
-                    t.InsertAfter(r.From, r.Along);
-                }
-                if (placedVisit != null && after != null)
-                {
-                    t.Remove((int)placedVisit);
-                }
-            }
-
-
-
-            return newDepotCost;
-        }
-
-
-        ///<summary>
-        /// Simulates the given changes and how much the depot round trip would cost in that case
-        ///</summary>
-        public float SimulateBestDepotCost(NoDepotCVRProblem problem, out int newDepotPoint, int tour,
-                int? placedVisit, int? after, Triple? removed)
-        {
-            // Some default out values and sanity check. Do we really have a depot?
-            newDepotPoint = 0;
-            if (problem.Depot == null)
-            {
-                return 0;
-            }
-
-
-            var t = Tour(tour);
-
-            // simulate the depot movement, get the best position
-            if (placedVisit != null && after != null)
-            {
-                t.InsertAfter((int)after, (int)placedVisit);
-            }
-            if (removed != null)
-            {
-                t.Remove(((Triple)removed).Along);
-            }
-
-            // Actually calculate the new depot position and cost
-            newDepotPoint = CalculateDepotPosition(problem, tour, out float newDepotCost);
-
-            // roll back the changes
-            if (removed != null)
-            {
-                Triple r = (Triple)removed;
-                t.InsertAfter(r.From, r.Along);
-            }
-            if (placedVisit != null && after != null)
-            {
-                t.Remove((int)placedVisit);
-            }
-
-            return newDepotCost;
-
-        }
-
-        ///<summary>
-        /// Simulates the given changes and calculates the best, new depot point. Gives the new depot cost as return and the Depot Point which it'll be afterwards
+        /// If 'worstOnly' is enabled, then the mehtod is only interested in _the worst case_ to check that a constraint might be broken.
+        /// It will thus only return a new cost if the cost might have increased.
+        /// If a constraint has been broken due to a to high cost, we can still try to recover by looking for a new lower depot cost later on.
+        /// 
         ///<param name="removedVisits">The visits that are removed. Important: the first element and last element of the sequence are still retained in the tour! Only the elements in between are removed</param>
+        ///<param name="placedVisit">A single, new visit which is placed, inserted after the 'after' parameter. Should not be used together with the placedVisits-sequence</param>
         ///<param name="placedVisits">Visits which are inserted in the tour. The are inserted after the 'after' parameter</param>
         ///<param name="worstOnly">If enabled, the depot will not be searched within the newly placed to speed up the calculation</param>
         ///<summary>
         public float SimulateDepotCost(NoDepotCVRProblem problem, out int newDepotPoint, int tour,
-            Sequence? placedVisits, int? after, Sequence? removedVisits, bool worstOnly = false)
+            int? placedVisit = null, Operators.Seq? placedVisits = null, int? after = null, Operators.Seq? removedVisits = null, bool worstOnly = false)
         {
-
+            if(problem.Depot == null){
+                newDepotPoint = 0;
+                return 0f;
+            }
             var dp = DepotPoint(tour); // we need those constantly, so we make a convenient variable for it
             var dn = DepotNeighbour(tour);
             var dc = DepotCost(tour);
             newDepotPoint = dp;
+
+            if (placedVisit != null && placedVisits != null)
+            {
+                throw new NotImplementedException("SimulateDepotCost: don't use a placedVisit (int) and placedVisits (sequence) at once. That's a bit complicated");
+            }
 
             /* We have a tour, with a depot point, a sequence that is removed and a sequence that is added.
             * If the depot point or neighbour is in the sequence that is removed, we have to find a new depot point and evaluate everything of the old sequence
@@ -471,7 +378,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             var depotPointRemoved = false;
             if (removedVisits != null)
             {
-                var removed = (Sequence)removedVisits;
+                var removed = (Operators.Seq)removedVisits;
                 if (removed.InnerContains(dp) || removed.InnerContains(dn))
                 {
                     // we have to find a new depot 
@@ -481,7 +388,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
             if (placedVisits != null)
             {
-                var placed = (Sequence)placedVisits;
+                var placed = (Operators.Seq)placedVisits;
                 var aftr = (int)after;
 
                 if (dp == aftr)
@@ -490,17 +397,44 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     depotPointRemoved = true;
                 }
             }
+            else if (placedVisit != null)
+            {
+                if (dp == (int)after)
+                {
+                    depotPointRemoved = true;
+                }
+            }
 
             // Here, we know if we have to search for a new depot point. If so, we search
             if (depotPointRemoved)
             {
-                newDepotPoint = CalculateDepotPosition(problem, tour, out dc, removedVisits);
+
+                if (placedVisit != null)
+                {
+                    // the case that a single new point is placed. We add it, calculate the new position and remove it again
+                    int aftr = (int)after;
+                    int placed = (int)placedVisit;
+
+                    var t = Tour(tour);
+                    // simulate point addition
+                    t.InsertAfter(aftr, placed);
+
+                    newDepotPoint = CalculateDepotPosition(problem, tour, out dc, removedVisits);
+
+                    t.ReplaceEdgeFrom(aftr, t.GetNeigbour(placed));
+
+                }
+                else
+                {
+                    newDepotPoint = CalculateDepotPosition(problem, tour, out dc, removedVisits);
+                }
+
             }
 
-            // Right now, we have a depot cost (new or old). The new visits might offer a better point
+            // Right now, we have a depot cost (new or old). The newly placed visits sequence might offer a better point
             if (!worstOnly && placedVisits != null)
             {
-                var placed = (Sequence)placedVisits;
+                var placed = (Operators.Seq)placedVisits;
                 int aftr = (int)after;
                 int depot = (int)problem.Depot;
                 var w = problem.Weights;
@@ -526,7 +460,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 for (int i = 0; i < placed.Length - 2; i++)
                 {
                     float cost = w[placed[i]][depot] + w[depot][placed[i + 1]] - w[placed[i]][placed[i + 1]];
-                    if(cost < dc){
+                    if (cost < dc)
+                    {
                         dc = cost;
                         newDepotPoint = placed[i];
                     }

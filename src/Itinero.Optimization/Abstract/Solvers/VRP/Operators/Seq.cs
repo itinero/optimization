@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Itinero.Optimization.Abstract.Tours.Sequences;
 
@@ -148,7 +149,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators
             return res.ToString();
         }
 
-
+        internal bool InnerContains(int dp)
+        {
+            return Visits.InnerContains(dp);
+        }
     }
 
     /// <summary>
