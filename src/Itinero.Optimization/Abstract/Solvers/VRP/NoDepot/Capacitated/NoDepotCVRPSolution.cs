@@ -346,6 +346,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// It will thus only return a new cost if the cost might have increased.
         /// If a constraint has been broken due to a to high cost, we can still try to recover by looking for a new lower depot cost later on.
         /// 
+        /// At last, if this method is invoked when the problem does not contain a depot, the value returned is 0
+        ///
         ///<param name="removedVisits">The visits that are removed. Important: the first element and last element of the sequence are still retained in the tour! Only the elements in between are removed</param>
         ///<param name="placedVisit">A single, new visit which is placed, inserted after the 'after' parameter. Should not be used together with the placedVisits-sequence</param>
         ///<param name="placedVisits">Visits which are inserted in the tour. The are inserted after the 'after' parameter</param>
