@@ -16,25 +16,109 @@
  *  limitations under the License.
  */
 
+using System;
+
 namespace Itinero.Optimization.Strategies
 {
     /// <summary>
     /// Contains extension methods related to operators.
     /// </summary>
     public static class IOperatorExtensions
-    {
+    {        
         /// <summary>
-        /// Apply the operator until no more improvements can be found.
+        /// Converts the given operator into an operator that runs applies the given operator until it fails.
         /// </summary>
-        /// <returns></returns>
-        public static bool ApplyUntil<TCandidate>(this IOperator<TCandidate> oper, TCandidate candidate)
+        /// <param name="oper">The operator.</param>
+        /// <typeparam name="TCandidate">The candidate type.</typeparam>
+        /// <returns>The new operator.</returns>
+        public static IOperator<TCandidate> ApplyUntil<TCandidate>(this IOperator<TCandidate> oper)
+            where TCandidate : class
         {
-            var success = false;
-            while (oper.Apply(candidate))
+            return new Iterative.IterativeOperator<TCandidate>(oper, int.MaxValue, true);
+        } 
+
+        /// <summary>
+        /// Converts the given operator into an operator that runs applies the given operator until it fails.
+        /// </summary>
+        /// <param name="oper">The operator.</param>
+        /// <typeparam name="TCandidate">The candidate type.</typeparam>
+        /// <returns>The new operator.</returns>
+        public static Func<TCandidate, bool> ApplyUntil<TCandidate>(this Func<TCandidate, bool> oper)
+            where TCandidate : class
+        {
+            return (candidate) => 
             {
-                success = true;
-            }
-            return success;
+                return Iterative.IterativeOperator<TCandidate>.Iterate(oper, candidate, int.MaxValue, true);
+            };
+        }
+        
+        /// <summary>
+        /// Converts the given operator into an operator that runs applies the given operator until it fails but for a given number of times.
+        /// </summary>
+        /// <param name="oper">The operator.</param>
+        /// <param name="n">The number of times to iterate.</param>
+        /// <typeparam name="TCandidate">The candidate type.</typeparam>
+        /// <returns>The new operator.</returns>
+        public static IOperator<TCandidate> ApplyUntil<TCandidate>(this IOperator<TCandidate> oper, int n)
+            where TCandidate : class
+        {
+            return new Iterative.IterativeOperator<TCandidate>(oper, n, true);
+        }
+        
+        /// <summary>
+        /// Converts the given operator into an operator that runs the given operator for a given number of times.
+        /// </summary>
+        /// <param name="oper">The operator.</param>
+        /// <param name="n">The number of times to iterate.</param>
+        /// <typeparam name="TCandidate">The candidate type.</typeparam>
+        /// <returns>The new operator.</returns>
+        public static Func<TCandidate, bool> ApplyUntil<TCandidate>(this Func<TCandidate, bool> oper, int n)
+            where TCandidate : class
+        {
+            return (candidate) => 
+            {
+                return Iterative.IterativeOperator<TCandidate>.Iterate(oper, candidate, n, true);
+            };
+        }
+        
+        /// <summary>
+        /// Converts the given operator into an operator that runs the given operator for a given number of times.
+        /// </summary>
+        /// <param name="oper">The operator.</param>
+        /// <param name="n">The number of times to iterate.</param>
+        /// <typeparam name="TCandidate">The candidate type.</typeparam>
+        /// <returns>The new operator.</returns>
+        public static IOperator<TCandidate> Iterate<TCandidate>(this IOperator<TCandidate> oper, int n)
+            where TCandidate : class
+        {
+            return new Iterative.IterativeOperator<TCandidate>(oper, n);
+        }
+        
+        /// <summary>
+        /// Converts the given operator into an operator that runs the given operator for a given number of times.
+        /// </summary>
+        /// <param name="oper">The operator.</param>
+        /// <param name="n">The number of times to iterate.</param>
+        /// <typeparam name="TCandidate">The candidate type.</typeparam>
+        /// <returns>The new operator.</returns>
+        public static Func<TCandidate, bool> Iterate<TCandidate>(this Func<TCandidate, bool> oper, int n)
+            where TCandidate : class
+        {
+            return (candidate) => 
+            {
+                var success = false;
+                var i = n;
+                while (i > 0)
+                {
+                    i--;
+
+                    if (oper(candidate))
+                    {
+                        success = true;
+                    }
+                }
+                return success;
+            };
         }
     }
 }

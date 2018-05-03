@@ -30,7 +30,7 @@ namespace Itinero.Optimization.Tests.Strategies
         /// Tests candicate comparison using a generic IComparable interface.
         /// </summary>
         [Fact]
-        public void UseGenericIComparable()
+        public void CandidateComparison_ShouldHandleGenericIComparable()
         {
             Assert.Equal(0, Itinero.Optimization.Strategies.CandidateComparison.Compare(
                 new CandidateGenericIComparable(0), new CandidateGenericIComparable(0)));
@@ -58,7 +58,7 @@ namespace Itinero.Optimization.Tests.Strategies
         /// Tests candicate comparison using a generic IComparable interface.
         /// </summary>
         [Fact]
-        public void UseIComparable()
+        public void CandidateComparison_ShouldHandleIComparable()
         {
             Assert.Equal(0, Itinero.Optimization.Strategies.CandidateComparison.Compare(
                 new CandidateIComparable(0), new CandidateIComparable(0)));

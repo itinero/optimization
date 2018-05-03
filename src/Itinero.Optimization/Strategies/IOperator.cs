@@ -22,6 +22,7 @@ namespace Itinero.Optimization.Strategies
     /// Abstract definition of an operator.
     /// </summary>
     public interface IOperator<TCandidate>
+        where TCandidate : class
     {
         /// <summary>
         /// Gets the name.
@@ -34,6 +35,7 @@ namespace Itinero.Optimization.Strategies
         /// </summary>
         /// <param name="candidate">The candidate.</param>
         /// <returns>True if an improvement was found.</returns>
+        /// <remarks>The candidate give should be modified in-place but this should *only* happen in the case when there is an improvement or this operator is explicitly used as a mutation operator.</remarks>
         bool Apply(TCandidate candidate);
     }
 
@@ -41,6 +43,7 @@ namespace Itinero.Optimization.Strategies
     /// An operator that does nothing.
     /// </summary>
     public class EmptyOperator<TCandidate> : IOperator<TCandidate>
+        where TCandidate : class
     {
         /// <summary>
         /// Gets the name of this operator.
