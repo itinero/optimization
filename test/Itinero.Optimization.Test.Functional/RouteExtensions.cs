@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Itinero.Attributes;
-using Itinero.Optimization.Models;
 
 namespace Itinero.Optimization.Test.Functional
 {
@@ -85,11 +84,11 @@ namespace Itinero.Optimization.Test.Functional
                     for (var s = 0; s < routes[i].Stops.Length - 1; s++)
                     {
                         var stop = routes[i].Stops[s];
-                        if (stop.Attributes.TryGetSingle("cost_" + Metrics.Time, out float localExtraTime))
+                        if (stop.Attributes.TryGetSingle("cost_time", out float localExtraTime))
                         {
                             extraTime += localExtraTime;
                         }
-                        if (stop.Attributes.TryGetSingle("cost_" + Metrics.Weight, out float localExtraWeight))
+                        if (stop.Attributes.TryGetSingle("cost_weight", out float localExtraWeight))
                         {
                             extraWeight += localExtraWeight;
                         }
