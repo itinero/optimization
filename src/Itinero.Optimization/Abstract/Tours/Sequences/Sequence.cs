@@ -42,9 +42,9 @@ namespace Itinero.Optimization.Abstract.Tours.Sequences
         }
 
         /// <summary>
-        /// Creates a new with a single visit.
+        /// Creates a new sequence with a single visit.
         /// </summary>
-        /// <param name="visits">The visits.</param>
+        /// <param name="visit">The sole visit in the sequence.</param>
         public Sequence(int visit){
             _visits = new int[1]{visit};
             _start = 0;

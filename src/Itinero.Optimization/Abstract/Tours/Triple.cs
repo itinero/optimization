@@ -47,11 +47,10 @@ namespace Itinero.Optimization.Abstract.Tours
 
         private int[] _raw;
 
-
-        public Solvers.VRP.Operators.Seq AsSequence()
-        {
-            return _seq;
-        }
+        /// <summary>
+        /// Returns the triple as a sequence.
+        /// </summary>
+        public Solvers.VRP.Operators.Seq AsSequence => _seq;
 
         /// <summary>
         /// Returns the from customer.

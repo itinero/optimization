@@ -37,28 +37,7 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
     {
 
         public NoDepotCVRProblem createProblem(int? depot = null){
-              // WECHELDERZANDE - LILLE
-            // build routerdb and save the result.
-            var lille = Staging.RouterDbBuilder.Build("query3");
-            var vehicle = lille.GetSupportedVehicle("car");
-            var router = new Router(lille);
-
-            // build problem1.
-            var locations = Staging.StagingHelpers.GetLocations(
-                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem1.geojson"));
-
-            // 
-            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, 1000, depot));
-            var routes = func.TestPerf("No-Depot Capacitated VRP (Wechelderzande)");
-
-            //#if DEBUG
-            // write info about result.
-            WriteStats(routes);
-            routes.WriteGeoJson(ClusteredWithDepotCVRPTests.Name + "lille-{0}.geojson");
-            //#endif
-
-
-            return problem;
+         return null;
         }
 
         [Test]

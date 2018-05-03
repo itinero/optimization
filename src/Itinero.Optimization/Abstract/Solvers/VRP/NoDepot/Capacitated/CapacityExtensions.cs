@@ -52,7 +52,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 {
                     q += constraint.Values[visit];
                 }
-                if (constraint.Max < q)
+                if (q > constraint.Max)
                 {
                     throw new Exception("Contraints violated.");
                 }

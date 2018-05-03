@@ -238,7 +238,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
         /// <summary>
         /// Calculates where the depot would be cheapest for the given tour.
-        /// <param name="RemovedPoints">If this is given, the tour will consider the shortcut removedPoints.First -> removedPoints.Last to be in the tour and ignore all the inner visits of the seq. This should not cut out the last element.</param>
+        /// <param name="problem">The problem containing all information</param>
+        /// <param name="tourIndex">The tour number for which the depot point should be calculated</param>
+        /// <param name="cheapestCost">Will be filled with the cost of the depot round trip</param>
+        /// <param name="removedPoints">If this is given, the tour will consider the shortcut removedPoints.First -> removedPoints.Last to be in the tour and ignore all the inner visits of the seq. This should not cut out the last element.</param>
         /// </summary>
         public int CalculateDepotPosition(NoDepotCVRProblem problem,
              int tourIndex, out float cheapestCost, Operators.Seq? removedPoints = null)
@@ -323,7 +326,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
 
         ///<summary>
-        /// Simulates the given changes and calculates the best, new depot point. Gives the new depot cost as return and the Depot Point which it'll be afterwards
         /// If no optional parameters are given, this method returns the already cached values
         ///
         /// Simulates how much the depot round trip would cost
@@ -351,8 +353,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         ///<param name="removedVisits">The visits that are removed. Important: the first element and last element of the sequence are still retained in the tour! Only the elements in between are removed</param>
         ///<param name="placedVisit">A single, new visit which is placed, inserted after the 'after' parameter. Should not be used together with the placedVisits-sequence</param>
         ///<param name="placedVisits">Visits which are inserted in the tour. The are inserted after the 'after' parameter</param>
+        /// <param name="after">The visit after which placedVisit(s) will be inserted</param>
+        /// <param name="problem">The problem containing all the information</param>
+        /// <param name="newDepotPoint">Will be filled with the new depot point</param>
+        /// <param name="tour">The tour number</param>
+        /// Simulates the given changes and calculates the best, new depot point. Gives the new depot cost as return and the Depot Point which it'll be afterwards
         ///<param name="worstOnly">If enabled, the depot will not be searched within the newly placed to speed up the calculation</param>
-        ///<summary>
+        ///</summary>
         public float SimulateDepotCost(NoDepotCVRProblem problem, out int newDepotPoint, int tour,
             int? placedVisit = null, Operators.Seq? placedVisits = null, int? after = null, Operators.Seq? removedVisits = null, bool worstOnly = false)
         {
