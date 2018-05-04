@@ -156,8 +156,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
             var multiReloc23 = new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 3);
             var multiExch13 = new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 3, true, false, true);
-            var multiExchOp110 = new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, true, true)
-       ;
+            var multiExchOp110 = new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, true, true);
             var slci = new SeededCheapestInsertion<NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution>(
                 new TSP.Solvers.HillClimbing3OptSolver(),
                 new IInterTourImprovementOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>[]
@@ -171,14 +170,14 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             var multiExch120 = new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 20, true, true, true);
 
             var gvns = new GuidedVNS<NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, Penalties>(
-   slci, new TSP.Solvers.HillClimbing3OptSolver(),
-   new IInterTourImprovementOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>[]
-   {
-                    multiReloc25,
-                    reloc,
-                   multiExch15
-   }
-);
+                        slci, new TSP.Solvers.HillClimbing3OptSolver(),
+                        new IInterTourImprovementOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>[]
+                        {
+                            multiReloc25,
+                            reloc,
+                            multiExch15
+                        }
+                        );
 
 
             var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(

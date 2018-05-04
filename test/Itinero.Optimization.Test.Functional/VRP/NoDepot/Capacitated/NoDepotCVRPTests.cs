@@ -47,6 +47,8 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
         public static void Run1Wechelderzande(int depotNumber)
         {
+
+
             // WECHELDERZANDE - LILLE
             // build routerdb and save the result.
             var lille = Staging.RouterDbBuilder.Build("query3");
@@ -70,6 +72,8 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
         public static void Run1WechelderzandeCapacitated()
         {
+            
+
             // WECHELDERZANDE - LILLE
             // build routerdb and save the result.
             var lille = Staging.RouterDbBuilder.Build("query3");

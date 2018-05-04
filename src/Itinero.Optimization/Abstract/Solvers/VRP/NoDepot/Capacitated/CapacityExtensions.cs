@@ -54,7 +54,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 }
                 if (q > constraint.Max)
                 {
-                    throw new Exception("Contraints violated.");
+                    throw new Exception(String.Format("Contraints violated. The total weight is %f %s, but the maximum allowed is %f", q, constraint.Name, constraint.Max));
                 }
                 content.Quantities[i] = q;
             }
@@ -483,13 +483,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 return new Content()
                 {
-                Weight = 0
+                    Weight = 0
                 };
             }
             return new Content()
             {
                 Weight = 0,
-                    Quantities = new float[capacity.Constraints.Length]
+                Quantities = new float[capacity.Constraints.Length]
             };
         }
 

@@ -33,18 +33,18 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
         public static void Run()
         {
             int depot = 0;
-           // Run1Wechelderzande(depot);
+            // Run1Wechelderzande(depot);
             Run1WechelderzandeCapacitated(depot);
-           // Run3DeHague(depot);
-           // */
+            // Run3DeHague(depot);
+            // */
             // LOOPT VAST Run2Spijkenisse(depot);
-           //  Run2SpijkenisseCapacitated(depot);
-          //  Run4Rotterdam(depot);
-          //  Run5Rotterdam(depot);
+            //  Run2SpijkenisseCapacitated(depot);
+            //  Run4Rotterdam(depot);
+            //  Run5Rotterdam(depot);
             /*
             Run2SpijkenisseVisitCosts(depot);
             */
-            Name = Name +"depot"+depot+"-";
+            Name = Name + "depot" + depot + "-";
         }
 
         public static void Run1Wechelderzande(int depot)

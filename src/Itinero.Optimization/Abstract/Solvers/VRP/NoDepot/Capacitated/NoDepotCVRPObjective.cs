@@ -61,7 +61,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="localizationFactor">The localization factor.</param>
         /// <param name="slackPercentage">The slack percentage.</param>        
         /// <param name="gvnsPenalty">The penalty value.</param>
-        public NoDepotCVRPObjective(Func<NoDepotCVRProblem, IList<int>, int> seedFunc, Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc,
+        public NoDepotCVRPObjective(Func<NoDepotCVRProblem, IList<int>, int> seedFunc,
+            Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc,
             float localizationFactor = 0.5f, float slackPercentage = .05f, float gvnsPenalty = 8 * 60)
         {
             _seedFunc = seedFunc;
@@ -75,6 +76,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 _localizationCostFunc = (p, s, v) => (p.Weights[s][v] +
                     p.Weights[v][s]) * localizationFactor;
             }
+           
         }
 
         /// <summary>

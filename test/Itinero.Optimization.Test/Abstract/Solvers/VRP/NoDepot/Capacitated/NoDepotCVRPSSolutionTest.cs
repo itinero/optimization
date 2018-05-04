@@ -26,6 +26,9 @@ using System.IO;
 using Itinero.Optimization.Models.Costs;
 using Itinero.Optimization.Models.Vehicles.Constraints;
 
+using Newtonsoft.Json;
+using Itinero.Optimization.Abstract.Models;
+
 namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
 
@@ -36,13 +39,57 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
     public class NoDepotCVRPSolutionTests
     {
 
-        public NoDepotCVRProblem createProblem(int? depot = null){
-         return null;
+        public NoDepotCVRProblem createProblem(int? depot = null)
+        {
+
+            float capacityMax = 100f;
+
+            Itinero.Optimization.IO.Json.JsonSerializer.ToJsonFunc = o =>
+            {
+                return Newtonsoft.Json.JsonConvert.SerializeObject(o);
+            };
+            Itinero.Optimization.IO.Json.JsonSerializer.FromJsonFunc = (o, t) =>
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject(o, t);
+            };
+
+            var json = "{\"TravelCosts\":[{\"Name\":\"time\",\"Costs\":[[0.0,10.0,10.0],[10.0,0.0,10.0],[10.0,10.0,0.0]],\"Directed\":false}],\"TimeWindows\":[{\"Min\":1.0,\"Max\":10.0},{\"Min\":1.0,\"Max\":10.0},{\"Min\":1.0,\"Max\":10.0}],\"VisitCosts\":[{\"Name\":\"weight\",\"Costs\":[10.0,10.0,10.0]}],\"VehiclePool\":{\"Vehicles\":[{\"Metric\":\"time\",\"CapacityConstraints\":[{\"Name\":\"weight\",\"Capacity\":100.0}],\"Departure\":null,\"Arrival\":null,\"TurnPentalty\":0.0}],\"Reusable\":false}}";
+            var model = AbstractModel.FromJson(json);
+
+            var ndcvrp = new NoDepotCVRProblem()
+            {
+                Depot = depot,
+                Capacity = new Capacity()
+                {
+                    Max = capacityMax
+                },
+                Weights = model.TravelCosts[0].Costs,
+                VisitCosts = model.VisitCosts[0].Costs
+            };
+
+            return ndcvrp;
+        }
+
+        public NoDepotCVRPObjective createObjective(NoDepotCVRProblem ndpr)
+        {
+            Func<NoDepotCVRProblem, IList<int>, int> seedFunc = (prob, visits) => visits[0];
+            var obj = new NoDepotCVRPObjective(seedFunc, null);
+            return obj;
+        }
+
+        public NoDepotCVRPSolution createSolution(){
+            return new NoDepotCVRPSolution(0);
         }
 
         [Test]
         public void TestWeightOf()
         {
+
+            var problem = createProblem(0);
+            var obj = createObjective(problem);
+            var sol = createSolution();
+
+            Assert.Zero(sol.CalculateTotalWeight());
 
         }
     }
