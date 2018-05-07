@@ -250,7 +250,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 throw new NullReferenceException("CheapestDepotPosition can not work if there is no depot");
             }
-            ITour tour = Tour(tourIndex);
+            var tour = Tour(tourIndex);
             int depot = (int)problem.Depot;
             var w = problem.Weights;
 
@@ -275,7 +275,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 float currentCost =
                     w[current][depot]
                   + w[depot][next]
-                  - w[tour.First][tour.GetNeigbour(tour.First)];
+                  - w[current][next];
 
                 if (cheapestCost > currentCost)
                 {
