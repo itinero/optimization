@@ -162,18 +162,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     c++;
                 }
             }
-
-            var problem = new NoDepotCVRProblem()
+            var capacity = new Capacity()
             {
-                Weights = travelCosts.Costs,
-                Capacity = new Capacity()
-                {
-                    Max = travelCostConstraint.Capacity,
-                    Constraints = constraints
-                },
-                // add the depot if there is one
-                Depot = vehicle.Departure
+                Max = travelCostConstraint.Capacity,
+                Constraints = constraints
             };
+            var problem = new NoDepotCVRProblem(capacity, weights: travelCosts.Costs, visitCosts: null, depot: vehicle.Departure);
 
             vehicle.Departure = null;
 

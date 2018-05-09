@@ -76,7 +76,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 _localizationCostFunc = (p, s, v) => (p.Weights[s][v] +
                     p.Weights[v][s]) * localizationFactor;
             }
-           
+
         }
 
         /// <summary>
@@ -1047,13 +1047,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         public NoDepotCVRProblem ProblemWithSlack(NoDepotCVRProblem problem)
         {
             // create a new problem definition, taking into account the slack percentage.
-            return new NoDepotCVRProblem()
-            {
-                Capacity = problem.Capacity.Scale(1 - _slackPercentage),
-                Weights = problem.Weights,
-                VisitCosts = problem.VisitCosts,
-                Depot = problem.Depot
-            };
+            return new NoDepotCVRProblem(problem.Capacity.Scale(1 - _slackPercentage), problem.Weights, problem.VisitCosts, problem.Depot);
         }
 
 

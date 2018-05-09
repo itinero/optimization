@@ -45,10 +45,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
     /// </summary>
     public class NoDepotCVRProblem : IRelocateProblem, IExchangeProblem
     {
+
         /// <summary>
         /// Gets or sets the vehicle capacity.
         /// </summary>
-        public Capacity Capacity { get; set; }
+        public Capacity Capacity { get; }
 
         /// <summary>
         /// Gets the weights. This is the travelling time it takes to get from a point A to a point B. Indexed with [from][to]
@@ -65,7 +66,30 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// Optional depot. If not null, the cost to travel from/to a cluster is taken into account.
         /// </summary>
         /// <returns></returns>
-        public int? Depot { get; set; }
+        public int? Depot => _depot;
+
+        ///<summary>
+        ///Constructs the depot CVRP problem
+        ///</summary>
+        public NoDepotCVRProblem(Capacity capacity, float[][] weights, float[] visitCosts,
+            int? depot = null)
+        {
+            _depot = depot;
+            if (_depot != null)
+            {
+                // We have a depot; this means that the visit cost of this depot should _always_ be factored into the solution
+                // This means that tours will be a little shorter now
+                int d = (int)_depot;
+                Capacity = capacity.Subtract(visitCosts[d]);
+            }
+            else
+            {
+                Capacity = capacity;
+            }
+            Weights = weights;
+            VisitCosts = visitCosts;
+        }
+
 
         /// <summary>
         /// Gets the cost for the given visit (if any).
@@ -85,6 +109,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// Holds the nearest neigbours in travel cost. Only used for the caching.
         /// </summary>
         private NearestNeigbourArray _nNTravelCost = null;
+        private readonly int? _depot;
+
 
         /// <summary>
         /// Gets the nearest neigbours in travel cost.
@@ -143,6 +169,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <returns></returns>
         public NoDepotCVRPSolution Solve(Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc)
         {
+
+
             var crossMultiAllPairs = new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>
                 (1, 10, true, true, true);
             var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>
@@ -173,30 +201,29 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                         slci, new TSP.Solvers.HillClimbing3OptSolver(),
                         new IInterTourImprovementOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>[]
                         {
-                            multiReloc25,
-                            reloc,
-                            multiExch15
+                              multiReloc25,
+                              reloc,
+                              multiExch15
                         }
                         );
 
 
             var constructionHeuristic = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-                                 gvns, 20);
+                              gvns, 20);
             var iterate = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
                     constructionHeuristic, 1,
                         new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 20, true, true, true),
                         crossMultiAllPairs);
 
 
+            return this.Solve(gvns, new NoDepotCVRPObjective((problem, visits) =>
+                 {
+                     var weights = problem.Weights;
 
-            return this.Solve(iterate, new NoDepotCVRPObjective((problem, visits) =>
-                {
-                    var weights = problem.Weights;
-
-                    //return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
-                    return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-                        weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
-                }, overlapsFunc, 1f, 0.01f, 480 * 2));
+                     //return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
+                     return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
+                          weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
+                 }, overlapsFunc, 1f, 0.01f, 480 * 2));
         }
 
         /// <summary>

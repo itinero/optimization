@@ -38,11 +38,11 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
     [TestFixture]
     public class NoDepotCVRPSolutionTests
     {
+        float capacityMax = 100f;
 
         public NoDepotCVRProblem createProblem(int? depot = null)
         {
 
-            float capacityMax = 100f;
 
             Itinero.Optimization.IO.Json.JsonSerializer.ToJsonFunc = o =>
             {
@@ -55,27 +55,21 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
 
             var json = "{\"TravelCosts\":[{\"Name\":" +
                 "\"time\",\"Costs\":[" +
-                    "[0.0 , 10.0, 5.0 , 20.0]," +
+                    "[0.0 , 10.0, 5.0 , 40.0]," +
                     "[10.0, 0.0 , 10.0, 20.0]," +
                     "[5.0 , 10.0, 0.0 , 20.0]," +
-                    "[20.0, 20.0, 20.0, 0.0 ]" +
+                    "[40.0, 20.0, 20.0, 0.0 ]" +
 
                 "],\"Directed\":false}]," +
                 "\"VisitCosts\":[{\"Name\":\"weight\",\"Costs\":[0.0,10.0,10.0, 10.0]}]," +
                 "\"VehiclePool\":{\"Vehicles\":[{\"Metric\":\"time\",\"CapacityConstraints\":[{\"Name\":\"weight\",\"Capacity\":100.0}],\"Departure\":null,\"Arrival\":null,\"TurnPentalty\":0.0}],\"Reusable\":false}}";
             var model = AbstractModel.FromJson(json);
             log(model.ToJson());
-            var ndcvrp = new NoDepotCVRProblem()
+            var capacity = new Capacity()
             {
-                Depot = depot,
-                Capacity = new Capacity()
-                {
-                    Max = capacityMax
-                },
-                Weights = model.TravelCosts[0].Costs,
-                VisitCosts = model.VisitCosts[0].Costs
+                Max = capacityMax
             };
-
+            var ndcvrp = new NoDepotCVRProblem(capacity, model.TravelCosts[0].Costs, model.VisitCosts[0].Costs, depot);
             return ndcvrp;
         }
 
@@ -90,10 +84,29 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
         {
             return new NoDepotCVRPSolution(0);
         }
+        
+        [Test]
+        public void TestCapacityConstraints()
+        {
+
+            clearLog();
+
+            var p = createProblem(null);
+            Assert.AreEqual(capacityMax, p.Capacity.Max);
+
+            p = createProblem(0); // visit cost of 0 is 0 
+            Assert.AreEqual(capacityMax, p.Capacity.Max);
+
+            p = createProblem(1); // visit cost of 1 is 10 
+            Assert.AreEqual(capacityMax - 10, p.Capacity.Max);
+
+        }
+
 
         [Test]
         public void TestWeightOf()
         {
+            clearLog();
 
             var problem = createProblem(0);
             var obj = createObjective(problem);
@@ -131,17 +144,34 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
             Assert.AreEqual(5.0, cost);
 
             // And I thought java could have it bad...
-            var removed = new Optimization.Abstract.Solvers.VRP.Operators.Seq(new Optimization.Abstract.Tours.Sequences.Sequence(3));
-            sol.CalculateDepotPosition(problem, 0, out cost, removed);
+            var removed = new Optimization.Abstract.Solvers.VRP.Operators.Seq(new Optimization.Abstract.Tours.Sequences.Sequence(new[] { 3, 2, 1 }));
+            pos = sol.CalculateDepotPosition(problem, 0, out cost, removed);
             log("Cheapest pos: " + pos.ToString() + ", cost: " + cost);
 
+            Assert.AreNotEqual(2, pos);
 
+            t0.ReplaceEdgeFrom(3, 1); // cut out 2
+
+            cost = sol.SimulateDepotCost(problem, out pos, 0, placedVisit: 2, after: 3);
+            log("Simulated Cheapest pos: " + pos.ToString() + ", cost: " + cost);
+            Assert.AreEqual(2, pos);
+            Assert.AreEqual(5, cost);
+
+            cost = sol.SimulateDepotCost(problem, out pos, 0, placedVisit: 2, after: 1);
+            log("Simulated Cheapest pos: " + pos.ToString() + ", cost: " + cost);
+
+            log("[Done]");
         }
 
 
         private void log(String msg)
         {
             File.AppendAllText("/home/pietervdvn/Desktop/TestLog.txt", msg + "\n");
+        }
+
+        private void clearLog()
+        {
+            File.WriteAllText("/home/pietervdvn/Desktop/TestLog.txt", "Testlog\n-------\n");
         }
 
     }

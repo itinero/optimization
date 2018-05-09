@@ -189,12 +189,21 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             _tours.Add(tour);
             if (problem.Depot != null)
             {
+                // When creating a new tour, this tour is [first] -> [first]
+                // The depot has to be visited in between, the "actual" tour the vehicle will do is thus: [first] -> depot -> [first]
+                // We however don't save this, in order to lie to the rest of the heuristics (the depot should in this case **not** influence the solution)
 
+                // We keep track of where the depot should be positioned in the tour and save the initial cost for this
                 var w = problem.Weights;
                 int depot = (int)problem.Depot;
                 float cost = w[first][depot] + w[depot][last] - w[first][last];
                 _depotPoint.Add(first);
                 _depotCost.Add(cost);
+
+
+                // but... The time is not the only cost of the depot. The depot might also have a visitcost (weight/time/...) associated with it
+                // This has to be taken into account as well. 
+
             }
             else
             {
@@ -250,6 +259,21 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 throw new NullReferenceException("CheapestDepotPosition can not work if there is no depot");
             }
+
+            if (removedPoints != null)
+            {
+                var rp = (Operators.Seq)removedPoints;
+                if (rp.Length < 3)
+                {
+                    throw new ArgumentException("When a sequence of removed points is given, it should contain at least three elements");
+                }
+                if (rp[0] == rp[rp.Length - 1])
+                {
+                    throw new ArgumentException("When a sequence of removed points is given, the first and last element should be different");
+
+                }
+            }
+
             var tour = Tour(tourIndex);
             int depot = (int)problem.Depot;
             var w = problem.Weights;
@@ -267,6 +291,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 var rp = (Operators.Seq)removedPoints;
                 shortcutStart = rp[0];
                 shortcutEnd = rp[rp.Length - 1];
+
+                if(current == shortcutStart){
+                    next = (int) shortcutEnd;
+                }
             }
 
 
@@ -363,7 +391,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         public float SimulateDepotCost(NoDepotCVRProblem problem, out int newDepotPoint, int tour,
             int? placedVisit = null, Operators.Seq? placedVisits = null, int? after = null, Operators.Seq? removedVisits = null, bool worstOnly = false)
         {
-            if(problem.Depot == null){
+            if (problem.Depot == null)
+            {
                 newDepotPoint = 0;
                 return 0f;
             }
