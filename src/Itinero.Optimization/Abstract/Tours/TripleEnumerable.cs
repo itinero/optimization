@@ -70,7 +70,7 @@ namespace Itinero.Optimization.Abstract.Tours
             {
                 get
                 {
-                    return _current;
+                    return new Triple(_current.From, _current.Along, _current.To);
                 }
             }
 
