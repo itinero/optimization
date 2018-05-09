@@ -84,7 +84,7 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
         {
             return new NoDepotCVRPSolution(0);
         }
-        
+
         [Test]
         public void TestCapacityConstraints()
         {
@@ -164,14 +164,28 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
 
+        var path = "/home/pietervdvn/Desktop/TestLog.txt";
         private void log(String msg)
         {
-            File.AppendAllText("/home/pietervdvn/Desktop/TestLog.txt", msg + "\n");
+            try
+            {
+
+                File.AppendAllText(path, msg + "\n");
+            }
+            catch (Exception e) { }
         }
 
         private void clearLog()
         {
-            File.WriteAllText("/home/pietervdvn/Desktop/TestLog.txt", "Testlog\n-------\n");
+            try
+            {
+
+                File.WriteAllText(path, "/home/pietervdvn/Desktop/TestLog.txt", "Testlog\n-------\n");
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
     }

@@ -42,8 +42,10 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
         {
             var model = "data.regression.abstract.model1.json".GetAbstractModel();
             var result = NoDepotCVRPSolverDetails.TryToNoDepotCVRP(model);
-
-            var solution = result.Value.Solve();
+            for (var i = 0; i < 10; i++)
+            {
+                var solution = result.Value.Solve();
+            }
         }
 
         /// <summary>
@@ -54,8 +56,10 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
         {
             var model = "data.regression.abstract.model2.json".GetAbstractModel();
             var result = NoDepotCVRPSolverDetails.TryToNoDepotCVRP(model);
-
-            var solution = result.Value.Solve();
+            for (var i = 0; i < 10; i++)
+            {
+                var solution = result.Value.Solve();
+            }
         }
     }
 }

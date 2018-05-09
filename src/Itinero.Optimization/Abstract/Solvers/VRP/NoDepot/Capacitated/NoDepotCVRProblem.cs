@@ -201,9 +201,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                         slci, new TSP.Solvers.HillClimbing3OptSolver(),
                         new IInterTourImprovementOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>[]
                         {
-                              multiReloc25,
-                              reloc,
-                              multiExch15
+                      //        multiReloc25,
+                       //       reloc,
+                       //       multiExch15
                         }
                         );
 

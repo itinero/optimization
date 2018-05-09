@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2018.1/system/resharper-host/local/Transient/ReSharperHost/v12/SolutionCaches/_Itinero.Optimization.-1045900459.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.9.0/build/netcoreapp1.0/Mono.Cecil.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.9.0/build/netcoreapp1.0/NUnit3.TestAdapter.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.9.0/build/netcoreapp1.0/nunit.engine.netstandard.dll" t="Include" />
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p=".gitignore" t="Include" />
+      <e p="Itinero.Optimization.sln" t="IncludeFlat" />
+      <e p="LICENSE.md" t="Include" />
+      <e p="NOTICE.md" t="Include" />
+      <e p="README.md" t="Include" />
+      <e p="SharedAssemblyVersion.cs" t="Include" />
+      <e p="Solution Items" t="Include" />
+      <e p="build.bat" t="Include" />
+      <e p="build.sh" t="Include" />
+      <e p="nuspec" t="Include">
+        <e p="Itinero.Optimization.nuspec" t="Include" />
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="src" t="Include">
+        <e p="Itinero.Optimization" t="IncludeRecursive">
+          <e p="Abstract" t="Include">
+            <e p="Models" t="Include">
+              <e p="AbstractModel.cs" t="Include" />
+              <e p="Costs" t="Include">
+                <e p="TravelCostMatrix.cs" t="Include" />
+                <e p="VisitCost.cs" t="Include" />
+              </e>
+              <e p="TimeWindows" t="Include">
+                <e p="TimeWindow.cs" t="Include" />
+                <e p="TimeWindowExtensions.cs" t="Include" />
+              </e>
+              <e p="Vehicles" t="Include">
+                <e p="Constraints" t="Include">
+                  <e p="CapacityConstraint.cs" t="Include" />
+                </e>
+                <e p="Vehicle.cs" t="Include" />
+                <e p="VehiclePool.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Solvers" t="Include">
+              <e p="Algorithms" t="Include">
+                <e p="CheapestInsertion" t="Include">
+                  <e p="CheapestInsertionDirectedHelper.cs" t="Include" />
+                  <e p="CheapestInsertionHelper.cs" t="Include" />
+                </e>
+                <e p="Directed" t="Include">
+                  <e p="DirectedHelper.cs" t="Include" />
+                </e>
+                <e p="ISolution.cs" t="Include" />
+                <e p="NearestNeighbour" t="Include">
+                  <e p="NearestNeigbourArray.cs" t="Include" />
+                  <e p="NearestNeighbourCache.cs" t="Include" />
+                  <e p="NearestNeighbours.cs" t="Include" />
+                  <e p="SortedNearestNeighbours.cs" t="Include" />
+                </e>
+                <e p="Random" t="Include">
+                  <e p="RandomGenerator.cs" t="Include" />
+                  <e p="RandomPool.cs" t="Include" />
+                </e>
+                <e p="Seeds" t="Include">
+                  <e p="SeedHeuristics.cs" t="Include" />
+                </e>
+                <e p="Solvers" t="Include">
+                  <e p="EmptyOperator.cs" t="Include" />
+                  <e p="Extensions.cs" t="Include" />
+                  <e p="GA" t="Include">
+                    <e p="GASettings.cs" t="Include" />
+                    <e p="GASolver.cs" t="Include" />
+                    <e p="ICrossOverOperator.cs" t="Include" />
+                    <e p="ISelectionOperator.cs" t="Include" />
+                    <e p="Individual.cs" t="Include" />
+                    <e p="TournamentSelectionOperator.cs" t="Include" />
+                  </e>
+                  <e p="IOperator.cs" t="Include" />
+                  <e p="IPerturber.cs" t="Include" />
+                  <e p="ISolver.cs" t="Include" />
+                  <e p="IterativeOperator.cs" t="Include" />
+                  <e p="IterativeSolver.cs" t="Include" />
+                  <e p="MultiOperator.cs" t="Include" />
+                  <e p="Objective" t="Include">
+                    <e p="ObjectiveBase.cs" t="Include" />
+                    <e p="ObjectiveBaseExtensions.cs" t="Include" />
+                    <e p="SolverObjectiveWrapper.cs" t="Include" />
+                  </e>
+                  <e p="SolverBase.cs" t="Include" />
+                  <e p="SolverObjectiveWrapper.cs" t="Include" />
+                  <e p="VNS" t="Include">
+                    <e p="VNSSolver.cs" t="Include" />
+                  </e>
+                </e>
+              </e>
+              <e p="FunctionalExtensions.cs" t="Include" />
+              <e p="General" t="Include">
+                <e p="Delegates.cs" t="Include" />
+                <e p="Operators" t="Include">
+                  <e p="GeneralLocal2Opt.cs" t="Include" />
+                  <e p="GeneralRandom1Shift.cs" t="Include" />
+                </e>
+                <e p="SeqExtensions.cs" t="Include" />
+                <e p="WeightExtensions.cs" t="Include" />
+              </e>
+              <e p="STSP" t="Include">
+                <e p="Directed" t="Include">
+                  <e p="STSPFitness.cs" t="Include" />
+                  <e p="STSPObjective.cs" t="Include" />
+                  <e p="STSPSolveDetails.cs" t="Include" />
+                  <e p="STSProblem.cs" t="Include" />
+                  <e p="Solver" t="Include">
+                    <e p="Operators" t="Include">
+                      <e p="CheapestInsertionOperator.cs" t="Include" />
+                      <e p="DirectionLocalSearchOperator.cs" t="Include" />
+                    </e>
+                    <e p="RandomSolver.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="STPSFitness.cs" t="Include" />
+                <e p="STSPObjective.cs" t="Include" />
+                <e p="STSPSolverDetails.cs" t="Include" />
+                <e p="STSProblem.cs" t="Include" />
+                <e p="Solvers" t="Include">
+                  <e p="Operators" t="Include">
+                    <e p="CheapestInsertionOperator.cs" t="Include" />
+                  </e>
+                  <e p="RandomSolver.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Sequences" t="Include">
+                <e p="Directed" t="Include">
+                  <e p="SequenceDirectedObjective.cs" t="Include" />
+                  <e p="SequenceDirectedProblem.cs" t="Include" />
+                  <e p="SequenceDirectedRouter.cs" t="Include" />
+                  <e p="Solver" t="Include">
+                    <e p="ConstructionSolver.cs" t="Include" />
+                    <e p="Operators" t="Include">
+                      <e p="DirectionLocalSearchOperator.cs" t="Include" />
+                    </e>
+                  </e>
+                </e>
+              </e>
+              <e p="SolverDetails.cs" t="Include" />
+              <e p="SolverRegistry.cs" t="Include" />
+              <e p="TSP" t="Include">
+                <e p="Directed" t="Include">
+                  <e p="Solvers" t="Include">
+                    <e p="HillClimbing3OptSolver.cs" t="Include" />
+                    <e p="Operators" t="Include">
+                      <e p="CheapestInsertionOperator.cs" t="Include" />
+                      <e p="DirectionLocalSearch.cs" t="Include" />
+                    </e>
+                    <e p="RandomSolver.cs" t="Include" />
+                  </e>
+                  <e p="TSPObjective.cs" t="Include" />
+                  <e p="TSPRouter.cs" t="Include" />
+                  <e p="TSPSolverDetails.cs" t="Include" />
+                  <e p="TSProblem.cs" t="Include" />
+                </e>
+                <e p="ITSProblem.cs" t="Include" />
+                <e p="ITSProblemExtensions.cs" t="Include" />
+                <e p="Solvers" t="Include">
+                  <e p="BruteForceSolver.cs" t="Include" />
+                  <e p="EAXSolver.cs" t="Include" />
+                  <e p="HillClimbing3OptSolver.cs" t="Include" />
+                  <e p="Operators" t="Include">
+                    <e p="EAXOperator.cs" t="Include" />
+                    <e p="Local1Shift.cs" t="Include" />
+                  </e>
+                  <e p="RandomSolver.cs" t="Include" />
+                </e>
+                <e p="TSPObjective.cs" t="Include" />
+                <e p="TSPSolverDetails.cs" t="Include" />
+                <e p="TSPSubProblem.cs" t="Include" />
+                <e p="TSProblem.cs" t="Include" />
+                <e p="TimeWindows" t="Include">
+                  <e p="Directed" t="Include">
+                    <e p="Solvers" t="Include">
+                      <e p="HillClimbing3OptSolver.cs" t="Include" />
+                      <e p="Operators" t="Include">
+                        <e p="Local1Shift.cs" t="Include" />
+                        <e p="Local1ShiftTurn.cs" t="Include" />
+                        <e p="Local2Opt.cs" t="Include" />
+                        <e p="Random1Shift.cs" t="Include" />
+                        <e p="VNDOperator.cs" t="Include" />
+                      </e>
+                      <e p="RandomSolver.cs" t="Include" />
+                      <e p="VNSConstructionSolver.cs" t="Include" />
+                      <e p="VNSSolver.cs" t="Include" />
+                    </e>
+                    <e p="TSPTWFeasibleObjective.cs" t="Include" />
+                    <e p="TSPTWObjective.cs" t="Include" />
+                    <e p="TSPTWObjectiveBase.cs" t="Include" />
+                    <e p="TSPTWProblem.cs" t="Include" />
+                    <e p="TSPTWSolverDetails.cs" t="Include" />
+                  </e>
+                  <e p="Solvers" t="Include">
+                    <e p="Operators" t="Include">
+                      <e p="Local1Shift.cs" t="Include" />
+                      <e p="Local2Opt.cs" t="Include" />
+                      <e p="Random1Shift.cs" t="Include" />
+                      <e p="VNDOperator.cs" t="Include" />
+                    </e>
+                    <e p="RandomSolver.cs" t="Include" />
+                    <e p="VNSConstructionSolver.cs" t="Include" />
+                    <e p="VNSSolver.cs" t="Include" />
+                  </e>
+                  <e p="TSPTWFeasibleObjective.cs" t="Include" />
+                  <e p="TSPTWObjective.cs" t="Include" />
+                  <e p="TSPTWProblem.cs" t="Include" />
+                  <e p="TSPTWSolverDetails.cs" t="Include" />
+                </e>
+              </e>
+              <e p="VRP" t="Include">
+                <e p="Depot" t="Include">
+                  <e p="Capacitated" t="Include">
+                    <e p="DepotCVRPObjective.cs" t="Include" />
+                    <e p="DepotCVRPSolution.cs" t="Include" />
+                    <e p="DepotCVRPSolverDetails.cs" t="Include" />
+                    <e p="DepotCVRProblem.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="NoDepot" t="Include">
+                  <e p="Capacitated" t="Include">
+                    <e p="Capacity.cs" t="Include" />
+                    <e p="CapacityConstraint.cs" t="Include" />
+                    <e p="CapacityExtensions.cs" t="Include" />
+                    <e p="NoDepotCVRPObjective.cs" t="Include" />
+                    <e p="NoDepotCVRPSolution.cs" t="Include" />
+                    <e p="NoDepotCVRPSolverDetails.cs" t="Include" />
+                    <e p="NoDepotCVRProblem.cs" t="Include" />
+                    <e p="Penalties.cs" t="Include" />
+                    <e p="Penalty.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="Operators" t="Include">
+                  <e p="Exchange" t="Include">
+                    <e p="ExchangeOperator.cs" t="Include" />
+                    <e p="IExchangeObjective.cs" t="Include" />
+                    <e p="IExchangeProblem.cs" t="Include" />
+                    <e p="IExchangeSolution.cs" t="Include" />
+                    <e p="Multi" t="Include">
+                      <e p="IMultiExchangeObjective.cs" t="Include" />
+                      <e p="IMultiExchangeSolution.cs" t="Include" />
+                      <e p="MultiExchangeOperator.cs" t="Include" />
+                    </e>
+                  </e>
+                  <e p="IInterTourImprovementOperator.cs" t="Include" />
+                  <e p="Relocate" t="Include">
+                    <e p="IRelocateObjective.cs" t="Include" />
+                    <e p="IRelocateProblem.cs" t="Include" />
+                    <e p="IRelocateSolution.cs" t="Include" />
+                    <e p="Multi" t="Include">
+                      <e p="IMultiRelocateObjective.cs" t="Include" />
+                      <e p="IMultiRelocateSolution.cs" t="Include" />
+                      <e p="MultiRelocateOperator.cs" t="Include" />
+                    </e>
+                    <e p="RelocateOperator.cs" t="Include" />
+                  </e>
+                  <e p="Seq.cs" t="Include" />
+                </e>
+                <e p="Solvers" t="Include">
+                  <e p="GVNS" t="Include">
+                    <e p="GuidedVNS.cs" t="Include" />
+                    <e p="IGuidedVNSObjective.cs" t="Include" />
+                    <e p="IGuidedVNSSolution.cs" t="Include" />
+                  </e>
+                  <e p="SCI" t="Include">
+                    <e p="ISeededCheapestInsertionObjective.cs" t="Include" />
+                    <e p="ISeededCheapestInsertionSolution.cs" t="Include" />
+                    <e p="SeededCheapestInsertion.cs" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="Tours" t="Include">
+              <e p="AdjacencyArrayTools.cs" t="Include" />
+              <e p="Cycles" t="Include">
+                <e p="AsymmetricAlternatingCycles.cs" t="Include" />
+                <e p="AsymmetricCycles.cs" t="Include" />
+              </e>
+              <e p="Directed" t="Include">
+                <e p="RouteExtensions.cs" t="Include" />
+              </e>
+              <e p="IMultiTour.cs" t="Include" />
+              <e p="ITour.cs" t="Include" />
+              <e p="MultiTour.SubTour.cs" t="Include" />
+              <e p="MultiTour.cs" t="Include" />
+              <e p="MultiTourExtensions.cs" t="Include" />
+              <e p="Operations" t="Include">
+                <e p="ShiftAfter.cs" t="Include" />
+                <e p="ShiftedAfterTour.cs" t="Include" />
+              </e>
+              <e p="Pair.cs" t="Include" />
+              <e p="PairEnumerable.cs" t="Include" />
+              <e p="PermutationEnumerable.cs" t="Include" />
+              <e p="Sequences" t="Include">
+                <e p="Sequence.cs" t="Include" />
+                <e p="SequenceEnumerable.cs" t="Include" />
+              </e>
+              <e p="Tour.cs" t="Include" />
+              <e p="TourExtensions.cs" t="Include" />
+              <e p="Triple.cs" t="Include" />
+              <e p="TripleEnumerable.cs" t="Include" />
+              <e p="Typed" t="Include">
+                <e p="Enumerator.cs" t="Include" />
+                <e p="IMultiTour.cs" t="Include" />
+                <e p="ITour.cs" t="Include" />
+                <e p="MultiTour.cs" t="Include" />
+                <e p="Pair.cs" t="Include" />
+                <e p="PairEnumerable.cs" t="Include" />
+                <e p="Tour.cs" t="Include" />
+                <e p="Triple.cs" t="Include" />
+                <e p="TripleEnumerable.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Collections" t="Include">
+            <e p="SortedDictionary.cs" t="Include" />
+          </e>
+          <e p="Constants.cs" t="Include" />
+          <e p="Extensions.cs" t="Include" />
+          <e p="IO" t="Include">
+            <e p="Json" t="Include">
+              <e p="JsonSerializer.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Itinero.Optimization.csproj" t="IncludeRecursive" />
+          <e p="Models" t="Include">
+            <e p="Costs" t="Include">
+              <e p="VisitCosts.cs" t="Include" />
+            </e>
+            <e p="Mapping" t="Include">
+              <e p="MappedModel.cs" t="Include" />
+              <e p="WeightMatrix.cs" t="Include" />
+              <e p="WeightMatrixBase.cs" t="Include" />
+              <e p="WeightMatrixDirected.cs" t="Include" />
+              <e p="WeightMatrixExtensions.cs" t="Include" />
+            </e>
+            <e p="Metrics.cs" t="Include" />
+            <e p="Model.cs" t="Include" />
+            <e p="ModelAbstractExtensions.cs" t="Include" />
+            <e p="TimeWindows" t="Include">
+              <e p="TimeWindow.cs" t="Include" />
+            </e>
+            <e p="Vehicles" t="Include">
+              <e p="Constraints" t="Include">
+                <e p="CapacityConstraint.cs" t="Include" />
+              </e>
+              <e p="Vehicle.cs" t="Include" />
+              <e p="VehiclePool.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Properties" t="Include">
+            <e p="AssemblyInfo.cs" t="Include" />
+          </e>
+          <e p="RouterExtensions.cs" t="Include" />
+          <e p="bin" t="ExcludeRecursive" />
+          <e p="obj" t="ExcludeRecursive">
+            <e p="Debug" t="Include">
+              <e p="net40" t="Include">
+                <e p="Itinero.Optimization.AssemblyInfo.cs" t="Include" />
+              </e>
+              <e p="net45" t="Include">
+                <e p="Itinero.Optimization.AssemblyInfo.cs" t="Include" />
+              </e>
+              <e p="netstandard1.3" t="Include">
+                <e p="Itinero.Optimization.AssemblyInfo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="test" t="Include">
+        <e p="Itinero.Optimization.Test" t="IncludeRecursive">
+          <e p="Abstract" t="Include">
+            <e p="Model" t="Include">
+              <e p="AbstractModelTests.cs" t="Include" />
+            </e>
+            <e p="Solvers" t="Include">
+              <e p="STSP" t="Include">
+                <e p="Directed" t="Include">
+                  <e p="Solvers" t="Include">
+                    <e p="Operators" t="Include">
+                      <e p="CheapestInsertionOperatorTests.cs" t="Include" />
+                      <e p="DirectionLocalSearchOperatorTests.cs" t="Include" />
+                    </e>
+                    <e p="RandomSolverTests.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="STPSHelper.cs" t="Include" />
+                <e p="Solvers" t="Include">
+                  <e p="Operators" t="Include">
+                    <e p="CheapestInsertionOperatorTests.cs" t="Include" />
+                  </e>
+                  <e p="RandomSolverTests.cs" t="Include" />
+                </e>
+              </e>
+              <e p="TSP" t="Include">
+                <e p="BruteForceSolverTests.cs" t="Include" />
+                <e p="Directed" t="Include">
+                  <e p="Solvers" t="Include">
+                    <e p="HillClimbing3OptSolverTests.cs" t="Include" />
+                    <e p="Operators" t="Include">
+                      <e p="DirectionLocalSearchTest.cs" t="Include" />
+                    </e>
+                  </e>
+                </e>
+                <e p="Solvers" t="Include">
+                  <e p="EAXSolverTests.cs" t="Include" />
+                  <e p="HillClimbing3OptSolverTests.cs" t="Include" />
+                  <e p="Operators" t="Include">
+                    <e p="EAXOperatorTests.cs" t="Include" />
+                    <e p="Local1ShiftTests.cs" t="Include" />
+                  </e>
+                  <e p="RandomSolverTests.cs" t="Include" />
+                </e>
+                <e p="TSPHelper.cs" t="Include" />
+                <e p="TSPProblemTests.cs" t="Include" />
+                <e p="TestTSPProblem.cs" t="Include" />
+                <e p="TimeWindows" t="Include">
+                  <e p="Directed" t="Include">
+                    <e p="Solvers" t="Include">
+                      <e p="Operators" t="Include">
+                        <e p="Local1ShiftTimeWindowTests.cs" t="Include" />
+                        <e p="Local1ShiftTurnTests.cs" t="Include" />
+                        <e p="Local2OptTests.cs" t="Include" />
+                        <e p="Random1ShiftTests.cs" t="Include" />
+                        <e p="VNDOperatorTests.cs" t="Include" />
+                      </e>
+                      <e p="VNSConstructionSolverTests.cs" t="Include" />
+                      <e p="VNSSolverTests.cs" t="Include" />
+                    </e>
+                    <e p="TSPTWFeasibleObjectiveTests.cs" t="Include" />
+                    <e p="TSPTWProblemTests.cs" t="Include" />
+                  </e>
+                  <e p="Solvers" t="Include">
+                    <e p="Operators" t="Include">
+                      <e p="Local1ShiftTimeWindowTests.cs" t="Include" />
+                      <e p="Local2OptTests.cs" t="Include" />
+                      <e p="Random1ShiftTests.cs" t="Include" />
+                      <e p="VNDOperatorTests.cs" t="Include" />
+                    </e>
+                    <e p="VNSConstructionSolverTests.cs" t="Include" />
+                    <e p="VNSSolverTests.cs" t="Include" />
+                  </e>
+                  <e p="TSPTWFeasibleObjectiveTests.cs" t="Include" />
+                  <e p="TSPTWHelper.cs" t="Include" />
+                </e>
+              </e>
+              <e p="VRP" t="Include">
+                <e p="NoDepot" t="Include">
+                  <e p="Capacitated" t="Include">
+                    <e p="NoDepotCVRPSSolutionTest.cs" t="Include" />
+                    <e p="NoDepotCVRPSolverDetailsTests.cs" t="Include" />
+                    <e p="Solvers" t="Include">
+                      <e p="GuidedVNSTests.cs" t="Include" />
+                      <e p="Operators" t="Include">
+                        <e p="CrossExchangeInterImprovementOperatorTests.cs" t="Include" />
+                        <e p="ExchangeInterImprovementOperatorTests.cs" t="Include" />
+                        <e p="RelocateExchangeInterImprovementOperatorTests.cs" t="Include" />
+                        <e p="RelocateImprovementOperatorTests.cs" t="Include" />
+                      </e>
+                      <e p="SeededLocalizedCheapestInsertionSolverTests.cs" t="Include" />
+                    </e>
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="Tours" t="Include">
+              <e p="MultiTourTests.cs" t="Include" />
+              <e p="Operators" t="Include">
+                <e p="ShiftAfterTests.cs" t="Include" />
+              </e>
+              <e p="PairEnumerableTests.cs" t="Include" />
+              <e p="PermutationEnumerableTests.cs" t="Include" />
+              <e p="Sequences" t="Include">
+                <e p="SequenceEnumerationTests.cs" t="Include" />
+                <e p="SequenceTests.cs" t="Include" />
+              </e>
+              <e p="TourExtensionsTests.cs" t="Include" />
+              <e p="TourTest.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Algorithms" t="Include">
+            <e p="CheapestInsertion" t="Include">
+              <e p="CheapestInsertionDirectedHelperTests.cs" t="Include" />
+            </e>
+            <e p="Directed" t="Include">
+              <e p="DirectedHelperTests.cs" t="Include" />
+            </e>
+            <e p="NearestNeighbours" t="Include">
+              <e p="NNearestNeighboursAlgorithmTests.cs" t="Include" />
+            </e>
+            <e p="Random" t="Include">
+              <e p="RandomPoolTests.cs" t="Include" />
+            </e>
+            <e p="Seeds" t="Include">
+              <e p="SeedHeuristicsTests.cs" t="Include" />
+            </e>
+            <e p="Solvers" t="Include">
+              <e p="GA" t="Include">
+                <e p="CrossOverMock.cs" t="Include" />
+                <e p="GASolverTests.cs" t="Include" />
+                <e p="SelectionMock.cs" t="Include" />
+                <e p="TournamentSelectionOperatorTests.cs" t="Include" />
+              </e>
+              <e p="GeneratorMock.cs" t="Include" />
+              <e p="IterativeSolverTest.cs" t="Include" />
+              <e p="LocalSearchMock.cs" t="Include" />
+              <e p="ObjectiveMock.cs" t="Include" />
+              <e p="PerturberMock.cs" t="Include" />
+              <e p="ProblemMock.cs" t="Include" />
+              <e p="SolutionMock.cs" t="Include" />
+              <e p="VNS" t="Include">
+                <e p="VNSSolverTests.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="ExtraAssert.cs" t="Include" />
+          <e p="GeoExtensions.cs" t="Include" />
+          <e p="Itinero.Optimization.Test.csproj" t="IncludeRecursive" />
+          <e p="Models" t="Include">
+            <e p="ModelTests.cs" t="Include" />
+          </e>
+          <e p="NotSoRandomGenerator.cs" t="Include" />
+          <e p="Sequences" t="Include">
+            <e p="Directed" t="Include">
+              <e p="Solvers" t="Include">
+                <e p="ConstructionSolverTests.cs" t="Include" />
+                <e p="Operators" t="Include">
+                  <e p="DirectionLocalSearchOperatorTests.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+            <e p="SequenceProblemHelper.cs" t="Include" />
+          </e>
+          <e p="Staging" t="Include">
+            <e p="StagingHelpers.cs" t="Include" />
+            <e p="VRP" t="Include">
+              <e p="NoDepot" t="Include">
+                <e p="Capacitated" t="Include">
+                  <e p="StagingHelper.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="TestConstants.cs" t="Include" />
+          <e p="WeightsHelper.cs" t="Include" />
+          <e p="bin" t="ExcludeRecursive" />
+          <e p="data" t="Include">
+            <e p="geometric" t="Include">
+              <e p="problem1.geojson" t="Include" />
+              <e p="problem2.geojson" t="Include" />
+              <e p="problem3.geojson" t="Include" />
+              <e p="problem4.geojson" t="Include" />
+              <e p="problem5.geojson" t="Include" />
+              <e p="problem6.geojson" t="Include" />
+            </e>
+            <e p="regression" t="Include">
+              <e p="abstract" t="Include">
+                <e p="model1.json" t="Include" />
+                <e p="model2.json" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="obj" t="ExcludeRecursive">
+            <e p="Debug" t="Include">
+              <e p="netcoreapp2.0" t="Include">
+                <e p="Itinero.Optimization.Test.AssemblyInfo.cs" t="Include" />
+                <e p="Itinero.Optimization.Test.Program.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="Itinero.Optimization.Test.Functional" t="IncludeRecursive">
+          <e p="GeoExtensions.cs" t="Include" />
+          <e p="Itinero.Optimization.Test.Functional.csproj" t="IncludeRecursive" />
+          <e p="PerformanceInfoConsumer.cs" t="Include" />
+          <e p="Program.cs" t="Include" />
+          <e p="RouteExtensions.cs" t="Include" />
+          <e p="RouterExtensions.cs" t="Include" />
+          <e p="STSP" t="Include">
+            <e p="STSPTests.cs" t="Include" />
+          </e>
+          <e p="Staging" t="Include">
+            <e p="Download.cs" t="Include" />
+            <e p="RouterDbBuilder.cs" t="Include" />
+            <e p="StagingHelper.cs" t="Include" />
+            <e p="query1.osm" t="Include" />
+            <e p="query1.txt" t="Include" />
+            <e p="query2.osm" t="Include" />
+            <e p="query2.txt" t="Include" />
+            <e p="query3.osm" t="Include" />
+            <e p="query3.txt" t="Include" />
+            <e p="query4.osm" t="Include" />
+            <e p="query4.txt" t="Include" />
+            <e p="query5.osm" t="Include" />
+            <e p="query5.txt" t="Include" />
+            <e p="query6.osm" t="Include" />
+            <e p="query6.txt" t="Include" />
+            <e p="query7.osm" t="Include" />
+            <e p="query7.txt" t="Include" />
+          </e>
+          <e p="TSP" t="Include">
+            <e p="TSPHelper.cs" t="Include" />
+            <e p="TSPTests.cs" t="Include" />
+          </e>
+          <e p="TSP-TW" t="Include">
+            <e p="TSPTWTests.cs" t="Include" />
+          </e>
+          <e p="VRP" t="Include">
+            <e p="Depot" t="Include">
+              <e p="Capacitated" t="Include">
+                <e p="DepotCVRPTests.cs" t="Include" />
+              </e>
+            </e>
+            <e p="NoDepot" t="Include">
+              <e p="Capacitated" t="Include">
+                <e p="ClusteredWithDepotCVRPTests.cs" t="Include" />
+                <e p="NoDepotCVRPTests.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="bin" t="ExcludeRecursive" />
+          <e p="data" t="Include">
+            <e p="DepotCVRP" t="Include">
+              <e p="problem1.geojson" t="Include" />
+              <e p="problem2-spijkenisse.geojson" t="Include" />
+              <e p="problem3-de-hague.geojson" t="Include" />
+              <e p="problem4-rotterdam.geojson" t="Include" />
+              <e p="problem5-rotterdam.geojson" t="Include" />
+              <e p="solutions" t="Include">
+                <e p="guided-vns-lille-0.geojson" t="Include" />
+                <e p="guided-vns-lille-1.geojson" t="Include" />
+                <e p="results" t="Include">
+                  <e p="spijkenisse-visit-costs-0.geojson" t="Include" />
+                  <e p="spijkenisse-visit-costs-0.json" t="Include" />
+                  <e p="spijkenisse-visit-costs-1.geojson" t="Include" />
+                  <e p="spijkenisse-visit-costs-1.json" t="Include" />
+                  <e p="spijkenisse-visit-costs-2.geojson" t="Include" />
+                  <e p="spijkenisse-visit-costs-2.json" t="Include" />
+                  <e p="spijkenisse-visit-costs-3.geojson" t="Include" />
+                  <e p="spijkenisse-visit-costs-3.json" t="Include" />
+                  <e p="spijkenisse-visit-costs-4.geojson" t="Include" />
+                  <e p="spijkenisse-visit-costs-4.json" t="Include" />
+                  <e p="spijkenisse-visit-costs-5.geojson" t="Include" />
+                  <e p="spijkenisse-visit-costs-5.json" t="Include" />
+                  <e p="spijkenisse-visit-costs.md" t="Include" />
+                </e>
+              </e>
+            </e>
+            <e p="NoDepotCVRP" t="Include">
+              <e p="problem1.geojson" t="Include" />
+              <e p="problem2-spijkenisse.geojson" t="Include" />
+              <e p="problem3-de-hague.geojson" t="Include" />
+              <e p="problem4-rotterdam.geojson" t="Include" />
+              <e p="problem5-rotterdam.geojson" t="Include" />
+              <e p="solutions" t="Include">
+                <e p="guided-vns-lille-0.geojson" t="Include" />
+                <e p="guided-vns-lille-1.geojson" t="Include" />
+                <e p="results" t="Include">
+                  <e p="spijkenisse-visit-costs-0.geojson" t="Include" />
+                  <e p="spijkenisse-visit-costs-0.json" t="Include" />
+                  <e p="spijkenisse-visit-costs-1.geojson" t="Include" />
+                  <e p="spijkenisse-visit-costs-1.json" t="Include" />
+                  <e p="spijkenisse-visit-costs-2.geojson" t="Include" />
+                  <e p="spijkenisse-visit-costs-2.json" t="Include" />
+                  <e p="spijkenisse-visit-costs-3.geojson" t="Include" />
+                  <e p="spijkenisse-visit-costs-3.json" t="Include" />
+                  <e p="spijkenisse-visit-costs-4.geojson" t="Include" />
+                  <e p="spijkenisse-visit-costs-4.json" t="Include" />
+                  <e p="spijkenisse-visit-costs-5.geojson" t="Include" />
+                  <e p="spijkenisse-visit-costs-5.json" t="Include" />
+                  <e p="spijkenisse-visit-costs.md" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="obj" t="ExcludeRecursive">
+            <e p="Debug" t="Include">
+              <e p="netcoreapp2.0" t="Include">
+                <e p="Itinero.Optimization.Test.Functional.AssemblyInfo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="query1.routerdb" t="Include" />
+          <e p="query2.routerdb" t="Include" />
+          <e p="query3.routerdb" t="Include" />
+          <e p="query4.routerdb" t="Include" />
+          <e p="query7.routerdb" t="Include" />
+          <e p="result" t="Include">
+            <e p="clustered-depot-CVRP-lille-0.geojson" t="Include" />
+            <e p="clustered-depot-CVRP-lille-1.geojson" t="Include" />
+            <e p="guided-vns-lille-0.geojson" t="Include" />
+            <e p="guided-vns-lille-1.geojson" t="Include" />
+            <e p="guided-vns-lille-capacitated-0.geojson" t="Include" />
+            <e p="guided-vns-lille-capacitated-1.geojson" t="Include" />
+            <e p="guided-vns-lille-capacitated-2.geojson" t="Include" />
+            <e p="guided-vns-lille-capacitated-3.geojson" t="Include" />
+            <e p="guided-vns-lille-capacitated-4.geojson" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="test.bat" t="Include" />
+      <e p="test.sh" t="Include" />
+    </e>
+  </component>
+</project>
