@@ -20,14 +20,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
+using Itinero.Optimization.Algorithms;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
     /// <summary>
     /// Contains extension methods to handle capacity.
     /// </summary>
-    public static class CapacityExtensions
+    public static class 
+        CapacityExtensions
     {
+
+        
         /// <summary>
         /// Updates the costs associated with a tour with the given visits.
         /// </summary>
