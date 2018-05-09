@@ -21,7 +21,6 @@ using Itinero.Optimization.Algorithms.Random;
 using Itinero.Optimization.Abstract.Solvers.STSP.Directed;
 using Itinero.Optimization.Abstract.Solvers.STSP.Directed.Solvers.Operators;
 using NUnit.Framework;
-using System.Linq;
 
 namespace Itinero.Optimization.Test.STSP.Directed.Solvers.Operators
 {
@@ -48,12 +47,11 @@ namespace Itinero.Optimization.Test.STSP.Directed.Solvers.Operators
             problem.Weights.SetWeight(4, 0, 1);
 
             // create a route with one shift.
-            var route = new Optimization.Abstract.Tours.Tour(new int[] { 0, 8, 12, 16 }, null);
+            var route = new Optimization.Abstract.Tours.Tour(new[] { 0, 8, 12, 16 }, null);
 
             // apply the operator.
             var localSearch = new CheapestInsertionOperator(4, 10);
-            STSPFitness delta;
-            Assert.IsTrue(localSearch.Apply(problem, new STSPObjective(), route, out delta));
+            Assert.IsTrue(localSearch.Apply(problem, new STSPObjective(), route, out STSPFitness delta));
         }
 
         /// <summary>
@@ -73,7 +71,7 @@ namespace Itinero.Optimization.Test.STSP.Directed.Solvers.Operators
             problem.Weights.SetWeight(4, 0, 1);
 
             // create a route with one shift.
-            var route = new Optimization.Abstract.Tours.Tour(new int[] { 0, 12, 4, 16 }, 16);
+            var route = new Optimization.Abstract.Tours.Tour(new[]{ 0, 12, 4, 16 }, 16);
 
             // apply the operator.
             var localSearch = new CheapestInsertionOperator(4, 10);
@@ -98,12 +96,11 @@ namespace Itinero.Optimization.Test.STSP.Directed.Solvers.Operators
             problem.Weights.SetWeight(4, 0, 1);
 
             // apply the operator.
-            var route = new Optimization.Abstract.Tours.Tour(new int[] { 0, 12, 4, 16 }, 0);
+            var route = new Optimization.Abstract.Tours.Tour(new[] { 0, 12, 4, 16 }, 0);
 
             // apply the 1-shift local search, it should find the customer to replocate.
             var localSearch = new CheapestInsertionOperator(4, 10);
-            STSPFitness delta;
-            Assert.IsTrue(localSearch.Apply(problem, new STSPObjective(), route, out delta));
+            Assert.IsTrue(localSearch.Apply(problem, new STSPObjective(), route, out STSPFitness delta));
         }
     }
 }

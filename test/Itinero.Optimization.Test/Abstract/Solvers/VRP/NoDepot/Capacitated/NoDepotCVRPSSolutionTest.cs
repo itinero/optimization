@@ -164,13 +164,12 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
         }
 
 
-        var path = "/home/pietervdvn/Desktop/TestLog.txt";
         private void log(String msg)
         {
             try
             {
 
-                File.AppendAllText(path, msg + "\n");
+                File.AppendAllText("/home/pietervdvn/Desktop/TestLog.txt", msg + "\n");
             }
             catch (Exception e) { }
         }
@@ -180,7 +179,7 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
             try
             {
 
-                File.WriteAllText(path, "/home/pietervdvn/Desktop/TestLog.txt", "Testlog\n-------\n");
+                File.WriteAllText("/home/pietervdvn/Desktop/TestLog.txt", "Testlog\n-------\n");
             }
             catch (Exception e)
             {

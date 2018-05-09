@@ -20,12 +20,6 @@ using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated;
 using Itinero.Optimization.Test.Staging;
 using NUnit.Framework;
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Itinero.Optimization.Models.Costs;
-using Itinero.Optimization.Models.Vehicles.Constraints;
-
 namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
     /// <summary>
@@ -41,10 +35,13 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
         public void TestRegressionModel1()
         {
             var model = "data.regression.abstract.model1.json".GetAbstractModel();
-            var result = NoDepotCVRPSolverDetails.TryToNoDepotCVRP(model);
-            for (var i = 0; i < 10; i++)
+            var result = model.TryToNoDepotCVRP();
+            for (var i = 0; i < 1000; i++)
             {
                 var solution = result.Value.Solve();
+                
+                
+                
             }
         }
 
@@ -55,7 +52,7 @@ namespace Itinero.Optimization.Test.Abstract.Solvers.VRP.NoDepot.Capacitated
         public void TestRegressionModel2()
         {
             var model = "data.regression.abstract.model2.json".GetAbstractModel();
-            var result = NoDepotCVRPSolverDetails.TryToNoDepotCVRP(model);
+            var result = model.TryToNoDepotCVRP();
             for (var i = 0; i < 10; i++)
             {
                 var solution = result.Value.Solve();
