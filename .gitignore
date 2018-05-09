@@ -30,6 +30,7 @@ test-results*/
 .DotSettings
 *.vspx
 *.patch
+.idea/*
 
 packages/*
 !packages/repositories.config
