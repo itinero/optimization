@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Itinero.Algorithms.Contracted.EdgeBased.Witness;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
@@ -442,6 +443,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             tour2.Verify(problem.Weights.Length);
 
             delta = difference;
+            
             return true;
         }
 
@@ -792,6 +794,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 solution.UpdateDepotPosition(t2, newDepotPoint2, tour2depotCost);
             }
 
+        
 
             return true;
         }

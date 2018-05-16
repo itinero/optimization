@@ -36,7 +36,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 
         /// <summary>
         /// This is an array of costs; which might be different on each visit.
-        /// (e.g. the visit with ID 0 contains 10kg that should be picked up, stop 1 has a load of 25kg, .!--.!--.)
+        /// (e.g. the visit with ID 0 contains 10kg that should be picked up, stop 1 has a load of 25kg,...)
         /// </summary>
         public float[] Values { get; set; }
     }

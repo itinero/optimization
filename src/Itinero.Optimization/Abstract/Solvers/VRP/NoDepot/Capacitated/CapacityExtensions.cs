@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 using Itinero.Optimization.Algorithms;
@@ -30,6 +31,39 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
     public static class 
         CapacityExtensions
     {
+
+
+        /// <summary>
+        /// Checks if the contents of this tour meet the given capacity contraints. Returns false if not.
+        /// </summary>
+        /// <param name="capacity"></param>
+        /// <param name="content"></param>
+        /// <param name="visits"></param>
+        /// <returns></returns>
+        public static bool ConstraintsAreHonored(this Capacity capacity, Content content, IEnumerable<int> visits)
+        {
+             if (capacity.Constraints == null)
+            { // no constraints, no work.
+                return true;
+            }
+            
+            if (content.Quantities == null ||
+                content.Quantities.Length != capacity.Constraints.Length)
+            {
+                content.Quantities = new float[capacity.Constraints.Length];
+            }
+            foreach (var constraint in capacity.Constraints)
+            {
+                var constraint1 = constraint;
+                var q = visits.Sum(visit => constraint1.Values[visit]);
+                if (q > constraint.Max)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         
         /// <summary>
@@ -47,7 +81,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 content.Quantities = new float[capacity.Constraints.Length];
             }
-
+            
             for (var i = 0; i < capacity.Constraints.Length; i++)
             {
                 var constraint = capacity.Constraints[i];
