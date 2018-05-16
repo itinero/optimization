@@ -39,7 +39,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         private readonly List<CapacityExtensions.Content> _contents;
         private readonly List<ITour> _tours; // does not use multitour, as some problems require the same depot to be visited multiple times
 
-
+        public List<ITour> Tours => _tours;
+        
         /// The visit-ID _after_ which the depot is visited
         private readonly List<int> _depotPoint;
 

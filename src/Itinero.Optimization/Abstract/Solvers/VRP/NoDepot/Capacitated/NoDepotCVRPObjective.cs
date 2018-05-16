@@ -984,6 +984,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 return false;
             }
 
+            if (!problem.Capacity.ConstraintsAreHonored(solution.Contents, solution.Tours))
+            {
+                return false;
+            }
+
             // insert the visit, it is possible to add it. 
             visits.Remove(visit);
             tour.InsertAfter(location.From, visit);

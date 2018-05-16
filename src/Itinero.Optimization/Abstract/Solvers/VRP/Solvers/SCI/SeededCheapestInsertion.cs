@@ -92,6 +92,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
                     // try and place the next visit.
                     if (objective.TryPlaceAny(problem, solution, t, visits))
                     { // placement succeeded.
+                        
+                            
+                            
                         if (((totalVisits - visits.Count) % interImprovementThreshold) == 0)
                         { // apply improvement local search if threshold reached.
                             // apply the intra-route improvements.

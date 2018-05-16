@@ -19,9 +19,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
-using Itinero.Optimization.Algorithms;
+using Itinero.Optimization.Abstract.Tours;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
 {
@@ -32,6 +31,24 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         CapacityExtensions
     {
 
+
+        public static bool ConstraintsAreHonored(this Capacity capacity, List<Content> contents, List<ITour> tours)
+        {
+            if (contents.Count != tours.Count)
+            {
+                throw new IndexOutOfRangeException($"The number of contents ({contents.Count}) and number of tours ({tours.Count}) don't match");
+            }
+            for (var i = 0; i < contents.Count; i++)
+            {
+                var honored = capacity.ConstraintsAreHonored(contents[i], tours[i]);
+                if (!honored)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Checks if the contents of this tour meet the given capacity contraints. Returns false if not.

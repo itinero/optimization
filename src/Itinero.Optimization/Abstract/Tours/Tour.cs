@@ -225,11 +225,11 @@ namespace Itinero.Optimization.Abstract.Tours
         {
             if (visit < 0)
             { // a new visit cannot be negative!
-                throw new ArgumentOutOfRangeException("visit", "Cannot add visits with a negative id!");
+                throw new ArgumentOutOfRangeException(nameof(visit), "Cannot add visits with a negative id!");
             }
             if (from < 0)
             { // a new visit cannot be negative!
-                throw new ArgumentOutOfRangeException("from", "Cannot add a visit after a visit with a negative id!");
+                throw new ArgumentOutOfRangeException(nameof(@from), "Cannot add a visit after a visit with a negative id!");
             }
             if (from == visit)
             { // the visit are identical.
