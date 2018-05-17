@@ -192,8 +192,8 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     float>[]
                 {
                     multiReloc23,
-                    //reloc,
-                    // multiExch13
+                    reloc,
+                    multiExch13
                 }, 0.03f, .25f
             );
             var slciIterate =
