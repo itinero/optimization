@@ -28,7 +28,6 @@ namespace Itinero.Optimization.Strategies
     public sealed class FuncStrategy<TProblem, TCandidate> : Strategy<TProblem, TCandidate>
     {
         private readonly Func<TProblem, TCandidate> _func;
-        private readonly string _name;
 
         /// <summary>
         /// Creates a new strategy.
@@ -37,7 +36,7 @@ namespace Itinero.Optimization.Strategies
         public FuncStrategy(Func<TProblem, TCandidate> func)
         {
             _func = func;
-            _name = Constants.ANONYMOUS;
+            Name = Constants.ANONYMOUS;
         }
 
         /// <summary>
@@ -48,20 +47,14 @@ namespace Itinero.Optimization.Strategies
         public FuncStrategy(Func<TProblem, TCandidate> func, string name)
         {
             _func = func;
-            _name = name;
+            Name = name;
         }
 
         /// <summary>
         /// Gets the name.
         /// </summary>
         /// <returns></returns>
-        public override string Name
-        {
-            get
-            {
-                return _name;
-            }
-        }
+        public override string Name { get; }
 
         /// <summary>
         /// Runs this strategy on the given problem and returns the best candidate.
@@ -71,16 +64,6 @@ namespace Itinero.Optimization.Strategies
         public override TCandidate Search(TProblem problem)
         {
             return _func(problem);
-        }
-
-        /// <summary>
-        /// Define an implicit type conversion from a function to a strategy instance.
-        /// </summary>
-        /// <param name="func">The function to use as a strategy.</param>
-        /// <returns>The function as a strategy instance.</returns>
-        public static implicit operator FuncStrategy<TProblem, TCandidate>(Func<TProblem, TCandidate> func)
-        {
-            return new FuncStrategy<TProblem, TCandidate>(func);
         }
     }
 

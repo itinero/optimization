@@ -16,21 +16,20 @@
  *  limitations under the License.
  */
 
+using System;
+
 namespace Itinero.Optimization.Strategies
 {
     /// <summary>
-    /// A base class for strategies.
+    /// Abstract representation of a search strategy.
     /// </summary>
-    public abstract class Strategy<TProblem, TCandidate> : IStrategy<TProblem, TCandidate>
+    public abstract class Strategy<TProblem, TCandidate>
     {
         /// <summary>
         /// Gets the name.
         /// </summary>
         /// <returns></returns>
-        public abstract string Name
-        {
-            get;
-        }
+        public abstract string Name { get; }
 
         /// <summary>
         /// A function called when a new candidate was found.
@@ -61,5 +60,15 @@ namespace Itinero.Optimization.Strategies
         /// <param name="problem">The problem.</param>
         /// <returns>A candidate.</returns>
         public abstract TCandidate Search(TProblem problem);
+
+        /// <summary>
+        /// Define an implicit type conversion from a function to a strategy instance.
+        /// </summary>
+        /// <param name="func">The function to use as a strategy.</param>
+        /// <returns>The function as a strategy instance.</returns>
+        public static implicit operator Strategy<TProblem, TCandidate>(Func<TProblem, TCandidate> func)
+        {
+            return new FuncStrategy<TProblem, TCandidate>(func);
+        }
     }
 }

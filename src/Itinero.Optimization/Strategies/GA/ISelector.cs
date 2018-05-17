@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Licensed to SharpSoftware under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for 
  *  additional information regarding copyright ownership.
@@ -18,23 +18,25 @@
 
 using System;
 
-namespace Itinero.Optimization.Tests.Strategies
+namespace Itinero.Optimization.Strategies.GA
 {
     /// <summary>
-    /// A candidate test class.
+    /// Abstract representation of a selection strategy to select individuals.
     /// </summary>
-    internal class IntegerCandidate : IComparable<IntegerCandidate>
+    /// <typeparam name="TCandidate">The candidate type.</typeparam>
+    public interface ISelector<in TCandidate>
     {
-        internal IntegerCandidate(int value)
-        {
-            this.Value = value;
-        }
-        
-        public int Value { get; set; }
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        string Name { get; }
 
-        public int CompareTo(IntegerCandidate other)
-        {
-            return this.Value.CompareTo(other.Value);
-        }
+        /// <summary>
+        /// Selects a candidate from the given population.
+        /// </summary>
+        /// <param name="population">The population.</param>
+        /// <param name="exclude">A function to ignore individuals.</param>
+        /// <returns>The index of the selected candidate.</returns>
+        int Select(TCandidate[] population, Func<int, bool> exclude);
     }
 }

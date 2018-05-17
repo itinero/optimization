@@ -18,6 +18,7 @@
 
 using System;
 using Itinero.Optimization.Strategies;
+using Itinero.Optimization.Tests.Strategies.TestProblems.MinimizeInteger;
 using Xunit;
 
 namespace Itinero.Optimization.Tests.Strategies
@@ -90,7 +91,7 @@ namespace Itinero.Optimization.Tests.Strategies
         [Fact]
         public void IOperatorExtension_ApplyUntilShouldApplyUntil()
         {
-            IOperator<IntegerCandidate> oper = new FuncOperator<IntegerCandidate>((c) => 
+            Operator<IntegerCandidate> oper = new FuncOperator<IntegerCandidate>((c) => 
             {
                 c.Value--;
                 return c.Value > 0;
@@ -109,7 +110,7 @@ namespace Itinero.Optimization.Tests.Strategies
         [Fact]
         public void IOperatorExtension_ApplyUntilWithMaxShouldStopAtMax()
         {
-            IOperator<IntegerCandidate> oper = new FuncOperator<IntegerCandidate>((c) => 
+            Operator<IntegerCandidate> oper = new FuncOperator<IntegerCandidate>((c) => 
             {
                 c.Value--;
                 return c.Value > 0;
@@ -128,7 +129,7 @@ namespace Itinero.Optimization.Tests.Strategies
         [Fact]
         public void IOperatorExtension_IterateShouldRepeat()
         {
-            IOperator<IntegerCandidate> oper = new FuncOperator<IntegerCandidate>((c) => 
+            Operator<IntegerCandidate> oper = new FuncOperator<IntegerCandidate>((c) => 
             {
                 c.Value--;
                 return true;

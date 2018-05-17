@@ -19,6 +19,7 @@
 using Xunit;
 using Itinero.Optimization.Strategies;
 using System;
+using Itinero.Optimization.Tests.Strategies.TestProblems.MinimizeInteger;
 
 namespace Itinero.Optimization.Tests.Strategies
 {
@@ -54,7 +55,7 @@ namespace Itinero.Optimization.Tests.Strategies
         public void IStrategyExtensions_IterateShouldIterateExactNumber()
         {
             var i = 0;
-            IStrategy<int, IntegerCandidate> strategy = new FuncStrategy<int, IntegerCandidate>(
+            Strategy<int, IntegerCandidate> strategy = new FuncStrategy<int, IntegerCandidate>(
                 (p) => 
                 {
                     i++;

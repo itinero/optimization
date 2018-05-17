@@ -26,6 +26,6 @@ namespace Itinero.Optimization.Strategies
         /// <summary>
         /// Defines the name used when strategies/operators are anonymous.
         /// </summary>
-        public static readonly string ANONYMOUS = "ANONYMOUS";
+        public const string ANONYMOUS = "ANONYMOUS";
     }
 }

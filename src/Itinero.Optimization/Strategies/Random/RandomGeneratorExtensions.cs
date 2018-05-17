@@ -45,44 +45,10 @@ namespace Itinero.Optimization.Strategies.Random
             {
                 n--;
                 var k = random.Generate(n + 1);
-                T value = list[k];
+                var value = list[k];
                 list[k] = list[n];
                 list[n] = value;
             }
-        }
-        
-        /// <summary>
-        /// Generates 2 distinct random int's in the given range.
-        /// </summary>
-        /// <param name="start">The start of the range.</param>
-        /// <param name="count">The # of elements.</param>
-        /// <param name="t1">The first random result.</param>
-        /// <param name="t2">The second random result.</param>
-        /// <returns>False if count is smaller <![CDATA[< 2]]></returns>
-        public static bool Random2Between(int start, int count, out int t1, out int t2)
-        {
-            if(count < 2)
-            {
-                t1 = 0;
-                t2 = 0;
-                return false;
-            }
-
-            var random = RandomGenerator.Default;
-            t1 = random.Generate(count);
-            t2 = random.Generate(count - 1);
-            if (t2 >= t1)
-            {
-                t2++;
-            }
-
-            if (start != 0)
-            {
-                t1 += count;
-                t2 += count;
-            }
-
-            return true;
         }
     }
 }

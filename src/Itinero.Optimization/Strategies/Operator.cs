@@ -16,19 +16,21 @@
  *  limitations under the License.
  */
 
+using System;
+
 namespace Itinero.Optimization.Strategies
 {
     /// <summary>
     /// Abstract definition of an operator.
     /// </summary>
-    public interface IOperator<TCandidate>
+    public abstract class Operator<TCandidate>
         where TCandidate : class
     {
         /// <summary>
         /// Gets the name.
         /// </summary>
         /// <returns></returns>
-        string Name { get; }
+        public abstract string Name { get; }
 
         /// <summary>
         /// Applies this operator to the given candidate.
@@ -36,27 +38,47 @@ namespace Itinero.Optimization.Strategies
         /// <param name="candidate">The candidate.</param>
         /// <returns>True if an improvement was found.</returns>
         /// <remarks>The candidate give should be modified in-place but this should *only* happen in the case when there is an improvement or this operator is explicitly used as a mutation operator.</remarks>
-        bool Apply(TCandidate candidate);
+        public abstract bool Apply(TCandidate candidate);
+
+        /// <summary>
+        /// Define an implicit type conversion from a function to a operator instance.
+        /// </summary>
+        /// <param name="func">The function to use.</param>
+        /// <returns>The operator instance.</returns>
+        public static implicit operator Operator<TCandidate>(Func<TCandidate, bool> func)
+        {
+            return new FuncOperator<TCandidate>(func);
+        }
+
+        /// <summary>
+        /// Define an implicit type conversion from a function to an operator instance.
+        /// </summary>
+        /// <param name="op">The operator instance.</param>
+        /// <returns>The function.</returns>
+        public static implicit operator Func<TCandidate, bool>(Operator<TCandidate> op)
+        {
+            return op.Apply;
+        }
     }
 
     /// <summary>
     /// An operator that does nothing.
     /// </summary>
-    public class EmptyOperator<TCandidate> : IOperator<TCandidate>
+    public sealed class EmptyOperator<TCandidate> : Operator<TCandidate>
         where TCandidate : class
     {
         /// <summary>
         /// Gets the name of this operator.
         /// </summary>
         /// <returns></returns>
-        public string Name => "EMPTY";
+        public override string Name => "EMPTY";
 
         /// <summary>
         /// Applies this operator to the given candidate.
         /// </summary>
         /// <param name="candidate">The candidate.</param>
         /// <returns>True if an improvement was found.</returns>
-        public bool Apply(TCandidate candidate)
+        public override bool Apply(TCandidate candidate)
         {
             return false;
         }

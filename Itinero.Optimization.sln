@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 15.0.26124.0
@@ -7,8 +7,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itinero.Optimization", "src\Itinero.Optimization\Itinero.Optimization.csproj", "{AB76A38A-FC7A-4028-AFFC-EDA10B89ED8E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{45FC4AD5-C7E1-488D-992A-635C87E69C24}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itinero.Optimization.Test", "test\Itinero.Optimization.Test\Itinero.Optimization.Test.csproj", "{D4B8506D-0417-488F-B121-EFFFFF5358F6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itinero.Optimization.Test.Functional", "test\Itinero.Optimization.Test.Functional\Itinero.Optimization.Test.Functional.csproj", "{734C0880-072C-4318-905A-189AFA2542C6}"
 EndProject
@@ -56,18 +54,6 @@ Global
 		{AB76A38A-FC7A-4028-AFFC-EDA10B89ED8E}.Release|x64.Build.0 = Release|Any CPU
 		{AB76A38A-FC7A-4028-AFFC-EDA10B89ED8E}.Release|x86.ActiveCfg = Release|Any CPU
 		{AB76A38A-FC7A-4028-AFFC-EDA10B89ED8E}.Release|x86.Build.0 = Release|Any CPU
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6}.Debug|x64.Build.0 = Debug|Any CPU
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6}.Debug|x86.Build.0 = Debug|Any CPU
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6}.Release|x64.ActiveCfg = Release|Any CPU
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6}.Release|x64.Build.0 = Release|Any CPU
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6}.Release|x86.ActiveCfg = Release|Any CPU
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6}.Release|x86.Build.0 = Release|Any CPU
 		{734C0880-072C-4318-905A-189AFA2542C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{734C0880-072C-4318-905A-189AFA2542C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{734C0880-072C-4318-905A-189AFA2542C6}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -110,7 +96,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{AB76A38A-FC7A-4028-AFFC-EDA10B89ED8E} = {E67D55B5-D45C-479C-A2F2-1A4345420CEE}
-		{D4B8506D-0417-488F-B121-EFFFFF5358F6} = {45FC4AD5-C7E1-488D-992A-635C87E69C24}
 		{734C0880-072C-4318-905A-189AFA2542C6} = {45FC4AD5-C7E1-488D-992A-635C87E69C24}
 		{64E51751-4924-48D9-940F-A1EE9DAAA6FB} = {45FC4AD5-C7E1-488D-992A-635C87E69C24}
 		{1AA64FF8-F1A1-44BA-A539-41E60FA8D92B} = {45FC4AD5-C7E1-488D-992A-635C87E69C24}

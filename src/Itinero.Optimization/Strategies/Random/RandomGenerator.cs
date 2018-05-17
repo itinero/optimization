@@ -78,13 +78,7 @@ namespace Itinero.Optimization.Strategies.Random
         /// <summary>
         /// Gets a new random generator.
         /// </summary>
-        public static RandomGenerator Default
-        {
-            get
-            {
-                return DefaultRandomGenerator.Value;
-            }
-        }
+        public static RandomGenerator Default => DefaultRandomGenerator.Value;
 
         /// <summary>
         /// A custom random generator creation function to inject custom random generators.
@@ -93,6 +87,51 @@ namespace Itinero.Optimization.Strategies.Random
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Generates 2 random int's.
+        /// </summary>
+        /// <param name="max">The # of elements.</param>
+        /// <param name="t1">The first random result.</param>
+        /// <param name="t2">The second random result.</param>
+        /// <returns>False if count is smaller <![CDATA[< 2]]></returns>
+        public static bool Generate2(int max, out int t1, out int t2)
+        {
+            return Generate2Between(0, max, out t1, out t2);
+        }
+
+        /// <summary>
+        /// Generates 2 distinct random int's in the given range.
+        /// </summary>
+        /// <param name="start">The start of the range.</param>
+        /// <param name="count">The # of elements.</param>
+        /// <param name="t1">The first random result.</param>
+        /// <param name="t2">The second random result.</param>
+        /// <returns>False if count is smaller <![CDATA[< 2]]></returns>
+        public static bool Generate2Between(int start, int count, out int t1, out int t2)
+        {
+            if(count < 2)
+            {
+                t1 = 0;
+                t2 = 0;
+                return false;
+            }
+
+            var random = RandomGenerator.Default;
+            t1 = random.Generate(count);
+            t2 = random.Generate(count - 1);
+            if (t2 >= t1)
+            {
+                t2++;
+            }
+
+            if (start == 0) return true;
+            
+            t1 += count;
+            t2 += count;
+
+            return true;
         }
     }
 }

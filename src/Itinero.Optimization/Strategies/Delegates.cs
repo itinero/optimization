@@ -28,6 +28,6 @@ namespace Itinero.Optimization.Strategies
         /// </summary>
         /// <param name="candidate">The new candidate.</param>
         /// <returns>True if the search has to continue, false otherwise.</returns>
-        public delegate bool NewCandidate<TCandidate>(TCandidate candidate);
+        public delegate bool NewCandidate<in TCandidate>(TCandidate candidate);
     }
 }

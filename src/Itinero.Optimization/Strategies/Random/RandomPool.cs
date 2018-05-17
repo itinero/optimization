@@ -43,41 +43,22 @@ namespace Itinero.Optimization.Strategies.Random
             this.Reset();
         }
 
-        private int _current = -1;
         private int _left = -1;
 
         /// <summary>
         /// Gets the size of this pool.
         /// </summary>
-        public int Size
-        {
-            get
-            {
-                return _pool.Length;
-            }
-        }
+        public int Size => _pool.Length;
 
         /// <summary>
         /// Returns the current element.
         /// </summary>
-        public int Current
-        {
-            get
-            {
-                return _current;
-            }
-        }
+        public int Current { get; private set; } = -1;
 
         /// <summary>
         /// Returns the current element.
         /// </summary>
-        object IEnumerator.Current
-        {
-            get
-            {
-                return _current;
-            }
-        }
+        object IEnumerator.Current => Current;
 
         /// <summary>
         /// Moves to the next element.
@@ -85,8 +66,7 @@ namespace Itinero.Optimization.Strategies.Random
         /// <returns></returns>
         public int GetNext()
         {
-            int current;
-            this.MoveNext(out current);
+            this.MoveNext(out var current);
             return current;
         }
 
@@ -98,26 +78,26 @@ namespace Itinero.Optimization.Strategies.Random
         {
             if (_left == 0)
             {
-                _current = -1;
+                Current = -1;
                 current = -1;
                 return false;
             }
 
             if (_left == 1)
             {
-                _current = _pool[0];
+                Current = _pool[0];
             }
             else
             {
                 var i = _random.Generate(_left);
-                _current = _pool[i];
+                Current = _pool[i];
                 if (i < _left - 1)
                 {
                     _pool[i] = _pool[_left - 1];
                 }
             }
             _left--;
-            current = _current;
+            current = Current;
             return true;
         }
 
@@ -127,8 +107,7 @@ namespace Itinero.Optimization.Strategies.Random
         /// <returns></returns>
         public bool MoveNext()
         {
-            int current;
-            return this.MoveNext(out current);
+            return this.MoveNext(out _);
         }
 
         /// <summary>

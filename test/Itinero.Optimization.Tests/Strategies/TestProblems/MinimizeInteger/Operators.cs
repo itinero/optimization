@@ -17,26 +17,22 @@
  */
 
 using System;
-using Itinero.Optimization.Strategies;
 
-namespace Itinero.Optimization.Tests.Strategies
+namespace Itinero.Optimization.Tests.Strategies.TestProblems.MinimizeInteger
 {
-    internal static class TestOperators
+    internal static class Operators
     {
         /// <summary>
         /// A simple test operator that does nothing.
         /// </summary>
         /// <returns></returns>
-        public static Func<IntegerCandidate, bool> Empty = (candidate) => 
-        {
-            return false;
-        };
+        public static Func<IntegerCandidate, bool> Empty = (candidate) => false;
 
         /// <summary>
         /// A simple test operator that subtracts random numbers.
         /// </summary>
         /// <returns></returns>
-        public static Func<IntegerCandidate, bool> SubtractRandom = (candidate) => 
+        public static readonly Func<IntegerCandidate, bool> SubtractRandom = (candidate) => 
         {
             if (candidate.Value == 0)
             {
@@ -44,11 +40,20 @@ namespace Itinero.Optimization.Tests.Strategies
             }
             var r = Itinero.Optimization.Strategies.Random.RandomGenerator.Default.Generate(4) + 1;
             candidate.Value -= r;
-            if (candidate.Value < 0)
-            {
-                candidate.Value = 0;
-                return true;
-            }
+            if (candidate.Value >= 0) return true;
+            candidate.Value = 0;
+            return true;
+        };
+
+        /// <summary>
+        /// A simple test operator that adds or subtracts small random numbers.
+        /// </summary>
+        public static Func<IntegerCandidate, bool> MutateRandom = (candidate) =>
+        {
+            var r = Itinero.Optimization.Strategies.Random.RandomGenerator.Default.Generate(8);
+            candidate.Value += r - 4;
+            if (candidate.Value >= 0) return true;
+            candidate.Value = 0;
             return true;
         };
     }

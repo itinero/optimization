@@ -24,11 +24,10 @@ namespace Itinero.Optimization.Strategies
     /// An operator defined by a function.
     /// </summary>
     /// <typeparam name="TCandidate">The candidate type.</typeparam>
-    public sealed class FuncOperator<TCandidate> : IOperator<TCandidate>
+    public sealed class FuncOperator<TCandidate> : Operator<TCandidate>
         where TCandidate : class
     {
         private readonly Func<TCandidate, bool> _func;
-        private readonly string _name;
 
         /// <summary>
         /// Creates a new operator.
@@ -37,7 +36,7 @@ namespace Itinero.Optimization.Strategies
         public FuncOperator(Func<TCandidate, bool> func)
         {
             _func = func;
-            _name = Constants.ANONYMOUS;
+            Name = Constants.ANONYMOUS;
         }
 
         /// <summary>
@@ -48,39 +47,23 @@ namespace Itinero.Optimization.Strategies
         public FuncOperator(Func<TCandidate, bool> func, string name)
         {
             _func = func;
-            _name = name;
+            Name = name;
         }
 
         /// <summary>
         /// Gets the name.
         /// </summary>
         /// <returns></returns>
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-        }
+        public override string Name { get; }
 
         /// <summary>
         /// Applies this operator to the given candidate.
         /// </summary>
         /// <param name="candidate">The candidate.</param>
         /// <returns>True if an improvement was found.</returns>
-        public bool Apply(TCandidate candidate)
+        public override bool Apply(TCandidate candidate)
         {
             return _func(candidate);
-        }
-
-        /// <summary>
-        /// Define an implicit type conversion from a function to a strategy instance.
-        /// </summary>
-        /// <param name="func">The function to use as a strategy.</param>
-        /// <returns>The function as a strategy instance.</returns>
-        public static implicit operator FuncOperator<TCandidate>(Func<TCandidate, bool> func)
-        {
-            return new FuncOperator<TCandidate>(func);
         }
     }
 

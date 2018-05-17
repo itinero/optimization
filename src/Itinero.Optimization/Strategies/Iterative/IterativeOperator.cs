@@ -24,10 +24,10 @@ namespace Itinero.Optimization.Strategies.Iterative
     /// An operator that repeats another operator a number of times.
     /// </summary>
     /// <typeparam name="TCandidate">The candidate type.</typeparam>
-    internal sealed class IterativeOperator<TCandidate> : IOperator<TCandidate>
+    internal sealed class IterativeOperator<TCandidate> : Operator<TCandidate>
         where TCandidate : class
     {
-        private readonly IOperator<TCandidate> _operator;
+        private readonly Operator<TCandidate> _operator;
         private readonly int _n;
         private readonly bool _stopAtFail;
 
@@ -37,7 +37,7 @@ namespace Itinero.Optimization.Strategies.Iterative
         /// <param name="op">The operator.</param>
         /// <param name="n">The numer of times to repeat.</param>
         /// <param name="stopAtFail">When true the iteration stops as soon as the operator fails.</param>
-        public IterativeOperator(IOperator<TCandidate> op, int n, bool stopAtFail = false)
+        public IterativeOperator(Operator<TCandidate> op, int n, bool stopAtFail = false)
         {
             _operator = op;
             _n = n;
@@ -49,18 +49,14 @@ namespace Itinero.Optimization.Strategies.Iterative
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public string Name
-        {
-            get;
-            private set;
-        }
+        public override string Name { get; }
 
         /// <summary>
         /// Applies this operator to the given candidate.
         /// </summary>
         /// <param name="candidate">The candidate.</param>
         /// <returns>True if an improvement was found.</returns>
-        public bool Apply(TCandidate candidate)
+        public override bool Apply(TCandidate candidate)
         {
             return Iterate(_operator, candidate, _n, _stopAtFail);
         }
@@ -74,29 +70,6 @@ namespace Itinero.Optimization.Strategies.Iterative
                 i--;
 
                 if (!op(candidate))
-                {
-                    if (stopAtFail)
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    success = true;
-                }
-            }
-            return success;
-        }
-
-        internal static bool Iterate(IOperator<TCandidate> op, TCandidate candidate, int n, bool stopAtFail)
-        {
-            var success = false;
-            var i = n;
-            while (i > 0)
-            {
-                i--;
-
-                if (!op.Apply(candidate))
                 {
                     if (stopAtFail)
                     {

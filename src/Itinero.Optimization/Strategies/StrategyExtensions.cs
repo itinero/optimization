@@ -23,7 +23,7 @@ namespace Itinero.Optimization.Strategies
     /// <summary>
     /// Extension methods related to the strategies.
     /// </summary>
-    public static class IStrategyExtensions
+    public static class StrategyExtensions
     {
         /// <summary>
         /// Creates a new strategy that uses the given strategy a given number of times and returns the best candidate.
@@ -35,10 +35,7 @@ namespace Itinero.Optimization.Strategies
         /// <returns></returns>
         public static Func<TProblem, TCandidate> Iterate<TProblem, TCandidate>(this Func<TProblem, TCandidate> strategy, int n)
         {
-            return (p) => 
-            {
-                return Iterative.IterativeStrategy<TProblem, TCandidate>.Iterate(strategy, p, n);
-            };
+            return (p) => Iterative.IterativeStrategy<TProblem, TCandidate>.Iterate(strategy, p, n);
         }
 
         /// <summary>
@@ -49,7 +46,7 @@ namespace Itinero.Optimization.Strategies
         /// <typeparam name="TProblem">The problem.</typeparam>
         /// <typeparam name="TCandidate">The candidate.</typeparam>
         /// <returns></returns>
-        public static IStrategy<TProblem, TCandidate> Iterate<TProblem, TCandidate>(this IStrategy<TProblem, TCandidate> strategy, int n)
+        public static Strategy<TProblem, TCandidate> Iterate<TProblem, TCandidate>(this Strategy<TProblem, TCandidate> strategy, int n)
         {
             return new Iterative.IterativeStrategy<TProblem, TCandidate>(strategy, n);
         }

@@ -16,33 +16,30 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Strategies
+using System;
+
+namespace Itinero.Optimization.Tests.Strategies.TestProblems.MinimizeInteger
 {
     /// <summary>
-    /// Abstract representation of a search strategy.
+    /// A candidate test class.
     /// </summary>
-    public interface IStrategy<TProblem, TCandidate>
+    internal class IntegerCandidate : IComparable<IntegerCandidate>
     {
-        /// <summary>
-        /// Gets the name of this strategy.
-        /// </summary>
-        /// <returns></returns>
-        string Name { get; }
-
-        /// <summary>
-        /// Runs this strategy on the given problem and returns the best candidate.
-        /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <returns>A candidate.</returns>
-        TCandidate Search(TProblem problem);
-
-        /// <summary>
-        /// A function called when a new candidate was found.
-        /// </summary>
-        Delegates.NewCandidate<TCandidate> IntermidiateResult
+        internal IntegerCandidate(int value)
         {
-            get;
-            set;
+            this.Value = value;
+        }
+        
+        public int Value { get; set; }
+
+        public int CompareTo(IntegerCandidate other)
+        {
+            return this.Value.CompareTo(other.Value);
+        }
+
+        public override string ToString()
+        {
+            return $"IC:{this.Value}";
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Itinero.Optimization.Strategies
     /// <summary>
     /// Contains extension methods related to operators.
     /// </summary>
-    public static class IOperatorExtensions
+    public static class OperatorExtensions
     {        
         /// <summary>
         /// Converts the given operator into an operator that runs applies the given operator until it fails.
@@ -31,7 +31,7 @@ namespace Itinero.Optimization.Strategies
         /// <param name="oper">The operator.</param>
         /// <typeparam name="TCandidate">The candidate type.</typeparam>
         /// <returns>The new operator.</returns>
-        public static IOperator<TCandidate> ApplyUntil<TCandidate>(this IOperator<TCandidate> oper)
+        public static Operator<TCandidate> ApplyUntil<TCandidate>(this Operator<TCandidate> oper)
             where TCandidate : class
         {
             return new Iterative.IterativeOperator<TCandidate>(oper, int.MaxValue, true);
@@ -46,10 +46,7 @@ namespace Itinero.Optimization.Strategies
         public static Func<TCandidate, bool> ApplyUntil<TCandidate>(this Func<TCandidate, bool> oper)
             where TCandidate : class
         {
-            return (candidate) => 
-            {
-                return Iterative.IterativeOperator<TCandidate>.Iterate(oper, candidate, int.MaxValue, true);
-            };
+            return (candidate) => Iterative.IterativeOperator<TCandidate>.Iterate(oper, candidate, int.MaxValue, true);
         }
         
         /// <summary>
@@ -59,7 +56,7 @@ namespace Itinero.Optimization.Strategies
         /// <param name="n">The number of times to iterate.</param>
         /// <typeparam name="TCandidate">The candidate type.</typeparam>
         /// <returns>The new operator.</returns>
-        public static IOperator<TCandidate> ApplyUntil<TCandidate>(this IOperator<TCandidate> oper, int n)
+        public static Operator<TCandidate> ApplyUntil<TCandidate>(this Operator<TCandidate> oper, int n)
             where TCandidate : class
         {
             return new Iterative.IterativeOperator<TCandidate>(oper, n, true);
@@ -75,10 +72,7 @@ namespace Itinero.Optimization.Strategies
         public static Func<TCandidate, bool> ApplyUntil<TCandidate>(this Func<TCandidate, bool> oper, int n)
             where TCandidate : class
         {
-            return (candidate) => 
-            {
-                return Iterative.IterativeOperator<TCandidate>.Iterate(oper, candidate, n, true);
-            };
+            return (candidate) => Iterative.IterativeOperator<TCandidate>.Iterate(oper, candidate, n, true);
         }
         
         /// <summary>
@@ -88,7 +82,7 @@ namespace Itinero.Optimization.Strategies
         /// <param name="n">The number of times to iterate.</param>
         /// <typeparam name="TCandidate">The candidate type.</typeparam>
         /// <returns>The new operator.</returns>
-        public static IOperator<TCandidate> Iterate<TCandidate>(this IOperator<TCandidate> oper, int n)
+        public static Operator<TCandidate> Iterate<TCandidate>(this Operator<TCandidate> oper, int n)
             where TCandidate : class
         {
             return new Iterative.IterativeOperator<TCandidate>(oper, n);

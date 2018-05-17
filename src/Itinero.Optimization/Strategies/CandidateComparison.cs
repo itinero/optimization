@@ -47,18 +47,14 @@ namespace Itinero.Optimization.Strategies
                 return comparison(candidate1, candidate2);
             }
 
-            // try generic comparable.
-            var candidate1ComparableGen = candidate1 as IComparable<TCandidate>;
-            if (candidate1ComparableGen != null)
+            switch (candidate1)
             {
-                return candidate1ComparableGen.CompareTo(candidate2);
-            }
-
-            // try comparable.
-            var candidate1Comparable = candidate1 as IComparable;
-            if (candidate1Comparable != null)
-            {
-                return candidate1Comparable.CompareTo(candidate2);
+                // try generic comparable.
+                case IComparable<TCandidate> candidate1ComparableGen:
+                    return candidate1ComparableGen.CompareTo(candidate2);
+                // try comparable.
+                case IComparable candidate1Comparable:
+                    return candidate1Comparable.CompareTo(candidate2);
             }
 
             throw new InvalidOperationException("The two given candidates cannot be compared, no method of comparison found.");
