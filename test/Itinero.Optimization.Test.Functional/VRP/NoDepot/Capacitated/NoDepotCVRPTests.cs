@@ -32,10 +32,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
         public static void Run()
         {
-            Run1Wechelderzande(0);
-            Run1Wechelderzande(1);
-
-
+            Run1Wechelderzande();
             Run1WechelderzandeCapacitated();
             Run2Spijkenisse();
             Run2SpijkenisseCapacitated();
@@ -45,10 +42,8 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             Run5Rotterdam();
         }
 
-        public static void Run1Wechelderzande(int depotNumber)
+        private static void Run1Wechelderzande()
         {
-
-
             // WECHELDERZANDE - LILLE
             // build routerdb and save the result.
             var lille = Staging.RouterDbBuilder.Build("query3");
@@ -60,7 +55,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
                 Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem1.geojson"));
 
             // 
-            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, 100, null));
+            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, 100));
             var routes = func.TestPerf("No-Depot Capacitated VRP (Wechelderzande)");
 
             //#if DEBUG
@@ -70,10 +65,8 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             //#endif
         }
 
-        public static void Run1WechelderzandeCapacitated()
+        private static void Run1WechelderzandeCapacitated()
         {
-            
-
             // WECHELDERZANDE - LILLE
             // build routerdb and save the result.
             var lille = Staging.RouterDbBuilder.Build("query3");
@@ -127,7 +120,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             //#endif
         }
 
-        public static void Run2Spijkenisse()
+        private static void Run2Spijkenisse()
         {
             // SPIJKENISSE
             // build routerdb and save the result.
@@ -141,7 +134,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // 
             var max = 5400;
-            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max, null));
+            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max));
             var routes = func.TestPerf("No-Depot Capacitated VRP (Spijkenisse)");
 
             //#if DEBUG
@@ -154,7 +147,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             //#endif
         }
 
-        public static void Run2SpijkenisseCapacitated()
+        private static void Run2SpijkenisseCapacitated()
         {
             // SPIJKENISSE
             // build routerdb and save the result.
@@ -276,7 +269,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             //#endif
         }
 
-        public static void Run3DeHague()
+        private static void Run3DeHague()
         {
             // DE-HAGUE
             // build routerdb and save the result.
@@ -290,7 +283,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // 
             var max = 3800;
-            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max, null));
+            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max));
             var routes = func.TestPerf("No-Depot Capacitated VRP (De Haque)");
 
             //#if DEBUG
@@ -301,7 +294,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             //#endif
         }
 
-        public static void Run4Rotterdam()
+        private static void Run4Rotterdam()
         {
             // ROTTERDAM
             // build routerdb and save the result.
@@ -315,7 +308,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // 
             var max = 4500;
-            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max, null));
+            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max));
             var routes = func.TestPerf("No-Depot Capacitated VRP (Rotterdam4)");
 
             //#if DEBUG
@@ -326,7 +319,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             //#endif 
         }
 
-        public static void Run5Rotterdam()
+        private static void Run5Rotterdam()
         {
             // ROTTERDAM
             // build routerdb and save the result.
@@ -340,7 +333,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // 
             var max = 4500;
-            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max, null));
+            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max));
             var routes = func.TestPerf("No-Depot Capacitated VRP (Rotterdam5)");
 
             //#if DEBUG
