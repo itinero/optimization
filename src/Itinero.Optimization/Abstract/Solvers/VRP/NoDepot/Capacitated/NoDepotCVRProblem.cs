@@ -24,11 +24,13 @@ using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
+using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GA;
 using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GVNS;
 using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
 using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms.NearestNeighbour;
 using Itinero.Optimization.Algorithms.Solvers;
+using Itinero.Optimization.Algorithms.Solvers.GA;
 using Itinero.Optimization.General;
 
 namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
@@ -137,8 +139,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                         new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 20, true, true, true),
                         crossMultiAllPairs
             );
-
-            return this.Solve(iterate, new NoDepotCVRPObjective((problem, visits) =>
+            
+            var multiOperator = new Algorithms.Solvers.MultiOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
+                new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 5),
+                new RelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(true),
+                new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 5, true, true, true));
+            
+            var gaSolver = new GASolver<NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution>(
+                slci, multiOperator, GASettings.Default);
+            return this.Solve(gaSolver, new NoDepotCVRPObjective((problem, visits) =>
                 {
                     var weights = problem.Weights;
 
@@ -146,6 +155,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
                         weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
                 }, overlapsFunc, 1f, 0.01f, 480 * 2));
+
+//            return this.Solve(iterate, new NoDepotCVRPObjective((problem, visits) =>
+//                {
+//                    var weights = problem.Weights;
+//
+//                    //return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
+//                    return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
+//                        weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
+//                }, overlapsFunc, 1f, 0.01f, 480 * 2));
         }
 
         /// <summary>

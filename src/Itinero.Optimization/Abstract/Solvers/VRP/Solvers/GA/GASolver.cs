@@ -30,7 +30,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GA
     /// <typeparam name="TObjective"></typeparam>
     /// <typeparam name="TSolution"></typeparam>
     public class GASolver<TProblem, TObjective, TSolution> : SolverBase<float, TProblem, TObjective, TSolution, float>
-        where TSolution : class, IGASolution
+        where TSolution : class
         where TObjective : ObjectiveBase<TProblem, TSolution, float>, IGAObjective<TProblem, TSolution>
     {
         private readonly ISolver<float, TProblem, TObjective, TSolution, float> _generator;

@@ -19,12 +19,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Itinero.Optimization.Abstract.Solvers.TSP;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate.Multi;
+using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GA;
 using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GVNS;
 using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI;
 using Itinero.Optimization.Abstract.Tours;
@@ -41,7 +41,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
     public class NoDepotCVRPObjective : ObjectiveBase<NoDepotCVRProblem, NoDepotCVRPSolution, float>,
         IRelocateObjective<NoDepotCVRProblem, NoDepotCVRPSolution>, IExchangeObjective<NoDepotCVRProblem, NoDepotCVRPSolution>, IMultiExchangeObjective<NoDepotCVRProblem, NoDepotCVRPSolution>,
         IMultiRelocateObjective<NoDepotCVRProblem, NoDepotCVRPSolution>, ISeededCheapestInsertionObjective<NoDepotCVRProblem, NoDepotCVRPSolution>,
-        IGuidedVNSObjective<NoDepotCVRProblem, NoDepotCVRPSolution, Penalties>
+        IGuidedVNSObjective<NoDepotCVRProblem, NoDepotCVRPSolution, Penalties>, IGAObjective<NoDepotCVRProblem, NoDepotCVRPSolution>
         {
             private readonly Func<NoDepotCVRProblem, IList<int>, int> _seedFunc;
             private readonly Func<NoDepotCVRProblem, int, int, float> _localizationCostFunc;
@@ -741,11 +741,23 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             {
                 var seed = _seedFunc(problem, visits);
                 visits.Remove(seed);
+                return this.NewTour(problem, solution, seed);
+            }
+
+            /// <summary>
+            /// Creates a new tour with the given visit as first visit.
+            /// </summary>
+            /// <param name="problem">The problem.</param>
+            /// <param name="solution">The solution.</param>
+            /// <param name="visit">The first visit.</param>
+            /// <returns>The index of the new tour.</returns>
+            public int NewTour(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int visit)
+            {
                 var content = problem.Capacity.Empty();
-                content.Weight += problem.GetVisitCost(seed);
-                problem.Capacity.Add(content, seed);
+                content.Weight += problem.GetVisitCost(visit);
+                problem.Capacity.Add(content, visit);
                 solution.Contents.Add(content);
-                solution.Add(seed, seed);
+                solution.Add(visit, visit);
                 return solution.Count - 1;
             }
 
@@ -1010,6 +1022,149 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     var e = pair.Key;
 
                     problem.Weights[e.From][e.To] = p.Original;
+                }
+            }
+
+            /// <summary>
+            /// Selects a good candidate tour to be place in the target tour from the source tour.
+            /// </summary>
+            /// <param name="problem">The problem.</param>
+            /// <param name="source">The source.</param>
+            /// <param name="target">The target.</param>
+            /// <returns>True if a good tour was found.</returns>
+            public bool SelectTour(NoDepotCVRProblem problem, NoDepotCVRPSolution source, NoDepotCVRPSolution target)
+            {   
+                // if target is empty select random tour.
+                if (target.Count == 0)
+                {
+                    var t = Itinero.Optimization.Algorithms.Random.RandomGeneratorExtensions.GetRandom()
+                        .Generate(source.Count);
+                    
+                    // copy over tour and it's content.
+                    var sourceTour = source.Tour(t);
+                    var targetT = this.NewTour(problem, target, sourceTour.First);
+                    var targetTour = target.Tour(targetT);
+                    foreach (var pair in sourceTour.Pairs())
+                    {
+                        targetTour.ReplaceEdgeFrom(pair.From, pair.To);
+                    }
+                    target.Contents[targetT].Weight = source.Contents[t].Weight;
+                    target.Contents[targetT].Quantities = source.Contents[t].Quantities.Clone() as float[];
+
+                    return true;
+                }
+                else
+                {
+                    // build list of remaining visits.
+                    var visits = new HashSet<int>(this.PotentialVisits(problem));
+                    for (var t = 0; t < target.Count; t++)
+                    {
+                        var tour = target.Tour(t);
+                        foreach (var v in tour)
+                        {
+                            visits.Remove(v);
+                        }
+                    }
+
+                    if (visits.Count == 0)
+                    {
+                        return false;
+                    }
+                
+                    // search for a tour that has the least overlapping visits.
+                    // TODO: this may give smaller (and worse) tours an advantage. Perhaps change this to a metric with the most visits inserted or something similar.
+                    var bestT = -1;
+                    var bestOverlap = int.MaxValue;
+                    for (var t = 0; t < source.Count; t++)
+                    {
+                        var tour = source.Tour(t);
+                        var tourOverlap = 0;
+                        var hasUnplaced = false;
+                        foreach (var v in tour)
+                        {
+                            if (!visits.Contains(v))
+                            {
+                                tourOverlap++;
+                            }
+                            else
+                            {
+                                hasUnplaced = true;
+                            }
+                        }
+
+                        if (hasUnplaced &&
+                            tourOverlap < bestOverlap)
+                        {
+                            bestOverlap = tourOverlap;
+                            bestT = t;
+                        }
+                    }
+
+                    if (bestT < 0)
+                    {
+                        return false;
+                    }
+                
+                    // copy over tour.
+                    var bestTour = source.Tour(bestT);
+                    ITour targetTour = null;
+                    CapacityExtensions.Content targetContent = null;
+                    var previous = bestTour.First;
+                    foreach (var pair in bestTour.Pairs())
+                    {
+                        if (targetTour == null)
+                        {
+                            if (!visits.Contains(pair.From))
+                            {
+                                continue;
+                            }
+                            var targetT = this.NewTour(problem, target, pair.From);
+                            targetTour = target.Tour(targetT);
+                            targetContent = target.Contents[targetT];
+                        }
+
+                        if (!visits.Contains(pair.To))
+                        { // TODO: do we need to close the tour here or not?
+                            continue;
+                        }
+                        targetTour.ReplaceEdgeFrom(previous, pair.To);
+                        problem.Capacity.Add(targetContent, pair.To);
+                        
+                        previous = pair.To;
+                    }
+
+                    return true;
+                }
+            }
+
+            /// <summary>
+            /// Place all the remaining unplaced visits in the given solution.
+            /// </summary>
+            /// <param name="problem">The problem.</param>
+            /// <param name="solution">The solution.</param>
+            public void PlaceRemaining(NoDepotCVRProblem problem, NoDepotCVRPSolution solution)
+            {
+                // build list of remaining visits.
+                var visits = this.PotentialVisits(problem);
+                for (var t = 0; t < solution.Count; t++)
+                {
+                    var tour = solution.Tour(t);
+                    foreach (var v in tour)
+                    {
+                        visits.Remove(v);
+                    }
+                }
+                
+                // keep placing until empty.
+                while (visits.Count > 0)
+                {
+                    if (this.TryPlaceAny(problem, solution, visits))
+                    {
+                        continue;
+                    }
+                    
+                    // oeps, this is very bad a new tour here.
+                    this.SeedNext(problem, solution, visits);
                 }
             }
         }
