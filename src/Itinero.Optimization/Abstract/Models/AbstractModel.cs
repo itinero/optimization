@@ -227,7 +227,7 @@ namespace Itinero.Optimization.Abstract.Models
                                     totalCost += travelCosts.Costs[(int)vehicle.Departure][visitID];
                                 }
 
-                                if (vehicle.Departure != null)
+                                if (vehicle.Arrival != null)
                                 {
                                     totalCost += travelCosts.Costs[visitID][(int)vehicle.Arrival];
                                 }
