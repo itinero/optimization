@@ -74,12 +74,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             int? depot = null)
         {
             _depot = depot;
-            if (_depot != null)
+            if (_depot != null &&
+                visitCosts != null)
             {
                 // We have a depot; this means that the visit cost of this depot should _always_ be factored into the solution
                 // This means that tours will be a little shorter now
-                int d = (int) _depot;
-                Capacity = capacity.Subtract(visitCosts[d]);
+                Capacity = capacity.Subtract(visitCosts[_depot.Value]);
             }
             else
             {
