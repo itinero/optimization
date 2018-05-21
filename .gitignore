@@ -35,6 +35,7 @@ packages/*
 !packages/repositories.config
 
 .vs/*
+.idea/*
 
 *.routerdb
 *.osm.pbf
