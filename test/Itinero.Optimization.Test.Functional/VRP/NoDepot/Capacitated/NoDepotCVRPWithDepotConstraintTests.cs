@@ -22,17 +22,17 @@ using System.IO;
 using Itinero.Optimization.Models.Costs;
 using Itinero.Optimization.Models.Vehicles.Constraints;
 
-namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
+namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 {
-    public static class ClusteredWithDepotCVRPTests
+    public static class NoDepotCVRPWithDepotConstraintTests
     {
         // Tests the No Depot VRP with Depot... (We should rename this shit)
 
-        private const string Name = "clustered-depot-CVRP-";
+        private const string Name = "no-depot-CVRP-with-depot-constrain-";
 
         public static void Run()
         {
-            // Run1Wechelderzande(depot);
+            Run1Wechelderzande();
             Run1WechelderzandeCapacitated();
             // Run3DeHague(depot);
             // */
@@ -45,7 +45,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
             */
         }
 
-        public static void Run1Wechelderzande()
+        private static void Run1Wechelderzande()
         {
             // WECHELDERZANDE - LILLE
             // build routerdb and save the result.
@@ -63,8 +63,8 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
 
             //#if DEBUG
             // write info about result.
-            WriteStats(routes);
-            routes.WriteGeoJson(ClusteredWithDepotCVRPTests.Name + "lille-{0}.geojson");
+            routes.WriteStats();
+            routes.WriteGeoJson(Name + "lille-{0}.geojson");
             //#endif
         }
 
@@ -118,8 +118,8 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
             //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
-            routes.WriteGeoJson(ClusteredWithDepotCVRPTests.Name + "lille-capacitated-{0}.geojson");
+            routes.WriteStats();
+            routes.WriteGeoJson(Name + "lille-capacitated-{0}.geojson");
             //#endif
         }
 
@@ -143,8 +143,8 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
             //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
-            var filename = ClusteredWithDepotCVRPTests.Name + "spijkenisse-{0}";
+            routes.WriteStats();
+            var filename = Name + "spijkenisse-{0}";
             routes.WriteGeoJson(filename + ".geojson");
             routes.WriteJson(filename + ".json");
             //#endif
@@ -200,8 +200,8 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
             //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
-            routes.WriteGeoJson(ClusteredWithDepotCVRPTests.Name + "spijkenisse-capacitated-{0}.geojson");
+            routes.WriteStats();
+            routes.WriteGeoJson(Name + "spijkenisse-capacitated-{0}.geojson");
             //#endif
         }
 
@@ -250,8 +250,8 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
             //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
-            var filename = ClusteredWithDepotCVRPTests.Name + "spijkenisse-visit-costs-{0}";
+            routes.WriteStats();
+            var filename = Name + "spijkenisse-visit-costs-{0}";
             routes.WriteGeoJson(filename + ".geojson");
             routes.WriteJson(filename + ".json");
             //#endif
@@ -277,8 +277,8 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
             //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
-            routes.WriteGeoJson(ClusteredWithDepotCVRPTests.Name + "de-hague-{0}.geojson");
+            routes.WriteStats();
+            routes.WriteGeoJson(Name + "de-hague-{0}.geojson");
             //#endif
         }
 
@@ -302,8 +302,8 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
             //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
-            routes.WriteGeoJson(ClusteredWithDepotCVRPTests.Name + "rotterdam4-{0}.geojson");
+            routes.WriteStats();
+            routes.WriteGeoJson(Name + "rotterdam4-{0}.geojson");
             //#endif 
         }
 
@@ -327,44 +327,9 @@ namespace Itinero.Optimization.Test.Functional.VRP.Depot.Capacitated
             //#if DEBUG
 
             // write info about result.
-            WriteStats(routes);
-            routes.WriteGeoJson(ClusteredWithDepotCVRPTests.Name + "rotterdam5-{0}.geojson");
+            routes.WriteStats();
+            routes.WriteGeoJson(Name + "rotterdam5-{0}.geojson");
             //#endif 
-        }
-
-        /// <summary>
-        /// Writes stats about the given routes.
-        /// </summary>
-        /// <param name="routes"></param>
-        public static void WriteStats(IList<Route> routes)
-        {
-            Console.WriteLine("# routes: {0}", routes.Count);
-
-            var totalStops = 0;
-            var totalDistance = 0f;
-            var totalTime = 0f;
-            for (var i = 0; i < routes.Count; i++)
-            {
-                Console.Write("route_{0}:", i);
-                if (routes[i] == null)
-                {
-                    Console.WriteLine("null");
-                    continue;
-                }
-                Console.Write("{0}s | ", routes[i].TotalTime);
-                Console.Write("{0}m | ", routes[i].TotalDistance);
-                Console.Write("{0}stops", routes[i].Stops.Length - 1);
-                totalStops += routes[i].Stops.Length - 1;
-                totalDistance += routes[i].TotalDistance;
-                totalTime += routes[i].TotalTime;
-                Console.WriteLine();
-            }
-
-            Console.Write("total:");
-            Console.Write("{0}s | ", totalTime);
-            Console.Write("{0}m | ", totalDistance);
-            Console.Write("{0}stops", totalStops);
-            Console.WriteLine();
         }
     }
 }

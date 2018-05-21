@@ -28,7 +28,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 {
     public static class NoDepotCVRPTests
     {
-        private static string Name = "guided-vns-";
+        private const string Name = "no-depot-CVRP-";
 
         public static void Run()
         {
