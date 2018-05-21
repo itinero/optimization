@@ -26,23 +26,19 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 {
     public static class NoDepotCVRPWithDepotConstraintTests
     {
-        // Tests the No Depot VRP with Depot... (We should rename this shit)
-
-        private const string Name = "no-depot-CVRP-with-depot-constrain-";
+        private const string FileNamePrefix = "no-depot-CVRP-with-depot-constraint-";
+        private const string Name = "No Depot CVRP with Depot constraint.";
 
         public static void Run()
         {
             Run1Wechelderzande();
             Run1WechelderzandeCapacitated();
-            // Run3DeHague(depot);
-            // */
-            // LOOPT VAST Run2Spijkenisse(depot);
-            //  Run2SpijkenisseCapacitated(depot);
-            //  Run4Rotterdam(depot);
-            //  Run5Rotterdam(depot);
-            /*
-            Run2SpijkenisseVisitCosts(depot);
-            */
+            Run2Spijkenisse();
+            //Run2SpijkenisseCapacitated(); // still fails.
+            Run2SpijkenisseVisitCosts();
+            Run3DeHague();
+            Run4Rotterdam();
+            Run5Rotterdam();
         }
 
         private static void Run1Wechelderzande()
@@ -59,12 +55,12 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // 
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, 1000, 0));
-            var routes = func.TestPerf("No-Depot Capacitated VRP (Wechelderzande)");
+            var routes = func.TestPerf(Name + " (Wechelderzande)");
 
             //#if DEBUG
             // write info about result.
             routes.WriteStats();
-            routes.WriteGeoJson(Name + "lille-{0}.geojson");
+            routes.WriteGeoJson(FileNamePrefix + "lille-{0}.geojson");
             //#endif
         }
 
@@ -113,17 +109,17 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
             // 
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, capacityConstraint,
                 visitCosts, 0));
-            var routes = func.TestPerf("No-Depot Capacitated VRP (Wechelderzande - Capacitated)");
+            var routes = func.TestPerf(Name + " (Wechelderzande - Capacitated)");
 
             //#if DEBUG
 
             // write info about result.
             routes.WriteStats();
-            routes.WriteGeoJson(Name + "lille-capacitated-{0}.geojson");
+            routes.WriteGeoJson(FileNamePrefix + "lille-capacitated-{0}.geojson");
             //#endif
         }
 
-        public static void Run2Spijkenisse(int depot)
+        private static void Run2Spijkenisse()
         {
             // SPIJKENISSE
             // build routerdb and save the result.
@@ -133,24 +129,24 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // build problem.
             var locations = Staging.StagingHelpers.GetLocations(
-                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem2-spijkenisse.geojson"));
+                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem2-spijkenisse-depot.geojson"));
 
             // 
             var max = 5400;
-            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max, depot));
-            var routes = func.TestPerf("No-Depot Capacitated VRP (Spijkenisse)");
+            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max, 0));
+            var routes = func.TestPerf(Name + " (Spijkenisse)");
 
             //#if DEBUG
 
             // write info about result.
             routes.WriteStats();
-            var filename = Name + "spijkenisse-{0}";
+            const string filename = FileNamePrefix + "spijkenisse-{0}";
             routes.WriteGeoJson(filename + ".geojson");
             routes.WriteJson(filename + ".json");
             //#endif
         }
 
-        public static void Run2SpijkenisseCapacitated(int depot)
+        private static void Run2SpijkenisseCapacitated()
         {
             // SPIJKENISSE
             // build routerdb and save the result.
@@ -160,7 +156,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // build problem.
             var locations = Staging.StagingHelpers.GetLocations(
-                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem2-spijkenisse.geojson"));
+                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem2-spijkenisse-depot.geojson"));
 
             // build capacity constraints
             var capacityConstraint = new CapacityConstraint[]
@@ -194,18 +190,18 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // 
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations,
-                capacityConstraint, visitCosts, depot));
-            var routes = func.TestPerf("No-Depot Capacitated VRP (Spijkenisse - Capacitated)");
+                capacityConstraint, visitCosts));
+            var routes = func.TestPerf(Name + " (Spijkenisse - Capacitated)");
 
             //#if DEBUG
 
             // write info about result.
             routes.WriteStats();
-            routes.WriteGeoJson(Name + "spijkenisse-capacitated-{0}.geojson");
+            routes.WriteGeoJson(FileNamePrefix + "spijkenisse-capacitated-{0}.geojson");
             //#endif
         }
 
-        public static void Run2SpijkenisseVisitCosts(int depot)
+        private static void Run2SpijkenisseVisitCosts()
         {
             // SPIJKENISSE
             // build routerdb and save the result.
@@ -215,7 +211,7 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // build problem.
             var locations = Staging.StagingHelpers.GetLocations(
-                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem2-spijkenisse.geojson"));
+                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem2-spijkenisse-depot.geojson"));
 
             // build capacity constraints
             var capacityConstraint = new CapacityConstraint[]
@@ -244,20 +240,20 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // 
             var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations,
-                capacityConstraint, visitCosts, depot));
-            var routes = func.TestPerf("No-Depot Visit Costs VRP (Spijkenisse - Capacitated)");
+                capacityConstraint, visitCosts, 0));
+            var routes = func.TestPerf(Name + " (Spijkenisse - Capacitated & Visit Costs)");
 
             //#if DEBUG
 
             // write info about result.
             routes.WriteStats();
-            var filename = Name + "spijkenisse-visit-costs-{0}";
+            var filename = FileNamePrefix + "spijkenisse-visit-costs-{0}";
             routes.WriteGeoJson(filename + ".geojson");
             routes.WriteJson(filename + ".json");
             //#endif
         }
 
-        public static void Run3DeHague(int depot)
+        private static void Run3DeHague()
         {
             // DE-HAGUE
             // build routerdb and save the result.
@@ -267,22 +263,22 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // build problem.
             var locations = Staging.StagingHelpers.GetLocations(
-                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem3-de-hague.geojson"));
+                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem3-de-hague-depot.geojson"));
 
             // 
             var max = 3800;
-            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max, depot));
+            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max, 0));
             var routes = func.TestPerf("No-Depot Capacitated VRP (De Haque)");
 
             //#if DEBUG
 
             // write info about result.
             routes.WriteStats();
-            routes.WriteGeoJson(Name + "de-hague-{0}.geojson");
+            routes.WriteGeoJson(FileNamePrefix + "de-hague-{0}.geojson");
             //#endif
         }
 
-        public static void Run4Rotterdam(int depot)
+        private static void Run4Rotterdam()
         {
             // ROTTERDAM
             // build routerdb and save the result.
@@ -292,22 +288,22 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // build problem.
             var locations = Staging.StagingHelpers.GetLocations(
-                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem4-rotterdam.geojson"));
+                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem4-rotterdam-depot.geojson"));
 
             // 
             var max = 4500;
-            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max, depot));
-            var routes = func.TestPerf("No-Depot Capacitated VRP (Rotterdam4)");
+            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max, 0));
+            var routes = func.TestPerf(Name + " (Rotterdam4)");
 
             //#if DEBUG
 
             // write info about result.
             routes.WriteStats();
-            routes.WriteGeoJson(Name + "rotterdam4-{0}.geojson");
+            routes.WriteGeoJson(FileNamePrefix + "rotterdam4-{0}.geojson");
             //#endif 
         }
 
-        public static void Run5Rotterdam(int depot)
+        private static void Run5Rotterdam()
         {
             // ROTTERDAM
             // build routerdb and save the result.
@@ -317,18 +313,18 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
             // build problem.
             var locations = Staging.StagingHelpers.GetLocations(
-                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem5-rotterdam.geojson"));
+                Staging.StagingHelpers.GetFeatureCollection("data.NoDepotCVRP.problem5-rotterdam-depot.geojson"));
 
             // 
             var max = 4500;
-            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max, depot));
-            var routes = func.TestPerf("No-Depot Capacitated VRP (Rotterdam5)");
+            var func = new Func<List<Route>>(() => router.CalculateNoDepotCVRP(vehicle.Fastest(), locations, max, 0));
+            var routes = func.TestPerf(Name + " (Rotterdam5)");
 
             //#if DEBUG
 
             // write info about result.
             routes.WriteStats();
-            routes.WriteGeoJson(Name + "rotterdam5-{0}.geojson");
+            routes.WriteGeoJson(FileNamePrefix + "rotterdam5-{0}.geojson");
             //#endif 
         }
     }
