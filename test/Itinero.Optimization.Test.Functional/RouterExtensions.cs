@@ -154,9 +154,5 @@ namespace Itinero.Optimization.Test.Functional
         {
             return router.TryCalculateDepotCVRP(profile, locations, depot, capacityConstraints, costs).Value;
         }
-
-
-
-
     }
 }
