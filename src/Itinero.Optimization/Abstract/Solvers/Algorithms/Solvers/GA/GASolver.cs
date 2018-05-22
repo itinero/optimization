@@ -151,7 +151,6 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
                     // create offspring.
                     var offspring = _crossOver.Apply(problem, objective, crossOverIndividuals[individual1].Solution,
                         crossOverIndividuals[individual2].Solution, out TFitness _);
-                    _mutation.Apply(problem, objective, offspring, out TFitness _);
                     population[i] = new Individual<TSolution, TFitness>()
                     {
                         Solution = offspring,
@@ -162,7 +161,7 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
                 // mutate part of the population.
                 for (int i = elitism; i < population.Length; i++)
                 {
-                    if (_random.Next(100) <= _settings.MutationPercentage)
+                    if (_random.Next(100) < _settings.MutationPercentage)
                     { // ok, mutate this individual.
                         TFitness mutatedDelta;
                         if (_mutation.Apply(problem, objective, population[i].Solution, out mutatedDelta))

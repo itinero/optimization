@@ -19,7 +19,9 @@
 using System;
 using System.Collections.Generic;
 using Itinero.Algorithms.Matrices;
+using Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated.Operators;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators;
+using Itinero.Optimization.Abstract.Solvers.VRP.Operators.CrossOver;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Exchange.Multi;
 using Itinero.Optimization.Abstract.Solvers.VRP.Operators.Relocate;
@@ -145,14 +147,19 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 new RelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(true),
                 new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, false, false));
 
+            var crossOver =
+                new TourExchangeCrossOverOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(
+                    multiOperator);
+            var mutation = new SolverMutationOperator(slci);
+
             var gaSettings = GASettings.Default;
-            gaSettings.PopulationSize = 2000;
+            gaSettings.PopulationSize = 20;
             gaSettings.ElitismPercentage = 1;
-            gaSettings.CrossOverPercentage = 75;
-            gaSettings.MutationPercentage = 0;
-            gaSettings.StagnationCount = 300;
-            var gaSolver = new GASolver<NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution>(
-                slci, multiOperator, gaSettings);
+            gaSettings.CrossOverPercentage = 25;
+            gaSettings.MutationPercentage = 2;
+            gaSettings.StagnationCount = 30;
+            var gaSolver = new GASolver<NoDepotCVRProblem,     NoDepotCVRPObjective, NoDepotCVRPSolution>(
+                slci, mutation, crossOver, gaSettings);
             gaSolver.IntermidiateResult += GaSolver_IntermidiateResult;
             return this.Solve(gaSolver, new NoDepotCVRPObjective((problem, visits) =>
                 {

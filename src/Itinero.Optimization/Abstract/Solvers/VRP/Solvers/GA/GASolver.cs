@@ -35,6 +35,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GA
     {
         private readonly ISolver<float, TProblem, TObjective, TSolution, float> _generator;
         private readonly IOperator<float, TProblem, TObjective, TSolution, float> _mutation;
+        private readonly ICrossOverOperator<float, TProblem, TObjective, TSolution, float> _crossOver;
         private readonly GASettings _settings;
 
         /// <summary>
@@ -42,12 +43,14 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GA
         /// </summary>
         /// <param name="generator">The generator.</param>
         /// <param name="mutation">The mutation operator.</param>
+        /// <param name="crossOver">The cross over operator.</param>
         /// <param name="settings">The settings.</param>
         public GASolver(ISolver<float, TProblem, TObjective, TSolution, float> generator, IOperator<float, TProblem, TObjective, TSolution, float> mutation,
-            GASettings settings)
+            ICrossOverOperator<float, TProblem, TObjective, TSolution, float> crossOver, GASettings settings)
         {
             _generator = generator;
             _mutation = mutation;
+            _crossOver = crossOver;
             _settings = settings;
         }
 
@@ -57,15 +60,11 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GA
         /// <inheritdoc />
         public override TSolution Solve(TProblem problem, TObjective objective, out float fitness)
         {
-            var crossOver = new TourExchangeCrossOverOperator<TObjective, TProblem, TSolution>();
             var selection = new TournamentSelectionOperator<TProblem, TSolution, TObjective, float>(50, 0.75);
             
-            var gaSolver = new Itinero.Optimization.Algorithms.Solvers.GA.GASolver<float, TProblem, TObjective, TSolution, float>(objective, _generator, crossOver, 
+            var gaSolver = new Itinero.Optimization.Algorithms.Solvers.GA.GASolver<float, TProblem, TObjective, TSolution, float>(objective, _generator, _crossOver, 
                 selection, _mutation, _settings);
-            gaSolver.IntermidiateResult += (res) =>
-              {
-                  this.ReportIntermidiateResult(res);
-              };
+            gaSolver.IntermidiateResult += this.ReportIntermidiateResult;
             return gaSolver.Solve(problem, objective, out fitness);
         }
     }

@@ -18,6 +18,7 @@
 
 using Itinero.Attributes;
 using Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GA;
+using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Algorithms.Solvers.GA;
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 
@@ -32,6 +33,17 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.CrossOver
     public class TourExchangeCrossOverOperator<TObjective, TProblem, TSolution> : ICrossOverOperator<float, TProblem, TObjective, TSolution, float>
         where TObjective : ObjectiveBase<TProblem, TSolution, float>, IGAObjective<TProblem, TSolution>
     {
+        private readonly IOperator<float, TProblem, TObjective, TSolution, float> _postOperator;
+
+        /// <summary>
+        /// Creates a cross over operator.
+        /// </summary>
+        /// <param name="postOperator">The operator to apply right after crossover.</param>
+        public TourExchangeCrossOverOperator(IOperator<float, TProblem, TObjective, TSolution, float> postOperator = null)
+        {
+            _postOperator = postOperator;
+        }
+        
         /// <inheritdoc />
         public string Name { get; } = "TOUR_EX";
 
@@ -55,6 +67,9 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.CrossOver
             
             // try to place the rest of the missing visits.
             objective.PlaceRemaining(problem, solution);
+            
+            // apply operator.
+            _postOperator?.Apply(problem, objective, solution, out var _);
 
             fitness = objective.Calculate(problem, solution);
             return solution;

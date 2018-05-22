@@ -360,7 +360,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="maxSize">The maximum size.</param>
         /// <param name="wrap">Wrap around first if true.</param>
         /// <returns>An enumerable with sequences.</returns>
-        public IEnumerable<Operators.Seq> SeqAndSmaller(NoDepotCVRProblem problem, IEnumerable<int> tour,
+        public IEnumerable<Seq> SeqAndSmaller(NoDepotCVRProblem problem, IEnumerable<int> tour,
             int minSize, int maxSize, bool wrap)
         {
             var visits = tour.ToArray();
@@ -416,7 +416,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                         continue;
                     }
 
-                    yield return new Operators.Seq(s)
+                    yield return new Seq(s)
                     {
                         BetweenTravelCost = between.Value,
                         BetweenTravelCostReversed = betweenReversed,
@@ -433,7 +433,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="problem">The problem.</param>
         /// <param name="sequence">The sequence.</param>
         /// <returns>The reversed sequence.</returns>        
-        public Operators.Seq Reverse(NoDepotCVRProblem problem, Operators.Seq sequence)
+        public Seq Reverse(NoDepotCVRProblem problem, Seq sequence)
         {
             // mark as reversed and recalculate travel cost.
             sequence.Reversed = true;
@@ -453,7 +453,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="delta">The difference in fitness.</param>
         /// <returns>True if the swap is possible.</returns>   
         public bool SimulateSwap(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int t1, int t2,
-            Operators.Seq s1, Operators.Seq s2, out float delta)
+            Seq s1, Seq s2, out float delta)
         {
             var E = 0.01f;
 
@@ -522,7 +522,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="delta">The difference in fitness.</param>
         /// <returns>True if the swap succeeded.</returns>   
         public bool TrySwap(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int t1, int t2,
-            Operators.Seq s1, Operators.Seq s2, out float delta)
+            Seq s1, Seq s2, out float delta)
         {
             var E = 0.01f;
 
@@ -631,7 +631,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="pair">The pair.</param>
         /// <param name="delta">The difference in visit.</param>
         /// <returns></returns>        
-        public bool TryMove(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int t1, int t2, Operators.Seq seq, Pair pair, out float delta)
+        public bool TryMove(NoDepotCVRProblem problem, NoDepotCVRPSolution solution, int t1, int t2, Seq seq, Pair pair, out float delta)
         {
             var E = 0.01f;
 

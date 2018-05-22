@@ -59,6 +59,10 @@ namespace Itinero.Optimization.Test.Functional
         };
         Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
         {
+            if (o == "SC")
+            {
+                return;
+            }
 //#if RELEASE
 //                 if (level == "verbose")
 //                 {
