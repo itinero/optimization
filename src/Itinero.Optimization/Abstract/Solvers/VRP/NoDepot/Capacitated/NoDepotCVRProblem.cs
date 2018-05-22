@@ -152,15 +152,16 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 new TourExchangeCrossOverOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(
                     multiOperator);
             var mutation = new SolverMutationOperator(slci);
+            var mutation2 = new SLCIRedoMutationOperator(slci);
 
             var gaSettings = GASettings.Default;
-            gaSettings.PopulationSize = 50;
+            gaSettings.PopulationSize = 100;
             gaSettings.ElitismPercentage = 1;
             gaSettings.CrossOverPercentage = 10;
-            gaSettings.MutationPercentage = 0;
-            gaSettings.StagnationCount = 10;
+            gaSettings.MutationPercentage = 5;
+            gaSettings.StagnationCount = 15;
             var gaSolver = new GASolver<NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution>(
-                slci, mutation, crossOver, gaSettings);
+                slci, mutation2, crossOver, gaSettings);
             gaSolver.IntermidiateResult += GaSolver_IntermidiateResult;
             return this.Solve(gaSolver, new NoDepotCVRPObjective((problem, visits) =>
                 {

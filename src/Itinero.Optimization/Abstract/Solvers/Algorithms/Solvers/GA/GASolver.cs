@@ -158,6 +158,12 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
                     };
                 }
 
+                // sort new population.
+                Array.Sort(population, (x, y) =>
+                {
+                    return objective.CompareTo(problem, x.Fitness, y.Fitness);
+                });
+
                 // mutate part of the population.
                 for (int i = elitism; i < population.Length; i++)
                 {
@@ -196,7 +202,7 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
 
                 if (EqualityComparer<TFitness>.Default.Equals(population[0].Fitness, population[population.Length - 1].Fitness))
                 {
-                    break;
+                    //break;
                 }
             }
 

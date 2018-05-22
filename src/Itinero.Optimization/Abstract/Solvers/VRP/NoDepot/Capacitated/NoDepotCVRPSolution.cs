@@ -173,5 +173,15 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 _tours.Add(tour.Clone() as Tour);
             }
         }
+
+        /// <summary>
+        /// Removes the given tour.
+        /// </summary>
+        /// <param name="i"></param>
+        public void RemoveTour(int i)
+        {
+            _tours.RemoveAt(i);
+            _contents.RemoveAt(i);
+        }
     }
 }
