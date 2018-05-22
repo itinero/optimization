@@ -118,7 +118,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 3),
                     new RelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(true),
                     new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 3, true, false, true)
-                }, 0.03f, .25f
+                }, 0.03f, .5f
             );
             var slciIterate = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
                 slci, 20, new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, true, true));
@@ -141,29 +141,41 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             );
             
             var multiOperator = new Algorithms.Solvers.MultiOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
-                new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 5),
+                new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 10),
                 new RelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(true),
-                new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 5, true, true, true));
-            
+                new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, false, false));
+
+            var gaSettings = GASettings.Default;
+            gaSettings.PopulationSize = 2000;
+            gaSettings.ElitismPercentage = 1;
+            gaSettings.CrossOverPercentage = 75;
+            gaSettings.MutationPercentage = 0;
+            gaSettings.StagnationCount = 300;
             var gaSolver = new GASolver<NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution>(
-                slci, multiOperator, GASettings.Default);
+                slci, multiOperator, gaSettings);
+            gaSolver.IntermidiateResult += GaSolver_IntermidiateResult;
             return this.Solve(gaSolver, new NoDepotCVRPObjective((problem, visits) =>
                 {
                     var weights = problem.Weights;
 
-                    //return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
-                    return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-                        weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
-                }, overlapsFunc, 1f, 0.01f, 480 * 2));
+                    return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
+                    //return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
+                    //    weights, this.NearestNeigboursTravelCost, visits, 10, 1f, .25f);
+                }, overlapsFunc, .75f, 0.05f, 480 * 2));
 
-//            return this.Solve(iterate, new NoDepotCVRPObjective((problem, visits) =>
-//                {
-//                    var weights = problem.Weights;
-//
-//                    //return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
-//                    return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
-//                        weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
-//                }, overlapsFunc, 1f, 0.01f, 480 * 2));
+            //return this.Solve(iterate, new NoDepotCVRPObjective((problem, visits) =>
+            //    {
+            //        var weights = problem.Weights;
+
+            //        //return Algorithms.Seeds.SeedHeuristics.GetSeedRandom(visits);
+            //        return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
+            //            weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
+            //    }, overlapsFunc, 1f, 0.01f, 480 * 2));
+        }
+
+        private void GaSolver_IntermidiateResult(NoDepotCVRPSolution result)
+        {
+            Console.WriteLine("intermediate result");
         }
 
         /// <summary>

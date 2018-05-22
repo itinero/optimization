@@ -58,10 +58,14 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GA
         public override TSolution Solve(TProblem problem, TObjective objective, out float fitness)
         {
             var crossOver = new TourExchangeCrossOverOperator<TObjective, TProblem, TSolution>();
-            var selection = new TournamentSelectionOperator<TProblem, TSolution, TObjective, float>();
+            var selection = new TournamentSelectionOperator<TProblem, TSolution, TObjective, float>(50, 0.75);
             
             var gaSolver = new Itinero.Optimization.Algorithms.Solvers.GA.GASolver<float, TProblem, TObjective, TSolution, float>(objective, _generator, crossOver, 
                 selection, _mutation, _settings);
+            gaSolver.IntermidiateResult += (res) =>
+              {
+                  this.ReportIntermidiateResult(res);
+              };
             return gaSolver.Solve(problem, objective, out fitness);
         }
     }
