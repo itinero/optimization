@@ -117,10 +117,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 new TSP.Solvers.HillClimbing3OptSolver(),
                 new IInterTourImprovementOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>[]
                 {
-                    new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 3),
+                    //new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 2),
                     new RelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(true),
-                    new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 3, true, false, true)
-                }, 0.03f, .5f
+                    //new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 1, true, false, true)
+                }, 0.03f, 1f
             );
             var slciIterate = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
                 slci, 20, new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, true, true));
@@ -143,6 +143,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             );
             
             var multiOperator = new Algorithms.Solvers.MultiOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
+                slci,
                 new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 10),
                 new RelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(true),
                 new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, false, false));
@@ -153,12 +154,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             var mutation = new SolverMutationOperator(slci);
 
             var gaSettings = GASettings.Default;
-            gaSettings.PopulationSize = 20;
+            gaSettings.PopulationSize = 50;
             gaSettings.ElitismPercentage = 1;
-            gaSettings.CrossOverPercentage = 25;
-            gaSettings.MutationPercentage = 2;
-            gaSettings.StagnationCount = 30;
-            var gaSolver = new GASolver<NoDepotCVRProblem,     NoDepotCVRPObjective, NoDepotCVRPSolution>(
+            gaSettings.CrossOverPercentage = 10;
+            gaSettings.MutationPercentage = 0;
+            gaSettings.StagnationCount = 10;
+            var gaSolver = new GASolver<NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution>(
                 slci, mutation, crossOver, gaSettings);
             gaSolver.IntermidiateResult += GaSolver_IntermidiateResult;
             return this.Solve(gaSolver, new NoDepotCVRPObjective((problem, visits) =>

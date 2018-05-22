@@ -66,7 +66,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Operators.CrossOver
             }
             
             // try to place the rest of the missing visits.
-            objective.PlaceRemaining(problem, solution);
+            //objective.PlaceRemaining(problem, solution);
             
             // apply operator.
             _postOperator?.Apply(problem, objective, solution, out var _);

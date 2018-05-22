@@ -9,7 +9,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
     /// <summary>
     /// A construction heuristic using a tour-by-tour strategy of seeding a new tour and filling it with visits.
     /// </summary>
-    public class SeededCheapestInsertion<TProblem, TObjective, TSolution> : SolverBase<float, TProblem, TObjective, TSolution, float>
+    public class SeededCheapestInsertion<TProblem, TObjective, TSolution> : SolverBase<float, TProblem, TObjective, TSolution, float>, IOperator<float, TProblem, TObjective, TSolution, float>
         where TSolution : ISeededCheapestInsertionSolution
         where TObjective : ObjectiveBase<TProblem, TSolution, float>, ISeededCheapestInsertionObjective<TProblem, TSolution>
     {
@@ -46,6 +46,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
         /// <returns></returns>
         public override string Name => "SC";
 
+        /// <inheritdoc />
+        public bool Supports(TObjective objective)
+        {
+            return true;
+        }
+
         /// <summary>
         /// Solves the given problem using the given objective.
         /// </summary>
@@ -58,13 +64,42 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
             // create the solution.
             var solution = objective.NewSolution(problem);
 
-            // get the list of potential visits.
-            var visits = objective.PotentialVisits(problem);
-            var totalVisits = visits.Count;
-
             // create a new instance of the problem with a little more slack.
             var originalProblem = problem;
             problem = objective.ProblemWithSlack(problem);
+
+            // get the list of potential visits.
+            var visits = objective.PotentialVisits(problem);
+            
+            // do placement.
+            this.Place(problem, originalProblem, objective, solution, visits);
+            
+            fitness = objective.Calculate(originalProblem, solution);
+            return solution;
+        }
+        
+        /// <inheritdoc />
+        public bool Apply(TProblem problem, TObjective objective, TSolution solution, out float delta)
+        {
+            // if not everything is place this behaves as an operator that places the rest.
+            // otherwise this does nothing.
+            var visits = objective.PotentialVisits(problem, solution);
+            if (visits.Count == 0)
+            {
+                delta = 0;
+                return false;
+            }
+
+            var before = objective.Calculate(problem, solution);
+            this.Place(problem, problem, objective, solution, visits);
+            var after = objective.Calculate(problem, solution);
+            delta = before - after;
+            return true;
+        }
+
+        private void Place(TProblem problem, TProblem originalProblem, TObjective objective, TSolution solution, IList<int> visits)
+        {
+            var totalVisits = visits.Count;
 
             // calculate absolute thresholds.
             var interImprovementThreshold = (int) (visits.Count * _interImprovementsThreshold);
@@ -121,9 +156,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
                     }
                 }
             }
-
-            fitness = objective.Calculate(problem, solution);
-            return solution;
         }
 
         /// <summary>

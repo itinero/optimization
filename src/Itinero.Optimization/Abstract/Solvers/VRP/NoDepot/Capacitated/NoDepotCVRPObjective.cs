@@ -720,13 +720,33 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             return new NoDepotCVRPSolution(problem.Weights.Length);
         }
 
-        /// <summary>
-        /// Gets a list of potential visits.
-        /// </summary>
-        /// <param name="problem">The problem.</param>
-        /// <returns>The list of visits to be visited, except potentially those uniquely used as seeds.</returns>
-        public IList<int> PotentialVisits(NoDepotCVRProblem problem)
+        /// <inheritdoc />
+        public IList<int> PotentialVisits(NoDepotCVRProblem problem, NoDepotCVRPSolution solution = null)
         {
+            if (solution != null && solution.Count > 0)
+            {
+                var total = 0;
+                for (var t = 0; t < solution.Count; t++)
+                {
+                    total += solution.Tour(t).Count;
+                }
+
+                if (total == problem.Weights.Length)
+                {
+                    return new List<int>();
+                }
+                
+                var visits = new List<int>(System.Linq.Enumerable.Range(0, problem.Weights.Length));
+                for (var t = 0; t < solution.Count; t++)
+                {
+                    foreach (var v in solution.Tour(t))
+                    {
+                        visits.Remove(v);
+                    }
+                }
+
+                return visits;
+            }
             return new List<int>(System.Linq.Enumerable.Range(0, problem.Weights.Length));
         }
 
@@ -1096,6 +1116,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                         }
                     }
 
+                    if (tourOverlap > tour.Count / 4)
+                    {
+                        continue;
+                    }
                     if (hasUnplaced &&
                         tourOverlap < bestOverlap)
                     {
@@ -1162,27 +1186,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         public void PlaceRemaining(NoDepotCVRProblem problem, NoDepotCVRPSolution solution)
         {
             // build list of remaining visits.
-            var visits = this.PotentialVisits(problem);
-            for (var t = 0; t < solution.Count; t++)
+            var visits = this.PotentialVisits(problem, solution);
+            if (visits.Count == 0)
             {
-                var tour = solution.Tour(t);
-                foreach (var v in tour)
-                {
-                    visits.Remove(v);
-                }
+                return;
             }
 
-            // keep placing until empty.
-            while (visits.Count > 0)
-            {
-                if (this.TryPlaceAny(problem, solution, visits))
-                {
-                    continue;
-                }
-
-                // oeps, this is very bad a new tour here.
-                this.SeedNext(problem, solution, visits);
-            }
+            throw new NotSupportedException();
         }
     }
 }

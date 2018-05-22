@@ -16,6 +16,8 @@
  *  limitations under the License.
  */
 
+using System.Collections.Generic;
+
 namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GA
 {
     /// <summary>
@@ -47,5 +49,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.GA
         /// <param name="problem">The problem.</param>
         /// <param name="solution">The solution.</param>
         void PlaceRemaining(TProblem problem, TSolution solution);
+
+        /// <summary>
+        /// Gets a list of unplaced visits.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="solution">The current solution if any.</param>
+        /// <returns>The list of visits to be visited, except potentially those uniquely used as seeds.</returns>
+        IList<int> PotentialVisits(TProblem problem, TSolution solution = default(TSolution));
     }
 }
