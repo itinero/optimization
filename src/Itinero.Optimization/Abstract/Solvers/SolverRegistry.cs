@@ -62,7 +62,8 @@ namespace Itinero.Optimization.Abstract.Solvers
         /// Attempts to use the registered solvers to solve the given model.
         /// </summary>
         /// <param name="model">The model to solve.</param>
-        public static IList<ITour> Solve(MappedModel model)
+        /// <param name="intermediateResult">A callback for intermediate results.</param>
+        public static IList<ITour> Solve(MappedModel model, Action<IList<ITour>> intermediateResult)
         {
             if(!model.BuildAbstract().HasSaneConstraints(out string failReason, out List<int> faultyVisists)){
                 throw new Exception("The given model can never be solved, it has insane constraints:\n"+failReason);
@@ -71,7 +72,7 @@ namespace Itinero.Optimization.Abstract.Solvers
             var reasonsWhy = new StringBuilder();
             for (var i = 0; i < _solvers.Count; i++)
             {
-                var result = _solvers[i].TrySolve(model);
+                var result = _solvers[i].TrySolve(model, intermediateResult);
                 if (!result.IsError)
                 {
                     return result.Value;

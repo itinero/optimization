@@ -42,7 +42,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
             TrySolve = TrySolve
         };
 
-        private static Result<IList<ITour>> TrySolve(MappedModel mappedModel)
+        private static Result<IList<ITour>> TrySolve(MappedModel mappedModel, Action<IList<ITour>> intermediateResult)
         {
             var model = mappedModel.BuildAbstract();
 

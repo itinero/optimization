@@ -107,7 +107,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// Solves this using a default solver.
         /// </summary>
         /// <returns></returns>
-        public NoDepotCVRPSolution Solve(Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc)
+        public NoDepotCVRPSolution Solve(Delegates.OverlapsFunc<NoDepotCVRProblem, ITour> overlapsFunc, Action<NoDepotCVRPSolution> intermediateSolution = null)
         {
             var crossMultiAllPairs = new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, true, true);
             var crossMultiAllPairsUntil = new Algorithms.Solvers.IterativeOperator<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
@@ -120,8 +120,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                     //new MultiRelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(2, 2),
                     new RelocateOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(true),
                     //new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 1, true, false, true)
-                }, 0.03f, 1f
-            );
+                }, 0.03f, 1f);
             var slciIterate = new Algorithms.Solvers.IterativeSolver<float, NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, float>(
                 slci, 20, new MultiExchangeOperator<NoDepotCVRPObjective, NoDepotCVRProblem, NoDepotCVRPSolution>(1, 10, true, true, true));
             var gvns = new GuidedVNS<NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution, Penalties>(
@@ -162,7 +161,10 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             gaSettings.StagnationCount = 15;
             var gaSolver = new GASolver<NoDepotCVRProblem, NoDepotCVRPObjective, NoDepotCVRPSolution>(
                 slci, mutation2, crossOver, gaSettings);
-            gaSolver.IntermidiateResult += GaSolver_IntermidiateResult;
+            if (intermediateSolution != null)
+            {
+                gaSolver.IntermidiateResult += (sol) => intermediateSolution(sol);
+            }
             return this.Solve(gaSolver, new NoDepotCVRPObjective((problem, visits) =>
                 {
                     var weights = problem.Weights;
@@ -180,11 +182,6 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             //        return Algorithms.Seeds.SeedHeuristics.GetSeedWithCloseNeighbours(
             //            weights, this.NearestNeigboursTravelCost, visits, 20, .75f, .5f);
             //    }, overlapsFunc, 1f, 0.01f, 480 * 2));
-        }
-
-        private void GaSolver_IntermidiateResult(NoDepotCVRPSolution result)
-        {
-            Console.WriteLine("intermediate result");
         }
 
         /// <summary>

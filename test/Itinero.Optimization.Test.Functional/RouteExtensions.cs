@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
+using System.Security.Cryptography;
 using Itinero.Attributes;
 using Itinero.Optimization.Models;
 
@@ -26,6 +28,7 @@ namespace Itinero.Optimization.Test.Functional
             {
                 directory.Create();
             }
+
             for (var i = 0; i < routes.Count; i++)
             {
                 if (routes[i] != null)
@@ -33,6 +36,25 @@ namespace Itinero.Optimization.Test.Functional
                     File.WriteAllText(Path.Combine(directory.FullName, 
                         string.Format(fileName, i)), routes[i].ToGeoJson());
                 }
+            }
+        }
+
+        /// <summary>
+        /// Writes all the routes to one geojson file.
+        /// </summary>
+        public static void WriteGeoJsonOneFile(this IEnumerable<Route> routes, string fileName)
+        {
+            var directory = new DirectoryInfo("result");
+            if (!directory.Exists)
+            {
+                directory.Create();
+            }
+
+            fileName = Path.Combine(directory.FullName, fileName);
+            using (var stream = File.Open(fileName, FileMode.Create))
+            using (var streamWriter = new StreamWriter(stream))
+            {
+                routes.WriteGeoJson(streamWriter);
             }
         }
 
@@ -54,6 +76,30 @@ namespace Itinero.Optimization.Test.Functional
                         string.Format(fileName, i)), routes[i].ToJson());
                 }
             }
+        }
+        
+        /// <summary>
+        /// Writes the route as geojson.
+        /// </summary>
+        public static void WriteGeoJson(this IEnumerable<Route> routes, TextWriter writer, bool includeShapeMeta = true, bool includeStops = true, bool groupByShapeMeta = true,
+            Action<IAttributeCollection> attributesCallback = null)
+        {
+            if (routes == null) { throw new ArgumentNullException(nameof(routes)); }
+            if (writer == null) { throw new ArgumentNullException(nameof(writer)); }
+
+            var jsonWriter = new Itinero.IO.Json.JsonWriter(writer);
+            jsonWriter.WriteOpen();
+            jsonWriter.WriteProperty("type", "FeatureCollection", true, false);
+            jsonWriter.WritePropertyName("features", false);
+            jsonWriter.WriteArrayOpen();
+
+            foreach (var route in routes)
+            {
+                route.WriteGeoJsonFeatures(jsonWriter, includeShapeMeta, includeStops, groupByShapeMeta, attributesCallback);
+            }
+
+            jsonWriter.WriteArrayClose();
+            jsonWriter.WriteClose();
         }
 
          /// <summary>
@@ -109,6 +155,54 @@ namespace Itinero.Optimization.Test.Functional
             Console.Write("{0}m | ", totalDistance);
             Console.Write("{0}stops", totalStops);
             Console.WriteLine();
+        }
+
+        public static void AddRouteId(this IEnumerable<Route> routes)
+        {
+            var routeId = 0;
+
+            foreach (var route in routes)
+            {
+                route.AddExtraAttributes("route-id", routeId.ToString());
+                routeId++;
+            }
+        }
+
+        public static void AddTimeStamp(this IEnumerable<Route> routes)
+        {
+            var timestamp = DateTime.Now.ToString("HH:mm:ss");
+            var timestampEnd = DateTime.Now.AddSeconds(1).ToString("HH:mm:ss");
+            
+            //DateTime.Now.ToString("HH:mm:ss")
+            foreach (var route in routes)
+            {
+                route.AddExtraAttributes("timestamp-start", timestamp);
+                route.AddExtraAttributes("timestamp-end", timestampEnd);
+            }
+        }
+
+        public static void AddTimeStamp(this Route route, string timestamp)
+        {
+            route.AddExtraAttributes("timestamp", timestamp);
+        }
+
+        public static void AddExtraAttributes(this Route route, string key, string value)
+        {
+            if (route.ShapeMeta != null)
+            {
+                foreach (var shapeMeta in route.ShapeMeta)
+                {
+                    shapeMeta.Attributes.AddOrReplace(key, value);
+                }
+            }
+
+            if (route.Stops != null)
+            {
+                foreach (var stop in route.Stops)
+                {
+                    stop.Attributes.AddOrReplace(key, value);
+                }
+            }
         }
     }
 }

@@ -44,6 +44,6 @@
     <Compile Include="..\..\SharedAssemblyVersion.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Itinero" Version="1.4.0-pre35" />
+    <PackageReference Include="Itinero" Version="1.4.0-pre52" />
   </ItemGroup>
 </Project>

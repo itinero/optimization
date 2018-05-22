@@ -22,6 +22,7 @@ using Itinero.Algorithms.Search;
 using Itinero.Optimization.Algorithms.Solvers;
 using Itinero.Optimization.Abstract.Tours;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Itinero.Optimization.Sequences.Directed
 {
@@ -52,12 +53,12 @@ namespace Itinero.Optimization.Sequences.Directed
         /// <summary>
         /// Executes the actual algorithm.
         /// </summary>
-        protected override void DoRun()
+        protected override void DoRun(CancellationToken token)
         {
             // calculate weight matrix.
             if (!_weightMatrixAlgorithm.HasRun)
             { // only run if it has not been run yet.
-                _weightMatrixAlgorithm.Run();
+                _weightMatrixAlgorithm.Run(token);
             }
             if (!_weightMatrixAlgorithm.HasSucceeded)
             { // algorithm has not succeeded.

@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using Itinero.Optimization.Abstract.Models;
 using Itinero.Optimization.Abstract.Models.Costs;
@@ -39,7 +40,7 @@ namespace Itinero.Optimization.Abstract.Solvers.STSP.Directed
             TrySolve = TrySolve
         };
 
-        private static Result<IList<ITour>> TrySolve(MappedModel mappedModel)
+        private static Result<IList<ITour>> TrySolve(MappedModel mappedModel, Action<IList<ITour>> intermediateResult)
         {
             var model = mappedModel.BuildAbstract();
             

@@ -16,7 +16,9 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Itinero.Algorithms.Matrices;
 using Itinero.LocalGeo;
 using Itinero.Optimization.Sequences.Directed;
@@ -312,14 +314,31 @@ namespace Itinero.Optimization
         /// </summary>
         /// <param name="router">The router.</param>
         /// <param name="model">The model to solve.</param>
+        /// <param name="intermediateResult">Callback for intermediate results if any.</param>
         /// <returns></returns>
-        public static Result<Route[]> Solve(this RouterBase router, Models.Model model)
+        public static Result<Route[]> Solve(this RouterBase router, Models.Model model, Action<Route[]> intermediateResult = null)
         {
             // map the model.
             var defaultModelMap = new MappedModel(model, router);
 
+            // handle intermediate results if requested.
+            Action<IList<ITour>> intermediateResultRaw = null;
+            if (intermediateResult != null)
+            {
+                intermediateResultRaw = (intermediateTours) =>
+                {
+                    var intermediateRoutes = new Route[intermediateTours.Count];
+                    for (var t = 0; t < intermediateTours.Count; t++)
+                    {
+                        intermediateRoutes[t] = defaultModelMap.BuildRoute(intermediateTours[t]);
+                    }
+
+                    intermediateResult(intermediateRoutes);
+                };
+            }
+
             // solve the abstract model.
-            var tours = Abstract.Solvers.SolverRegistry.Solve(defaultModelMap);
+            var tours = Abstract.Solvers.SolverRegistry.Solve(defaultModelMap, intermediateResultRaw);
 
             // use the map to convert to real-world routes.
             var routes = new Route[tours.Count];
