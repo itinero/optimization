@@ -82,8 +82,8 @@ namespace Itinero.Optimization.Models.Mapping
         /// <returns></returns>
         public static Coordinate LocationOnNetwork<T>(this IWeightMatrixAlgorithm<T> algorithm, int visit)
         {
-            var originalIdx = algorithm.OriginalIndexOf(visit);
-            var routerPoint = algorithm.RouterPoints[originalIdx];
+            //var originalIdx = algorithm.OriginalIndexOf(visit);
+            var routerPoint = algorithm.RouterPoints[visit];
 
             return routerPoint.LocationOnNetwork(algorithm.Router.Db);
         }
