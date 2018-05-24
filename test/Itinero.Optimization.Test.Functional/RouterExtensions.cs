@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Itinero.Algorithms.Matrices;
@@ -26,7 +27,7 @@ namespace Itinero.Optimization.Test.Functional
         /// <param name="costs">The costs.</param>
         /// <returns></returns>
         public static Result<List<Route>> TryCalculateNoDepotCVRP(this Router router, Profile profile, Coordinate[] locations,
-            CapacityConstraint[] capacityConstraints, VisitCosts[] costs = null)
+            CapacityConstraint[] capacityConstraints, VisitCosts[] costs = null, Action<Route[]> intermediateResult = null)
         {
             // build model.
             var model = new Model()
@@ -50,7 +51,7 @@ namespace Itinero.Optimization.Test.Functional
             };
 
             // solve model.
-            var routes = router.Solve(model);
+            var routes = router.Solve(model, intermediateResult);
 
             return new Result<List<Route>>(routes.Value.ToList());
         }
@@ -65,7 +66,7 @@ namespace Itinero.Optimization.Test.Functional
         /// <param name="locations">The locations.</param>
         /// <param name="max">The maximum travel time per tour.</param>
         /// <returns></returns>
-        public static List<Route> CalculateNoDepotCVRP(this Router router, Profile profile, Coordinate[] locations, float max)
+        public static List<Route> CalculateNoDepotCVRP(this Router router, Profile profile, Coordinate[] locations, float max, Action<Route[]> intermediateResult = null)
         {
             return router.TryCalculateNoDepotCVRP(profile, locations, new CapacityConstraint[]
             {
@@ -74,14 +75,14 @@ namespace Itinero.Optimization.Test.Functional
                     Name = Itinero.Optimization.Models.Metrics.Time,
                     Capacity = max
                 }
-            }).Value;
+            }, null, intermediateResult).Value;
         }
 
         /// <returns></returns>
         public static List<Route> CalculateNoDepotCVRP(this Router router, Profile profile, Coordinate[] locations,
-            CapacityConstraint[] capacityConstraints = null, VisitCosts[] costs = null)
+            CapacityConstraint[] capacityConstraints = null, VisitCosts[] costs = null, Action<Route[]> intermediateResult = null)
         {
-            return router.TryCalculateNoDepotCVRP(profile, locations, capacityConstraints, costs).Value;
+            return router.TryCalculateNoDepotCVRP(profile, locations, capacityConstraints, costs, intermediateResult).Value;
         }
 
         // --------- Depot Shizzle ---------
@@ -97,7 +98,7 @@ namespace Itinero.Optimization.Test.Functional
         /// <param name="costs">The costs.</param>
         /// <returns></returns>
         public static Result<List<Route>> TryCalculateDepotCVRP(this Router router, Profile profile, Coordinate[] locations, int depot,
-            CapacityConstraint[] capacityConstraints, VisitCosts[] costs = null)
+            CapacityConstraint[] capacityConstraints, VisitCosts[] costs = null, Action<Route[]> intermediateResult = null)
         {
             // build model.
             var model = new Model()
@@ -121,7 +122,7 @@ namespace Itinero.Optimization.Test.Functional
             };
 
             // solve model.
-            var routes = router.Solve(model);
+            var routes = router.Solve(model, intermediateResult);
 
             return new Result<List<Route>>(routes.Value.ToList());
         }
@@ -136,7 +137,7 @@ namespace Itinero.Optimization.Test.Functional
         /// <param name="locations">The locations.</param>
         /// <param name="max">The maximum travel time per tour.</param>
         /// <returns></returns>
-        public static List<Route> CalculateDepotCVRP(this Router router, Profile profile, Coordinate[] locations, int depot, float max)
+        public static List<Route> CalculateDepotCVRP(this Router router, Profile profile, Coordinate[] locations, int depot, float max, Action<Route[]> intermediateResult = null)
         {
             return router.TryCalculateDepotCVRP(profile, locations, depot, new CapacityConstraint[]
             {
@@ -145,14 +146,14 @@ namespace Itinero.Optimization.Test.Functional
                     Name = Itinero.Optimization.Models.Metrics.Time,
                     Capacity = max
                 }
-            }).Value;
+            }, null, intermediateResult).Value;
         }
 
         /// <returns></returns>
         public static List<Route> CalculateDepotCVRP(this Router router, Profile profile, Coordinate[] locations, int depot,
-            CapacityConstraint[] capacityConstraints = null, VisitCosts[] costs = null)
+            CapacityConstraint[] capacityConstraints = null, VisitCosts[] costs = null, Action<Route[]> intermediateResult = null)
         {
-            return router.TryCalculateDepotCVRP(profile, locations, depot, capacityConstraints, costs).Value;
+            return router.TryCalculateDepotCVRP(profile, locations, depot, capacityConstraints, costs, intermediateResult).Value;
         }
     }
 }

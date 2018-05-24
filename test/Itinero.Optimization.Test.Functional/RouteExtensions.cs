@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.IO;
 using System.Security.Cryptography;
 using Itinero.Attributes;
+using Itinero.LocalGeo;
 using Itinero.Optimization.Models;
+using NetTopologySuite.Triangulate;
+using OsmSharp.IO.PBF;
 
 namespace Itinero.Optimization.Test.Functional
 {
@@ -37,6 +41,97 @@ namespace Itinero.Optimization.Test.Functional
                         string.Format(fileName, i)), routes[i].ToGeoJson());
                 }
             }
+        }
+
+        public static Box FromCoordinates(IEnumerable<Coordinate> coordinates)
+        {
+            Coordinate? coordinate1 = null;
+            Coordinate? coordinate2 = null;
+            Box? box = null;
+
+            foreach (var coordinate in coordinates)
+            {
+                if (coordinate1 == null)
+                {
+                    coordinate1 = coordinate;
+                }
+                else if (coordinate2 == null)
+                {
+                    coordinate2 = coordinate;
+                }
+                else if (box == null)
+                {
+                    box = new Box(coordinate1.Value, coordinate2.Value);
+                }
+                else
+                {
+                    box = box.Value.ExpandWith(coordinate.Latitude, coordinate.Longitude);
+                }
+            }
+
+            return box.Value;
+        }
+
+        public static void Sort(this List<Route> routes)
+        {
+            routes.Sort((r1, r2) =>
+            {
+                if (r1 == null && r2 == null)
+                {
+                    return 0;
+                }
+
+                if (r1 == null)
+                {
+                    return -1;
+                }
+
+                if (r2 == null)
+                {
+                    return 1;
+                }
+                
+                var center1 = FromCoordinates(r1.Shape).Center;
+                var center2 = FromCoordinates(r2.Shape).Center;
+
+                if (center1.Latitude != center2.Latitude)
+                {
+                    return center1.Latitude.CompareTo(center2.Latitude);
+                }
+
+                return center1.Longitude.CompareTo(center2.Longitude);
+            });
+        }
+
+        public static void Sort(this Route[] routes)
+        {
+            Array.Sort(routes, (r1, r2) =>
+            {
+                if (r1 == null && r2 == null)
+                {
+                    return 0;
+                }
+
+                if (r1 == null)
+                {
+                    return -1;
+                }
+
+                if (r2 == null)
+                {
+                    return 1;
+                }
+                
+                var center1 = FromCoordinates(r1.Shape).Center;
+                var center2 = FromCoordinates(r2.Shape).Center;
+
+                if (center1.Latitude != center2.Latitude)
+                {
+                    return center1.Latitude.CompareTo(center2.Latitude);
+                }
+
+                return center1.Longitude.CompareTo(center2.Longitude);
+            });
         }
 
         /// <summary>
@@ -95,7 +190,8 @@ namespace Itinero.Optimization.Test.Functional
 
             foreach (var route in routes)
             {
-                route.WriteGeoJsonFeatures(jsonWriter, includeShapeMeta, includeStops, groupByShapeMeta, attributesCallback);
+                route?.WriteGeoJsonFeatures(jsonWriter, includeShapeMeta, includeStops, groupByShapeMeta, attributesCallback,
+                    (k, v) => k == "anistart" || k == "aniend");
             }
 
             jsonWriter.WriteArrayClose();
@@ -168,17 +264,30 @@ namespace Itinero.Optimization.Test.Functional
             }
         }
 
+        private static int previous = -1;
+
+        public static void ResetTimeStamp()
+        {
+            previous = 1;
+        }
+
         public static void AddTimeStamp(this IEnumerable<Route> routes)
         {
-            var timestamp = DateTime.Now.ToString("HH:mm:ss");
-            var timestampEnd = DateTime.Now.AddSeconds(1).ToString("HH:mm:ss");
+            if (previous == -1)
+            {
+                previous = 0;
+            }
+            var timestamp = previous.ToString(); //.ToString("HH:mm:ss");
+            var now = previous + 1;
+            var timestampEnd = now.ToString(); //.ToString("HH:mm:ss");
             
-            //DateTime.Now.ToString("HH:mm:ss")
             foreach (var route in routes)
             {
-                route.AddExtraAttributes("timestamp-start", timestamp);
-                route.AddExtraAttributes("timestamp-end", timestampEnd);
+                route.AddExtraAttributes("anistart", timestamp);
+                route.AddExtraAttributes("aniend", timestampEnd);
             }
+
+            previous += 2;
         }
 
         public static void AddTimeStamp(this Route route, string timestamp)
@@ -188,6 +297,11 @@ namespace Itinero.Optimization.Test.Functional
 
         public static void AddExtraAttributes(this Route route, string key, string value)
         {
+            if (route == null)
+            {
+                return;
+            }
+            
             if (route.ShapeMeta != null)
             {
                 foreach (var shapeMeta in route.ShapeMeta)
