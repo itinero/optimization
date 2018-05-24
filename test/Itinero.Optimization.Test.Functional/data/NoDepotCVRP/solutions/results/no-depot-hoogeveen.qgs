@@ -165,7 +165,7 @@
         <ymax>52.84785999999999717</ymax>
       </extent>
       <id>no_depot_hogeveen_all_no_depot_hogeveen_all_LineString20180524085252696</id>
-      <datasource>../../../../result/no-depot-hogeveen-all.geojson|layername=no-depot-hogeveen-all|subset=anistart &lt; 2 AND aniend >= 1 |geometrytype=LineString</datasource>
+      <datasource>../../../../result/no-depot-hogeveen-all.geojson|layername=no-depot-hogeveen-all|subset=anistart &lt; 33 AND aniend >= 32 |geometrytype=LineString</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -946,13 +946,13 @@ def my_form_open(dialog, layer, feature):
       <timeFrameSize type="int">1</timeFrameSize>
       <labelSize type="int">25</labelSize>
       <mode type="int">0</mode>
-      <timeLayerManager type="QString">1970-01-01 00:00:01;1970-01-01 00:00:32;1970-01-01 00:00:01</timeLayerManager>
+      <timeLayerManager type="QString">1970-01-01 00:00:01;1970-01-01 00:00:32;1970-01-01 00:00:32</timeLayerManager>
       <labelFont type="QString">Liberation Sans</labelFont>
       <digits type="int">4</digits>
       <timeFrameType type="QString">seconds</timeFrameType>
       <active type="int">1</active>
       <labelColor type="QString">#000000</labelColor>
-      <currentMapTimePosition type="QString">1970-01-01 00:00:01</currentMapTimePosition>
+      <currentMapTimePosition type="QString">1970-01-01 00:00:32</currentMapTimePosition>
       <loopAnimation type="int">0</loopAnimation>
       <labelPlacement type="QString">NE</labelPlacement>
       <animationFrameLength type="int">200</animationFrameLength>
