@@ -19,6 +19,7 @@
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Itinero.Optimization.Algorithms.Solvers.GA
 {
@@ -84,16 +85,22 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
             var population = new Individual<TSolution, TFitness>[_settings.PopulationSize];
 
             // generate initial population.
+            Individual<TSolution, TFitness>? bestIndividual = null;
             var solutionCount = 0;
             while (solutionCount < _settings.PopulationSize)
             {
-                TFitness localFitness;
-                var solution = _generator.Solve(problem, objective, out localFitness);
+                var solution = _generator.Solve(problem, objective, out var localFitness);
                 population[solutionCount] = new Individual<TSolution, TFitness>()
                 {
                     Fitness = localFitness,
                     Solution = solution
                 };
+                if (bestIndividual == null ||
+                    objective.IsBetterThan(problem, population[solutionCount].Fitness, bestIndividual.Value.Fitness))
+                {
+                    bestIndividual = population[solutionCount];
+                    this.ReportIntermidiateResult(bestIndividual.Value.Solution);
+                }
                 solutionCount++;
             }
 
@@ -102,8 +109,8 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
             {
                 return objective.CompareTo(problem, x.Fitness, y.Fitness);
             });
-            var bestIndividual = population[0];
-            this.ReportIntermidiateResult(bestIndividual.Solution);
+            bestIndividual = population[0];
+            this.ReportIntermidiateResult(bestIndividual.Value.Solution);
             
             Console.WriteLine("Generation {0}: {1} -> {2}", 0,
                 population[0].Fitness, population[population.Length - 1].Fitness);
@@ -182,14 +189,14 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
                 {
                     return objective.CompareTo(problem, x.Fitness, y.Fitness);
                 });
-                if (objective.IsBetterThan(problem, population[0].Fitness, bestIndividual.Fitness))
+                if (objective.IsBetterThan(problem, population[0].Fitness, bestIndividual.Value.Fitness))
                 { // a better individual was found.
                     Itinero.Logging.Logger.Log("GASolver", Itinero.Logging.TraceEventType.Verbose,
-                        "Found a better solution at generation {0}: {1} -> {2}", generation, bestIndividual.Fitness, population[0].Fitness);
+                        "Found a better solution at generation {0}: {1} -> {2}", generation, bestIndividual.Value.Fitness, population[0].Fitness);
 
                     bestIndividual = population[0];
                     stagnation = 0; // reset stagnation flag.
-                    this.ReportIntermidiateResult(bestIndividual.Solution);
+                    this.ReportIntermidiateResult(bestIndividual.Value.Solution);
                 }
                 else
                 { // no better solution found.
@@ -206,8 +213,8 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
                 }
             }
 
-            fitness = bestIndividual.Fitness;
-            return bestIndividual.Solution;
+            fitness = bestIndividual.Value.Fitness;
+            return bestIndividual.Value.Solution;
         }
     }
 }
