@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System.Threading;
 using Itinero.Algorithms;
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
@@ -53,12 +54,12 @@ namespace Itinero.Optimization.Abstract.Solvers.TSP.Directed
         /// <summary>
         /// Executes the actual algorithm.
         /// </summary>
-        protected override void DoRun()
+        protected override void DoRun(CancellationToken cancellationToken)
         {
             // calculate weight matrix.
             if (!_weightMatrixAlgorithm.HasRun)
             { // only run if it has not been run yet.
-                _weightMatrixAlgorithm.Run();
+                _weightMatrixAlgorithm.Run(cancellationToken);
             }
             if (!_weightMatrixAlgorithm.HasSucceeded)
             { // algorithm has not succeeded.
