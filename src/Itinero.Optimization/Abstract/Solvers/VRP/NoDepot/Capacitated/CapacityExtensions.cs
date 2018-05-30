@@ -490,6 +490,19 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             /// The quantities per constraint.
             /// </summary>
             public float[] Quantities { get; set; }
+
+            /// <summary>
+            /// Returns a deep-copy of this object.
+            /// </summary>
+            /// <returns></returns>
+            public Content Copy()
+            {
+                return new Content()
+                {
+                    Quantities = this.Quantities.Clone() as float[],
+                    Weight = this.Weight
+                };
+            }
         }
     }
 }

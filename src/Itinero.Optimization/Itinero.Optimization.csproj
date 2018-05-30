@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>netstandard1.3;net40;net45</TargetFrameworks>
     <AssemblyName>Itinero.Optimization</AssemblyName>
@@ -13,50 +12,39 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
     <PackageReference Include="System.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
   </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <DefineConstants>$(DefineConstants);NETSTANDARD13;NETFX_CORE;DOTNET_CORE</DefineConstants>
   </PropertyGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <Compile Include="..\..\SharedAssemblyVersion.cs" Link="Properties\SharedAssemblyVersion.cs" />
   </ItemGroup>
-
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <DefineConstants>$(DefineConstants);NET40</DefineConstants>
   </PropertyGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <Compile Include="..\..\SharedAssemblyVersion.cs" />
   </ItemGroup>
-
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <DefineConstants>$(DefineConstants);NET45</DefineConstants>
   </PropertyGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Compile Include="..\..\SharedAssemblyVersion.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Reminiscence" Version="1.2.0-pre06" />
     <PackageReference Include="Itinero" Version="1.4.0-pre54" />
   </ItemGroup>
-
 </Project>

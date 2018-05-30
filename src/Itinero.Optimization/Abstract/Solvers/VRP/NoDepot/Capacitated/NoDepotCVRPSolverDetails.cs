@@ -43,7 +43,7 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
             TrySolve = TrySolve
         };
 
-        private static Result<IList<ITour>> TrySolve(MappedModel mappedModel)
+        private static Result<IList<ITour>> TrySolve(MappedModel mappedModel, Action<IList<ITour>> intermediateResult)
         {
             var model = mappedModel.BuildAbstract();
 
@@ -54,12 +54,26 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
                 return result.ConvertError<IList<ITour>>();
             }
             
-            // call solver.
-            var solution = result.Value.Solve((p, tour1, tour2) => 
+            // handle intermediate solutions if requested.
+            Action<NoDepotCVRPSolution> intermediateSolutionAction = null;
+            if (intermediateResult != null)
             {
-                return mappedModel.Overlaps(tour1, tour2);
-            });
+                intermediateSolutionAction = (intermediateSolution) =>
+                {
+                    var intermediateTours = new List<ITour>();
+                    for (var t = 0; t < intermediateSolution.Count; t++)
+                    {
+                        intermediateTours.Add(intermediateSolution.Tour(t));
+                    }
 
+                    intermediateResult(intermediateTours);
+                };
+            }
+            
+            // call solver.
+            var solution = result.Value.Solve((p, tour1, tour2) => mappedModel.Overlaps(tour1, tour2), intermediateSolutionAction);
+
+            // convert solution.
             var tours = new List<ITour>();
             for (var t = 0; t < solution.Count; t++)
             {

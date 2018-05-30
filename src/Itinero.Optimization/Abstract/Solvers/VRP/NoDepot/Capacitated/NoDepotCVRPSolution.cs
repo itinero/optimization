@@ -146,7 +146,42 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.NoDepot.Capacitated
         /// <param name="solution"></param>
         public void CopyFrom(ISolution solution)
         {
-            throw new NotImplementedException();
+            var other = (solution as NoDepotCVRPSolution);
+            if (other == null)
+            {
+                throw new Exception("Can only copy from another NoDepot CVRP solution.");
+            }
+            
+            // make a deep-copy of the contents.
+            _contents.Clear();
+            for (var c = 0; c < other._contents.Count; c++)
+            {
+                _contents.Add(new CapacityExtensions.Content()
+                {
+                    Weight = other._contents[c].Weight
+                });
+                if (other._contents[c].Quantities != null)
+                {
+                    _contents[c].Quantities = other._contents[c].Quantities.Clone() as float[];
+                }
+            }
+
+            // make a deep-copy of the tours.
+            _tours.Clear();
+            foreach (var tour in other._tours)
+            {
+                _tours.Add(tour.Clone() as Tour);
+            }
+        }
+
+        /// <summary>
+        /// Removes the given tour.
+        /// </summary>
+        /// <param name="i"></param>
+        public void RemoveTour(int i)
+        {
+            _tours.RemoveAt(i);
+            _contents.RemoveAt(i);
         }
     }
 }

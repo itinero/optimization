@@ -84,7 +84,7 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
             // sort the population..
             tempPop.Sort((x, y) =>
             {
-                return objective.CompareTo(problem, y.Item2.Fitness, x.Item2.Fitness);
+                return objective.CompareTo(problem, x.Item2.Fitness, y.Item2.Fitness);
             });
 
             // choose a candidate.

@@ -40,7 +40,7 @@ namespace Itinero.Optimization.Abstract.Solvers.TSP
             TrySolve = TrySolve
         };
 
-        private static Result<IList<ITour>> TrySolve(MappedModel mappedModel)
+        private static Result<IList<ITour>> TrySolve(MappedModel mappedModel, Action<IList<ITour>> intermediateResult)
         {
             var result = mappedModel.TryToTSP();
 

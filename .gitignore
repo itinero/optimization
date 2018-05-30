@@ -42,3 +42,4 @@ packages/*
 TestResult*.xml
 
 test/Itinero.Optimization.Test.Functional/result/*
+*.qgs~

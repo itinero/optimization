@@ -21,6 +21,7 @@ using System;
 using System.Linq;
 using System.IO;
 using Itinero.Profiles;
+using OsmSharp.Streams;
 
 namespace Itinero.Optimization.Test.Functional.Staging
 {
@@ -63,20 +64,32 @@ namespace Itinero.Optimization.Test.Functional.Staging
 
             if (routerDb == null)
             {
-                // check if OSM file is there, otherwise attempt to download from overpass.
-                var fileName = Path.Combine("Staging", queryName + ".osm");
+                // check if OSM pbf file is there.
+                var fileName = Path.Combine("Staging", queryName + ".osm.pbf");
                 if (!File.Exists(fileName))
-                {
-                    // make sure source OSM data is there.
-                    Download.ToFile(queryName);
+                { // check if OSM file is there, otherwise attempt to download from overpass.
+                    fileName = Path.Combine("Staging", queryName + ".osm");
+                    if (!File.Exists(fileName))
+                    {
+                        // make sure source OSM data is there.
+                        Download.ToFile(queryName);
+                    } 
                 }
 
                 // build routerdb.
                 Itinero.Logging.Logger.Log("RouterDbBuilder", Itinero.Logging.TraceEventType.Information, "No existing RouterDb file found, creating now.");
                 using (var stream = File.OpenRead(fileName))
                 {
-                    var xmlStream = new OsmSharp.Streams.XmlOsmStreamSource(stream);
-                    var sortedData = xmlStream.ToList();
+                    OsmStreamSource osmStream = null;
+                    if (fileName.EndsWith(".osm.pbf"))
+                    {
+                        osmStream = new OsmSharp.Streams.PBFOsmStreamSource(stream);
+                    }
+                    else
+                    {
+                        osmStream = new OsmSharp.Streams.XmlOsmStreamSource(stream);
+                    }
+                    var sortedData = osmStream.ToList();
                     sortedData.Sort((x, y) =>
                     {
                         if (x.Type == y.Type)

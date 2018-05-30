@@ -39,8 +39,9 @@ namespace Itinero.Optimization.Abstract.Solvers
         /// A delegate to define try solve calls.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <param name="intermediateResult">A callback to report on intermediate events if found.</param>
         /// <returns></returns>
-        public delegate Result<IList<ITour>> TrySolveDelegate(MappedModel model);
+        public delegate Result<IList<ITour>> TrySolveDelegate(MappedModel model, Action<IList<ITour>> intermediateResult);
 
         /// <summary>
         /// Gets or sets the try solve function.

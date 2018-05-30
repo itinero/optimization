@@ -17,11 +17,12 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Solvers.SCI
         TSolution NewSolution(TProblem problem);
 
         /// <summary>
-        /// Gets a list of potential visits.
+        /// Gets a list of unplaced visits.
         /// </summary>
         /// <param name="problem">The problem.</param>
+        /// <param name="solution">The current solution if any.</param>
         /// <returns>The list of visits to be visited, except potentially those uniquely used as seeds.</returns>
-        IList<int> PotentialVisits(TProblem problem);
+        IList<int> PotentialVisits(TProblem problem, TSolution solution = default(TSolution));
 
         /// <summary>
         /// Creates a new instance of the given problem that has tighter constraints.

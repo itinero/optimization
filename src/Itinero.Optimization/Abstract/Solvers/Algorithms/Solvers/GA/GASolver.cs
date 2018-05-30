@@ -19,6 +19,7 @@
 using Itinero.Optimization.Algorithms.Solvers.Objective;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Itinero.Optimization.Algorithms.Solvers.GA
 {
@@ -84,16 +85,22 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
             var population = new Individual<TSolution, TFitness>[_settings.PopulationSize];
 
             // generate initial population.
+            Individual<TSolution, TFitness>? bestIndividual = null;
             var solutionCount = 0;
             while (solutionCount < _settings.PopulationSize)
             {
-                TFitness localFitness;
-                var solution = _generator.Solve(problem, objective, out localFitness);
+                var solution = _generator.Solve(problem, objective, out var localFitness);
                 population[solutionCount] = new Individual<TSolution, TFitness>()
                 {
                     Fitness = localFitness,
                     Solution = solution
                 };
+                if (bestIndividual == null ||
+                    objective.IsBetterThan(problem, population[solutionCount].Fitness, bestIndividual.Value.Fitness))
+                {
+                    bestIndividual = population[solutionCount];
+                    this.ReportIntermidiateResult(bestIndividual.Value.Solution);
+                }
                 solutionCount++;
             }
 
@@ -102,14 +109,26 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
             {
                 return objective.CompareTo(problem, x.Fitness, y.Fitness);
             });
-            var bestIndividual = population[0];
-            this.ReportIntermidiateResult(bestIndividual.Solution);
+            bestIndividual = population[0];
+            this.ReportIntermidiateResult(bestIndividual.Value.Solution);
+            
+            Console.WriteLine("Generation {0}: {1} -> {2}", 0,
+                population[0].Fitness, population[population.Length - 1].Fitness);
 
             // mutate/crossover population.
             var stagnation = 0;
             var generation = 0;
             var elitism = (int)(_settings.PopulationSize * (_settings.ElitismPercentage / 100.0));
+            if (elitism == 0 && _settings.ElitismPercentage != 0)
+            { // make sure we have at least one, elitism was requested but population was too small.
+                elitism = 1;
+            }
             var crossOver = (int)(_settings.PopulationSize * (_settings.CrossOverPercentage / 100.0));
+            if (crossOver < 2 &&
+                _settings.CrossOverPercentage != 0)
+            { // make sure we have at least 2, some crossover was requested but population was too small.
+                crossOver = 2;
+            }
             var crossOverIndividuals = new Individual<TSolution, TFitness>[crossOver];
             var exclude = new HashSet<int>();
             while (stagnation < _settings.StagnationCount &&
@@ -131,7 +150,7 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
                 }
 
                 // replace part of the population by offspring.
-                for (int i = elitism; i < population.Length; i++)
+                for (int i = population.Length - 1; i > population.Length - 1 - elitism - crossOver; i--)
                 {
                     // take two random parents.
                     var individual1 = _random.Next(crossOver);
@@ -142,25 +161,30 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
                     }
 
                     // create offspring.
-                    TFitness offspringFitness;
-                    var offspring = _crossOver.Apply(problem, objective, population[individual1].Solution,
-                        population[individual2].Solution, out offspringFitness);
+                    var offspring = _crossOver.Apply(problem, objective, crossOverIndividuals[individual1].Solution,
+                        crossOverIndividuals[individual2].Solution, out TFitness _);
                     population[i] = new Individual<TSolution, TFitness>()
                     {
                         Solution = offspring,
-                        Fitness = offspringFitness
+                        Fitness = objective.Calculate(problem, offspring)
                     };
                 }
+
+                // sort new population.
+                Array.Sort(population, (x, y) =>
+                {
+                    return objective.CompareTo(problem, x.Fitness, y.Fitness);
+                });
 
                 // mutate part of the population.
                 for (int i = elitism; i < population.Length; i++)
                 {
-                    if (_random.Next(100) <= _settings.MutationPercentage)
+                    if (_random.Next(100) < _settings.MutationPercentage)
                     { // ok, mutate this individual.
                         TFitness mutatedDelta;
                         if (_mutation.Apply(problem, objective, population[i].Solution, out mutatedDelta))
                         { // mutation succeeded.
-                            population[i].Fitness = objective.Subtract(problem, population[i].Fitness, mutatedDelta);
+                            population[i].Fitness = objective.Calculate(problem, population[i].Solution);
                         }
                     }
                 }
@@ -170,20 +194,32 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
                 {
                     return objective.CompareTo(problem, x.Fitness, y.Fitness);
                 });
-                if (objective.IsBetterThan(problem, bestIndividual.Fitness, population[0].Fitness))
+                if (objective.IsBetterThan(problem, population[0].Fitness, bestIndividual.Value.Fitness))
                 { // a better individual was found.
+                    Itinero.Logging.Logger.Log("GASolver", Itinero.Logging.TraceEventType.Verbose,
+                        "Found a better solution at generation {0}: {1} -> {2}", generation, bestIndividual.Value.Fitness, population[0].Fitness);
+
                     bestIndividual = population[0];
                     stagnation = 0; // reset stagnation flag.
-                    this.ReportIntermidiateResult(bestIndividual.Solution);
+                    this.ReportIntermidiateResult(bestIndividual.Value.Solution);
                 }
                 else
                 { // no better solution found.
                     stagnation++;
                 }
+                generation++;
+
+                Console.WriteLine("Generation {0}: {1} -> {2}", generation, 
+                    population[0].Fitness, population[population.Length - 1].Fitness);
+
+                if (EqualityComparer<TFitness>.Default.Equals(population[0].Fitness, population[population.Length - 1].Fitness))
+                {
+                    //break;
+                }
             }
 
-            fitness = bestIndividual.Fitness;
-            return bestIndividual.Solution;
+            fitness = bestIndividual.Value.Fitness;
+            return bestIndividual.Value.Solution;
         }
     }
 }

@@ -712,13 +712,13 @@ namespace Itinero.Optimization.Abstract.Solvers.VRP.Depot.Capacitated
                 return new DepotCVRPSolution(problem.Weights.Length);
             }
 
-            /// <summary>
-            /// Gets a list of potential visits.
-            /// </summary>
-            /// <param name="problem">The problem.</param>
-            /// <returns>The list of visits to be visited, except potentially those uniquely used as seeds.</returns>
-            public IList<int> PotentialVisits(DepotCVRProblem problem)
+            /// <inheritdoc />
+            public IList<int> PotentialVisits(DepotCVRProblem problem, DepotCVRPSolution solution = null)
             {
+                if (solution != null && solution.Count > 0)
+                {
+                    throw new NotSupportedException();
+                }
                 var visits = new List<int>(System.Linq.Enumerable.Range(0, problem.Weights.Length));
                 visits.Remove(problem.Depot);
                 return visits;

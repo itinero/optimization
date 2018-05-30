@@ -36,9 +36,15 @@ namespace Itinero.Optimization.Test.Functional
             TSP.TSPTests.Run();
             STSP.STSPTests.Run();
             TSP_TW.TSPTWTests.Run();
+            
             VRP.NoDepot.Capacitated.NoDepotCVRPTests.Run();
             VRP.Depot.Capacitated.DepotCVRPTests.Run();
-    }
+
+#if DEBUG
+            Console.WriteLine("Testing done!");
+            Console.ReadLine();
+#endif
+        }
 
 
     private static void EnableLogging()
@@ -55,12 +61,16 @@ namespace Itinero.Optimization.Test.Functional
         };
         Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
         {
-#if RELEASE
-                 if (level == "verbose")
-                 {
-                     return;
-                 }
-#endif
+            if (o == "SC")
+            {
+                return;
+            }
+//#if RELEASE
+//                 if (level == "verbose")
+//                 {
+//                     return;
+//                 }
+//#endif
             Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
         };
     }
