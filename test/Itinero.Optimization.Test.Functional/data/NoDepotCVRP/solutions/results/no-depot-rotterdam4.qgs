@@ -156,14 +156,8 @@
       <blendMode>0</blendMode>
     </maplayer>
     <maplayer minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Line" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
-      <extent>
-        <xmin>4.47636699999999976</xmin>
-        <ymin>51.88000000000000256</ymin>
-        <xmax>4.52176199999999984</xmax>
-        <ymax>51.91647999999999996</ymax>
-      </extent>
       <id>no_depot_rotterdam4_all_no_depot_rotterdam4_all_LineString20180523150959894</id>
-      <datasource>../../../../result/no-depot-rotterdam4-all.geojson|layername=no-depot-rotterdam4-all|subset=anistart &lt; 47 AND aniend >= 46 |geometrytype=LineString</datasource>
+      <datasource>../../../../result/no-depot-rotterdam4-all.geojson|layername=no-depot-rotterdam4-all|subset=anistart &lt; 35 AND aniend >= 34 |geometrytype=LineString</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -198,9 +192,6 @@
         <edittype widgetv2type="TextEdit" name="highway">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="maxspeed">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-        </edittype>
         <edittype widgetv2type="TextEdit" name="profile">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
@@ -219,13 +210,16 @@
         <edittype widgetv2type="TextEdit" name="route-id">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
+        <edittype widgetv2type="TextEdit" name="maxspeed">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
         <edittype widgetv2type="TextEdit" name="junction">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="bridge">
+        <edittype widgetv2type="TextEdit" name="index">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="index">
+        <edittype widgetv2type="TextEdit" name="bridge">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="tunnel">
@@ -338,8 +332,6 @@
             </layer>
           </symbol>
         </source-symbol>
-        <colorramp type="randomcolors" name="[source]"/>
-        <invertedcolorramp value="0"/>
         <rotation/>
         <sizescale scalemethod="diameter"/>
       </renderer-v2>
@@ -512,17 +504,18 @@
       <SingleCategoryDiagramRenderer diagramType="Pie">
         <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
           <fontProperties description="Ubuntu,11,-1,5,50,0,0,0,0,0" style=""/>
+          <attribute field="" color="#000000" label=""/>
         </DiagramCategory>
       </SingleCategoryDiagramRenderer>
       <DiagramLayerSettings yPosColumn="-1" linePlacementFlags="10" placement="2" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
-      <annotationform></annotationform>
+      <annotationform>.</annotationform>
       <excludeAttributesWMS/>
       <excludeAttributesWFS/>
       <attributeactions/>
-      <editform></editform>
+      <editform>.</editform>
       <editforminit/>
       <editforminitcodesource>0</editforminitcodesource>
-      <editforminitfilepath></editforminitfilepath>
+      <editforminitfilepath>.</editforminitfilepath>
       <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
 """
 QGIS forms can have a Python function that is called when the form is
@@ -826,13 +819,13 @@ def my_form_open(dialog, layer, feature):
       <timeFrameSize type="int">1</timeFrameSize>
       <labelSize type="int">25</labelSize>
       <mode type="int">0</mode>
-      <timeLayerManager type="QString">1970-01-01 00:00:01;1970-01-01 00:00:46;1970-01-01 00:00:46</timeLayerManager>
+      <timeLayerManager type="QString">1970-01-01 00:00:01;1970-01-01 00:00:34;1970-01-01 00:00:34</timeLayerManager>
       <labelFont type="QString">Liberation Sans</labelFont>
       <digits type="int">4</digits>
       <timeFrameType type="QString">seconds</timeFrameType>
       <active type="int">1</active>
       <labelColor type="QString">#000000</labelColor>
-      <currentMapTimePosition type="QString">1970-01-01 00:00:46</currentMapTimePosition>
+      <currentMapTimePosition type="QString">1970-01-01 00:00:34</currentMapTimePosition>
       <loopAnimation type="int">0</loopAnimation>
       <labelPlacement type="QString">NE</labelPlacement>
       <animationFrameLength type="int">200</animationFrameLength>

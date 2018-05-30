@@ -6,7 +6,7 @@
     <layer-tree-layer expanded="1" checked="Qt::Checked" id="problem2_spijkenisse20180523092406262" name="problem2-spijkenisse">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="0" checked="Qt::Checked" id="no_depot_spijkenisse_all_no_depot_spijkenisse_all_LineString20180523155627419" name="no-depot-spijkenisse-all no-depot-spijkenisse-all LineString">
+    <layer-tree-layer expanded="1" checked="Qt::Checked" id="no_depot_spijkenisse_all_no_depot_spijkenisse_all_LineString20180523155627419" name="no-depot-spijkenisse-all no-depot-spijkenisse-all LineString">
       <customproperties/>
     </layer-tree-layer>
     <layer-tree-layer expanded="1" checked="Qt::Checked" id="OpenStreetMap20180523093039349" name="OpenStreetMap">
@@ -67,8 +67,8 @@
         <legendlayerfile isInOverview="0" layerid="problem2_spijkenisse20180523092406262" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="no-depot-spijkenisse-all no-depot-spijkenisse-all LineString" showFeatureCount="0">
-      <filegroup open="false" hidden="false">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="no-depot-spijkenisse-all no-depot-spijkenisse-all LineString" showFeatureCount="0">
+      <filegroup open="true" hidden="false">
         <legendlayerfile isInOverview="0" layerid="no_depot_spijkenisse_all_no_depot_spijkenisse_all_LineString20180523155627419" visible="1"/>
       </filegroup>
     </legendlayer>
@@ -153,14 +153,8 @@
       <blendMode>0</blendMode>
     </maplayer>
     <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Line" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
-      <extent>
-        <xmin>4.30286900000000028</xmin>
-        <ymin>51.82323000000000235</ymin>
-        <xmax>4.3725069999999997</xmax>
-        <ymax>51.85866999999999649</ymax>
-      </extent>
       <id>no_depot_spijkenisse_all_no_depot_spijkenisse_all_LineString20180523155627419</id>
-      <datasource>../../../../result/no-depot-spijkenisse-all.geojson|layername=no-depot-spijkenisse-all|subset=anistart &lt; 59 AND aniend >= 58 |geometrytype=LineString</datasource>
+      <datasource>../../../../result/no-depot-spijkenisse-all.geojson|layername=no-depot-spijkenisse-all|subset=anistart &lt; 43 AND aniend >= 42 |geometrytype=LineString</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -192,6 +186,9 @@
         <edittype widgetv2type="TextEdit" name="highway">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
+        <edittype widgetv2type="TextEdit" name="maxspeed">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
         <edittype widgetv2type="TextEdit" name="profile">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
@@ -210,19 +207,16 @@
         <edittype widgetv2type="TextEdit" name="route-id">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="maxspeed">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-        </edittype>
         <edittype widgetv2type="TextEdit" name="oneway">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="junction">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="index">
+        <edittype widgetv2type="TextEdit" name="bridge">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="bridge">
+        <edittype widgetv2type="TextEdit" name="index">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
       </edittypes>
@@ -839,13 +833,13 @@ def my_form_open(dialog, layer, feature):
       <timeFrameSize type="int">1</timeFrameSize>
       <labelSize type="int">25</labelSize>
       <mode type="int">0</mode>
-      <timeLayerManager type="QString">1970-01-01 00:00:01;1970-01-01 00:00:58;1970-01-01 00:00:58</timeLayerManager>
+      <timeLayerManager type="QString">1970-01-01 00:00:01;1970-01-01 00:00:42;1970-01-01 00:00:42</timeLayerManager>
       <labelFont type="QString">Liberation Sans</labelFont>
       <digits type="int">4</digits>
       <timeFrameType type="QString">seconds</timeFrameType>
       <active type="int">1</active>
       <labelColor type="QString">#000000</labelColor>
-      <currentMapTimePosition type="QString">1970-01-01 00:00:58</currentMapTimePosition>
+      <currentMapTimePosition type="QString">1970-01-01 00:00:42</currentMapTimePosition>
       <loopAnimation type="int">0</loopAnimation>
       <labelPlacement type="QString">NE</labelPlacement>
       <animationFrameLength type="int">200</animationFrameLength>

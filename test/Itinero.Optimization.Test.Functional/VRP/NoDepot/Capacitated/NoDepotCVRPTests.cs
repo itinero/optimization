@@ -34,14 +34,14 @@ namespace Itinero.Optimization.Test.Functional.VRP.NoDepot.Capacitated
 
         public static void Run()
         {
-//            Run1Wechelderzande();
-//            Run1WechelderzandeCapacitated();
-//            Run2Spijkenisse();
-//            Run2SpijkenisseCapacitated();
-//            Run2SpijkenisseVisitCosts();
-//            Run3DeHague();
-//            Run4Rotterdam();
-//            Run5Rotterdam();
+            Run1Wechelderzande();
+            Run1WechelderzandeCapacitated();
+            Run2Spijkenisse();
+            Run2SpijkenisseCapacitated();
+            Run2SpijkenisseVisitCosts();
+            Run3DeHague();
+            Run4Rotterdam();
+            Run5Rotterdam();
             Run6Hoogeveen();
         }
 

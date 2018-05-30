@@ -3,10 +3,10 @@
   <title></title>
   <layer-tree-group expanded="1" checked="Qt::Checked" name="">
     <customproperties/>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="problem5_rotterdam20180523144856837" name="problem5-rotterdam">
+    <layer-tree-layer expanded="1" checked="Qt::Checked" id="problem3_de_hague20180524114836291" name="problem3-de-hague">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="0" checked="Qt::Checked" id="no_depot_rotterdam5_all_no_depot_rotterdam5_all_LineString20180523151654558" name="no-depot-rotterdam5-all no-depot-rotterdam5-all LineString">
+    <layer-tree-layer expanded="1" checked="Qt::Checked" id="no_depot_de_hague_all_no_depot_de_hague_all_LineString20180524115012809" name="no-depot-de-hague-all no-depot-de-hague-all LineString">
       <customproperties/>
     </layer-tree-layer>
     <layer-tree-layer expanded="1" checked="Qt::Checked" id="OpenStreetMap20180523093039349" name="OpenStreetMap">
@@ -17,10 +17,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>505183.70220452029025182</xmin>
-      <ymin>6783776.96262791845947504</ymin>
-      <xmax>514946.41972032614285126</xmax>
-      <ymax>6793521.12664753291755915</ymax>
+      <xmin>477778.032376098271925</xmin>
+      <ymin>6809264.26651897840201855</ymin>
+      <xmax>486039.82902055274462327</xmax>
+      <ymax>6818067.99607636593282223</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -40,41 +40,44 @@
     <layer_coordinate_transform_info>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="no_depot_rotterdam4_all_no_depot_rotterdam4_all_LineString20180523144016083"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="no_depot_spijkenisse_capacitated_all_no_depot_spijkenisse_capacitated_all_LineString20180523140811085"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="no_depot_rotterdam5_all_no_depot_rotterdam5_all_LineString20180523151654558"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="spijkenisse_all20180523101137999"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="problem2_spijkenisse20180523092406262"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="guided_vns_spijkenisse_all_guided_vns_spijkenisse_all_LineString20180523100513833"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="problem4_rotterdam20180523144253776"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="spijkenisse_all20180523094430616"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="problem5_rotterdam20180523144856837"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="no_depot_hogeveen_all_no_depot_hogeveen_all_LineString20180524114937168"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="problem6_hogeveen20180524085215227"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="guided_vns_spijkenisse_all_guided_vns_spijkenisse_all_LineString20180523101120950"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="problem4_rotterdam20180523143940801"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="guided_vns_spijkenisse_all_guided_vns_spijkenisse_all_LineString20180523100738440"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="no_depot_spijkenisse_capacitated_all20180523140848967"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="no_depot_rotterdam5_all_no_depot_rotterdam5_all_LineString20180523144841092"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="no_depot_hogeveen_all_no_depot_hogeveen_all_LineString20180524085252696"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="no_depot_de_hague_all_no_depot_de_hague_all_LineString20180524115012809"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="guided_vns_spijkenisse_all_guided_vns_spijkenisse_all_LineString20180523094414789"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="OpenStreetMap20180523093039349"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="no_depot_spijkenisse_visitcost_all20180523135751637"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="problem3_de_hague20180524114836291"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="spijkenisse_all20180523092143333"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="no_depot_rotterdam4_all_no_depot_rotterdam4_all_LineString20180523150959894"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="no_depot_rotterdam4_all_no_depot_rotterdam4_all_LineString20180523144701507"/>
     </layer_coordinate_transform_info>
   </mapcanvas>
   <layer-tree-canvas>
     <custom-order enabled="0">
       <item>OpenStreetMap20180523093039349</item>
-      <item>problem5_rotterdam20180523144856837</item>
-      <item>no_depot_rotterdam5_all_no_depot_rotterdam5_all_LineString20180523151654558</item>
+      <item>problem3_de_hague20180524114836291</item>
+      <item>no_depot_de_hague_all_no_depot_de_hague_all_LineString20180524115012809</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="problem5-rotterdam" showFeatureCount="0">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="problem3-de-hague" showFeatureCount="0">
       <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="problem5_rotterdam20180523144856837" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="problem3_de_hague20180524114836291" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="false" checked="Qt::Checked" name="no-depot-rotterdam5-all no-depot-rotterdam5-all LineString" showFeatureCount="0">
-      <filegroup open="false" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="no_depot_rotterdam5_all_no_depot_rotterdam5_all_LineString20180523151654558" visible="1"/>
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="no-depot-de-hague-all no-depot-de-hague-all LineString" showFeatureCount="0">
+      <filegroup open="true" hidden="false">
+        <legendlayerfile isInOverview="0" layerid="no_depot_de_hague_all_no_depot_de_hague_all_LineString20180524115012809" visible="1"/>
       </filegroup>
     </legendlayer>
     <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="OpenStreetMap" showFeatureCount="0">
@@ -158,12 +161,18 @@
       <blendMode>0</blendMode>
     </maplayer>
     <maplayer minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Line" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
-      <id>no_depot_rotterdam5_all_no_depot_rotterdam5_all_LineString20180523151654558</id>
-      <datasource>../../../../result/no-depot-rotterdam5-all.geojson|layername=no-depot-rotterdam5-all|subset=anistart &lt; 33 AND aniend >= 32 |geometrytype=LineString</datasource>
+      <extent>
+        <xmin>4.28970200000000013</xmin>
+        <ymin>52.05096000000000345</ymin>
+        <xmax>4.36440300000000025</xmax>
+        <ymax>52.09796999999999656</ymax>
+      </extent>
+      <id>no_depot_de_hague_all_no_depot_de_hague_all_LineString20180524115012809</id>
+      <datasource>../../../../result/no-depot-de-hague-all.geojson|layername=no-depot-de-hague-all|subset=anistart &lt; 2 AND aniend >= 1 |geometrytype=LineString</datasource>
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>no-depot-rotterdam5-all no-depot-rotterdam5-all LineString</layername>
+      <layername>no-depot-de-hague-all no-depot-de-hague-all LineString</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
@@ -191,6 +200,12 @@
         <edittype widgetv2type="TextEdit" name="highway">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
+        <edittype widgetv2type="TextEdit" name="oneway">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="maxspeed">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
         <edittype widgetv2type="TextEdit" name="profile">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
@@ -209,19 +224,7 @@
         <edittype widgetv2type="TextEdit" name="route-id">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="maxspeed">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="oneway">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="junction">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-        </edittype>
         <edittype widgetv2type="TextEdit" name="bridge">
-          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="tunnel">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="index">
@@ -232,10 +235,7 @@
         <categories>
           <category render="true" symbol="0" value="0" label="0"/>
           <category render="true" symbol="1" value="1" label="1"/>
-          <category render="true" symbol="2" value="2" label="2"/>
-          <category render="true" symbol="3" value="3" label="3"/>
-          <category render="true" symbol="4" value="4" label="4"/>
-          <category render="true" symbol="5" value="" label=""/>
+          <category render="true" symbol="2" value="" label=""/>
         </categories>
         <symbols>
           <symbol alpha="1" clip_to_extent="1" type="line" name="0">
@@ -246,7 +246,7 @@
               <prop k="customdash_unit" v="MM"/>
               <prop k="draw_inside_polygon" v="0"/>
               <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="226,74,32,255"/>
+              <prop k="line_color" v="151,204,107,255"/>
               <prop k="line_style" v="solid"/>
               <prop k="line_width" v="0.46"/>
               <prop k="line_width_unit" v="MM"/>
@@ -265,7 +265,7 @@
               <prop k="customdash_unit" v="MM"/>
               <prop k="draw_inside_polygon" v="0"/>
               <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="213,16,171,255"/>
+              <prop k="line_color" v="231,47,130,255"/>
               <prop k="line_style" v="solid"/>
               <prop k="line_width" v="0.46"/>
               <prop k="line_width_unit" v="MM"/>
@@ -284,64 +284,7 @@
               <prop k="customdash_unit" v="MM"/>
               <prop k="draw_inside_polygon" v="0"/>
               <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="119,187,206,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.46"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
-          </symbol>
-          <symbol alpha="1" clip_to_extent="1" type="line" name="3">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="5;2"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="MM"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="157,136,232,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.46"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
-          </symbol>
-          <symbol alpha="1" clip_to_extent="1" type="line" name="4">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="5;2"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="MM"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="43,219,82,255"/>
-              <prop k="line_style" v="solid"/>
-              <prop k="line_width" v="0.46"/>
-              <prop k="line_width_unit" v="MM"/>
-              <prop k="offset" v="0"/>
-              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="offset_unit" v="MM"/>
-              <prop k="use_custom_dash" v="0"/>
-              <prop k="width_map_unit_scale" v="0,0,0,0,0,0"/>
-            </layer>
-          </symbol>
-          <symbol alpha="1" clip_to_extent="1" type="line" name="5">
-            <layer pass="0" class="SimpleLine" locked="0">
-              <prop k="capstyle" v="square"/>
-              <prop k="customdash" v="5;2"/>
-              <prop k="customdash_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="customdash_unit" v="MM"/>
-              <prop k="draw_inside_polygon" v="0"/>
-              <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="180,223,37,255"/>
+              <prop k="line_color" v="14,102,208,255"/>
               <prop k="line_style" v="solid"/>
               <prop k="line_width" v="0.46"/>
               <prop k="line_width_unit" v="MM"/>
@@ -362,7 +305,7 @@
               <prop k="customdash_unit" v="MM"/>
               <prop k="draw_inside_polygon" v="0"/>
               <prop k="joinstyle" v="bevel"/>
-              <prop k="line_color" v="27,116,217,255"/>
+              <prop k="line_color" v="163,70,49,255"/>
               <prop k="line_style" v="solid"/>
               <prop k="line_width" v="0.46"/>
               <prop k="line_width_unit" v="MM"/>
@@ -374,6 +317,8 @@
             </layer>
           </symbol>
         </source-symbol>
+        <colorramp type="randomcolors" name="[source]"/>
+        <invertedcolorramp value="0"/>
         <rotation/>
         <sizescale scalemethod="diameter"/>
       </renderer-v2>
@@ -546,18 +491,17 @@
       <SingleCategoryDiagramRenderer diagramType="Pie">
         <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
           <fontProperties description="Ubuntu,11,-1,5,50,0,0,0,0,0" style=""/>
-          <attribute field="" color="#000000" label=""/>
         </DiagramCategory>
       </SingleCategoryDiagramRenderer>
       <DiagramLayerSettings yPosColumn="-1" linePlacementFlags="10" placement="2" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
-      <annotationform>.</annotationform>
+      <annotationform></annotationform>
       <excludeAttributesWMS/>
       <excludeAttributesWFS/>
       <attributeactions/>
-      <editform>.</editform>
+      <editform></editform>
       <editforminit/>
       <editforminitcodesource>0</editforminitcodesource>
-      <editforminitfilepath>.</editforminitfilepath>
+      <editforminitfilepath></editforminitfilepath>
       <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
 """
 QGIS forms can have a Python function that is called when the form is
@@ -585,17 +529,17 @@ def my_form_open(dialog, layer, feature):
     </maplayer>
     <maplayer minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <extent>
-        <xmin>4.5387000000000004</xmin>
-        <ymin>51.91089999999999804</ymin>
-        <xmax>4.6166999999999998</xmax>
-        <ymax>51.95889999999999986</ymax>
+        <xmin>4.29372016000000034</xmin>
+        <ymin>52.05167236823309906</ymin>
+        <xmax>4.36440300000000025</xmax>
+        <ymax>52.09796599999999955</ymax>
       </extent>
-      <id>problem5_rotterdam20180523144856837</id>
-      <datasource>../../problem5-rotterdam.geojson</datasource>
+      <id>problem3_de_hague20180524114836291</id>
+      <datasource>../../problem3-de-hague.geojson</datasource>
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>problem5-rotterdam</layername>
+      <layername>problem3-de-hague</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
@@ -813,18 +757,17 @@ def my_form_open(dialog, layer, feature):
       <SingleCategoryDiagramRenderer diagramType="Pie">
         <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
           <fontProperties description="Ubuntu,11,-1,5,50,0,0,0,0,0" style=""/>
-          <attribute field="" color="#000000" label=""/>
         </DiagramCategory>
       </SingleCategoryDiagramRenderer>
       <DiagramLayerSettings yPosColumn="-1" linePlacementFlags="10" placement="0" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
-      <annotationform>../../../../result</annotationform>
+      <annotationform></annotationform>
       <excludeAttributesWMS/>
       <excludeAttributesWFS/>
       <attributeactions/>
-      <editform>../../../../result</editform>
+      <editform></editform>
       <editforminit/>
       <editforminitcodesource>0</editforminitcodesource>
-      <editforminitfilepath>../../../../result</editforminitfilepath>
+      <editforminitfilepath></editforminitfilepath>
       <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
 """
 QGIS forms can have a Python function that is called when the form is
@@ -861,18 +804,18 @@ def my_form_open(dialog, layer, feature):
       <timeFrameSize type="int">1</timeFrameSize>
       <labelSize type="int">25</labelSize>
       <mode type="int">0</mode>
-      <timeLayerManager type="QString">1970-01-01 00:00:01;1970-01-01 00:00:32;1970-01-01 00:00:32</timeLayerManager>
+      <timeLayerManager type="QString">1970-01-01 00:00:01;1970-01-01 00:00:20;1970-01-01 00:00:01</timeLayerManager>
       <labelFont type="QString">Liberation Sans</labelFont>
       <digits type="int">4</digits>
       <timeFrameType type="QString">seconds</timeFrameType>
       <active type="int">1</active>
       <labelColor type="QString">#000000</labelColor>
-      <currentMapTimePosition type="QString">1970-01-01 00:00:32</currentMapTimePosition>
+      <currentMapTimePosition type="QString">1970-01-01 00:00:01</currentMapTimePosition>
       <loopAnimation type="int">0</loopAnimation>
       <labelPlacement type="QString">NE</labelPlacement>
       <animationFrameLength type="int">200</animationFrameLength>
       <timeLayerList type="QStringList">
-        <value>no_depot_rotterdam5_all_no_depot_rotterdam5_all_LineString20180523151654558;;anistart;aniend;True;SECONDS FROM EPOCH;0;;False;No interpolation (faster);True;False</value>
+        <value>no_depot_de_hague_all_no_depot_de_hague_all_LineString20180524115012809;;anistart;aniend;True;SECONDS FROM EPOCH;0;;False;No interpolation (faster);True;False</value>
       </timeLayerList>
       <playBackwards type="int">0</playBackwards>
       <labelFormat type="QString">%S</labelFormat>
@@ -898,7 +841,7 @@ def my_form_open(dialog, layer, feature):
     <Digitizing>
       <DefaultSnapToleranceUnit type="int">2</DefaultSnapToleranceUnit>
       <LayerSnappingList type="QStringList">
-        <value>problem5_rotterdam20180523144856837</value>
+        <value>problem3_de_hague20180524114836291</value>
       </LayerSnappingList>
       <LayerSnappingEnabledList type="QStringList">
         <value>disabled</value>

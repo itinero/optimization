@@ -120,10 +120,15 @@ namespace Itinero.Optimization.Algorithms.Solvers.GA
             var generation = 0;
             var elitism = (int)(_settings.PopulationSize * (_settings.ElitismPercentage / 100.0));
             if (elitism == 0 && _settings.ElitismPercentage != 0)
-            {
+            { // make sure we have at least one, elitism was requested but population was too small.
                 elitism = 1;
             }
             var crossOver = (int)(_settings.PopulationSize * (_settings.CrossOverPercentage / 100.0));
+            if (crossOver < 2 &&
+                _settings.CrossOverPercentage != 0)
+            { // make sure we have at least 2, some crossover was requested but population was too small.
+                crossOver = 2;
+            }
             var crossOverIndividuals = new Individual<TSolution, TFitness>[crossOver];
             var exclude = new HashSet<int>();
             while (stagnation < _settings.StagnationCount &&
