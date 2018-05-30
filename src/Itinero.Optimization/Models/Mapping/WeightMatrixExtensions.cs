@@ -27,6 +27,7 @@ using Itinero.Optimization.Abstract.Tours;
 using Itinero.Optimization.Algorithms.Directed;
 using Itinero.Attributes;
 using System;
+using Itinero.Logging;
 
 namespace Itinero.Optimization.Models.Mapping
 {
@@ -351,6 +352,21 @@ namespace Itinero.Optimization.Models.Mapping
                 // TODO: extract more info at once!
                 var pairFromDepartureId = algorithm.SourcePaths[DirectedHelper.ExtractDepartureId(pair.From)];
                 var pairToArrivalId = algorithm.TargetPaths[DirectedHelper.ExtractArrivalId(pair.To)];
+                
+                if (pairFromDepartureId == null)
+                {
+                    Itinero.Logging.Logger.Log("WeightMatrixExtensions", TraceEventType.Warning, 
+                        $"No source path found at departure id for {pair.From}->{pair.To}, returning an empty route.");
+                    routes.Add(null);
+                    continue;
+                }                
+                if (pairToArrivalId == null)
+                {
+                    Itinero.Logging.Logger.Log("WeightMatrixExtensions", TraceEventType.Warning, 
+                        $"No target path found at arrival id for {pair.From}->{pair.To}, returning an empty route.");
+                    routes.Add(null);
+                    continue;
+                }
 
                 var pairFromEdgeId = algorithm.Router.Db.Network.GetEdges(pairFromDepartureId.From.Vertex).First(x => x.To == pairFromDepartureId.Vertex).IdDirected();
                 var pairToEdgeId = algorithm.Router.Db.Network.GetEdges(pairToArrivalId.Vertex).First(x => x.To == pairToArrivalId.From.Vertex).IdDirected();
@@ -361,7 +377,15 @@ namespace Itinero.Optimization.Models.Mapping
                 var fromRouterPoint = algorithm.RouterPoints[pairFromId];
                 var toRouterPoint = algorithm.RouterPoints[pairToId];
 
-                var localRouteRaw = algorithm.Router.TryCalculateRaw(algorithm.Profile, weightHandler, pairFromEdgeId, pairToEdgeId, null).Value;
+                var localRouteRawResult = algorithm.Router.TryCalculateRaw(algorithm.Profile, weightHandler, pairFromEdgeId, pairToEdgeId, null);
+                if (localRouteRawResult.IsError)
+                {
+                    Itinero.Logging.Logger.Log("WeightMatrixExtensions", TraceEventType.Warning, $"Route was not found between {pair.From}->{pair.To}, returning an empty route.");
+                    routes.Add(null);
+                    continue;
+                }
+
+                var localRouteRaw = localRouteRawResult.Value;
                 localRouteRaw.StripSource();
                 localRouteRaw.StripTarget();
 
@@ -369,8 +393,7 @@ namespace Itinero.Optimization.Models.Mapping
                 if (localRoute.IsError)
                 {
                     throw new Itinero.Exceptions.RouteNotFoundException(
-                        string.Format("Part of the tour was not found: {0}[{1}] -> {2}[{3}] - {4}.",
-                            pair.From, pairFromId, pair.To, pairToId, localRoute.ErrorMessage));
+                        $"Part of the tour was not found: {pair.From}[{pairFromId}] -> {pair.To}[{pairToId}] - {localRoute.ErrorMessage}.");
                 }
                 routes.Add(localRoute.Value);
             }
