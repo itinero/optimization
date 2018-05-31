@@ -50,6 +50,11 @@ namespace Itinero.Optimization.Test.Algorithms.Solvers.GA
                 fitness = solution2.Value - RandomGeneratorExtensions.GetRandom().Generate(
                     solution1.Value - solution2.Value);
             }
+
+            if (fitness < 0)
+            {
+                fitness = 0;
+            }
             return new SolutionMock()
             {
                 Value = fitness

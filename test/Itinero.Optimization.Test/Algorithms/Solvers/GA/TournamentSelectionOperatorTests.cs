@@ -48,7 +48,6 @@ namespace Itinero.Optimization.Test.Algorithms.Solvers.GA
         [Test]
         public void Test1()
         {
-
             // create population and selector.
             var population = new Individual<SolutionMock, float>[] {
                 new Individual<SolutionMock, float>() { Fitness = 10, Solution = new SolutionMock(10) },
@@ -58,11 +57,11 @@ namespace Itinero.Optimization.Test.Algorithms.Solvers.GA
             var selector = new TournamentSelectionOperator<ProblemMock, SolutionMock, ObjectiveMock, float>(50, 0.5);
 
             var objective = new ObjectiveMock();
+            Assert.AreEqual(0, selector.Select(new ProblemMock(), objective, population, null));
+            Assert.AreEqual(-1, selector.Select(new ProblemMock(), objective, population, null));
             Assert.AreEqual(2, selector.Select(new ProblemMock(), objective, population, null));
             Assert.AreEqual(-1, selector.Select(new ProblemMock(), objective, population, null));
             Assert.AreEqual(3, selector.Select(new ProblemMock(), objective, population, null));
-            Assert.AreEqual(-1, selector.Select(new ProblemMock(), objective, population, null));
-            Assert.AreEqual(0, selector.Select(new ProblemMock(), objective, population, null));
             Assert.AreEqual(-1, selector.Select(new ProblemMock(), objective, population, null));
         }
 
