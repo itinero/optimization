@@ -16,23 +16,42 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Models.VRP.Vehicles.Constraints
+using Itinero.Optimization.Models.Vehicles.Constraints;
+
+namespace Itinero.Optimization.Models.Vehicles
 {
     /// <summary>
-    /// Represents a capacity constraint.
+    /// Represents a vehicle.
     /// </summary>
-    public class CapacityConstraint
+    public class Vehicle
     {
         /// <summary>
-        /// Gets or sets the name of the metric used in this constraint.
+        /// Gets or sets the profile name.
         /// </summary>
         /// <returns></returns>
-        public string Name { get; set; }
+        public string Profile { get; set; }
 
         /// <summary>
-        /// Gets or set the maximum capacity.
+        /// Gets or sets the departure location if fixed.
         /// </summary>
         /// <returns></returns>
-        public float Capacity { get; set; }
+        public int? Departure { get; set; }
+
+        /// <summary>
+        /// Gets or sets the arrival location if fixed.
+        /// </summary>
+        /// <returns></returns>
+        public int? Arrival { get; set; }
+
+        /// <summary>
+        /// Gets or sets a turn penalty (if any).
+        /// </summary>
+        /// <returns></returns>
+        public float TurnPentalty { get; set; }
+
+        /// <summary>
+        /// Gets or sets the capacity constraints.
+        /// </summary>
+        public CapacityConstraint[] CapacityConstraints { get; set; }
     }
 }

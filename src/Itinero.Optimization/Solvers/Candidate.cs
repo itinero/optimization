@@ -16,42 +16,40 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.Models.VRP.Vehicles.Constraints;
+using System;
 
-namespace Itinero.Optimization.Models.VRP.Vehicles
+namespace Itinero.Optimization.Solvers
 {
     /// <summary>
-    /// Represents a vehicle.
+    /// Represents a candidate, a solution, the problem it's for, and associated fitness value.
     /// </summary>
-    public class Vehicle
+    /// <typeparam name="TSolution">The solution type.</typeparam>
+    /// <typeparam name="TProblem">The problem type.</typeparam>
+    public class Candidate<TProblem, TSolution> : IComparable<Candidate<TProblem, TSolution>>
     {
         /// <summary>
-        /// Gets or sets the profile name.
+        /// Gets or sets the solution.
         /// </summary>
-        /// <returns></returns>
-        public string Profile { get; set; }
-
+        public TSolution Solution { get; set; }
+        
         /// <summary>
-        /// Gets or sets the departure location if fixed.
+        /// Gets or sets the fitness.
         /// </summary>
-        /// <returns></returns>
-        public int? Departure { get; set; }
-
+        public float Fitness { get; set; }
+        
         /// <summary>
-        /// Gets or sets the arrival location if fixed.
+        /// Gets or sets the problem.
         /// </summary>
-        /// <returns></returns>
-        public int? Arrival { get; set; }
+        public TProblem Problem { get; set; }
 
-        /// <summary>
-        /// Gets or sets a turn penalty (if any).
-        /// </summary>
-        /// <returns></returns>
-        public float TurnPentalty { get; set; }
-
-        /// <summary>
-        /// Gets or sets the capacity constraints.
-        /// </summary>
-        public CapacityConstraint[] CapacityConstraints { get; set; }
+        /// <inheritdoc />
+        public int CompareTo(Candidate<TProblem, TSolution> other)
+        {
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+            return this.Fitness.CompareTo(other.Fitness);
+        }
     }
 }

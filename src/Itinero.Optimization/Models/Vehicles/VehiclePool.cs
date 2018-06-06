@@ -16,40 +16,22 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Models.VRP.TimeWindows
+namespace Itinero.Optimization.Models.Vehicles
 {
     /// <summary>
-    /// Represents a timewindow.
+    /// Represents a pool of vehicles.
     /// </summary>
-    public struct TimeWindow
+    public class VehiclePool
     {
         /// <summary>
-        /// The minimum time in seconds.
-        /// </summary>
-        public float Min { get; set; }
-
-        /// <summary>
-        /// The maximum time in seconds.
-        /// </summary>
-        public float Max { get; set; }
-
-        /// <summary>
-        /// Returns a default timewindow with unlimited arrival/departure times.
-        /// </summary>
-        public static TimeWindow Default => new TimeWindow()
-        {
-            Max = float.MaxValue,
-            Min = float.MinValue
-        };
-
-        /// <summary>
-        /// Returns the fully qualified type name of this instance.
+        /// Gets or sets the vehicles.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return string.Format("[{0}, {1}]",
-                this.Min, this.Max);
-        }
+        public Vehicle[] Vehicles { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reusable flag.
+        /// </summary>
+        public bool Reusable { get; set; }
     }
 }

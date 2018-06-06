@@ -16,23 +16,27 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Models.VRP.Costs
+using System.Collections.Generic;
+
+namespace Itinero.Optimization.Solvers.Tours
 {
     /// <summary>
-    /// Represents the cost per visit.
+    /// Contains tour extensions.
     /// </summary>
-    public class VisitCosts
+    public static class TourExtensions
     {
         /// <summary>
-        /// Gets or sets the name of the metric used for the cost.
+        /// Puts the elements of the enumerator (back) in a list.
         /// </summary>
         /// <returns></returns>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the costs.
-        /// </summary>
-        /// <returns></returns>
-        public float[] Costs { get;set; }
+        public static List<T> ToList<T>(this IEnumerator<T> enumerator)
+        {
+            var list = new List<T>();
+            while (enumerator.MoveNext())
+            {
+                list.Add(enumerator.Current);
+            }
+            return list;
+        }
     }
 }

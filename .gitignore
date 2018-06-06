@@ -43,3 +43,7 @@ packages/*
 TestResult*.xml
 
 test/Itinero.Optimization.Test.Functional/result/*
+
+Candidate*.md
+Candidate*.csv
+Candidate*.html

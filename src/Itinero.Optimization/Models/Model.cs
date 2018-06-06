@@ -17,16 +17,16 @@
  */
 
 using Itinero.LocalGeo;
-using Itinero.Optimization.Models.VRP.Costs;
-using Itinero.Optimization.Models.VRP.TimeWindows;
-using Itinero.Optimization.Models.VRP.Vehicles;
+using Itinero.Optimization.Models.Costs;
+using Itinero.Optimization.Models.TimeWindows;
+using Itinero.Optimization.Models.Vehicles;
 
-namespace Itinero.Optimization.Models.VRP
+namespace Itinero.Optimization.Models
 {
     /// <summary>
-    /// Represents a real-world model for a vehicle routing problem.
+    /// Represents a real-world model for a generic vehicle routing problem.
     /// </summary>
-    public class VRPModel
+    public class Model
     {
         /// <summary>
         /// Gets or sets the visits (including any depots).
@@ -67,9 +67,9 @@ namespace Itinero.Optimization.Models.VRP
         /// </summary>
         /// <param name="json">The json.</param>
         /// <returns></returns>
-        public static VRPModel FromJson(string json)
+        public static Model FromJson(string json)
         {
-            return IO.Json.JsonSerializer.FromJsonFunc(json, typeof(VRPModel)) as VRPModel;
+            return IO.Json.JsonSerializer.FromJsonFunc(json, typeof(Model)) as Model;
         }
     }
 }
