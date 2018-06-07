@@ -955,7 +955,7 @@ namespace Itinero.Optimization.Tests.Solvers.Tours
 
                 Assert.Equal(visits.Count, tour.Count);
                 Assert.Equal(0, tour.First);
-                Assert.Equal(null, tour.Last);
+                Assert.Null(tour.Last);
 
                 ExtraAssert.ItemsEqual(visits, tour);
 
