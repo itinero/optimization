@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using Itinero.Logging;
+using Serilog;
 
 namespace Itinero.Optimization.Test.Functional
 {
@@ -45,6 +46,7 @@ namespace Itinero.Optimization.Test.Functional
                     return;
                 }
 #endif
+            Log.Information(message);
             Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
         };
         Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>

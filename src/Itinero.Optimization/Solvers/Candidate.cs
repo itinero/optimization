@@ -51,5 +51,11 @@ namespace Itinero.Optimization.Solvers
             }
             return this.Fitness.CompareTo(other.Fitness);
         }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return $"{this.Fitness}@{this.Solution}";
+        }
     }
 }

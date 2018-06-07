@@ -3,11 +3,12 @@ using BenchmarkDotNet.Running;
 
 namespace Itinero.Optimization.Tests.Benchmarks
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             BenchmarkRunner.Run<Strategies.CandidateComparisonBenchmark>();
+            BenchmarkRunner.Run<Solvers.TSP.EAX.EAXSolverBenchmark>();
         }
     }
 }

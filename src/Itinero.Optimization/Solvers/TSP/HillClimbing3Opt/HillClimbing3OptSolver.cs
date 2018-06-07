@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System.Threading;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
 
@@ -91,5 +92,8 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
             
             return candidate;
         }
+        
+        private static readonly ThreadLocal<HillClimbing3OptSolver> DefaultLazy = new ThreadLocal<HillClimbing3OptSolver>(() => new HillClimbing3OptSolver());
+        public static HillClimbing3OptSolver Default => DefaultLazy.Value;
     }
 }

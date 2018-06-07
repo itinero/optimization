@@ -149,6 +149,8 @@ namespace Itinero.Optimization.Strategies.GA
                 { // oeps, failed attempt.
                     stagnation++;
                 }
+
+                generation++;
             }
 
             return best;

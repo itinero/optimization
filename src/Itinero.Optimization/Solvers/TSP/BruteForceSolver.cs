@@ -16,8 +16,10 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
 
@@ -92,5 +94,8 @@ namespace Itinero.Optimization.Solvers.TSP
                 Fitness = bestFitness
             };
         }
+        
+        private static readonly ThreadLocal<BruteForceSolver> DefaultLazy = new ThreadLocal<BruteForceSolver>(() => new BruteForceSolver());
+        public static BruteForceSolver Default => DefaultLazy.Value;
     }
 }

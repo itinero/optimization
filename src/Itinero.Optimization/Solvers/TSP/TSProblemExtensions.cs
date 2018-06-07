@@ -70,5 +70,73 @@ namespace Itinero.Optimization.Solvers.TSP
 
             return weight;
         }
+        
+        /// <summary>
+        /// Converts this problem to it's closed equivalent.
+        /// </summary>
+        /// <returns></returns>
+        internal static TSProblem ToClosed(this TSProblem problem)
+        {
+            if (problem.Last == null)
+            { // 'open' problem, just set weights to first to 0.
+                // REMARK: weights already set in constructor.
+                var weights = new float[problem.Count][];
+                for (var x = 0; x < weights.Length; x++)
+                {
+                    weights[x] = new float[problem.Count];
+                    for (var y = 0; y < weights.Length; y++)
+                    {
+                        weights[x][y] = problem.Weight(x, y);
+                    }
+                }
+                return new TSProblem(problem.First, problem.First, weights);
+            }
+            else if (problem.First != problem.Last)
+            { // 'open' problem but with fixed last.
+                var weights = new float[problem.Count - 1][];
+                for (var x = 0; x < problem.Count; x++)
+                {
+                    if (x == problem.Last)
+                    { // skip last edge.
+                        continue;
+                    }
+                    var xNew = x;
+                    if (x > problem.Last)
+                    { // decrease new index.
+                        xNew = xNew - 1;
+                    }
+
+                    weights[xNew] = new float[problem.Count - 1];
+
+                    for (var y = 0; y < problem.Count; y++)
+                    {
+                        if (y == problem.Last)
+                        { // skip last edge.
+                            continue;
+                        }
+                        var yNew = y;
+                        if (y > problem.Last)
+                        { // decrease new index.
+                            yNew = yNew - 1;
+                        }
+
+                        if (yNew == xNew)
+                        { // make not sense to keep values other than '0' and to make things easier to understand just use '0'.
+                            weights[xNew][yNew] = 0;
+                        }
+                        else if (y == problem.First)
+                        { // replace -> first with -> last.
+                            weights[xNew][yNew] = problem.Weight(x, problem.Last.Value);
+                        }
+                        else
+                        { // nothing special about this connection, yay!
+                            weights[xNew][yNew] = problem.Weight(x, y);
+                        }
+                    }
+                }
+                return new TSProblem(problem.First, problem.First, weights);
+            }
+            return problem; // problem already closed with first==last.
+        }
     }
 }

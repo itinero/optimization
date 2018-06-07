@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Threading;
 
 namespace Itinero.Optimization.Strategies
 {
@@ -82,5 +83,12 @@ namespace Itinero.Optimization.Strategies
         {
             return false;
         }
+        
+        private static readonly ThreadLocal<EmptyOperator<TCandidate>> DefaultLazy = new ThreadLocal<EmptyOperator<TCandidate>>(() => new EmptyOperator<TCandidate>());
+        
+        /// <summary>
+        /// Gets the default empty operator.
+        /// </summary>
+        public static EmptyOperator<TCandidate> Default => DefaultLazy.Value;
     }
 }
