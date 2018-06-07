@@ -32,20 +32,40 @@ namespace Itinero.Optimization.Solvers.TSP
         /// <param name="problem">The problem.</param>
         /// <param name="tour">The tour.</param>
         /// <returns>Returns the weight.</returns>
-        internal static float Weights(this TSProblem problem, IEnumerable<int> tour)
+        internal static float Weights(this TSProblem problem, Tour tour)
+        {
+            return problem.Weights(tour, tour.First == tour.Last);
+        }
+
+        /// <summary>
+        /// Calculates the total weight for the given tour.
+        /// </summary>
+        /// <param name="problem">The problem.</param>
+        /// <param name="tour">The tour.</param>
+        /// <param name="closed">The when true also count the connection between last and visit visit.</param>
+        /// <returns>Returns the weight.</returns>
+        internal static float Weights(this TSProblem problem, IEnumerable<int> tour, bool closed)
         {
             var weight = 0f;
             var previous = Tour.NOT_SET;
+            var first = Tour.NOT_SET;
             foreach (var visit in tour)
             {
                 if (previous == Tour.NOT_SET)
                 {
+                    first = visit;
                     previous = visit;
                     continue;
                 }
 
                 weight += problem.Weight(previous, visit);
                 previous = visit;
+            }
+
+            if (closed &&
+                first != Tour.NOT_SET)
+            {
+                weight += problem.Weight(previous, first);
             }
 
             return weight;

@@ -16,7 +16,9 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Runtime.CompilerServices;
+using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
 
 [assembly: InternalsVisibleTo("Itinero.Optimization.Tests")]
 namespace Itinero.Optimization.Solvers.TSP
@@ -27,6 +29,7 @@ namespace Itinero.Optimization.Solvers.TSP
     internal sealed class TSProblem
     {
         internal readonly float[][] _weights;
+        private readonly Lazy<NearestNeighbourCache> _nearestNeighbourCacheLazy;
 
         /// <summary>
         /// Creates a new TSP 'open' TSP with only a start customer.
@@ -37,11 +40,12 @@ namespace Itinero.Optimization.Solvers.TSP
             this.Last = null;
             _weights = weights;
             this.Count = weights.Length;
-            
             for (var x = 0; x < _weights.Length; x++)
             {
                 _weights[x][first] = 0;
             }
+            _nearestNeighbourCacheLazy = new Lazy<NearestNeighbourCache>(() =>
+                new NearestNeighbourCache(_weights.Length, (x, y) => _weights[x][y]));
         }
 
         /// <summary>
@@ -55,6 +59,8 @@ namespace Itinero.Optimization.Solvers.TSP
             this.Count = weights.Length;
 
             _weights[first][last] = 0;
+            _nearestNeighbourCacheLazy = new Lazy<NearestNeighbourCache>(() =>
+                new NearestNeighbourCache(_weights.Length, (x, y) => _weights[x][y]));
         }
         
         /// <summary>
@@ -79,5 +85,10 @@ namespace Itinero.Optimization.Solvers.TSP
         /// Gets the number of visits.
         /// </summary>
         public int Count { get; private set; }
+
+        /// <summary>
+        /// Gets the nearest neighbour cache.
+        /// </summary>
+        internal NearestNeighbourCache NearestNeighbourCache => _nearestNeighbourCacheLazy.Value;
     }
 }
