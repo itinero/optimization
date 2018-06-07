@@ -17,9 +17,11 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
 
+[assembly: InternalsVisibleTo("Itinero.Optimization.Tests")]
 namespace Itinero.Optimization.Solvers.TSP
 {
     /// <summary>

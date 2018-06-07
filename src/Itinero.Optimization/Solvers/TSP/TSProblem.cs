@@ -16,6 +16,9 @@
  *  limitations under the License.
  */
 
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Itinero.Optimization.Tests")]
 namespace Itinero.Optimization.Solvers.TSP
 {
     /// <summary>
@@ -23,7 +26,7 @@ namespace Itinero.Optimization.Solvers.TSP
     /// </summary>
     internal sealed class TSProblem
     {
-        private readonly float[][] _weights;
+        internal readonly float[][] _weights;
 
         /// <summary>
         /// Creates a new TSP 'open' TSP with only a start customer.

@@ -38,12 +38,14 @@ namespace Itinero.Optimization.Solvers.TSP
             var previous = Tour.NOT_SET;
             foreach (var visit in tour)
             {
-                if (previous != Tour.NOT_SET)
+                if (previous == Tour.NOT_SET)
                 {
                     previous = visit;
+                    continue;
                 }
 
                 weight += problem.Weight(previous, visit);
+                previous = visit;
             }
 
             return weight;
