@@ -61,7 +61,7 @@ namespace Itinero.Optimization.Solvers.TSP.EAX
                 Logger.Log($"{typeof(EAXSolver)}.{nameof(Search)}", TraceEventType.Warning,
                     "Performance warning: EAX solver cannot be applied to 'open' TSP's, converting problem to a closed equivalent.");
 
-                var convertedProblem = problem.ToClosed();
+                var convertedProblem = problem.ClosedEquivalent;
                 var convertedCandidate = _gaStrategy.Search(convertedProblem);
                 
                 // TODO: instead of recalculating the fitness value *should* be identical, confirm this with more testing.
@@ -79,7 +79,7 @@ namespace Itinero.Optimization.Solvers.TSP.EAX
                 Logger.Log($"{typeof(EAXSolver)}.{nameof(Search)}", TraceEventType.Warning,
                     "Performance warning: EAX solver cannot be applied to'closed' TSP's with a fixed endpoint: converting problem to a closed equivalent.");
 
-                var convertedProblem = problem.ToClosed();
+                var convertedProblem = problem.ClosedEquivalent;
                 var convertedCandidate = _gaStrategy.Search(convertedProblem);
                 
                 // TODO: instead of recalculating the fitness adjust it to match the difference by adding last->problem.last.

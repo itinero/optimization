@@ -128,6 +128,7 @@ namespace Itinero.Optimization.Solvers.TSP.EAX
         /// <returns></returns>
         public override Candidate<TSProblem, Tour> Apply(Candidate<TSProblem, Tour> candidate1, Candidate<TSProblem, Tour> candidate2)
         {
+            // TODO: PERFORMANCE Check if we can reduce allocations here.
             var problem = candidate1.Problem;
             var solution1 = candidate1.Solution;
             var solution2 = candidate2.Solution;
@@ -143,40 +144,40 @@ namespace Itinero.Optimization.Solvers.TSP.EAX
                 Logger.Log($"{typeof(EAXOperator)}.{nameof(Apply)}", TraceEventType.Warning,
                     "Performance warning: EAX operator cannot be applied to 'open' TSP's, converting problem and tours to a closed equivalent.");
 
-                problem =  problem.ToClosed();
-                solution1 = new Tour(solution1, 0);
-                solution2 = new Tour(solution2, 0);
+                problem = problem.ClosedEquivalent;
+                solution1 = new Tour(solution1, problem.First);
+                solution2 = new Tour(solution2, problem.First);
             }
             else if (problem.First != problem.Last)
             { // last is set but is not the same as first.
                 Logger.Log($"{typeof(EAXOperator)}.{nameof(Apply)}", TraceEventType.Warning,
                     "Performance warning: EAX operator cannot be applied to 'closed' TSP's with a fixed endpoint, converting problem and tours to a closed equivalent.");
 
-                problem = problem.ToClosed();
-                solution1 = new Tour(solution1, 0);
-                solution2 = new Tour(solution2, 0);
-                solution1.Remove(originalProblem.Last.Value);
-                solution2.Remove(originalProblem.Last.Value);
+                problem = problem.ClosedEquivalent;
+                solution1 = new Tour(solution1, problem.First);
+                solution2 = new Tour(solution2, problem.First);
+                solution1.Remove(problem.Last.Value);
+                solution2.Remove(problem.Last.Value);
             }
             
             var fitness = float.MaxValue;
 
             // first create E_a
-            var eA = new AsymmetricCycles(solution1.Count);
+            var eA = new AsymmetricCycles(problem.WeightsSize);
             foreach (var edge in solution1.Pairs())
             {
                 eA.AddEdge(edge.From, edge.To);
             }
 
             // create E_b
-            var eB = new int[solution2.Count];
+            var eB = new int[problem.WeightsSize];
             foreach (var edge in solution2.Pairs())
             {
                 eB[edge.To] = edge.From;
             }
 
             // create cycles.
-            var cycles = new AsymmetricAlternatingCycles(solution2.Count);
+            var cycles = new AsymmetricAlternatingCycles(problem.WeightsSize);
             for (var idx = 0; idx < eB.Length; idx++)
             {
                 var a = eA[idx];

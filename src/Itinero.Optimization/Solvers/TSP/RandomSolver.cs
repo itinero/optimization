@@ -17,6 +17,7 @@
  */
 
 using System.Collections.Generic;
+using System.Threading;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
 using Itinero.Optimization.Strategies.Random;
@@ -32,9 +33,9 @@ namespace Itinero.Optimization.Solvers.TSP
         
         public override Candidate<TSProblem, Tour> Search(TSProblem problem)
         {
-            // generate random solution.
+            // initialize.
             var visits = new List<int>();
-            for (var visit = 0; visit < problem.Count; visit++)
+            foreach (var visit in problem.Visits)
             {
                 if (visit != problem.First &&
                     visit != problem.Last)
@@ -58,5 +59,8 @@ namespace Itinero.Optimization.Solvers.TSP
                 Fitness = problem.Weights(tour)
             };
         }
+        
+        private static readonly ThreadLocal<RandomSolver> DefaultLazy = new ThreadLocal<RandomSolver>(() => new RandomSolver());
+        public static RandomSolver Default => DefaultLazy.Value;
     }
 }

@@ -141,5 +141,38 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
                 Assert.Empty(solutionList);
             }
         }
+
+        /// <summary>
+        /// Tests the solver on a closed tsp with custom visits.
+        /// </summary>
+        [Fact]
+        public void RandomSolver_ShouldUseOnlyProvidedVisits()
+        {
+            // create problem.
+            var problem = TSPHelper.CreateTSP(0, 8, 10, 10, 
+                new [] { 0, 2, 4, 6, 8 });
+
+            for (var i = 0; i < 100; i++)
+            {
+                // generate solution.
+                var candidate = RandomSolver.Default.Search(problem);
+                var tour = candidate.Solution;
+                var fitness = candidate.Fitness;
+
+                // test contents.
+                Assert.Equal(40, fitness);
+                Assert.Equal(problem.First, tour.First);
+                Assert.Equal(problem.Last, tour.Last);
+
+                var solutionList = new List<int>(tour);
+                Assert.Equal(0, solutionList[0]);
+                Assert.True(solutionList.Remove(0));
+                Assert.True(solutionList.Remove(2));
+                Assert.True(solutionList.Remove(4));
+                Assert.True(solutionList.Remove(6));
+                Assert.True(solutionList.Remove(8));
+                Assert.Empty(solutionList);
+            }
+        }
     }
 }

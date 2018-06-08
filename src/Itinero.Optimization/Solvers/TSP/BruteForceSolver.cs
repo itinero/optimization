@@ -37,7 +37,7 @@ namespace Itinero.Optimization.Solvers.TSP
         {
             // initialize.
             var visits = new List<int>();
-            for (var visit = 0; visit < problem.Count; visit++)
+            foreach (var visit in problem.Visits)
             {
                 if (visit != problem.First &&
                     visit != problem.Last)
@@ -45,7 +45,7 @@ namespace Itinero.Optimization.Solvers.TSP
                     visits.Add(visit);
                 }
             }
-
+            
             if (visits.Count < 2)
             { // a tiny problem.
                 // build route.

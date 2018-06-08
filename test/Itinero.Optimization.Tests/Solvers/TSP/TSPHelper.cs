@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System.Collections.Generic;
 using Itinero.Optimization.Solvers.TSP;
 
 namespace Itinero.Optimization.Tests.Solvers.TSP
@@ -28,7 +29,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static TSProblem CreateTSP(int first, int size, float defaultWeight)
+        public static TSProblem CreateTSP(int first, int size, float defaultWeight, IEnumerable<int> visits = null)
         {
             var weights = new float[size][];
             for (var x = 0; x < size; x++)
@@ -43,13 +44,13 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
                     }
                 }
             }
-            return new TSProblem(0, weights);
+            return new TSProblem(0, null, weights, visits);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
-        public static TSProblem CreateTSP(int first, int last, int size, float defaultWeight)
+        public static TSProblem CreateTSP(int first, int last, int size, float defaultWeight, IEnumerable<int> visits = null)
         {
             var weights = new float[size][];
             for (var x = 0; x < size; x++)
@@ -60,25 +61,25 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
                     weights[x][y] = defaultWeight;
                 }
             }
-            return new TSProblem(first, last, weights);
+            return new TSProblem(first, last, weights, visits);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static TSProblem CreateTSP(int first, float[][] weights)
+        public static TSProblem CreateTSP(int first, float[][] weights, IEnumerable<int> visits = null)
         {
-            return new TSProblem(first, weights);
+            return new TSProblem(first, null, weights, visits);
         }
 
         /// <summary>
         /// Creates a new TSP.
         /// </summary>
         /// <returns></returns>
-        public static TSProblem CreateTSP(int first, int last, float[][] weights)
+        public static TSProblem CreateTSP(int first, int last, float[][] weights, IEnumerable<int> visits = null)
         {
-            return new TSProblem(first, last, weights);
+            return new TSProblem(first, last, weights, visits);
         }
     }
 }

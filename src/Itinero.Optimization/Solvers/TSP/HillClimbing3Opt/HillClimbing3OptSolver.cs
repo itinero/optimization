@@ -40,7 +40,7 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
         /// Creates a new solver.
         /// </summary>
         public HillClimbing3OptSolver()
-            : this(new RandomSolver())
+            : this(RandomSolver.Default)
         {
 
         }

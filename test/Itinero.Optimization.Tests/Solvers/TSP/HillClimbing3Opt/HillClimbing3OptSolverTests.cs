@@ -34,8 +34,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP.HillClimbing3Opt
             problem._weights[4][0] = 1;
 
             // solve problem.
-            var solver = new HillClimbing3OptSolver();
-            var solution = solver.Search(problem);
+            var solution = HillClimbing3OptSolver.Default.Search(problem);
             var tour = solution.Solution;
 
             // check result.
@@ -46,6 +45,34 @@ namespace Itinero.Optimization.Tests.Solvers.TSP.HillClimbing3Opt
             Assert.Equal(2, tour.GetVisitAt(2));
             Assert.Equal(3, tour.GetVisitAt(3));
             Assert.Equal(4, tour.GetVisitAt(4));
+            Assert.Equal(0, tour.Last);
+        }
+        
+        [Fact]
+        public void HillClimbing3OptSolver_ShouldUseOnlyProvidedVisits()
+        {
+            var problem = TSPHelper.CreateTSP(0, 0, 10, 10,
+                new int[] { 0, 2, 4, 6, 8 });
+            problem._weights[0][2] = 1;
+            problem._weights[2][4] = 1;
+            problem._weights[4][6] = 1;
+            problem._weights[6][8] = 1;
+            problem._weights[8][0] = 1;
+
+            // solve problem.
+            var solution = HillClimbing3OptSolver.Default.Search(problem);
+            var tour = solution.Solution;
+            var fitness = solution.Fitness;
+
+            // check result.
+            Assert.NotNull(tour);
+            Assert.Equal(5, fitness);
+            Assert.Equal(5, tour.Count);
+            Assert.Equal(0, tour.GetVisitAt(0));
+            Assert.Equal(2, tour.GetVisitAt(1));
+            Assert.Equal(4, tour.GetVisitAt(2));
+            Assert.Equal(6, tour.GetVisitAt(3));
+            Assert.Equal(8, tour.GetVisitAt(4));
             Assert.Equal(0, tour.Last);
         }
     }

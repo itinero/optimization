@@ -30,10 +30,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         [Fact]
         public void BruteForceSolver_ShouldHaveBFAsName()
         {
-            // create the solver.
-            var solver = new BruteForceSolver();
-
-            Assert.Equal("BF", solver.Name);
+            Assert.Equal("BF", BruteForceSolver.Default.Name);
         }
 
         /// <summary>
@@ -46,8 +43,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
             var problem = TSPHelper.CreateTSP(0, 0, 1, 10);
 
             // create the solver.
-            var solver = new BruteForceSolver();
-            var solution = solver.Search(problem).Solution;
+            var solution = BruteForceSolver.Default.Search(problem).Solution;
 
             // verify solution.
             Assert.Equal(new [] { 0 }, solution.ToArray());
@@ -63,8 +59,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
             var problem = TSPHelper.CreateTSP(0, 1, 2, 10);
 
             // create the solver.
-            var solver = new BruteForceSolver();
-            var solution = solver.Search(problem).Solution;
+            var solution = BruteForceSolver.Default.Search(problem).Solution;
 
             // verify solution.
             Assert.Equal(new [] { 0, 1 }, solution.ToArray());
@@ -85,8 +80,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
             problem._weights[4][0] = 1;
 
             // create the solver.
-            var solver = new BruteForceSolver();
-            var solution = solver.Search(problem).Solution;
+            var solution = BruteForceSolver.Default.Search(problem).Solution;
 
             // verify solution.
             Assert.Equal(new [] { 0, 1, 2, 3, 4 }, solution.ToArray());
@@ -107,8 +101,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
             problem._weights[4][0] = 1;
 
             // create the solver.
-            var solver = new BruteForceSolver();
-            var solution = solver.Search(problem).Solution;
+            var solution = BruteForceSolver.Default.Search(problem).Solution;
 
             // verify solution.
             Assert.Equal(new [] { 0, 1, 2, 3, 4 }, solution.ToArray());
@@ -129,8 +122,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
             problem._weights[4][0] = 1;
 
             // create the solver.
-            var solver = new BruteForceSolver();
-            var solution = solver.Search(problem).Solution;
+            var solution = BruteForceSolver.Default.Search(problem).Solution;
 
             // verify solution.
             Assert.Equal(new [] { 0, 1, 2, 3, 4 }, solution.ToArray());
@@ -144,13 +136,34 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
             problem._weights[4][0] = 1;
 
             // create the solver.
-            solver = new BruteForceSolver();
-            solution = solver.Search(problem).Solution;
+            solution = BruteForceSolver.Default.Search(problem).Solution;
 
             // verify solution.
             var array = solution.ToArray();
             Assert.Equal(0, array[0]);
             Assert.Equal(3, array[4]);
+        }
+
+        /// <summary>
+        /// Tests the solver.
+        /// </summary>
+        [Fact]
+        public void BruteForceSolver_ShouldUseOnlyProvidedVisits()
+        {
+            // create the problem and make sure 0->2->4->6->8 is the solution.
+            var problem = TSPHelper.CreateTSP(0, 10, 10, 
+                new int[] { 0, 2, 4, 6, 8});
+            problem._weights[0][2] = 1;
+            problem._weights[2][4] = 1;
+            problem._weights[4][6] = 1;
+            problem._weights[6][8] = 1;
+            problem._weights[8][0] = 1;
+
+            // create the solver.
+            var solution = BruteForceSolver.Default.Search(problem).Solution;
+
+            // verify solution.
+            Assert.Equal(new [] { 0, 2, 4, 6, 8 }, solution.ToArray());
         }
     }
 }

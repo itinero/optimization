@@ -17,6 +17,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
 
@@ -30,37 +32,53 @@ namespace Itinero.Optimization.Solvers.TSP
     {
         internal readonly float[][] _weights;
         private readonly Lazy<NearestNeighbourCache> _nearestNeighbourCacheLazy;
-
-        /// <summary>
-        /// Creates a new TSP 'open' TSP with only a start customer.
-        /// </summary>
-        public TSProblem(int first, float[][] weights)
+        private readonly Lazy<TSProblem> _closedEquivalent;
+        private readonly bool _behaveAsClosed = false;
+        private readonly int? _last;
+        private readonly HashSet<int> _visits;
+        
+        private TSProblem(TSProblem other, bool behaveAsClosed)
         {
-            this.First = first;
-            this.Last = null;
-            _weights = weights;
-            this.Count = weights.Length;
-            for (var x = 0; x < _weights.Length; x++)
-            {
-                _weights[x][first] = 0;
-            }
-            _nearestNeighbourCacheLazy = new Lazy<NearestNeighbourCache>(() =>
-                new NearestNeighbourCache(_weights.Length, (x, y) => _weights[x][y]));
+            _weights = other._weights;
+            _nearestNeighbourCacheLazy = other._nearestNeighbourCacheLazy;
+            _visits = other._visits;
+            this.First = other.First;
+            _last = other._last;
+            
+            _behaveAsClosed = behaveAsClosed;
         }
-
+        
         /// <summary>
-        /// Creates a new TSP, 'closed' when first equals last.
+        /// Creates a new TSP.
+        /// - An 'open' TSP, when last is null.
+        /// - A 'closed' TSP, when last = first.
+        /// - A 'fixed' TSP, all other cases, when first != last and last != null.
         /// </summary>
-        public TSProblem(int first, int last, float[][] weights)
+        public TSProblem(int first, int? last, float[][] weights, IEnumerable<int> visits = null)
         {
             this.First = first;
-            this.Last = last;
+            _last = last;
             _weights = weights;
-            this.Count = weights.Length;
-
-            _weights[first][last] = 0;
+            
+            if (!this.Contains(this.First)) { throw new ArgumentException("Not in the visits.", nameof(first)); }
+            if (this.Last.HasValue && !this.Contains(this.First)) { throw new ArgumentException("Not in the visits.", nameof(last)); }
+            
             _nearestNeighbourCacheLazy = new Lazy<NearestNeighbourCache>(() =>
                 new NearestNeighbourCache(_weights.Length, (x, y) => _weights[x][y]));
+            _closedEquivalent = new Lazy<TSProblem>(() => 
+                new TSProblem(this, true));
+
+            if (visits != null)
+            {
+                if (visits is HashSet<int> visitsSet)
+                {
+                    _visits = visitsSet;
+                }
+                else
+                {
+                    _visits = new HashSet<int>(visits);
+                }
+            }
         }
         
         /// <summary>
@@ -68,7 +86,71 @@ namespace Itinero.Optimization.Solvers.TSP
         /// </summary>
         public float Weight(int from, int to)
         {
+            if (_behaveAsClosed)
+            {
+                if (!_last.HasValue && to == this.First)
+                { // make sure all costs to 'first' are '0'.
+                    return 0;
+                }
+                else if (_last.HasValue && _last != this.First)
+                { // first and last are different.
+                    // pretend '-> first' is '-> last' and remove last altogether.
+                    if (to == this.First) to = _last.Value;
+
+                    return _weights[from][to];
+                }
+            }
             return _weights[from][to];
+        }
+
+        /// <summary>
+        /// Returns true if the visit is part of this problem.
+        /// </summary>
+        /// <param name="visit">The visit.</param>
+        /// <returns>True if this visit is part of this problem.</returns>
+        public bool Contains(int visit)
+        {
+            if (_behaveAsClosed &&
+                _last.HasValue &&
+                visit == _last)
+            {
+                return false;
+            }
+            if (_visits != null)
+            {
+                return _visits.Contains(visit);
+            }
+            return visit >= 0 && visit < _weights.Length;
+        }
+
+        /// <summary>
+        /// Gets the visits.
+        /// </summary>
+        public IEnumerable<int> Visits
+        {
+            get
+            {
+                var visits = _visits ?? System.Linq.Enumerable.Range(0, _weights.Length);
+                if (_behaveAsClosed)
+                {
+                    foreach (var visit in visits)
+                    {
+                        if (visit == _last)
+                        {
+                            continue;
+                        }
+
+                        yield return visit;
+                    }
+                }
+                else
+                {
+                    foreach (var visit in visits)
+                    {
+                        yield return visit;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -77,18 +159,63 @@ namespace Itinero.Optimization.Solvers.TSP
         public int First { get; private set; }
 
         /// <summary>
-        /// Gets the last if the problem is closed.
+        /// Gets the last.
         /// </summary>
-        public int? Last { get; private set; }
+        public int? Last
+        {
+            get
+            {
+                if (_behaveAsClosed)
+                {
+                    return this.First;
+                }
+                return _last;
+            }
+        }
 
         /// <summary>
         /// Gets the number of visits.
         /// </summary>
-        public int Count { get; private set; }
+        public int Count
+        {
+            get
+            {
+                var count = _weights.Length;
+                if (_visits != null) count = _visits.Count;
+                if (_behaveAsClosed &&
+                    _last.HasValue)
+                {
+                    count--;
+                }
+
+                return count;
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of weights.
+        /// </summary>
+        public int WeightsSize => _weights.Length;
 
         /// <summary>
         /// Gets the nearest neighbour cache.
         /// </summary>
         internal NearestNeighbourCache NearestNeighbourCache => _nearestNeighbourCacheLazy.Value;
+
+        /// <summary>
+        /// Gets the closed equivalent of this problem.
+        /// </summary>
+        internal TSProblem ClosedEquivalent
+        {
+            get
+            {
+                if (this.First != this.Last)
+                {
+                    return _closedEquivalent.Value;
+                }
+
+                return this;
+            }
+        }
     }
 }

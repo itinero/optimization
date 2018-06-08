@@ -61,7 +61,8 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
                 throw new ArgumentException("Route and problem have to be both closed.");
             }
 
-            var dontLookBits = useDontLookBits ? new bool[problem.Count] : null;
+            // TODO: [PERFORMANCE] can we prevent recreating this all the time?
+            var dontLookBits = useDontLookBits ? new bool[problem.WeightsSize] : null;
 
             // loop over all customers.
             var anyImprovement = false;
@@ -78,6 +79,7 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
                         anyImprovement = true;
                         improvement = true;
                         delta = delta + moveDelta;
+                        candidate.Fitness += moveDelta;
                         break;
                     }
 
