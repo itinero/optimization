@@ -41,6 +41,7 @@ namespace Itinero.Optimization.Solvers.STSP
             _visits = other._visits;
             this.First = other.First;
             _last = other._last;
+            this.Max = other.Max;
             
             _behaveAsClosed = behaveAsClosed;
         }
@@ -61,9 +62,7 @@ namespace Itinero.Optimization.Solvers.STSP
             this.First = first;
             _last = last;
             _weights = weights;
-            
-            if (!this.Contains(this.First)) { throw new ArgumentException("Not in the visits.", nameof(first)); }
-            if (this.Last.HasValue && !this.Contains(this.First)) { throw new ArgumentException("Not in the visits.", nameof(last)); }
+            this.Max = max;
             
             _nearestNeighbourCacheLazy = new Lazy<NearestNeighbourCache>(() =>
                 new NearestNeighbourCache(_weights.Length, (x, y) => _weights[x][y]));
@@ -81,6 +80,9 @@ namespace Itinero.Optimization.Solvers.STSP
                     _visits = new HashSet<int>(visits);
                 }
             }
+            
+            if (!this.Contains(this.First)) { throw new ArgumentException("Not in the visits.", nameof(first)); }
+            if (this.Last.HasValue && !this.Contains(this.Last.Value)) { throw new ArgumentException("Not in the visits.", nameof(last)); }
         }
         
         /// <summary>

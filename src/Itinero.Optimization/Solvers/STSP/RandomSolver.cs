@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System.Threading;
 using Itinero.Optimization.Solvers.Shared.CheapestInsertion;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
@@ -62,7 +63,7 @@ namespace Itinero.Optimization.Solvers.STSP
 
                 var cost = tour.CalculateCheapest(problem.Weight,
                     visit, out var location);
-                if (!(cost + fitness < problem.Max)) continue;
+                if (!(cost + fitness <= problem.Max)) continue;
                 tour.InsertAfter(location.From, visit);
                 fitness += cost;
             }
@@ -74,5 +75,8 @@ namespace Itinero.Optimization.Solvers.STSP
                 Solution = tour
             };
         }
+        
+        private static readonly ThreadLocal<RandomSolver> DefaultLazy = new ThreadLocal<RandomSolver>(() => new RandomSolver());
+        public static RandomSolver Default => DefaultLazy.Value;
     }
 }

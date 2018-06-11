@@ -31,10 +31,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         [Fact]
         public void RandomSolver_NameShouldBeRAN()
         {
-            // create the solver.
-            var solver = new RandomSolver();
-
-            Assert.Equal("RAN", solver.Name);
+            Assert.Equal("RAN", RandomSolver.Default.Name);
         }
 
         /// <summary>
@@ -46,13 +43,10 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
             // create problem.
             var problem = TSPHelper.CreateTSP(0, 5, 10);
 
-            // create the solver.
-            var solver = new RandomSolver();
-
             for (var i = 0; i < 100; i++)
             {
                 // generate solution.
-                var candidate = solver.Search(problem);
+                var candidate = RandomSolver.Default.Search(problem);
                 var tour = candidate.Solution;
                 var fitness = candidate.Fitness;
 
@@ -81,13 +75,10 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
             // create problem.
             var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
 
-            // create the solver.
-            var solver = new RandomSolver();
-
             for (var i = 0; i < 100; i++)
             {
                 // generate solution.
-                var candidate = solver.Search(problem);
+                var candidate = RandomSolver.Default.Search(problem);
                 var tour = candidate.Solution;
                 var fitness = candidate.Fitness;
 
@@ -116,13 +107,10 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
             // create problem.
             var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
 
-            // create the solver.
-            var solver = new RandomSolver();
-
             for (var i = 0; i < 100; i++)
             {
                 // generate solution.
-                var candidate = solver.Search(problem);
+                var candidate = RandomSolver.Default.Search(problem);
                 var tour = candidate.Solution;
                 var fitness = candidate.Fitness;
 

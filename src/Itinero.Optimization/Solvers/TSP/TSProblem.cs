@@ -64,9 +64,6 @@ namespace Itinero.Optimization.Solvers.TSP
             _last = last;
             _weights = weights;
             
-            if (!this.Contains(this.First)) { throw new ArgumentException("Not in the visits.", nameof(first)); }
-            if (this.Last.HasValue && !this.Contains(this.First)) { throw new ArgumentException("Not in the visits.", nameof(last)); }
-            
             _nearestNeighbourCacheLazy = new Lazy<NearestNeighbourCache>(() =>
                 new NearestNeighbourCache(_weights.Length, (x, y) => _weights[x][y]));
             _closedEquivalent = new Lazy<TSProblem>(() => 
@@ -83,6 +80,9 @@ namespace Itinero.Optimization.Solvers.TSP
                     _visits = new HashSet<int>(visits);
                 }
             }
+            
+            if (!this.Contains(this.First)) { throw new ArgumentException("Not in the visits.", nameof(first)); }
+            if (this.Last.HasValue && !this.Contains(this.Last.Value)) { throw new ArgumentException("Not in the visits.", nameof(last)); }
         }
         
         /// <summary>
