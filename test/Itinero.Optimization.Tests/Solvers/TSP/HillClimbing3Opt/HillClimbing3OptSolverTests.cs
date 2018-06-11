@@ -24,7 +24,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP.HillClimbing3Opt
     public class HillClimbing3OptSolverTests
     {
         [Fact]
-        public void HillClimbing3OptSolver_ThisClosedTour1ShouldSolverPerfectly()
+        public void HillClimbing3OptSolver_ThisClosedTour1ShouldSolvePerfectly()
         {
             var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
             problem._weights[0][1] = 1;

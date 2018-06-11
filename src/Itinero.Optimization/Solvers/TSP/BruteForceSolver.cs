@@ -60,7 +60,7 @@ namespace Itinero.Optimization.Solvers.TSP
                 {
                     Solution = tour,
                     Problem = problem,
-                    Fitness = problem.Weights(tour)
+                    Fitness = tour.Weight(problem.Weight)
                 };
             }
 
@@ -82,7 +82,7 @@ namespace Itinero.Optimization.Solvers.TSP
                 var localRoute = new Tour(withFirst, problem.Last);
 
                 // calculate fitness.
-                var localFitness = problem.Weights(localRoute);
+                var localFitness = localRoute.Weight(problem.Weight);
                 if (!(localFitness < bestFitness)) continue; // the best weight has improved.
                 bestFitness = localFitness;
                 bestSolution = localRoute;

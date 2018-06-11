@@ -71,7 +71,7 @@ namespace Itinero.Optimization.Solvers.TSP.EAX
                 {
                     Problem = problem,
                     Solution = tour,
-                    Fitness = problem.Weights(tour)
+                    Fitness = tour.Weight(problem.Weight)
                 };
             }
             else if (problem.First != problem.Last)
@@ -90,7 +90,7 @@ namespace Itinero.Optimization.Solvers.TSP.EAX
                 {
                     Problem = problem,
                     Solution = tour,
-                    Fitness = problem.Weights(tour)
+                    Fitness = tour.Weight(problem.Weight)
                 };
             }
             else

@@ -18,26 +18,23 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
 
-[assembly: InternalsVisibleTo("Itinero.Optimization.Tests")]
-namespace Itinero.Optimization.Solvers.TSP
+namespace Itinero.Optimization.Solvers.STSP
 {
     /// <summary>
-    /// The TSP.
+    /// The selective TSP.
     /// </summary>
-    internal sealed class TSProblem
+    internal class STSProblem
     {
         internal readonly float[][] _weights;
         private readonly Lazy<NearestNeighbourCache> _nearestNeighbourCacheLazy;
-        private readonly Lazy<TSProblem> _closedEquivalent;
+        private readonly Lazy<STSProblem> _closedEquivalent;
         private readonly bool _behaveAsClosed = false;
         private readonly int? _last;
         private readonly HashSet<int> _visits;
         
-        private TSProblem(TSProblem other, bool behaveAsClosed)
+        private STSProblem(STSProblem other, bool behaveAsClosed)
         {
             _weights = other._weights;
             _nearestNeighbourCacheLazy = other._nearestNeighbourCacheLazy;
@@ -49,16 +46,17 @@ namespace Itinero.Optimization.Solvers.TSP
         }
         
         /// <summary>
-        /// Creates a new TSP.
-        /// - An 'open' TSP, when last is null.
-        /// - A 'closed' TSP, when last = first.
-        /// - A 'fixed' TSP, all other cases, when first != last and last != null.
+        /// Creates a new STSP.
+        /// - An 'open' STSP, when last is null.
+        /// - A 'closed' STSP, when last = first.
+        /// - A 'fixed' STSP, all other cases, when first != last and last != null.
         /// </summary>
         /// <param name="first">The first visit.</param>
         /// <param name="last">The last visit if any.</param>
         /// <param name="weights">The weights matrix.</param>
+        /// <param name="max">The maximum weight.</param>
         /// <param name="visits">The possible visits, all visits are possible if null.</param>
-        public TSProblem(int first, int? last, float[][] weights, IEnumerable<int> visits = null)
+        public STSProblem(int first, int? last, float[][] weights, float max, IEnumerable<int> visits = null)
         {
             this.First = first;
             _last = last;
@@ -69,8 +67,8 @@ namespace Itinero.Optimization.Solvers.TSP
             
             _nearestNeighbourCacheLazy = new Lazy<NearestNeighbourCache>(() =>
                 new NearestNeighbourCache(_weights.Length, (x, y) => _weights[x][y]));
-            _closedEquivalent = new Lazy<TSProblem>(() => 
-                new TSProblem(this, true));
+            _closedEquivalent = new Lazy<STSProblem>(() => 
+                new STSProblem(this, true));
 
             if (visits != null)
             {
@@ -178,6 +176,11 @@ namespace Itinero.Optimization.Solvers.TSP
         }
 
         /// <summary>
+        /// Gets or sets the max.
+        /// </summary>
+        public float Max { get; set; }
+
+        /// <summary>
         /// Gets the number of visits.
         /// </summary>
         public int Count
@@ -209,7 +212,7 @@ namespace Itinero.Optimization.Solvers.TSP
         /// <summary>
         /// Gets the closed equivalent of this problem.
         /// </summary>
-        internal TSProblem ClosedEquivalent
+        internal STSProblem ClosedEquivalent
         {
             get
             {

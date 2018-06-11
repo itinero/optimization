@@ -56,7 +56,7 @@ namespace Itinero.Optimization.Solvers.TSP
             {
                 Problem = problem,
                 Solution = tour,
-                Fitness = problem.Weights(tour)
+                Fitness = tour.Weight(problem.Weight)
             };
         }
         

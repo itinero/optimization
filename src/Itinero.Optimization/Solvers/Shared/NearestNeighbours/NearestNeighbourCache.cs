@@ -48,7 +48,7 @@ namespace Itinero.Optimization.Solvers.Shared.NearestNeighbours
         /// Gets the nearest neighbours for the given 'n'.
         /// </summary>
         /// <returns>The nearest neighbour array.</returns>
-        public NearestNeighbourArray GetNNearestNeighbours(int n, int customer)
+        public NearestNeighbourArray GetNNearestNeighbours(int n)
         {
             if (_nearestNeighbours == null)
             { // not there yet, create.

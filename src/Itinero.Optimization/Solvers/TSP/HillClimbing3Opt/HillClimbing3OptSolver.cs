@@ -17,6 +17,7 @@
  */
 
 using System.Threading;
+using Itinero.Optimization.Solvers.Shared.HillClimbing3Opt;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
 
@@ -88,7 +89,12 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
             var candidate = _generator.Search(problem);
 
             // improve it by running the 3-Opt step.
-            HillClimbing3Opt.Apply(this.Name, problem, candidate, _nearestNeighbours, _dontLook);
+            var nearestNeighbours = _nearestNeighbours ? null : problem.NearestNeighbourCache.GetNNearestNeighboursForward(10);
+            if (candidate.Solution.Do3Opt(problem.Weight, problem.WeightsSize, out var delta, 
+                nearestNeighbours, _dontLook))
+            {
+                candidate.Fitness += delta;
+            }
             
             return candidate;
         }

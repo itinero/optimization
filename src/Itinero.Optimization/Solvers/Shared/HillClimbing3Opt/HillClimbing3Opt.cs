@@ -18,72 +18,78 @@
 
 using System;
 using System.Linq;
+using Itinero.Logging;
+using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
 using Itinero.Optimization.Solvers.Tours;
 
-namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
+namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
 {
+
     /// <summary>
     /// Contains the core of the 3-OPT hill climbing algorithm. 
     /// </summary>
     internal static class HillClimbing3Opt
     {
         private const float E = 0.001f;
-
+        
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
         /// </summary>
-        /// <remarks>
-        /// This only supports 'closed' or 'fixed' problems.
-        /// </remarks>
-        /// <returns></returns>
-        internal static bool Apply(string name, TSProblem problem, Candidate<TSProblem, Tour> candidate,
-            bool nearestNeighbours,
-            bool useDontLookBits)
+        /// <param name="weightFunc">The weight function.</param>
+        /// <param name="candidate">The candidate tour.</param>
+        /// <param name="size">The size of the weight matrix.</param>
+        /// <param name="nearestNeighbours">The nearest neighbours, not used if null.</param>
+        /// <param name="useDontLookBits">The don't look bits flag.</param>
+        /// <param name="delta">The difference in weight.</param>
+        /// <returns>True if there was an improvement.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        internal static bool Do3Opt(this Tour candidate, Func<int, int, float> weightFunc,
+            int size, out float delta, NearestNeighbourArray nearestNeighbours = null, bool useDontLookBits = true)
         {
             // TODO: check and see if we can apply this to an open problem anyway. This would remove the need to convert existing TSP's.
-            var solution = candidate.Solution;
-            if (!problem.Last.HasValue)
+            if (!candidate.Last.HasValue)
             {
-                Itinero.Logging.Logger.Log(name, Logging.TraceEventType.Warning,
+                Logger.Log($"{typeof(HillClimbing3Opt)}.{nameof(Do3Opt)}", TraceEventType.Warning,
                     "Cannot apply this operator to an open problem, skipping.");
+                delta = 0;
                 return false;
             }
 
-            if (solution.First != solution.Last)
+            if (candidate.First != candidate.Last)
             {
-                Itinero.Logging.Logger.Log(name, Logging.TraceEventType.Warning,
-                    "Cannot apply this operator to an open fixed end problem, skipping.");
+                Logger.Log($"{typeof(HillClimbing3Opt)}.{nameof(Do3Opt)}", TraceEventType.Warning,
+                    "Cannot apply this operator to an open tour, skipping.");
+                delta = 0;
                 return false;
             }
 
-            if ((solution.First == solution.Last) != problem.Last.HasValue)
+            if ((candidate.First == candidate.Last) != candidate.Last.HasValue)
             {
-                throw new ArgumentException("Route and problem have to be both closed.");
+                throw new ArgumentException("Tour has to be closed.");
             }
 
             // TODO: [PERFORMANCE] can we prevent recreating this all the time?
-            var dontLookBits = useDontLookBits ? new bool[problem.WeightsSize] : null;
+            var dontLookBits = useDontLookBits ? new bool[size] : null;
 
             // loop over all customers.
             var anyImprovement = false;
             var improvement = true;
-            var delta = 0f;
+            delta = 0f;
             while (improvement)
             {
                 improvement = false;
-                foreach (var v1 in solution)
+                foreach (var v1 in candidate)
                 {
-                    if (Check(dontLookBits, problem, v1)) continue;
-                    if (Try3OptMoves(problem, solution, dontLookBits, v1, out var moveDelta, nearestNeighbours))
+                    if (Check(dontLookBits, v1)) continue;
+                    if (Try3OptMoves(weightFunc, candidate, dontLookBits, v1, out var moveDelta, nearestNeighbours))
                     {
                         anyImprovement = true;
                         improvement = true;
                         delta = delta + moveDelta;
-                        candidate.Fitness += moveDelta;
                         break;
                     }
 
-                    Set(dontLookBits, problem, v1, true);
+                    Set(dontLookBits, v1, true);
                 }
             }
 
@@ -94,8 +100,8 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
         /// Tries all 3Opt Moves for the neighbourhood of v1.
         /// </summary>
         /// <returns></returns>
-        private static bool Try3OptMoves(TSProblem problem, Tour tour, bool[] dontLookBits, int v1, out float delta,
-            bool nearestNeighbours)
+        private static bool Try3OptMoves(Func<int, int, float> weightFunc, Tour tour, bool[] dontLookBits, int v1, out float delta,
+            NearestNeighbourArray nearestNeighbours)
         {
             // get v_2.
             var v2 = tour.GetNeigbour(v1);
@@ -106,27 +112,26 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
             }
 
             var betweenV2V1 = tour.Between(v2, v1);
-            var weightV1V2 = problem.Weight(v1, v2); // weights[v1][v2];
-            if (v2 == problem.First && !problem.Last.HasValue)
+            var weightV1V2 = weightFunc(v1, v2); // weights[v1][v2];
+            if (v2 == tour.First && !tour.Last.HasValue)
             {
                 // set to zero if not closed.
                 weightV1V2 = 0;
             }
 
             var v3 = -1;
-            // TODO: performance test when this is a hashset.
-            var neighbours = problem.NearestNeighbourCache.GetNNearestNeighboursForward(10)[v1];
-
+            // TODO: performance test when neighbours array is a hashset.
+            var neighbours = nearestNeighbours?[v1];
+            
             foreach (var v4 in betweenV2V1)
             {
                 if (v3 >= 0 && v3 != v1)
                 {
-                    if (!nearestNeighbours ||
-                        neighbours.Contains(v4))
+                    if (neighbours == null || neighbours.Contains(v4)) // TODO: this is now linq, ouwch, check TODO above.
                     {
-                        var weightV1V4 = problem.Weight(v1, v4); // weights[v1][v4];
-                        var weightV3V4 = problem.Weight(v3, v4); // weights[v3][v4];
-                        if (v4 == problem.First && !problem.Last.HasValue)
+                        var weightV1V4 = weightFunc(v1, v4); // weights[v1][v4];
+                        var weightV3V4 = weightFunc(v3, v4); // weights[v3][v4];
+                        if (v4 == tour.First && !tour.Last.HasValue)
                         {
                             // set to zero if not closed.
                             weightV1V4 = 0;
@@ -135,7 +140,7 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
 
                         var weightV1V2PlusV3V4 = weightV1V2 + weightV3V4;
                         // var weightsV3 = weights[v3];
-                        if (Try3OptMoves(problem, tour, dontLookBits, v1, v2, v3, v4, weightV1V2PlusV3V4, weightV1V4,
+                        if (Try3OptMoves(weightFunc, tour, dontLookBits, v1, v2, v3, v4, weightV1V2PlusV3V4, weightV1V4,
                             out delta))
                         {
                             return true;
@@ -154,29 +159,29 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <returns></returns>
-        private static bool Try3OptMoves(TSProblem problem, Tour tour, bool[] dontLookBits,
+        private static bool Try3OptMoves(Func<int, int, float> weightFunc, Tour tour, bool[] dontLookBits,
             int v1, int v2, float weightV1V2,
             int v3, out float delta)
         {
             // get v_4.
             var v4 = tour.GetNeigbour(v3);
-            var weightV1V2PlusV3V4 = weightV1V2 + problem.Weight(v3, v4); // weights[v3][v4];
-            var weightV1V4 = problem.Weight(v1, v4); // weights[v1][v4];
-            if (v4 == problem.First && !problem.Last.HasValue)
+            var weightV1V2PlusV3V4 = weightV1V2 + weightFunc(v3, v4); // weights[v3][v4];
+            var weightV1V4 = weightFunc(v1, v4); // weights[v1][v4];
+            if (v4 == tour.First && !tour.Last.HasValue)
             {
                 // set to zero if not closed.
                 weightV1V4 = 0;
             }
 
             //var weightsV3 = weights[v3];
-            return Try3OptMoves(problem, tour, dontLookBits, v1, v2, v3, v4, weightV1V2PlusV3V4, weightV1V4, out delta);
+            return Try3OptMoves(weightFunc, tour, dontLookBits, v1, v2, v3, v4, weightV1V2PlusV3V4, weightV1V4, out delta);
         }
 
         /// <summary>
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <returns></returns>
-        private static bool Try3OptMoves(TSProblem problem, Tour tour, bool[] dontLookBits,
+        private static bool Try3OptMoves(Func<int, int, float> weightFunc, Tour tour, bool[] dontLookBits,
             int v1, int v2, int v3, int v4, float weightV1V2PlusV3V4, float weightV1V4, out float delta)
         {
             var betweenV4V1Enumerator = tour.Between(v4, v1).GetEnumerator();
@@ -188,17 +193,17 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
                     while (betweenV4V1Enumerator.MoveNext())
                     {
                         var v6 = betweenV4V1Enumerator.Current;
-                        var weightV3V6 = problem.Weight(v3, v6); // weightsV3[v6];
-                        var weightV5V2 = problem.Weight(v5, v2); // weights[v5][v2];
-                        var weightV5V6 = problem.Weight(v5, v6); // weights[v5][v6];
-                        if (v6 == problem.First && !problem.Last.HasValue)
+                        var weightV3V6 = weightFunc(v3, v6); // weightsV3[v6];
+                        var weightV5V2 = weightFunc(v5, v2); // weights[v5][v2];
+                        var weightV5V6 = weightFunc(v5, v6); // weights[v5][v6];
+                        if (v6 == tour.First && !tour.Last.HasValue)
                         {
                             // set to zero if not closed.
                             weightV3V6 = 0;
                             weightV5V6 = 0;
                         }
 
-                        if (v2 == problem.First && !problem.Last.HasValue)
+                        if (v2 == tour.First && !tour.Last.HasValue)
                         {
                             // set to zero if not closed.
                             weightV5V2 = 0;
@@ -221,8 +226,8 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
                             tour.ReplaceEdgeFrom(v5, v2);
 
                             // set bits.
-                            Set(dontLookBits, problem, v3, false);
-                            Set(dontLookBits, problem, v5, false);
+                            Set(dontLookBits, v3, false);
+                            Set(dontLookBits, v5, false);
 
                             return true; // move succeeded.
                         }
@@ -236,7 +241,7 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
             return false;
         }
 
-        private static bool Check(bool[] dontLookBits, TSProblem problem, int visit)
+        private static bool Check(bool[] dontLookBits, int visit)
         {
             if (dontLookBits != null)
             {
@@ -246,7 +251,7 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
             return false;
         }
 
-        private static void Set(bool[] dontLookBits, TSProblem problem, int visit, bool value)
+        private static void Set(bool[] dontLookBits, int visit, bool value)
         {
             if (dontLookBits != null)
             {

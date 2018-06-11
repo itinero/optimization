@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 
 namespace Itinero.Optimization.Solvers.Tours
@@ -37,6 +38,49 @@ namespace Itinero.Optimization.Solvers.Tours
                 list.Add(enumerator.Current);
             }
             return list;
+        }        
+        
+        /// <summary>
+        /// Returns true if the given route is closed.
+        /// </summary>
+        public static bool IsClosed(this Tour tour)
+        {
+            return tour.Last.HasValue &&
+                   tour.Last.Value == tour.First;
+        }
+        
+        /// <summary>
+        /// Calculates the total weight.
+        /// </summary>
+        /// <param name="tour">The tour.</param>
+        /// <param name="weightsFunc">The weight function.</param>
+        /// <returns>The total weight.</returns>
+        internal static float Weight(this Tour tour, Func<int, int, float> weightsFunc)
+        {
+            var weight = 0f;
+            var previous = Tour.NOT_SET;
+            var first = Tour.NOT_SET;
+            foreach (var visit in tour)
+            {
+                if (previous == Tour.NOT_SET)
+                {
+                    first = visit;
+                    previous = visit;
+                    continue;
+                }
+
+                weight += weightsFunc(previous, visit);
+                previous = visit;
+            }
+
+            var closed = tour.IsClosed();
+            if (closed &&
+                first != Tour.NOT_SET)
+            {
+                weight += weightsFunc(previous, first);
+            }
+
+            return weight;
         }
     }
 }

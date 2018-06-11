@@ -390,13 +390,13 @@ namespace Itinero.Optimization.Solvers.TSP.EAX
             if (!originalProblem.Last.HasValue)
             { // original problem as an 'open' problem, convert to an 'open' route.
                 best = new Tour(best, null);
-                fitness = originalProblem.Weights(best);
+                fitness = best.Weight(originalProblem.Weight);
             }
             else if (originalProblem.First != originalProblem.Last)
             { // original problem was a problem with a fixed last point different from the first point.
                 best.InsertAfter(System.Linq.Enumerable.Last(best), originalProblem.Last.Value);
                 best = new Tour(best, problem.Last.Value);
-                fitness = originalProblem.Weights(best);
+                fitness = best.Weight(originalProblem.Weight);
             }
 
             return new Candidate<TSProblem, Tour>()

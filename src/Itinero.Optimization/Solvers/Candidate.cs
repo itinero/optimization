@@ -43,7 +43,48 @@ namespace Itinero.Optimization.Solvers
         public TProblem Problem { get; set; }
 
         /// <inheritdoc />
-        public int CompareTo(Candidate<TProblem, TSolution> other)
+        public virtual int CompareTo(Candidate<TProblem, TSolution> other)
+        {
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+            return this.Fitness.CompareTo(other.Fitness);
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return $"{this.Fitness}@{this.Solution}";
+        }
+    }
+    
+    /// <summary>
+    /// Represents a candidate, a solution, the problem it's for, and associated fitness value.
+    /// </summary>
+    /// <typeparam name="TSolution">The solution type.</typeparam>
+    /// <typeparam name="TProblem">The problem type.</typeparam>
+    /// <typeparam name="TFitness">The fitness type.</typeparam>
+    public class Candidate<TProblem, TSolution, TFitness> : IComparable<Candidate<TProblem, TSolution, TFitness>>
+        where TFitness : IComparable
+    {
+        /// <summary>
+        /// Gets or sets the solution.
+        /// </summary>
+        public TSolution Solution { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the fitness.
+        /// </summary>
+        public TFitness Fitness { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the problem.
+        /// </summary>
+        public TProblem Problem { get; set; }
+
+        /// <inheritdoc />
+        public virtual int CompareTo(Candidate<TProblem, TSolution, TFitness> other)
         {
             if (other == null)
             {

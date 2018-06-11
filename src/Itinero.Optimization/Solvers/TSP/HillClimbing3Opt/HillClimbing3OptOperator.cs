@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using Itinero.Optimization.Solvers.Shared.HillClimbing3Opt;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
 
@@ -62,8 +63,18 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
         
         public override bool Apply(Candidate<TSProblem, Tour> candidate)
         {
-            // improve it by running the 3-Opt step.
-            return HillClimbing3Opt.Apply(this.Name, candidate.Problem, candidate, _nearestNeighbours, _dontLook);
+            var problem = candidate.Problem;
+            
+            // improve by running the 3-Opt step.
+            var nearestNeighbours = _nearestNeighbours ? null : problem.NearestNeighbourCache.GetNNearestNeighboursForward(10);
+            if (candidate.Solution.Do3Opt(problem.Weight, problem.WeightsSize, out var delta, nearestNeighbours,
+                _dontLook))
+            {
+                candidate.Fitness += delta;
+                return true;
+            }
+
+            return false;
         }
     }
 }
