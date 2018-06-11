@@ -29,5 +29,14 @@ namespace Itinero.Optimization.Strategies
         /// <param name="candidate">The new candidate.</param>
         /// <returns>True if the search has to continue, false otherwise.</returns>
         public delegate bool NewCandidate<in TCandidate>(TCandidate candidate);
+        
+        /// <summary>
+        /// Delegate used as a stop condition.
+        /// </summary>
+        /// <param name="candidate">The current candidate.</param>
+        /// <param name="iteration">The iteration count.</param>
+        /// <param name="level">The level.</param>
+        /// <returns>True if the search has to stop.</returns>
+        public delegate bool StopConditionDelegate<in TCandidate>(TCandidate candidate, int iteration, int level);
     }
 }

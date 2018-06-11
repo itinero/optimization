@@ -38,7 +38,7 @@ namespace Itinero.Optimization.Strategies
         /// </summary>
         /// <param name="candidate">The candidate.</param>
         /// <returns>True if an improvement was found.</returns>
-        /// <remarks>The candidate give should be modified in-place but this should *only* happen in the case when there is an improvement or this operator is explicitly used as a mutation operator.</remarks>
+        /// <remarks>The candidate will be modified in-place but this should *only* happen in the case when there is an improvement or this operator is explicitly used as a mutation operator.</remarks>
         public abstract bool Apply(TCandidate candidate);
 
         /// <summary>

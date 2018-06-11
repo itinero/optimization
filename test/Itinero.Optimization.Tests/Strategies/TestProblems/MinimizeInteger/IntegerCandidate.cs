@@ -23,7 +23,7 @@ namespace Itinero.Optimization.Tests.Strategies.TestProblems.MinimizeInteger
     /// <summary>
     /// A candidate test class.
     /// </summary>
-    internal class IntegerCandidate : IComparable<IntegerCandidate>
+    internal class IntegerCandidate : IComparable<IntegerCandidate>, Itinero.Optimization.Strategies.ICloneable<IntegerCandidate>
     {
         internal IntegerCandidate(int value)
         {
@@ -35,6 +35,11 @@ namespace Itinero.Optimization.Tests.Strategies.TestProblems.MinimizeInteger
         public int CompareTo(IntegerCandidate other)
         {
             return this.Value.CompareTo(other.Value);
+        }
+
+        public IntegerCandidate Clone()
+        {
+            return new IntegerCandidate(this.Value);
         }
 
         public override string ToString()
