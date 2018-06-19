@@ -16,23 +16,32 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Models.Costs
+using Itinero.Optimization.Models.Visits.Costs;
+
+namespace Itinero.Optimization.Models.Mapping
 {
     /// <summary>
-    /// Represents the cost per visit.
+    /// Contains extensions methods related to the models.
     /// </summary>
-    public class VisitCosts
+    internal static class MappedModelExtensions
     {
         /// <summary>
-        /// Gets or sets the name of the metric used for the cost.
+        /// 
         /// </summary>
+        /// <param name="model"></param>
+        /// <param name="metric"></param>
+        /// <param name="travelCosts"></param>
         /// <returns></returns>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the costs.
-        /// </summary>
-        /// <returns></returns>
-        public float[] Costs { get;set; }
+        public static bool TryGetTravelCostsForMetric(this MappedModel model, string metric, out TravelCostMatrix travelCosts)
+        {
+            foreach (var t in model.TravelCosts)
+            {
+                if (t.Metric != metric) continue;
+                travelCosts = t;
+                return true;
+            }
+            travelCosts = null;
+            return false;
+        }
     }
 }

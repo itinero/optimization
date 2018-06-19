@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using Itinero.Logging;
 using Serilog;
 
-namespace Itinero.Optimization.Test.Functional
+namespace Itinero.Optimization.Tests.Functional
 {
     public class Program
     {

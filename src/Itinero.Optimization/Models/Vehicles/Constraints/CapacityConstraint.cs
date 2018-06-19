@@ -27,7 +27,7 @@ namespace Itinero.Optimization.Models.Vehicles.Constraints
         /// Gets or sets the name of the metric used in this constraint.
         /// </summary>
         /// <returns></returns>
-        public string Name { get; set; }
+        public string Metric { get; set; }
 
         /// <summary>
         /// Gets or set the maximum capacity.

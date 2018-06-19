@@ -36,11 +36,17 @@ namespace Itinero.Optimization.Models.TimeWindows
         /// <summary>
         /// Returns a default timewindow with unlimited arrival/departure times.
         /// </summary>
-        public static TimeWindow Default => new TimeWindow()
+        public static TimeWindow Unlimited => new TimeWindow()
         {
             Max = float.MaxValue,
             Min = float.MinValue
         };
+
+        /// <summary>
+        /// Returns true if this window is the default, unlimited window.
+        /// </summary>
+        public bool IsUnlimited => this.Max == float.MaxValue &&
+                                   this.Min == float.MinValue;
 
         /// <summary>
         /// Returns the fully qualified type name of this instance.
@@ -48,8 +54,7 @@ namespace Itinero.Optimization.Models.TimeWindows
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[{0}, {1}]",
-                this.Min, this.Max);
+            return $"[{this.Min}, {this.Max}]";
         }
     }
 }

@@ -16,47 +16,28 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.Models.Vehicles.Constraints;
-
-namespace Itinero.Optimization.Models.Vehicles
+namespace Itinero.Optimization.Models.Visits.Costs
 {
     /// <summary>
-    /// Represents a vehicle.
+    /// Represents a travel cost matrix, the costs between visits, this could be distance, time or some custom metric.
     /// </summary>
-    public class Vehicle
+    public class TravelCostMatrix
     {
         /// <summary>
-        /// Gets or sets the metric.
+        /// Gets or sets the name of the type of metric used.
         /// </summary>
         /// <returns></returns>
-        public string Metric { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the vehicle profile.
-        /// </summary>
-        public string Profile { get; set; }
+        public string Metric { get; set; } = Itinero.Optimization.Models.Metrics.Time;
 
         /// <summary>
-        /// Gets or sets the departure location if fixed.
+        /// Gets or sets the cost matrix.
         /// </summary>
-        /// <returns></returns>
-        public int? Departure { get; set; }
+        public float[][] Costs { get;set; }
 
         /// <summary>
-        /// Gets or sets the arrival location if fixed.
+        /// Gets or sets the directed flag.
         /// </summary>
-        /// <returns></returns>
-        public int? Arrival { get; set; }
-
-        /// <summary>
-        /// Gets or sets a turn penalty (if any).
-        /// </summary>
-        /// <returns></returns>
-        public float TurnPentalty { get; set; }
-
-        /// <summary>
-        /// Gets or sets the capacity constraints.
-        /// </summary>
-        public CapacityConstraint[] CapacityConstraints { get; set; }
+        /// <remarks>If this is true there are 4 costs per visit pair, for each direction to leave/arrive.</remarks>
+        public bool Directed { get; set; }
     }
 }

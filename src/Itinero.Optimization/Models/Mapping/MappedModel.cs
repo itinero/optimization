@@ -16,17 +16,24 @@
  *  limitations under the License.
  */
 
+using Itinero.LocalGeo;
+using Itinero.Optimization.Models.TimeWindows;
 using Itinero.Optimization.Models.Vehicles;
 using Itinero.Optimization.Models.Visits;
 using Itinero.Optimization.Models.Visits.Costs;
 
-namespace Itinero.Optimization.Models
+namespace Itinero.Optimization.Models.Mapping
 {
     /// <summary>
-    /// Represents a real-world model for a generic vehicle routing problem.
+    /// Represents a mapped model.
     /// </summary>
-    public class Model
+    public class MappedModel
     {
+        /// <summary>
+        /// Gets or sets travel costs between the visits.
+        /// </summary>
+        public TravelCostMatrix[] TravelCosts { get; set; }
+        
         /// <summary>
         /// Gets or sets the visits (including any depots).
         /// </summary>
@@ -54,9 +61,9 @@ namespace Itinero.Optimization.Models
         /// </summary>
         /// <param name="json">The json.</param>
         /// <returns></returns>
-        public static Model FromJson(string json)
+        public static MappedModel FromJson(string json)
         {
-            return IO.Json.JsonSerializer.FromJsonFunc(json, typeof(Model)) as Model;
+            return IO.Json.JsonSerializer.FromJsonFunc(json, typeof(Model)) as MappedModel;
         }
     }
 }

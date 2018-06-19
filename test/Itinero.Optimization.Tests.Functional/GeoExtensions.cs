@@ -21,7 +21,7 @@ using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using Newtonsoft.Json;
 
-namespace Itinero.Optimization.Test.Functional
+namespace Itinero.Optimization.Tests.Functional
 {
     /// <summary>
     /// Contains extension methods for NTS.

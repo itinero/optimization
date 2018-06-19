@@ -29,5 +29,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Itinero" Version="1.4.0-pre60" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 </Project>

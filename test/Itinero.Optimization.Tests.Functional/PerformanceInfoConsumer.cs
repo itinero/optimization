@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Itinero.Optimization.Test.Functional
+namespace Itinero.Optimization.Tests.Functional
 {
     /// <summary>
     /// A class that consumes perfomance information.

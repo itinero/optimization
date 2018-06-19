@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Itinero.Optimization.Models;
-using Itinero.Optimization.Models.Validation;
+using Itinero.Optimization.Models.Mapping;
 
 namespace Itinero.Optimization.Solvers
 {
@@ -29,7 +29,7 @@ namespace Itinero.Optimization.Solvers
     /// </summary>
     public static class SolverRegistry
     {
-        private static readonly List<SolverHook> Solvers = new List<SolverHook>();
+        private static readonly List<SolverHook> Solvers = new List<SolverHook>(new [] { TSP.TSPSolverHook.Default });
         
         /// <summary>
         /// A delegate to define try solve calls.
@@ -37,7 +37,7 @@ namespace Itinero.Optimization.Solvers
         /// <param name="model">The model.</param>
         /// <param name="intermediateResult">A callback to report on intermediate events if found.</param>
         /// <returns></returns>
-        public delegate Result<IList<IEnumerable<int>>> TrySolveDelegate(Model model, 
+        public delegate Result<IList<IEnumerable<int>>> TrySolveDelegate(MappedModel model, 
             Action<IList<IEnumerable<int>>> intermediateResult);
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Itinero.Optimization.Solvers
         /// </summary>
         /// <param name="model">The model to solve.</param>
         /// <param name="intermediateResult">A callback for intermediate results.</param>
-        public static IList<IEnumerable<int>> Solve(Model model, Action<IList<IEnumerable<int>>> intermediateResult)
+        public static IList<IEnumerable<int>> Solve(MappedModel model, Action<IList<IEnumerable<int>>> intermediateResult)
         {
             if(!model.IsValid(out var failReason)) 
             {
@@ -82,6 +82,24 @@ namespace Itinero.Optimization.Solvers
                 }
             }
             throw new Exception("The given model cannot be solved by any of the registered solvers: " + reasonsWhy.ToString());
+        }
+        
+        /// <summary>
+        /// Represents 
+        /// </summary>
+        internal class SolverHook
+        {
+            /// <summary>
+            /// Gets or sets the name.
+            /// </summary>
+            /// <returns></returns>
+            internal string Name { get; set; }
+
+            /// <summary>
+            /// Gets or sets the try solve function.
+            /// </summary>
+            /// <returns></returns>
+            internal SolverRegistry.TrySolveDelegate TrySolve { get; set; }
         }
     }
 }

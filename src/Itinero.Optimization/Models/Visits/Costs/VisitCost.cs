@@ -16,27 +16,22 @@
  *  limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
-using Itinero.Optimization.Models;
 
-namespace Itinero.Optimization.Solvers
+namespace Itinero.Optimization.Models.Visits.Costs
 {
     /// <summary>
-    /// Represents 
+    /// Represents a visit cost, a metric and value.
     /// </summary>
-    internal class SolverHook
+    public class VisitCost
     {
         /// <summary>
-        /// Gets or sets the name.
+        /// Gets or sets the metric id.
         /// </summary>
-        /// <returns></returns>
-        internal string Name { get; set; }
+        public string Metric { get; set; }
 
         /// <summary>
-        /// Gets or sets the try solve function.
+        /// Gets or sets the value.
         /// </summary>
-        /// <returns></returns>
-        internal SolverRegistry.TrySolveDelegate TrySolve { get; set; }
+        public float Value { get; set; }
     }
 }

@@ -16,23 +16,25 @@
  *  limitations under the License.
  */
 
-namespace Itinero.Optimization.Models.Validation
+using System.Collections.Generic;
+
+namespace Itinero.Optimization.Models.Mapping
 {
     /// <summary>
-    /// Contains extension methods for model validation.
+    /// Represents the link between a model and the actual routing network.
     /// </summary>
-    public static class ModelValidation
+    public interface IModelMapping
     {
         /// <summary>
-        /// Validates the model, returns a message if invalid.
+        /// Converts a solution to the mapped model into routes.
         /// </summary>
-        /// <param name="model">The model.</param>
-        /// <param name="message">The message if invalid.</param>
-        /// <returns>True if valid, false otherwise.</returns>
-        public static bool IsValid(this Model model, out string message)
-        {
-            message = string.Empty;
-            return false;
-        }
+        /// <param name="solution">The solution.</param>
+        /// <returns>The routes that are represented by the solution.</returns>
+        Result<IEnumerable<Route>> BuildRoutes(IList<IEnumerable<int>> solution);
+
+        /// <summary>
+        /// Gets errors in the mapping if any.
+        /// </summary>
+        IEnumerable<(int visit, string message)> Errors { get; }
     }
 }

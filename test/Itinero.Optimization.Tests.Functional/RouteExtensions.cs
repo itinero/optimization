@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Itinero.Attributes;
 
-namespace Itinero.Optimization.Test.Functional
+namespace Itinero.Optimization.Tests.Functional
 {
     public static class RouteExtensions
     {
