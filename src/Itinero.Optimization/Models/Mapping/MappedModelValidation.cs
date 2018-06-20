@@ -32,7 +32,12 @@ namespace Itinero.Optimization.Models.Mapping
         public static bool IsValid(this MappedModel model, out string reasonWhy)
         {
             // REMARK: validation here counts on the fact that the model that this mapped model is based on was already validated.
-            
+
+            if (model.TravelCosts == null)
+            {
+                reasonWhy = $"No travel costs found.";
+                return false;
+            }
             foreach (var vehicle in model.VehiclePool.Vehicles)
             {
                 if (!model.TryGetTravelCostsForMetric(vehicle.Metric, out var _))
