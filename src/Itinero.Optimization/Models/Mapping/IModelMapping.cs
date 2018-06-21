@@ -30,7 +30,7 @@ namespace Itinero.Optimization.Models.Mapping
         /// </summary>
         /// <param name="solution">The solution.</param>
         /// <returns>The routes that are represented by the solution.</returns>
-        Result<IEnumerable<Route>> BuildRoutes(IList<IEnumerable<int>> solution);
+        Result<IEnumerable<Route>> BuildRoutes(IEnumerable<(int vehicle, IEnumerable<int> tour)> solution);
 
         /// <summary>
         /// Gets errors in the mapping if any.
