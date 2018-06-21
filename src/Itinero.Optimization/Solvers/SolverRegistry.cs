@@ -37,7 +37,7 @@ namespace Itinero.Optimization.Solvers
         /// <param name="model">The model.</param>
         /// <param name="intermediateResult">A callback to report on intermediate events if found.</param>
         /// <returns></returns>
-        public delegate Result<IList<IEnumerable<int>>> TrySolveDelegate(MappedModel model, 
+        public delegate Result<IEnumerable<(int vehicle, IEnumerable<int>)>> TrySolveDelegate(MappedModel model, 
             Action<IList<IEnumerable<int>>> intermediateResult);
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Itinero.Optimization.Solvers
         /// </summary>
         /// <param name="model">The model to solve.</param>
         /// <param name="intermediateResult">A callback for intermediate results.</param>
-        public static IList<IEnumerable<int>> Solve(MappedModel model, Action<IList<IEnumerable<int>>> intermediateResult)
+        public static IEnumerable<(int vehicle, IEnumerable<int> tour)> Solve(MappedModel model, Action<IList<IEnumerable<int>>> intermediateResult)
         {
             if(!model.IsValid(out var failReason)) 
             {

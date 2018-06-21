@@ -38,25 +38,25 @@ namespace Itinero.Optimization.Solvers.TSP
             TrySolve = TSPSolverHook.Solve
         };
 
-        private static Result<IList<IEnumerable<int>>> Solve(MappedModel model, Action<IList<IEnumerable<int>>> intermediateResult)
+        private static Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>> Solve(MappedModel model, Action<IList<IEnumerable<int>>> intermediateResult)
         {
             var tsp = model.TryToTSP();
             if (tsp.IsError)
             {
-                return tsp.ConvertError<IList<IEnumerable<int>>>();
+                return tsp.ConvertError<IEnumerable<(int vehicle, IEnumerable<int> tour)>>();
             }
             
             // use a default solver to solve the TSP here.
             try
             {
                 var solution = EAXSolver.Default.Search(tsp.Value);
-                return new Result<IList<IEnumerable<int>>>(
-                    new List<IEnumerable<int>>(new [] { solution.Solution }));
+                return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>(
+                    (new (int vehicle, IEnumerable<int> tour) [] { (0, solution.Solution) }));
             }
             catch (Exception ex)
             {
                 Logger.Log($"", TraceEventType.Critical, $"Unhandled exception: {ex.ToString()}.");
-                return new Result<IList<IEnumerable<int>>>($"Unhandled exception: {ex.ToString()}.");
+                return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>($"Unhandled exception: {ex.ToString()}.");
             }
         }
 

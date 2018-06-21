@@ -39,7 +39,7 @@ namespace Itinero.Optimization
         /// <param name="visits">The visits to make.</param>
         /// <param name="errors">The visits in error and associated errors message if any.</param>
         /// <returns>A set of tours that visit the given visits using the vehicles in the pool.</returns>
-        public static Result<IEnumerable<Route>> Optimize(this RouterBase router, VehiclePool vehicles, Visit[] visits, 
+        public static IEnumerable<Result<Route>> Optimize(this RouterBase router, VehiclePool vehicles, Visit[] visits, 
             out IEnumerable<(Visit visit, string message)> errors)
         {
             var model = new Model()

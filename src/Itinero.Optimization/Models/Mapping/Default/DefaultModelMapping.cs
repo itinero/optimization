@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
@@ -27,37 +28,49 @@ namespace Itinero.Optimization.Models.Mapping.Default
     /// </summary>
     internal class DefaultModelMapping : IModelMapping
     {
-        private readonly RouterBase _router;
+        private readonly MappedModel _mappedModel;
         private readonly WeightMatrixAlgorithm _weightMatrixAlgorithm;
-        private readonly MassResolvingAlgorithm _massResolvingAlgorithm;
 
-        public DefaultModelMapping(RouterBase router, MassResolvingAlgorithm massResolvingAlgorithm,
-            WeightMatrixAlgorithm weightMatrixAlgorithm)
+        public DefaultModelMapping(MappedModel mappedModel, WeightMatrixAlgorithm weightMatrixAlgorithm)
         {
-            _router = router;
+            _mappedModel = mappedModel;
             _weightMatrixAlgorithm = weightMatrixAlgorithm;
-            _massResolvingAlgorithm = massResolvingAlgorithm;
-            
-            // TODO: compose errors.
-        }
-
-        /// <summary>
-        /// Returns the mapped visit given the original visit.
-        /// </summary>
-        /// <param name="originalVisit">The original visit index.</param>
-        /// <returns>The mapped visit index if any.</returns>
-        public int? MappedVisit(int? originalVisit)
-        {
-            
         }
         
         /// <inheritdoc />
-        public Result<IEnumerable<Route>> BuildRoutes(IEnumerable<(int vehicle, IEnumerable<int> tour)> solution)
+        public IEnumerable<Result<Route>> BuildRoutes(IEnumerable<(int vehicle, IEnumerable<int> tour)> solution)
         {
-            
+            foreach (var vehicleAndTour in solution)
+            {
+                yield return this.BuildRoute(vehicleAndTour);
+            }
+        }
+
+        private Result<Route> BuildRoute((int vehicle, IEnumerable<int> tour) vehicleAndTour)
+        {
+            try
+            {
+                return new Result<Route>("Not implemented");
+            }
+            catch (Exception e)
+            {
+                return new Result<Route>(e.Message);
+            }
         }
 
         /// <inheritdoc />
-        public IEnumerable<(int visit, string message)> Errors { get; }
+        public IEnumerable<(int visit, string message)> Errors
+        {
+            get
+            {
+                if (_weightMatrixAlgorithm.Errors != null)
+                {
+                    foreach (var error in _weightMatrixAlgorithm.Errors)
+                    {
+                        yield return (error.Key, $"{error.Value.Code} - {error.Value.Message}");
+                    }
+                }
+            }
+        }
     }
 }

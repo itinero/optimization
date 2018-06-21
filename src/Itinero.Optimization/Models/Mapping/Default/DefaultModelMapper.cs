@@ -130,9 +130,6 @@ namespace Itinero.Optimization.Models.Mapping.Default
                 return false;
             }
             
-            // build mapping.
-            var modelMapping = new DefaultModelMapping(router, massResolvingAlgorithm, weightMatrixAlgorithm);
-            
             // try to adjust the vehicle pool to the mapping, if any of the defined departure or arrival points cannot be mapped then this will fail.
             if (!weightMatrixAlgorithm.TryToMap(model.VehiclePool, out var mappedVehiclePool, out message))
             {
@@ -155,6 +152,9 @@ namespace Itinero.Optimization.Models.Mapping.Default
                     }
                 }
             };
+            
+            // build mapping.
+            var modelMapping = new DefaultModelMapping(mappedModel, weightMatrixAlgorithm);
 
             mappings = (mappedModel, modelMapping);
             message = string.Empty;
@@ -184,6 +184,9 @@ namespace Itinero.Optimization.Models.Mapping.Default
                     return false;
                 }
             }
+
+            message = string.Empty;
+            return true;
         }
 
         private static bool AdjustToMapping(this IWeightMatrixAlgorithm<float> algorithm, Vehicle vehicle,
@@ -208,6 +211,9 @@ namespace Itinero.Optimization.Models.Mapping.Default
                 }
                 vehicle.Departure = algorithm.WeightIndex(vehicle.Departure.Value);
             }
+
+            message = string.Empty;
+            return true;
         }
         
         private static Visit[] AdjustToMapping(this IWeightMatrixAlgorithm<float> algorithm, Visit[] ar)
@@ -217,7 +223,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
                 return ar;
             }
             
-            var newAr = new W[algorithm.Weights.Length];
+            var newAr = new Visit[algorithm.Weights.Length];
             for (var i = 0; i < newAr.Length; i++)
             {
                 newAr[i] = ar[algorithm.OriginalLocationIndex(i)];
