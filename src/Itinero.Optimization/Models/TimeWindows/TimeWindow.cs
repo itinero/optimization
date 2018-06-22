@@ -21,7 +21,7 @@ namespace Itinero.Optimization.Models.TimeWindows
     /// <summary>
     /// Represents a timewindow.
     /// </summary>
-    public struct TimeWindow
+    public class TimeWindow
     {
         /// <summary>
         /// The minimum time in seconds.

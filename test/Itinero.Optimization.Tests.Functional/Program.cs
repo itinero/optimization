@@ -30,35 +30,37 @@ namespace Itinero.Optimization.Tests.Functional
             EnableLogging();
 
 #if DEBUG
-            Itinero.Logging.Logger.Log("Program", TraceEventType.Information, "Performance tests are running in Debug, please run in Release mode.");
+            Logger.Log($"{typeof(Program)}.{nameof(Main)}", TraceEventType.Information,
+                "Performance tests are running in Debug, please run in Release mode.");
 #endif
+            // invoke case-specific tests.
+            TSP.TSPTests.Run();
+        }
 
-    }
 
-
-    private static void EnableLogging()
-    {
-        OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
+        private static void EnableLogging()
         {
+            OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
+            {
 #if RELEASE
                 if (level == "verbose")
                 {
                     return;
                 }
 #endif
-            Log.Information(message);
-            Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
-        };
-        Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
-        {
+                Log.Information(message);
+                Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
+            };
+            Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
+            {
 #if RELEASE
                  if (level == "verbose")
                  {
                      return;
                  }
 #endif
-            Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
-        };
+                Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
+            };
+        }
     }
-}
 }

@@ -210,6 +210,11 @@ namespace Itinero.Optimization.Models
         /// <returns>True if valid, false otherwise.</returns>
         private static bool IsValid(this TimeWindow tw, out string message)
         {
+            if (tw == null)
+            {
+                message = string.Empty;
+                return true;
+            }
             if (tw.IsUnlimited)
             {
                 message = string.Empty;
@@ -218,7 +223,7 @@ namespace Itinero.Optimization.Models
 
             if (tw.Min >= tw.Max)
             {
-                message = $"Max has to be >= min: {tw.ToString()}";
+                message = $"Max has to be >= min: {tw}";
                 return false;
             }
             message = string.Empty;

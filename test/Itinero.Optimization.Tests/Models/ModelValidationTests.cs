@@ -95,6 +95,39 @@ namespace Itinero.Optimization.Tests.Models
         }
 
         /// <summary>
+        /// Tests if a model is indeed valid with a null time window.
+        /// </summary>
+        [Fact]
+        public void Model_ShouldBeValidWithNullTimeWindow()
+        {
+            var model = new Model
+            {
+                VehiclePool = new VehiclePool()
+                {
+                    Reusable = true,
+                    Vehicles = new []
+                    {
+                        new Vehicle()
+                        {
+                            Metric = Metrics.Time,
+                            Profile = "Car"
+                        }
+                    }
+                },
+                Visits = new Visit[]
+                {
+                    new Visit()
+                    {
+                        Latitude = 1,
+                        Longitude = 2
+                    }
+                }
+            };
+
+            Assert.True(model.IsValid(out _));
+        }
+
+        /// <summary>
         /// Tests if a model is indeed invalid with an invalid time window.
         /// </summary>
         [Fact]

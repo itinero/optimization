@@ -50,12 +50,53 @@ namespace Itinero.Optimization.Models.Mapping.Default
         {
             try
             {
-                return new Result<Route>("Not implemented");
+                Route route = null;
+                var previous = -1;
+                foreach (var v in vehicleAndTour.tour)
+                {
+                    if (previous < 0)
+                    {
+                        previous = v;
+                        continue;
+                    }
+
+                    var localResult = AppendRoute(route, previous, v);
+                    if (localResult.IsError)
+                    {
+                        return localResult;
+                    }
+
+                    route = localResult.Value;
+                    previous = v;
+                }
+                return new Result<Route>(route);
             }
             catch (Exception e)
             {
                 return new Result<Route>(e.Message);
             }
+        }
+
+        private Result<Route> AppendRoute(Route route, int visit1, int visit2)
+        {
+            var visit1RouterPoint = _weightMatrixAlgorithm.OriginalIndexOf(visit1);
+            var visit2RouterPoint = _weightMatrixAlgorithm.OriginalIndexOf(visit2);
+            var routerPoint1 = _weightMatrixAlgorithm.RouterPoints[visit1RouterPoint];
+            var routerPoint2 = _weightMatrixAlgorithm.RouterPoints[visit2RouterPoint];
+            var localRoute = _weightMatrixAlgorithm.Router.TryCalculate(_weightMatrixAlgorithm.Profile,
+                routerPoint1, routerPoint2);
+            if (localRoute.IsError)
+            {
+                var originalVisit1 = _weightMatrixAlgorithm.OriginalLocationIndex(visit1);
+                var originalVisit2 = _weightMatrixAlgorithm.OriginalLocationIndex(visit2);
+                return new Result<Route>(
+                    $"Route could not be calculated between visit {visit1}->{visit2} " +
+                    $"between routerpoints {visit1RouterPoint}({routerPoint1})->{visit2RouterPoint}({routerPoint2})");
+            }
+
+            route = route == null ? localRoute.Value : route.Concatenate(localRoute.Value);
+            
+            return new Result<Route>(route);
         }
 
         /// <inheritdoc />

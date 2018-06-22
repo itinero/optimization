@@ -164,9 +164,12 @@ namespace Itinero.Optimization.Models.Mapping.Default
         private static bool TryToMap(this IWeightMatrixAlgorithm<float> algorithm, VehiclePool vehiclePool, out VehiclePool mappedVehiclePool,
             out string message)
         {
-            if (algorithm.Errors.Count == 0)
+            if (algorithm.Errors.Count == 0 &&
+                algorithm.MassResolver.Errors.Count == 0)
             { // don't copy if no errors.
                 mappedVehiclePool = vehiclePool;
+                message = string.Empty;
+                return true;
             }
 
             mappedVehiclePool = new VehiclePool()
@@ -194,7 +197,13 @@ namespace Itinero.Optimization.Models.Mapping.Default
         {
             if (vehicle.Arrival.HasValue)
             {
-                if (algorithm.Errors.TryGetValue(vehicle.Arrival.Value, out var error))
+                if (algorithm.MassResolver.Errors.TryGetValue(vehicle.Arrival.Value, out var locationError))
+                {
+                    message = $"Arrival location is in error: {locationError.Code} - {locationError.Message}.";
+                    return false;
+                }
+                var resolvedIdx = algorithm.MassResolver.ResolvedIndexOf(vehicle.Arrival.Value);
+                if (algorithm.Errors.TryGetValue(resolvedIdx, out var error))
                 {
                     message = $"Arrival location is in error: {error.Code} - {error.Message}.";
                     return false;
@@ -204,7 +213,13 @@ namespace Itinero.Optimization.Models.Mapping.Default
 
             if (vehicle.Departure.HasValue)
             {
-                if (algorithm.Errors.TryGetValue(vehicle.Departure.Value, out var error))
+                if (algorithm.MassResolver.Errors.TryGetValue(vehicle.Departure.Value, out var locationError))
+                {
+                    message = $"Departure location is in error: {locationError.Code} - {locationError.Message}.";
+                    return false;
+                }
+                var resolvedIdx = algorithm.MassResolver.ResolvedIndexOf(vehicle.Departure.Value);
+                if (algorithm.Errors.TryGetValue(resolvedIdx, out var error))
                 {
                     message = $"Departure location is in error: {error.Code} - {error.Message}.";
                     return false;

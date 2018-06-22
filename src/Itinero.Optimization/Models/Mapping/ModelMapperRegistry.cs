@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Itinero.Optimization.Models.Mapping.Default;
 
 namespace Itinero.Optimization.Models.Mapping
 {
@@ -27,7 +28,14 @@ namespace Itinero.Optimization.Models.Mapping
     /// </summary>
     public static class ModelMapperRegistry
     {
-        private static readonly List<ModelMapperHook> ModelMappers = new List<ModelMapperHook>();
+        private static readonly List<ModelMapperHook> ModelMappers = new List<ModelMapperHook>(new []
+        {
+            new ModelMapperHook()
+            {
+                Name = "Default",
+                TryMap = DefaultModelMapper.TryMap
+            }
+        });
         
         /// <summary> 
         /// A delegate to define a call for mapping a model onto a road network.
