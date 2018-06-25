@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using Itinero.Optimization.Solvers.TSP;
 using Itinero.Optimization.Solvers.TSP.HillClimbing3Opt;
 using Xunit;
 
@@ -26,12 +27,13 @@ namespace Itinero.Optimization.Tests.Solvers.TSP.HillClimbing3Opt
         [Fact]
         public void HillClimbing3OptSolver_ThisClosedTour1ShouldSolvePerfectly()
         {
-            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
-            problem._weights[0][1] = 1;
-            problem._weights[1][2] = 1;
-            problem._weights[2][3] = 1;
-            problem._weights[3][4] = 1;
-            problem._weights[4][0] = 1;
+            var weights = WeightMatrixHelpers.Build(5, 10);
+            weights[0][1] = 1;
+            weights[1][2] = 1;
+            weights[2][3] = 1;
+            weights[3][4] = 1;
+            weights[4][0] = 1;
+            var problem = new TSProblem(0, 0, weights);
 
             // solve problem.
             var solution = HillClimbing3OptSolver.Default.Search(problem);
@@ -51,13 +53,14 @@ namespace Itinero.Optimization.Tests.Solvers.TSP.HillClimbing3Opt
         [Fact]
         public void HillClimbing3OptSolver_ShouldUseOnlyProvidedVisits()
         {
-            var problem = TSPHelper.CreateTSP(0, 0, 10, 10,
+            var weights = WeightMatrixHelpers.Build(10, 10);
+            weights[0][2] = 1;
+            weights[2][4] = 1;
+            weights[4][6] = 1;
+            weights[6][8] = 1;
+            weights[8][0] = 1;
+            var problem = new TSProblem(0, 0, weights,
                 new int[] { 0, 2, 4, 6, 8 });
-            problem._weights[0][2] = 1;
-            problem._weights[2][4] = 1;
-            problem._weights[4][6] = 1;
-            problem._weights[6][8] = 1;
-            problem._weights[8][0] = 1;
 
             // solve problem.
             var solution = HillClimbing3OptSolver.Default.Search(problem);

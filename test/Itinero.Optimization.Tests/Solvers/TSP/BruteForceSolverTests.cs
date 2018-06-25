@@ -40,7 +40,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         public void BruteForceSolver_ShouldWorkOnSingleSizedProblem()
         {
             // create a problem with only one customer.
-            var problem = TSPHelper.CreateTSP(0, 0, 1, 10);
+            var problem = new TSProblem(0, 0, WeightMatrixHelpers.Build(1, 10));
 
             // create the solver.
             var solution = BruteForceSolver.Default.Search(problem).Solution;
@@ -56,7 +56,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         public void BruteForceSolver_ShouldWorkOnDoubleSizedProblem()
         {
             // create a problem with only one customer.
-            var problem = TSPHelper.CreateTSP(0, 1, 2, 10);
+            var problem = new TSProblem(0, 1, WeightMatrixHelpers.Build(2, 10));
 
             // create the solver.
             var solution = BruteForceSolver.Default.Search(problem).Solution;
@@ -72,13 +72,14 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         public void BruteForceSolver_ShouldSolvePerfectlyOnClosed()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = TSPHelper.CreateTSP(0, 0, 5, 10);
-            problem._weights[0][1] = 1;
-            problem._weights[1][2] = 1;
-            problem._weights[2][3] = 1;
-            problem._weights[3][4] = 1;
-            problem._weights[4][0] = 1;
-
+            var weights = WeightMatrixHelpers.Build(5, 10);
+            weights[0][1] = 1;
+            weights[1][2] = 1;
+            weights[2][3] = 1;
+            weights[3][4] = 1;
+            weights[4][0] = 1;
+            var problem = new TSProblem(0, 0, weights);
+            
             // create the solver.
             var solution = BruteForceSolver.Default.Search(problem).Solution;
 
@@ -93,12 +94,13 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         public void BruteForceSolver_ShouldSolvePerfectlyOnOpen()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = TSPHelper.CreateTSP(0, 5, 10);
-            problem._weights[0][1] = 1;
-            problem._weights[1][2] = 1;
-            problem._weights[2][3] = 1;
-            problem._weights[3][4] = 1;
-            problem._weights[4][0] = 1;
+            var weights = WeightMatrixHelpers.Build(5, 10);
+            weights[0][1] = 1;
+            weights[1][2] = 1;
+            weights[2][3] = 1;
+            weights[3][4] = 1;
+            weights[4][0] = 1;
+            var problem = new TSProblem(0, null, weights);
 
             // create the solver.
             var solution = BruteForceSolver.Default.Search(problem).Solution;
@@ -114,26 +116,28 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         public void BruteForceSolver_ShouldSolvePerfectlyOnFixed()
         {
             // create the problem and make sure 0->1->2->3->4 is the solution.
-            var problem = TSPHelper.CreateTSP(0, 4, 5, 10);
-            problem._weights[0][1] = 1;
-            problem._weights[1][2] = 1;
-            problem._weights[2][3] = 1;
-            problem._weights[3][4] = 1;
-            problem._weights[4][0] = 1;
+            var weights = WeightMatrixHelpers.Build(5, 10);
+            weights[0][1] = 1;
+            weights[1][2] = 1;
+            weights[2][3] = 1;
+            weights[3][4] = 1;
+            weights[4][0] = 1;
+            var problem = new TSProblem(0, 4, weights);
 
             // create the solver.
             var solution = BruteForceSolver.Default.Search(problem).Solution;
 
             // verify solution.
             Assert.Equal(new [] { 0, 1, 2, 3, 4 }, solution.ToArray());
-
-            // create the problem and make sure 0->...->3 is the solution.
-            problem = TSPHelper.CreateTSP(0, 3, 5, 10);
-            problem._weights[0][1] = 1;
-            problem._weights[1][2] = 1;
-            problem._weights[2][3] = 1;
-            problem._weights[3][4] = 1;
-            problem._weights[4][0] = 1;
+            
+            // create the problem and make sure 0->1->2->3->4 is the solution.
+            weights = WeightMatrixHelpers.Build(5, 10);
+            weights[0][1] = 1;
+            weights[1][2] = 1;
+            weights[2][3] = 1;
+            weights[3][4] = 1;
+            weights[4][0] = 1;
+            problem = new TSProblem(0, 3, weights);
 
             // create the solver.
             solution = BruteForceSolver.Default.Search(problem).Solution;
@@ -151,14 +155,15 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         public void BruteForceSolver_ShouldUseOnlyProvidedVisits()
         {
             // create the problem and make sure 0->2->4->6->8 is the solution.
-            var problem = TSPHelper.CreateTSP(0, 10, 10, 
+            var weights = WeightMatrixHelpers.Build(10, 10);
+            weights[0][2] = 1;
+            weights[2][4] = 1;
+            weights[4][6] = 1;
+            weights[6][8] = 1;
+            weights[8][0] = 1;
+            var problem = new TSProblem(0, null, weights,
                 new int[] { 0, 2, 4, 6, 8});
-            problem._weights[0][2] = 1;
-            problem._weights[2][4] = 1;
-            problem._weights[4][6] = 1;
-            problem._weights[6][8] = 1;
-            problem._weights[8][0] = 1;
-
+            
             // create the solver.
             var solution = BruteForceSolver.Default.Search(problem).Solution;
 

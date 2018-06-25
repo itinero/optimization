@@ -32,7 +32,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP.EAX
         public void EAXSolver_SolvingSize1ProblemShouldHaveSize1Result()
         {
             // create problem.
-            var problem = TSPHelper.CreateTSP(0, 0, 1, 0);
+            var problem = new TSProblem(0, 0, WeightMatrixHelpers.Build(1, 0));
 
             for (var i = 0; i < 10; i++)
             {
@@ -55,9 +55,10 @@ namespace Itinero.Optimization.Tests.Solvers.TSP.EAX
         public void EAXSolver_SolvingSize2ProblemShouldBePerfect()
         {
             // create problem.
-            var problem = TSPHelper.CreateTSP(0, 1, 2, 10);
-            problem._weights[0][1] = 1;
-            problem._weights[1][0] = 1;
+            var weights = WeightMatrixHelpers.Build(2, 10);
+            weights[0][1] = 1;
+            weights[1][0] = 1;
+            var problem = new TSProblem(0, 1, weights);
 
             for (var i = 0; i < 10; i++)
             {
@@ -100,7 +101,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP.EAX
                 new float[] {   5,   5,  26,  12,  12,   8,   8,   0,   0,   5,   5,   5,   5,  26,   8,   8,9999}};
 
             // create problem.
-            var problem = TSPHelper.CreateTSP(0, 16, weights);
+            var problem = new TSProblem(0, 16, weights);
 
             for (var i = 0; i < 10; i++)
             {
@@ -160,7 +161,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP.EAX
                 new float[] {   5,   5,  26,  12,  12,   8,   8,   0,   0,   5,   5,   5,   5,  26,   8,   8,9999}};
 
             // create problem.
-            var problem = TSPHelper.CreateTSP(0, 0, weights);
+            var problem = new TSProblem(0, 0, weights);
 
             for (var i = 0; i < 10; i++)
             {
@@ -201,13 +202,14 @@ namespace Itinero.Optimization.Tests.Solvers.TSP.EAX
         public void EAXSolver_ShouldUsedOnlyProvidedVisits()
         {
             // create the problem and make sure 0->2->4->6->8 is the solution.
-            var problem = TSPHelper.CreateTSP(0, 10, 10, 
-                new int[] { 0, 2, 4, 6, 8});
-            problem._weights[0][2] = 1;
-            problem._weights[2][4] = 1;
-            problem._weights[4][6] = 1;
-            problem._weights[6][8] = 1;
-            problem._weights[8][0] = 1;
+            var weights = WeightMatrixHelpers.Build(10, 10);
+            weights[0][2] = 1;
+            weights[2][4] = 1;
+            weights[4][6] = 1;
+            weights[6][8] = 1;
+            weights[8][0] = 1;
+            var problem = new TSProblem(0, null, weights,
+                new [] { 0, 2, 4, 6, 8 });
 
             for (var i = 0; i < 10; i++)
             {

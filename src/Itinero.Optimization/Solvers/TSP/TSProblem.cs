@@ -30,7 +30,7 @@ namespace Itinero.Optimization.Solvers.TSP
     /// </summary>
     internal sealed class TSProblem
     {
-        internal readonly float[][] _weights;
+        private readonly float[][] _weights;
         private readonly Lazy<NearestNeighbourCache> _nearestNeighbourCacheLazy;
         private readonly Lazy<TSProblem> _closedEquivalent;
         private readonly bool _behaveAsClosed = false;

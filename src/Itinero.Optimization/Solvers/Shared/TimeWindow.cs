@@ -68,7 +68,7 @@ namespace Itinero.Optimization.Solvers.Shared
         /// <summary>
         /// Returns a default timewindow with unlimited arrival/departure times.
         /// </summary>
-        public static TimeWindow Default => new TimeWindow()
+        public static TimeWindow Unlimited => new TimeWindow()
         {
             Max = float.MaxValue,
             Min = float.MinValue

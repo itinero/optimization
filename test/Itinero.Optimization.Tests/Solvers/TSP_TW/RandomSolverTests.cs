@@ -17,11 +17,10 @@
  */
 
 using System.Collections.Generic;
-using Itinero.Optimization.Solvers.TSP;
-using Itinero.Optimization.Strategies.Random;
+using Itinero.Optimization.Solvers.TSP_TW;
 using Xunit;
 
-namespace Itinero.Optimization.Tests.Solvers.TSP
+namespace Itinero.Optimization.Tests.Solvers.TSP_TW
 {
     public class RandomSolverTests
     {
@@ -41,7 +40,8 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         public void RandomSolver_ShouldGenerateRandomPermutationOnOpen()
         {
             // create problem.
-            var problem = new TSProblem(0, null, WeightMatrixHelpers.Build(5, 10));
+            var problem = new TSPTWProblem(0, null, WeightMatrixHelpers.Build(5, 10),
+                TimeWindowHelpers.Unlimited(5));
 
             for (var i = 0; i < 100; i++)
             {
@@ -73,7 +73,8 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         public void RandomSolver_ShouldGenerateRandomPermutationOnClosed()
         {
             // create problem.
-            var problem = new TSProblem(0, 0, WeightMatrixHelpers.Build(5, 10));
+            var problem = new TSPTWProblem(0, 0, WeightMatrixHelpers.Build(5, 10),
+                TimeWindowHelpers.Unlimited(5));
 
             for (var i = 0; i < 100; i++)
             {
@@ -105,7 +106,8 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         public void RandomSolver_ShouldGenerateRandomPermutationOnFixed()
         {
             // create problem.
-            var problem = new TSProblem(0, 4, WeightMatrixHelpers.Build(5, 10));
+            var problem = new TSPTWProblem(0, 4, WeightMatrixHelpers.Build(5, 10),
+                TimeWindowHelpers.Unlimited(5));
 
             for (var i = 0; i < 100; i++)
             {
@@ -137,8 +139,8 @@ namespace Itinero.Optimization.Tests.Solvers.TSP
         public void RandomSolver_ShouldUseOnlyProvidedVisits()
         {
             // create problem.
-            var problem = new TSProblem(0, 8, WeightMatrixHelpers.Build(10, 10),
-                new [] { 0, 2, 4, 6, 8 });
+            var problem = new TSPTWProblem(0, 8, WeightMatrixHelpers.Build(10, 10),
+                TimeWindowHelpers.Unlimited(10), new [] { 0, 2, 4, 6, 8 });
 
             for (var i = 0; i < 100; i++)
             {

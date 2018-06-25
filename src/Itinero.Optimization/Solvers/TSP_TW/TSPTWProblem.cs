@@ -42,6 +42,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW
             _visits = other._visits;
             this.First = other.First;
             _last = other._last;
+            this.Windows = other.Windows; 
             
             _behaveAsClosed = behaveAsClosed;
         }
@@ -83,6 +84,8 @@ namespace Itinero.Optimization.Solvers.TSP_TW
             
             if (!this.Contains(this.First)) { throw new ArgumentException("Not in the visits.", nameof(first)); }
             if (this.Last.HasValue && !this.Contains(this.Last.Value)) { throw new ArgumentException("Not in the visits.", nameof(last)); }
+            if (this.Windows == null) { throw new ArgumentNullException(nameof(windows)); }
+            if (this.Windows.Length != _weights.Length) { throw new ArgumentException($"Time window array has the wrong dimensions: Expected {_weights.Length}, is {this.Windows.Length}."); }
         }
         
         /// <summary>

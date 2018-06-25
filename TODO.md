@@ -1,5 +1,13 @@
 Main TODO's:
 
+**conceptual todo's**:
+
+The main thing left to think about is how to elegantly handle turning costs:
+
+- Can we combine or reuse existing methods of solving?
+- Can we perhaps use a regular solver and then 'add' in turning costs after?
+- Can we optmize a fixed sequence efficiëntly (related to above).
+
 **make sure to check to TODO's in the code**
 
 - Convert *all* TSP solvers to solvers that can handle sub-problems of matrices.
