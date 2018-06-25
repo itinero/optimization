@@ -35,6 +35,7 @@ namespace Itinero.Optimization.Tests.Functional
 #endif
             // invoke case-specific tests.
             TSP.TSPTests.Run();
+            STSP.STSPTests.Run();
         }
 
 

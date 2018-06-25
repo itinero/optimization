@@ -34,17 +34,18 @@ namespace Itinero.Optimization
     public static class RouterExtensions
     {
         /// <summary>
-        /// Optimizes the sequence along the given locations (the TSP).
+        /// Tries to find the best tour to visit all the given visits with the given vehicles and constraints.
         /// </summary>
         /// <param name="router">The router.</param>
         /// <param name="profileName">The vehicle profile name.</param>
         /// <param name="locations">The locations to visit.</param>
         /// <param name="first">The location to start from, should point to an element in the locations index.</param>
         /// <param name="last">The location to stop at, should point to an element in the locations index if set.</param>
-        /// <param name="errors">The visits in error and associated errors message if any.</param>
-        /// <returns>A set of tours that visit the given visits using the vehicles in the pool.</returns>
+        /// <param name="max">The maximum relative to the profile defined, means maximum travel time when using 'fastest', maximum distance when using 'shortest'.</param>
+        /// <param name="errors">The locations in error and associated errors message if any.</param>
+        /// <returns>A tours that visit the given locations using the vehicle respecting the contraints.</returns>
         public static Result<Route> Optimize(this RouterBase router, string profileName, Coordinate[] locations,
-            out IEnumerable<(Visit visit, string message)> errors, int first = 0, int? last = 0)
+            out IEnumerable<(int location, string message)> errors, int first = 0, int? last = 0, float max = float.MaxValue)
         {
             if (!router.Db.SupportProfile(profileName))
             {
@@ -52,21 +53,22 @@ namespace Itinero.Optimization
             }
             var profile = router.Db.GetSupportedProfile(profileName);
 
+            var vehiclePool = VehiclePool.FromProfile(profile, departure: first, arrival: last, reusable: false, max: max);
+       
+            return router.Optimize(vehiclePool, locations, out errors).First();
+        }
 
-            var vehiclePool = new Models.Vehicles.VehiclePool()
-            {
-                Vehicles = new[]
-                {
-                    new Vehicle()
-                    {
-                        Arrival = last,
-                        Departure = first,
-                        Metric = profile.Metric.ToModelMetric(),
-                        Profile = profileName
-                    }
-                },
-                Reusable = false
-            };
+        /// <summary>
+        /// Tries to find the best tour(s) to visit all the given locations with the given vehicles.
+        /// </summary>
+        /// <param name="router">The router.</param>
+        /// <param name="vehicles">The vehicle pool.</param>
+        /// <param name="locations">The locations to visit.</param>
+        /// <param name="errors">The locations in error and associated errors message if any.</param>
+        /// <returns>A set of tours that visit the given locations using the vehicles in the pool.</returns>
+        public static IEnumerable<Result<Route>> Optimize(this RouterBase router, VehiclePool vehicles,
+            Coordinate[] locations, out IEnumerable<(int location, string message)> errors)
+        {
             var visits = new Visit[locations.Length];
             for (var i = 0; i < visits.Length; i++)
             {
@@ -77,12 +79,12 @@ namespace Itinero.Optimization
                     Latitude = location.Latitude
                 };
             }
-
-            return router.Optimize(vehiclePool, visits, out errors).First();
+            
+            return router.Optimize(vehicles, visits, out errors);
         }
 
         /// <summary>
-        /// Optimizes the tour(s) to visit the required visits using the vehicles in the pool.
+        /// Tries to find the best tour(s) to visit all the given visits with the given vehicles.
         /// </summary>
         /// <param name="router">The router.</param>
         /// <param name="vehicles">The vehicle pool.</param>
@@ -90,7 +92,7 @@ namespace Itinero.Optimization
         /// <param name="errors">The visits in error and associated errors message if any.</param>
         /// <returns>A set of tours that visit the given visits using the vehicles in the pool.</returns>
         public static IEnumerable<Result<Route>> Optimize(this RouterBase router, VehiclePool vehicles, Visit[] visits, 
-            out IEnumerable<(Visit visit, string message)> errors)
+            out IEnumerable<(int visit, string message)> errors)
         {
             var model = new Model()
             {
@@ -100,7 +102,7 @@ namespace Itinero.Optimization
 
             // do the mapping, maps the model to the road network.
             var mappings = ModelMapperRegistry.Map(router, model);
-            errors = mappings.mapping.Errors?.Select(x => (visits[x.visit], x.message));
+            errors = mappings.mapping.Errors?.Select(x => (x.visit, x.message));
             
             // call the solvers.
             var solution = SolverRegistry.Solve(mappings.mappedModel, null);

@@ -55,9 +55,38 @@ namespace Itinero.Optimization.Solvers.TSP
             }
             catch (Exception ex)
             {
-                Logger.Log($"", TraceEventType.Critical, $"Unhandled exception: {ex.ToString()}.");
+                Logger.Log($"{typeof(TSPSolverHook)}.{nameof(Solve)}", TraceEventType.Critical, $"Unhandled exception: {ex.ToString()}.");
                 return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>($"Unhandled exception: {ex.ToString()}.");
             }
+        }
+
+        /// <summary>
+        /// Converts the given abstract model to a TSP.
+        /// </summary>
+        internal static Result<TSProblem> TryToTSP(this MappedModel model)
+        {
+            if (!model.IsTSP(out var reasonWhenFailed))
+            {
+                return new Result<TSProblem>($"Model is not a TSP: {reasonWhenFailed}");
+            }
+
+            var vehicle = model.VehiclePool.Vehicles[0];
+            var metric = vehicle.Metric;
+            if (!model.TryGetTravelCostsForMetric(metric, out var weights))
+            {
+                throw new Exception("Travel costs not found but model was declared valid.");
+            }
+            var first = 0;
+            int? last = null;
+            if (vehicle.Departure.HasValue)
+            {
+                first = vehicle.Departure.Value;
+            }
+            if (vehicle.Arrival.HasValue)
+            {
+                last = vehicle.Arrival.Value;
+            }
+            return new Result<TSProblem>(new TSProblem(first, last, weights.Costs));
         }
 
         private static bool IsTSP(this MappedModel model, out string reasonIfNot)
@@ -89,35 +118,6 @@ namespace Itinero.Optimization.Solvers.TSP
 
             reasonIfNot = string.Empty;
             return true;
-        }
-
-        /// <summary>
-        /// Converts the given abstract model to a TSP.
-        /// </summary>
-        internal static Result<TSProblem> TryToTSP(this MappedModel model)
-        {
-            if (!model.IsTSP(out var reasonWhenFailed))
-            {
-                return new Result<TSProblem>($"Model is not a TSP: {reasonWhenFailed}");
-            }
-
-            var vehicle = model.VehiclePool.Vehicles[0];
-            var metric = vehicle.Metric;
-            if (!model.TryGetTravelCostsForMetric(metric, out var weights))
-            {
-                throw new Exception("Travel costs not found but model was declared valid.");
-            }
-            var first = 0;
-            int? last = null;
-            if (vehicle.Departure.HasValue)
-            {
-                first = vehicle.Departure.Value;
-            }
-            if (vehicle.Arrival.HasValue)
-            {
-                last = vehicle.Arrival.Value;
-            }
-            return new Result<TSProblem>(new TSProblem(first, last, weights.Costs));
         }
     }
 }

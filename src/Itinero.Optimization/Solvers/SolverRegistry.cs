@@ -29,7 +29,11 @@ namespace Itinero.Optimization.Solvers
     /// </summary>
     public static class SolverRegistry
     {
-        private static readonly List<SolverHook> Solvers = new List<SolverHook>(new [] { TSP.TSPSolverHook.Default });
+        private static readonly List<SolverHook> Solvers = new List<SolverHook>(new []
+        {
+            STSP.STSPSolverHook.Default,
+            TSP.TSPSolverHook.Default
+        });
         
         /// <summary>
         /// A delegate to define try solve calls.
@@ -68,19 +72,18 @@ namespace Itinero.Optimization.Solvers
             }
 
             var reasonsWhy = new StringBuilder();
-            for (var i = 0; i < Solvers.Count; i++)
+            for (var i = Solvers.Count - 1; i >= 0; i--)
             {
                 var result = Solvers[i].TrySolve(model, intermediateResult);
                 if (!result.IsError)
                 {
                     return result.Value;
                 }
-                else
-                {
-                    reasonsWhy.Append(result.ErrorMessage);
-                    reasonsWhy.Append(Environment.NewLine);
-                }
+
+                reasonsWhy.Append(result.ErrorMessage);
+                reasonsWhy.Append(Environment.NewLine);
             }
+
             throw new Exception("The given model cannot be solved by any of the registered solvers: " + reasonsWhy.ToString());
         }
         
