@@ -16,24 +16,25 @@
  *  limitations under the License.
  */
 
+using System.Collections.Generic;
 using Itinero.Optimization.Strategies;
 
-namespace Itinero.Optimization.Solvers.VRP.SCI
+namespace Itinero.Optimization.Solvers.Shared.Operators
 {
     /// <summary>
-    /// A construction heuristic using a tour-by-tour strategy of seeding a new tour and filling it with visits.
+    /// An operator that can be used to place unplaced visits in a candidate solution. 
     /// </summary>
-    /// <typeparam name="TProblem"></typeparam>
     /// <typeparam name="TCandidate"></typeparam>
-    public class SeededCheapestInsertionStrategy<TProblem, TCandidate> : Strategy<TProblem, TCandidate>
+    public abstract class PlacementOperator<TCandidate> : Operator<TCandidate>
+        where TCandidate : class
     {
-        /// <inheritdoc />
-        public override string Name { get; } = "SCI";
-
-        /// <inheritdoc />
-        public override TCandidate Search(TProblem problem)
-        {
-            throw new System.NotImplementedException();
-        }
+        /// <summary>
+        /// Applies this operator to the given candidate, removes the visits that have been place from the visits collection given.
+        /// </summary>
+        /// <param name="candidate">The candidate.</param>
+        /// <param name="visits">The visits to place.</param>
+        /// <returns>True if at least one visit was placed.</returns>
+        /// <remarks>The candidate will be modified in-place but this should *only* happen in the case when there is an improvement or this operator is explicitly used as a mutation operator.</remarks>
+        public abstract bool Apply(TCandidate candidate, ICollection<int> visits);
     }
 }

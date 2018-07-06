@@ -61,8 +61,9 @@ namespace Itinero.Optimization.Solvers.STSP
                     continue;
                 }
 
-                var cost = tour.CalculateCheapest(problem.Weight,
-                    visit, out var location);
+                var result = tour.CalculateCheapest(problem.Weight, visit);
+                var cost = result.cost;
+                var location = result.location;
                 if (!(cost + fitness <= problem.Max)) continue;
                 tour.InsertAfter(location.From, visit);
                 fitness += cost;

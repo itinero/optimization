@@ -28,7 +28,7 @@ namespace Itinero.Optimization.Tests.Functional.Staging
     /// </summary>
     public static class StagingHelpers
     {
-        public static string EmbeddedResourceRoot = "Itinero.Optimization.Test.Functional.";
+        public static string EmbeddedResourceRoot = "Itinero.Optimization.Tests.Functional.";
 
         /// <summary>
         /// Gets a feature collection for the given embedded resource.

@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using Itinero.Optimization.Models.Visits;
 using Itinero.Optimization.Models.Visits.Costs;
 
 namespace Itinero.Optimization.Models.Mapping
@@ -26,12 +27,12 @@ namespace Itinero.Optimization.Models.Mapping
     internal static class MappedModelExtensions
     {
         /// <summary>
-        /// 
+        /// Gets the travel cost for the given metric.
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="metric"></param>
-        /// <param name="travelCosts"></param>
-        /// <returns></returns>
+        /// <param name="model">The model.</param>
+        /// <param name="metric">The metric.</param>
+        /// <param name="travelCosts">The travel costs.</param>
+        /// <returns>True if travel costs are found for the given metric.</returns>
         public static bool TryGetTravelCostsForMetric(this MappedModel model, string metric, out TravelCostMatrix travelCosts)
         {
             foreach (var t in model.TravelCosts)
@@ -43,5 +44,32 @@ namespace Itinero.Optimization.Models.Mapping
             travelCosts = null;
             return false;
         }
+
+        /// <summary>
+        /// Gets the visit cost for the given metric.
+        /// </summary>
+        /// <param name="visit">The visit.</param>
+        /// <param name="metric">The metric.</param>
+        /// <param name="cost">The visit cost.</param>
+        /// <returns>True if the visit cost is found for the given metric.</returns>
+        public static bool TryGetVisitCostForMetric(this Visit visit, string metric, out float cost)
+        {
+            if (visit.VisitCosts == null)
+            {
+                cost = 0;
+                return false;
+            }
+            
+            foreach (var visitCost in visit.VisitCosts)
+            {
+                if (visitCost.Metric != metric) continue;
+                cost = visitCost.Value;
+                return true;
+            }
+
+            cost = 0;
+            return false;
+        }
+            
     }
 }

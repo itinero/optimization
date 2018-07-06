@@ -38,7 +38,8 @@ namespace Itinero.Optimization.Solvers.STSP
             TrySolve = STSPSolverHook.Solve
         };
 
-        private static Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>> Solve(MappedModel model, Action<IList<IEnumerable<int>>> intermediateResult)
+        private static Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>> Solve(MappedModel model, 
+            Action<IEnumerable<(int vehicle, IEnumerable<int>)>> intermediateResult)
         {
             var stsp = model.TryToSTSP();
             if (stsp.IsError)

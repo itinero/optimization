@@ -25,6 +25,8 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
 {
     internal static class Local1ShiftOperation
     {
+        // TODO: performance test all this stuff.
+        
         /// <summary>
         /// Tries to move violated time windows backwards until they are not.
         /// </summary>
@@ -36,8 +38,6 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
             int oldAfter, int newBefore, int newAfter) MoveViolatedBackward(this Tour tour,
                 Func<int, int, float> weightFunc, TimeWindow[] windows)
         {
-            // TODO: performance test this stuff.
-
             // search for invalid customers.
             var time = 0.0f;
             var fitness = 0.0f;

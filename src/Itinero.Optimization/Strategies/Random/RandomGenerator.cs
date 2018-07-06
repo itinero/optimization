@@ -90,12 +90,37 @@ namespace Itinero.Optimization.Strategies.Random
         }
 
         /// <summary>
+        /// Generates a second random int distinct from the first.
+        /// </summary>
+        /// <param name="max">The # of elements.</param>
+        /// <param name="first">The existing integer.</param>
+        /// <param name="second">The second distinct integer.</param>
+        /// <returns>False if max is smaller <![CDATA[< 2]]></returns>
+        public static bool GenerateSecond(int max, int first, out int second)
+        {
+            if (max < 2)
+            {
+                second = 0;
+                return false;
+            }
+            
+            var random = RandomGenerator.Default;
+            second = random.Generate(max - 1);
+            if (second >= first)
+            {
+                second++;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Generates 2 random int's.
         /// </summary>
         /// <param name="max">The # of elements.</param>
         /// <param name="t1">The first random result.</param>
         /// <param name="t2">The second random result.</param>
-        /// <returns>False if count is smaller <![CDATA[< 2]]></returns>
+        /// <returns>False if max is smaller <![CDATA[< 2]]></returns>
         public static bool Generate2(int max, out int t1, out int t2)
         {
             return Generate2Between(0, max, out t1, out t2);

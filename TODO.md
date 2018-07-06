@@ -21,3 +21,7 @@ The main thing left to think about is how to elegantly handle turning costs:
 - Unittest Shared.HillClimbing3Opt or verify that it is tested.
 - Remove explicit reference on Reminiscence once Itinero is published.
 - Implement nice tostring on the model objects.
+- Add the travel weight and visit weights to TSP's.
+- Have an other look at sequences and seq and their usage in the exchange operator.
+- Create a way to update first of a tour (and use this in swap).
+- Test CVRP solver with a 'null' arrival location.

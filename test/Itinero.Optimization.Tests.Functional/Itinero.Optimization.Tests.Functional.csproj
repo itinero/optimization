@@ -9,6 +9,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="data\**\*.geojson" />
+    <None Remove="CVRP\data\problem1.geojson" />
+    <EmbeddedResource Include="CVRP\data\problem1.geojson" />
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>

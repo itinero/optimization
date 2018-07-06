@@ -9,6 +9,7 @@ namespace Itinero.Optimization.Tests.Benchmarks
         {
             BenchmarkRunner.Run<Strategies.CandidateComparisonBenchmark>();
             BenchmarkRunner.Run<Solvers.TSP.EAX.EAXSolverBenchmark>();
+            BenchmarkRunner.Run<Solvers.Tours.Sequences.SequenceEnumerableTests>();
         }
     }
 }

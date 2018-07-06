@@ -31,6 +31,7 @@ namespace Itinero.Optimization.Solvers
     {
         private static readonly List<SolverHook> Solvers = new List<SolverHook>(new []
         {
+            CVRP.CVRPSolverHook.Default,
             STSP.STSPSolverHook.Default,
             TSP.TSPSolverHook.Default
         });
@@ -42,7 +43,7 @@ namespace Itinero.Optimization.Solvers
         /// <param name="intermediateResult">A callback to report on intermediate events if found.</param>
         /// <returns></returns>
         public delegate Result<IEnumerable<(int vehicle, IEnumerable<int>)>> TrySolveDelegate(MappedModel model, 
-            Action<IList<IEnumerable<int>>> intermediateResult);
+            Action<IEnumerable<(int vehicle, IEnumerable<int>)>> intermediateResult);
 
         /// <summary>
         /// Registers a new solver.
@@ -64,7 +65,8 @@ namespace Itinero.Optimization.Solvers
         /// </summary>
         /// <param name="model">The model to solve.</param>
         /// <param name="intermediateResult">A callback for intermediate results.</param>
-        public static IEnumerable<(int vehicle, IEnumerable<int> tour)> Solve(MappedModel model, Action<IList<IEnumerable<int>>> intermediateResult)
+        public static IEnumerable<(int vehicle, IEnumerable<int> tour)> Solve(MappedModel model, 
+            Action<IEnumerable<(int vehicle, IEnumerable<int> tour)>> intermediateResult)
         {
             if(!model.IsValid(out var failReason)) 
             {

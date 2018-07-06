@@ -82,5 +82,34 @@ namespace Itinero.Optimization.Solvers.Tours
 
             return weight;
         }
+        
+        /// <summary>
+        /// Enumerates all visits starting at the given vist.
+        /// </summary>
+        public static IEnumerable<int> From(this Tour tour, int visit)
+        {
+            var started = false;
+            foreach (var v in tour)
+            {
+                if (!started)
+                {
+                    if (v != visit)
+                    {
+                        continue;
+                    }
+                    started = true;
+                }
+
+                yield return v;
+            }
+            foreach(var v in tour)
+            {
+                if (v == visit)
+                {
+                    break;
+                }
+                yield return v;
+            }
+        }
     }
 }
