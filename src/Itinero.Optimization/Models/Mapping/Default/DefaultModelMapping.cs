@@ -50,6 +50,8 @@ namespace Itinero.Optimization.Models.Mapping.Default
         {
             try
             {
+                var vehicle = _mappedModel.VehiclePool.Vehicles[vehicleAndTour.vehicle];
+                
                 Route route = null;
                 var previous = -1;
                 foreach (var v in vehicleAndTour.tour)
@@ -69,6 +71,21 @@ namespace Itinero.Optimization.Models.Mapping.Default
                     route = localResult.Value;
                     previous = v;
                 }
+
+                if (vehicle.Arrival.HasValue &&
+                    vehicle.Departure.HasValue &&
+                    vehicle.Arrival == vehicle.Departure &&
+                    previous != 0)
+                {
+                    var localResult = AppendRoute(route, previous, vehicle.Departure.Value);
+                    if (localResult.IsError)
+                    {
+                        return localResult;
+                    }
+                    
+                    route = localResult.Value;
+                }
+                
                 return new Result<Route>(route);
             }
             catch (Exception e)

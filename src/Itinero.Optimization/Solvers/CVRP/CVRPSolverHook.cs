@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using Itinero.Logging;
 using Itinero.Optimization.Models.Mapping;
+using Itinero.Optimization.Solvers.CVRP.GA;
 using Itinero.Optimization.Solvers.CVRP.Operators;
 using Itinero.Optimization.Solvers.CVRP.SCI;
 using Itinero.Optimization.Solvers.Shared.Seeds;
@@ -53,14 +54,14 @@ namespace Itinero.Optimization.Solvers.CVRP
             // use a default solver to solve the TSP here.
             try
             {
-                var solver = new SeededCheapestInsertionStrategy();
+                var solver = GASolver.Default;
                 var candidate = solver.Search(cvrp.Value);
                 var solution = candidate.Solution;
 
                 var vehiclesAndTours = new List<(int vehicle, IEnumerable<int> tour)>();
                 for (var t = 0; t < solution.Count; t++)
                 {
-                    vehiclesAndTours.Add((t, solution.Tour(t)));
+                    vehiclesAndTours.Add((0, solution.Tour(t)));
                 }
                 
                 return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>(vehiclesAndTours);

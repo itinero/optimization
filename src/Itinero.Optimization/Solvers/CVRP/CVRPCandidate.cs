@@ -68,6 +68,9 @@ namespace Itinero.Optimization.Solvers.CVRP
             }
             _tourData[_tourData.Count - 1] = tourData;
             
+            // update total fitness.
+            this.Fitness += tourData.weight;
+            
             return t;
         }
 
@@ -78,7 +81,11 @@ namespace Itinero.Optimization.Solvers.CVRP
         public void Remove(int t)
         {
             this.Solution.Remove(t);
+            var tourData = _tourData[t];
             _tourData.RemoveAt(t);
+            
+            // update total fitness.
+            this.Fitness -= tourData.weight;
         }
 
         /// <summary>
@@ -181,6 +188,9 @@ namespace Itinero.Optimization.Solvers.CVRP
             }
             tourData.weight = tourData.weight + diff;
             _tourData[t] = tourData;
+            
+            // update total fitness.
+            this.Fitness += diff;
         }
 
         /// <summary>
@@ -379,6 +389,9 @@ namespace Itinero.Optimization.Solvers.CVRP
             // update content.
             _tourData[t1] = (tour1FutureComplete, exchange1.contents);
             _tourData[t2] = (tour2FutureComplete, exchange2.contents);
+            
+            // update total fitness.
+            this.Fitness += difference;
             
             // don't do the swap.
             return (true, difference);
