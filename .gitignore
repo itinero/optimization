@@ -42,8 +42,9 @@ packages/*
 *.osm.pbf
 TestResult*.xml
 
-test/Itinero.Optimization.Test.Functional/result/*
+test/Itinero.Optimization.Tests.Functional/result/*
 
 Candidate*.md
 Candidate*.csv
 Candidate*.html
+

@@ -17,19 +17,19 @@
  */
 
 using System.Threading;
-using Itinero.Optimization.Solvers.CVRP.Operators;
-using Itinero.Optimization.Solvers.CVRP.SCI;
+using Itinero.Optimization.Solvers.CVRP_ND.Operators;
+using Itinero.Optimization.Solvers.CVRP_ND.SCI;
 using Itinero.Optimization.Strategies;
 using Itinero.Optimization.Strategies.GA;
 
-namespace Itinero.Optimization.Solvers.CVRP.GA
+namespace Itinero.Optimization.Solvers.CVRP_ND.GA
 {
     /// <summary>
     /// A solver using a GA and the edge-assembly crossover.
     /// </summary> 
-    internal class GASolver : Strategy<CVRProblem, CVRPCandidate>
+    internal class GASolver : Strategy<CVRPNDProblem, CVRPNDCandidate>
     {
-        private readonly GAStrategy<CVRProblem, CVRPCandidate> _gaStrategy;
+        private readonly GAStrategy<CVRPNDProblem, CVRPNDCandidate> _gaStrategy;
         
         /// <summary>
         /// Creates a new GA solver.
@@ -38,21 +38,21 @@ namespace Itinero.Optimization.Solvers.CVRP.GA
         /// <param name="mutation">The mutation operator, if any.</param>
         /// <param name="crossOver">The cross over operator, if any.</param>
         /// <param name="settings">The settings, if not default.</param>
-        public GASolver(Strategy<CVRProblem, CVRPCandidate> generator = null, Operator<CVRPCandidate> mutation = null,
-            CrossOverOperator<CVRPCandidate> crossOver = null, GASettings settings = null)
+        public GASolver(Strategy<CVRPNDProblem, CVRPNDCandidate> generator = null, Operator<CVRPNDCandidate> mutation = null,
+            CrossOverOperator<CVRPNDCandidate> crossOver = null, GASettings settings = null)
         {
             generator = generator ?? new SeededCheapestInsertionStrategy();
             mutation = mutation ?? new RedoPlacementOperator();
             crossOver = crossOver ?? new TourExchangeCrossOverOperator();
             settings = settings ?? GASettings.Default;
 
-            _gaStrategy = new GAStrategy<CVRProblem, CVRPCandidate>(
+            _gaStrategy = new GAStrategy<CVRPNDProblem, CVRPNDCandidate>(
                 generator, crossOver, mutation, settings);
         }
 
         public override string Name => _gaStrategy.Name;
 
-        public override CVRPCandidate Search(CVRProblem problem)
+        public override CVRPNDCandidate Search(CVRPNDProblem problem)
         {
             return _gaStrategy.Search(problem);
         }

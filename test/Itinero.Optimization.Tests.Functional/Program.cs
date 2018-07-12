@@ -36,7 +36,8 @@ namespace Itinero.Optimization.Tests.Functional
             // invoke case-specific tests.
             // TSP.TSPTests.Run();
             // STSP.STSPTests.Run();
-            CVRP.CVRPTests.Run();
+            //CVRP.CVRPTests.Run();
+            CVRP_ND.CVRPNDTests.Run();
         }
 
         private static void EnableLogging()

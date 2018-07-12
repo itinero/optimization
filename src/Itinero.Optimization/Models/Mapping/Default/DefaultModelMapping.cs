@@ -50,12 +50,22 @@ namespace Itinero.Optimization.Models.Mapping.Default
         {
             try
             {
+                // TODO: we need a better more generic way of handling this. Current rules are:
+                // - use vehicle departure and arrival to close a tour or not.
+                // - close a tour by default when both departure and arrival are null.
+                // PROBLEM: this doesn't support the case where we have a vehicle with arrival and departure null and we generate open-tours.
+                // SUGGESTED FIX: look at the enumerable differently include all visits, even if that means closing the tour in the enumerable.
                 var vehicle = _mappedModel.VehiclePool.Vehicles[vehicleAndTour.vehicle];
                 
                 Route route = null;
                 var previous = -1;
+                var first = -1;
                 foreach (var v in vehicleAndTour.tour)
                 {
+                    if (first < 0)
+                    {
+                        first = v;
+                    }
                     if (previous < 0)
                     {
                         previous = v;
@@ -78,6 +88,19 @@ namespace Itinero.Optimization.Models.Mapping.Default
                     previous != 0)
                 {
                     var localResult = AppendRoute(route, previous, vehicle.Departure.Value);
+                    if (localResult.IsError)
+                    {
+                        return localResult;
+                    }
+                    
+                    route = localResult.Value;
+                }
+
+                if (!vehicle.Arrival.HasValue &&
+                    !vehicle.Departure.HasValue &&
+                    previous != 0)
+                {
+                    var localResult = AppendRoute(route, previous, first);
                     if (localResult.IsError)
                     {
                         return localResult;

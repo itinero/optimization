@@ -51,7 +51,7 @@ namespace Itinero.Optimization.Tests.Functional
             var resultsList = results.ToList();
             for (var i = 0; i < resultsList.Count; i++)
             {
-                if (resultsList[i] == null || resultsList[i].IsError) continue;
+                if (resultsList[i] == null || resultsList[i].IsError || resultsList[i].Value == null) continue;
                 
                 var route = resultsList[i].Value;
                 File.WriteAllText(Path.Combine(directory.FullName, 
@@ -151,6 +151,12 @@ namespace Itinero.Optimization.Tests.Functional
                 if (resultsList[i].IsError)
                 {
                     Console.WriteLine($"Error: {resultsList[i].ErrorMessage}");
+                    continue;
+                }
+                
+                if (resultsList[i].Value == null)
+                {
+                    Console.WriteLine("null");
                     continue;
                 }
 

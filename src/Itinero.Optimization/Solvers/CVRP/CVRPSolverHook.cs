@@ -164,6 +164,13 @@ namespace Itinero.Optimization.Solvers.CVRP
                 reasonIfNot = "At least one capacity constraint required.";
                 return false;
             }
+
+            if (vehicle.Departure == null &&
+                vehicle.Arrival == null)
+            {
+                reasonIfNot = "No arrival or departure location set.";
+                return false;
+            }
             foreach (var visit in model.Visits)
             {
                 if (visit.TimeWindow == null || visit.TimeWindow.IsUnlimited) continue;

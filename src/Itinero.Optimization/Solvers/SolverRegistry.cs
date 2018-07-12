@@ -31,6 +31,7 @@ namespace Itinero.Optimization.Solvers
     {
         private static readonly List<SolverHook> Solvers = new List<SolverHook>(new []
         {
+            CVRP_ND.CVRPNDSolverHook.Default,
             CVRP.CVRPSolverHook.Default,
             STSP.STSPSolverHook.Default,
             TSP.TSPSolverHook.Default
