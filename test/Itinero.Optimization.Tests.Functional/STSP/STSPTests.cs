@@ -37,22 +37,17 @@ namespace Itinero.Optimization.Tests.Functional.STSP
                 new Coordinate(51.270054481615624f, 4.799646735191345f),
                 new Coordinate(51.252984777835955f, 4.776681661605835f)
             };
-
+            
             // calculate TSP.
-            var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0, 600));
-            var route = func.TestPerf("Testing STSP (0->0)");
-            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1, 600));
-            route = func.TestPerf("Testing STSP (0->last)");
-            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null, 600));
-            route = func.TestPerf("Testing STSP (0->...)");
-
-//            // calculate directed STSP.
-//            func = new Func<Route>(() => router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, 0));
-//            route = func.TestPerf("Testing Directed STSP (0->0)");
-//            func = new Func<Route>(() => router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, locations.Length - 1));
-//            route = func.TestPerf("Testing Directed STSP (0->last)");
-//            func = new Func<Route>(() => router.CalculateSTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 600, 0, null));
-//            route = func.TestPerf("Testing Directed STSP (0->...)"); 
+            Func<Action<Result<Route>>, Result<Route>> func = (intermediateRoutesFunc) =>
+                router.Optimize("car", locations, out _, 0, 0, 600, intermediateRoutesFunc);
+            var route = func.RunWithIntermedidates("STSP-wechel-closed");
+            func = (intermediateRoutesFunc) =>
+                router.Optimize("car", locations, out _, 0, locations.Length - 1, 600, intermediateRoutesFunc);
+            route = func.RunWithIntermedidates("STSP-wechel-fixed");
+            func = (intermediateRoutesFunc) =>
+                router.Optimize("car", locations, out _, 0, null, 600, intermediateRoutesFunc);
+            route = func.RunWithIntermedidates("STSP-wechel-open");
         }
     }
 }

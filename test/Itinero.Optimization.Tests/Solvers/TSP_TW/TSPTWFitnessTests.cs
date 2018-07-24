@@ -17,6 +17,7 @@
  */
 
 using System;
+using Itinero.Optimization.Solvers.Shared;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Solvers.TSP_TW;
 using Xunit;
@@ -34,6 +35,46 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW
             var tour = new Tour(new[] {0, 1, 2, 3, 4}, 0);
             
             Assert.Equal(50, tour.Fitness(problem));
+        }
+
+        [Fact]
+        public void TSPTWFitness_ShouldNotApplyPenaltiesWhenFeasible()
+        {
+            var weights = WeightMatrixHelpers.Build(5, 2);
+            var windows = new TimeWindow[5];
+            windows[2] = new TimeWindow()
+            {
+                Min = 1,
+                Max = 3
+            };
+            var problem = new TSPTWProblem(0, 0, weights, windows);
+            
+            // create a feasible route.
+            var tour = new Tour(new int[] { 0, 2, 4, 1, 3 }, 0);
+
+            // apply the 1-shift local search.
+            var fitness = tour.Fitness(problem);
+            Assert.Equal(10, fitness);
+        }
+
+        [Fact]
+        public void TSPTWFitness_ShouldApplyPenaltiesWhenUnfeasible()
+        {
+            var weights = WeightMatrixHelpers.Build(5, 2);
+            var windows = new TimeWindow[5];
+            windows[2] = new TimeWindow()
+            {
+                Min = 1,
+                Max = 3
+            };
+            var problem = new TSPTWProblem(0, 0, weights, windows);
+
+            // create a route with one shift.
+            var tour = new Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
+
+            // apply the 1-shift local search, it should find the customer to replocate.
+            var fitness = tour.Fitness(problem, timeWindowViolationPenaltyFactor: 1000000);
+            Assert.Equal(1000010, fitness);
         }
     }
 }

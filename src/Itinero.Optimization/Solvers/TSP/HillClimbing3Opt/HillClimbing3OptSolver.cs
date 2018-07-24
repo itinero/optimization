@@ -90,10 +90,10 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
 
             // improve it by running the 3-Opt step.
             var nearestNeighbours = _nearestNeighbours ? null : problem.NearestNeighbourCache.GetNNearestNeighboursForward(10);
-            if (candidate.Solution.Do3Opt(problem.Weight, problem.WeightsSize, out var delta, 
-                nearestNeighbours, _dontLook))
+            var res = candidate.Solution.Do3Opt(problem.Weight, problem.WeightsSize, nearestNeighbours, _dontLook);
+            if (res.improved)
             {
-                candidate.Fitness += delta;
+                candidate.Fitness += res.delta;
             }
             
             return candidate;

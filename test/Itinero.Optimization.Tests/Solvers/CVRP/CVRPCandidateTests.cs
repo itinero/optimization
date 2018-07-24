@@ -102,7 +102,7 @@ namespace Itinero.Optimization.Tests.Solvers.CVRP
                 })
             };
             var tourData = candidate.TourData(candidate.AddNew());
-            Assert.Equal(0, tourData.weight);
+            Assert.Equal(1, tourData.weight);
             Assert.NotNull(tourData.constraints);
             Assert.Empty(tourData.constraints);
             

@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Itinero.Optimization.Solvers.Shared.Operators;
 using Itinero.Optimization.Solvers.Shared.Seeds;
@@ -39,7 +40,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
         public SeededCheapestInsertionStrategy(
             SeededCheapestInsertionPlacementOperator seededCheapestInsertionPlacementOperator = null)
         {
-            _seededCheapestInsertionPlacementOperator = seededCheapestInsertionPlacementOperator ?? new SeededCheapestInsertionPlacementOperator();
+            _seededCheapestInsertionPlacementOperator = seededCheapestInsertionPlacementOperator ?? SeededCheapestInsertionPlacementOperator.Default;
         }
      
         /// <inheritdoc />
@@ -60,6 +61,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
 
             // apply the operator.
             _seededCheapestInsertionPlacementOperator.Apply(candidate, visits);
+            
+            Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
             
             return candidate;
         }

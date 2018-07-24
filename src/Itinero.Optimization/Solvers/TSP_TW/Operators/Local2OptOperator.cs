@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System.Threading;
 using Itinero.Optimization.Solvers.Shared.TimeWindows.Local2Opt;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
@@ -36,5 +37,8 @@ namespace Itinero.Optimization.Solvers.TSP_TW.Operators
             candidate.Fitness = candidate.Solution.Fitness(candidate.Problem);
             return true;
         }
+        
+        private static readonly ThreadLocal<Local2OptOperator> DefaultLazy = new ThreadLocal<Local2OptOperator>(() => new Local2OptOperator());
+        public static Local2OptOperator Default => DefaultLazy.Value;
     }
 }

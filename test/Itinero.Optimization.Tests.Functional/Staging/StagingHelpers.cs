@@ -18,6 +18,8 @@
 
 using System.Collections.Generic;
 using System.IO;
+using Itinero.Optimization.Models.TimeWindows;
+using Itinero.Optimization.Models.Visits;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 
@@ -59,6 +61,39 @@ namespace Itinero.Optimization.Tests.Functional.Staging
                 }
             }
             return locations.ToArray();
+        }
+        
+        /// <summary>
+        /// Extracts an array of visits and details encoded on the features from the given feature collection.
+        /// </summary>
+        public static Visit[] GetVisits(this FeatureCollection features)
+        {
+            var visits = new List<Visit>();
+
+            foreach (var feature in features.Features)
+            {
+                if (feature.Geometry is Point)
+                {
+                    var visit = new Visit()
+                    {
+                        Longitude = (float)feature.Geometry.Coordinate.X,
+                        Latitude = (float)feature.Geometry.Coordinate.Y
+                    };
+
+                    if (feature.Attributes.TryGetValueInt32("time-window-start", out var timeWindowStart) &&
+                        feature.Attributes.TryGetValueInt32("time-window-end", out var timeWindowEnd))
+                    {
+                        visit.TimeWindow = new TimeWindow()
+                        {
+                            Min = timeWindowStart,
+                            Max = timeWindowEnd
+                        };
+                    }
+
+                    visits.Add(visit);
+                }
+            }
+            return visits.ToArray();
         }
     }
 }

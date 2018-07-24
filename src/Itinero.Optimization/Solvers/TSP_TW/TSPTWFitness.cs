@@ -23,23 +23,16 @@ namespace Itinero.Optimization.Solvers.TSP_TW
 {
     internal static class TSPTWFitness
     {
-        /// <summary> 
-        /// A penalty applied to time window violations as a factor. A very high number compared to travel times.
-        /// </summary>
-        public const int TimeWindowViolationPenaltyFactor = 1000000; // an arbitrary high number compared to realistic travel times.
-
-        /// <summary>
-        /// A penalty applied to waiting times as a factor.
-        /// </summary>
-        public const int WaitingTimePenaltyFactor = 2;
-        
         /// <summary>
         /// Calculates a fitness value for the given tour.
         /// </summary>
         /// <param name="tour">The tour.</param>
         /// <param name="problem">The problem.</param>
+        /// <param name="waitingTimePenaltyFactor">A penalty applied to time window violations as a factor. A very high number compared to travel times.</param>
+        /// <param name="timeWindowViolationPenaltyFactor">A penalty applied to waiting times as a factor.</param>
         /// <returns>A fitness value that reflects violations of timewindows by huge penalties.</returns>
-        public static float Fitness(this Tour tour, TSPTWProblem problem)
+        public static float Fitness(this Tour tour, TSPTWProblem problem, float waitingTimePenaltyFactor = 1,
+            float timeWindowViolationPenaltyFactor = 1000000)
         {
             var violations = 0.0f;
             var waitingtime = 0.0f; // waits are not really a violation but a waist.
@@ -57,17 +50,20 @@ namespace Itinero.Optimization.Solvers.TSP_TW
                     }
 
                     var window = problem.Windows[current];
-                    if (window.Max < time)
+                    if (!window.IsEmpty)
                     {
-                        // ok, unfeasible.
-                        violations += time - window.Max;
-                    }
+                        if (window.Max < time)
+                        {
+                            // ok, unfeasible.
+                            violations += time - window.Max;
+                        }
 
-                    if (window.Min > time)
-                    {
-                        // wait here!
-                        waitingtime += (window.Min - time);
-                        time = window.Min;
+                        if (window.Min > time)
+                        {
+                            // wait here!
+                            waitingtime += (window.Min - time);
+                            time = window.Min;
+                        }
                     }
 
                     previous = current;
@@ -87,7 +83,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW
                 violations = 1;
             }
 
-            return (violations * TimeWindowViolationPenaltyFactor) + time + (waitingtime * WaitingTimePenaltyFactor);
+            return (violations * timeWindowViolationPenaltyFactor) + time + (waitingtime * waitingTimePenaltyFactor);
         }
     }
 }

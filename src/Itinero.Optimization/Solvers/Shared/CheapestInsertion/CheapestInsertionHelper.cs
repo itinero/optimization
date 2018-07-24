@@ -18,14 +18,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Itinero.Optimization.Solvers.Tours;
 
+[assembly: InternalsVisibleTo("Itinero.Optimization.Tests")]
+[assembly: InternalsVisibleTo("Itinero.Optimization.Tests.Benchmarks")]
 namespace Itinero.Optimization.Solvers.Shared.CheapestInsertion
 {
     /// <summary>
     /// Contains shared methods to do 'cheapest insertion' or 'best placement'. 
     /// </summary>
-    public static class CheapestInsertionHelper
+    internal static class CheapestInsertionHelper
     {
         /// <summary>
         /// Calculates the best position to insert a given visit.

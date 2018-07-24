@@ -16,24 +16,32 @@
  *  limitations under the License.
  */
 
-using System.Collections.Generic;
+using Itinero.Optimization.Solvers.STSP;
+using Itinero.Optimization.Solvers.Tours;
+using Xunit;
 
-namespace Itinero.Optimization.Solvers.Shared.Collections
+namespace Itinero.Optimization.Tests.Solvers.STSP
 {
-    /// <summary>
-    /// A hashset implement the readonly set interface.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    internal class ReadOnlyHashSet<T> : HashSet<T>, IReadOnlySet<T>
+    public class STSPFitnessTests
     {
-        /// <summary>
-        /// Creates a new readonly hash set.
-        /// </summary>
-        /// <param name="collection">The initial elements.</param>
-        public ReadOnlyHashSet(IEnumerable<T> collection)
-            : base(collection)
+        [Fact]
+        public void STSPFitness_ShouldTakeIntoAccountUnplacedVisits()
         {
-            
+            // create problem.
+            var problem = STSPHelper.Create(0, 0, 5, 10, 40);
+            var tour = new Tour(new[] {0, 1}, 0);
+
+            Assert.Equal(40 * 5 - 40 * 2 + 20, tour.Fitness(problem));
+        }
+        
+        [Fact]
+        public void STSPFitness_ShouldEqualTravelWeightWhenAllPlaced()
+        {
+            // create problem.
+            var problem = STSPHelper.Create(0, 0, 5, 10, 50);
+            var tour = new Tour(new[] {0, 1, 2, 3, 4}, 0);
+
+            Assert.Equal(50, tour.Fitness(problem));
         }
     }
 }

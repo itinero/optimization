@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System.Threading;
 using Itinero.Optimization.Solvers.Shared.HillClimbing3Opt;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
@@ -67,14 +68,13 @@ namespace Itinero.Optimization.Solvers.TSP.HillClimbing3Opt
             
             // improve by running the 3-Opt step.
             var nearestNeighbours = _nearestNeighbours ? null : problem.NearestNeighbourCache.GetNNearestNeighboursForward(10);
-            if (candidate.Solution.Do3Opt(problem.Weight, problem.WeightsSize, out var delta, nearestNeighbours,
-                _dontLook))
-            {
-                candidate.Fitness += delta;
-                return true;
-            }
-
-            return false;
+            var res = candidate.Solution.Do3Opt(problem.Weight, problem.WeightsSize, nearestNeighbours, _dontLook);
+            if (!res.improved) return false;
+            candidate.Fitness += res.delta;
+            return true;
         }
+        
+        private static readonly ThreadLocal<HillClimbing3OptOperator> DefaultLazy = new ThreadLocal<HillClimbing3OptOperator>(() => new HillClimbing3OptOperator());
+        public static HillClimbing3OptOperator Default => DefaultLazy.Value;
     }
 }

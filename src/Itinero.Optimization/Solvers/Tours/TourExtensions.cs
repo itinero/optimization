@@ -84,6 +84,43 @@ namespace Itinero.Optimization.Solvers.Tours
         }
         
         /// <summary>
+        /// Calculates the total weight.
+        /// </summary>
+        /// <param name="tour">The tour.</param>
+        /// <param name="weightsFunc">The weight function.</param>
+        /// <param name="visitCount">The number of visits found.</param>
+        /// <returns>The total weight.</returns>
+        internal static float Weight(this Tour tour, Func<int, int, float> weightsFunc, out int visitCount)
+        {
+            visitCount = 0;
+            var weight = 0f;
+            var previous = Tour.NOT_SET;
+            var first = Tour.NOT_SET;
+            foreach (var visit in tour)
+            {
+                visitCount++;
+                if (previous == Tour.NOT_SET)
+                {
+                    first = visit;
+                    previous = visit;
+                    continue;
+                }
+
+                weight += weightsFunc(previous, visit);
+                previous = visit;
+            }
+
+            var closed = tour.IsClosed();
+            if (closed &&
+                first != Tour.NOT_SET)
+            {
+                weight += weightsFunc(previous, first);
+            }
+
+            return weight;
+        }
+        
+        /// <summary>
         /// Enumerates all visits starting at the given vist.
         /// </summary>
         public static IEnumerable<int> From(this Tour tour, int visit)

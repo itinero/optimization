@@ -19,7 +19,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Itinero.Optimization.Solvers.TSP.EAX
+namespace Itinero.Optimization.Solvers.Shared.EAX
 {
     /// <summary>
     /// A collection of asymmetric alternating cycles.

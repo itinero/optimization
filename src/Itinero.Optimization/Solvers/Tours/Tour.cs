@@ -501,6 +501,11 @@ namespace Itinero.Optimization.Solvers.Tours
         }
 
         /// <summary>
+        /// Gets the current capacity.
+        /// </summary>
+        public int Capacity => _nextArray.Length;
+
+        /// <summary>
         /// Removes a visit from the tour.
         /// </summary>
         /// <param name="visit"></param>

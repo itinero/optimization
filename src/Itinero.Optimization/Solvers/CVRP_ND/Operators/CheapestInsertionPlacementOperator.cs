@@ -18,9 +18,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Itinero.Optimization.Solvers.Shared.CheapestInsertion;
 using Itinero.Optimization.Solvers.Shared.Operators;
+using Itinero.Optimization.Solvers.Tours;
 
 namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
 {
@@ -30,10 +32,13 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
     internal class CheapestInsertionPlacementOperator : PlacementOperator<CVRPNDCandidate>
     {
         private readonly Func<int, int, float> _insertionCostHeuristic;
+        private readonly bool _lastOnly = false;
         
-        public CheapestInsertionPlacementOperator(Func<int, int, float> insertionCostHeuristic = null)
+        public CheapestInsertionPlacementOperator(Func<int, int, float> insertionCostHeuristic = null,
+            bool lastOnly = false)
         {
             _insertionCostHeuristic = insertionCostHeuristic;
+            _lastOnly = lastOnly;
         }
 
         public override string Name => "CI_PLACE";
@@ -46,33 +51,73 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
 
         public override bool Apply(CVRPNDCandidate candidate, ICollection<int> visits)
         {
-            // try to place in the last tour.
-            var t = candidate.Count - 1;
-            var tour = candidate.Tour(t);
-
-            Func<int, float> insertionCostHeuristic = null;
-            if (_insertionCostHeuristic != null)
+            if (_lastOnly)
             {
-                insertionCostHeuristic = (v) => _insertionCostHeuristic(tour.First, v);
-            }
-
-            var cheapest = tour.CalculateCheapest(candidate.Problem.TravelWeight, visits, 
-                insertionCostHeuristic, (travelCost, v) => candidate.CanInsert(t, v, travelCost));
-            while (cheapest.cost < float.MaxValue)
-            {
-                candidate.InsertAfter(t, cheapest.location.From, cheapest.visit);
-                visits.Remove(cheapest.visit);
-                if (visits.Count == 0)
+                // try to place in the last tour.
+                var t = candidate.Count - 1;
+                var tour = candidate.Tour(t);
+                Func<int, float> insertionCostHeuristic = null;
+                if (_insertionCostHeuristic != null)
                 {
-                    break;
+                    insertionCostHeuristic = (v) => _insertionCostHeuristic(tour.First, v);
                 }
-                
-                cheapest = tour.CalculateCheapest(candidate.Problem.TravelWeight, visits, 
+
+                var cheapest = tour.CalculateCheapest(candidate.Problem.TravelWeight, visits,
                     insertionCostHeuristic, (travelCost, v) => candidate.CanInsert(t, v, travelCost));
+                while (cheapest.cost < float.MaxValue)
+                {
+                    candidate.InsertAfter(t, cheapest.location.From, cheapest.visit);
+                    visits.Remove(cheapest.visit);
+                    if (visits.Count == 0)
+                    {
+                        break;
+                    }
+
+                    cheapest = tour.CalculateCheapest(candidate.Problem.TravelWeight, visits,
+                        insertionCostHeuristic, (travelCost, v) => candidate.CanInsert(t, v, travelCost));
+                }
+            }
+            else
+            {
+                (float cost, Pair location, int visit, int tour) best = (float.MaxValue, new Pair(), Tour.NOT_SET, int.MaxValue);
+                while (true)
+                {
+                    for (var t = 0; t < candidate.Count; t++)
+                    {
+                        var tour = candidate.Tour(t);
+                        Func<int, float> insertionCostHeuristic = null;
+                        if (_insertionCostHeuristic != null)
+                        {
+                            insertionCostHeuristic = (v) => _insertionCostHeuristic(tour.First, v);
+                        }
+
+                        var cheapest = tour.CalculateCheapest(candidate.Problem.TravelWeight, visits,
+                            insertionCostHeuristic, (travelCost, v) => candidate.CanInsert(t, v, travelCost));
+                        if (cheapest.cost < best.cost)
+                        {
+                            best = (cheapest.cost, cheapest.location, cheapest.visit, t);
+                        }
+                    }
+
+                    if (best.visit == Tour.NOT_SET)
+                    { // none of the visits can be placed (anymore).
+                        break;
+                    }
+                    
+                    candidate.InsertAfter(best.tour, best.location.From, best.visit);
+                    visits.Remove(best.visit);
+                    if (visits.Count == 0)
+                    {
+                        break;
+                    }
+                }
             }
 
             return false;
         }
+        
+        private static readonly ThreadLocal<CheapestInsertionPlacementOperator> DefaultLastOnlyLazy = new ThreadLocal<CheapestInsertionPlacementOperator>(() => new CheapestInsertionPlacementOperator(null, true));
+        public static CheapestInsertionPlacementOperator DefaultLastOnly => DefaultLastOnlyLazy.Value;
         
         private static readonly ThreadLocal<CheapestInsertionPlacementOperator> DefaultLazy = new ThreadLocal<CheapestInsertionPlacementOperator>(() => new CheapestInsertionPlacementOperator());
         public static CheapestInsertionPlacementOperator Default => DefaultLazy.Value;

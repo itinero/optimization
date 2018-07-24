@@ -17,6 +17,7 @@
  */
 
 using Itinero.Optimization.Solvers.STSP;
+using Itinero.Optimization.Solvers.Tours;
 using Xunit;
 
 namespace Itinero.Optimization.Tests.Solvers.STSP
@@ -97,7 +98,7 @@ namespace Itinero.Optimization.Tests.Solvers.STSP
                 // test contents.
                 Assert.Equal(problem.First, tour.First);
                 Assert.Equal(problem.Last, tour.Last);
-                Assert.True(40 >= fitness);
+                Assert.True(40 >= tour.Weight(problem.Weight));
             }
         }
 

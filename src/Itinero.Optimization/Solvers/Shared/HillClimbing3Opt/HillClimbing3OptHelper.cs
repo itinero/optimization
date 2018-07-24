@@ -18,17 +18,19 @@
 
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Itinero.Logging;
 using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
 using Itinero.Optimization.Solvers.Tours;
 
+[assembly: InternalsVisibleTo("Itinero.Optimization.Tests")]
+[assembly: InternalsVisibleTo("Itinero.Optimization.Tests.Benchmarks")]
 namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
 {
-
     /// <summary>
     /// Contains the core of the 3-OPT hill climbing algorithm. 
     /// </summary>
-    internal static class HillClimbing3Opt
+    internal static class HillClimbing3OptHelper
     {
         private const float E = 0.001f;
         
@@ -40,27 +42,28 @@ namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
         /// <param name="size">The size of the weight matrix.</param>
         /// <param name="nearestNeighbours">The nearest neighbours, not used if null.</param>
         /// <param name="useDontLookBits">The don't look bits flag.</param>
-        /// <param name="delta">The difference in weight.</param>
-        /// <returns>True if there was an improvement.</returns>
+        /// <returns>True if there was an improvement and the associated cost.</returns>
         /// <exception cref="ArgumentException"></exception>
-        internal static bool Do3Opt(this Tour candidate, Func<int, int, float> weightFunc,
-            int size, out float delta, NearestNeighbourArray nearestNeighbours = null, bool useDontLookBits = true)
+        internal static (bool improved, float delta) Do3Opt(this Tour candidate, Func<int, int, float> weightFunc,
+            int size, NearestNeighbourArray nearestNeighbours = null, bool useDontLookBits = true)
         {
+            float delta;
+            
             // TODO: check and see if we can apply this to an open problem anyway. This would remove the need to convert existing TSP's.
             if (!candidate.Last.HasValue)
             {
-                Logger.Log($"{typeof(HillClimbing3Opt)}.{nameof(Do3Opt)}", TraceEventType.Warning,
+                Logger.Log($"{typeof(HillClimbing3OptHelper)}.{nameof(Do3Opt)}", TraceEventType.Warning,
                     "Cannot apply this operator to an open problem, skipping.");
                 delta = 0;
-                return false;
+                return (false, delta);
             }
 
             if (candidate.First != candidate.Last)
             {
-                Logger.Log($"{typeof(HillClimbing3Opt)}.{nameof(Do3Opt)}", TraceEventType.Warning,
+                Logger.Log($"{typeof(HillClimbing3OptHelper)}.{nameof(Do3Opt)}", TraceEventType.Warning,
                     "Cannot apply this operator to an open tour, skipping.");
                 delta = 0;
-                return false;
+                return (false, delta);
             }
 
             if ((candidate.First == candidate.Last) != candidate.Last.HasValue)
@@ -93,7 +96,7 @@ namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
                 }
             }
 
-            return anyImprovement;
+            return (anyImprovement, delta);
         }
 
         /// <summary>

@@ -118,6 +118,21 @@ namespace Itinero.Optimization
                 Visits = visits
             };
 
+            return router.Optimize(model, out errors, intermediateResultsCallback);
+        }
+
+        /// <summary>
+        /// Tries to find the best tour(s) to visit all the given visits with the given vehicles.
+        /// </summary>
+        /// <param name="router">The router.</param>
+        /// <param name="model">The model, the problem description, to optimize.</param>
+        /// <param name="errors">The visits in error and associated errors message if any.</param>
+        /// <param name="intermediateResultsCallback">A callback to report on any intermediate solutions.</param>
+        /// <returns>A set of tours that visit the given visits using the vehicles in the pool.</returns>
+        public static IEnumerable<Result<Route>> Optimize(this RouterBase router, Model model,
+            out IEnumerable<(int visit, string message)> errors,
+            Action<IEnumerable<Result<Route>>> intermediateResultsCallback = null)
+        {
             // do the mapping, maps the model to the road network.
             var mappings = ModelMapperRegistry.Map(router, model);
             errors = mappings.mapping.Errors?.Select(x => (x.visit, x.message));

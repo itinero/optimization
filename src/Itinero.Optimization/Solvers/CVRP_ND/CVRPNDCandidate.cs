@@ -54,6 +54,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             {
                 tourData.weight += this.Problem.TravelWeight(pair.From, pair.To);
             }
+            tourData.weight += this.Problem.VisitWeight(seed);
             for (var c = 0; c < this.Problem.CapacityConstraints.Length; c++)
             {
                 var constraint = this.Problem.CapacityConstraints[c];
@@ -153,6 +154,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 diff += this.Problem.TravelWeight(visit, after);
                 diff -= this.Problem.TravelWeight(before, after);
             }
+            diff += this.Problem.VisitWeight(visit);
 
             return this.CanInsert(t, before, diff);
         }
@@ -182,8 +184,12 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             if (after != Tours.Tour.NOT_SET)
             {
                 diff += this.Problem.TravelWeight(visit, after);
-                diff -= this.Problem.TravelWeight(before, after);
+                if (before != after)
+                {
+                    diff -= this.Problem.TravelWeight(before, after);
+                }
             }
+            diff += this.Problem.VisitWeight(visit);
             tourData.weight = tourData.weight + diff;
             _tourData[t] = tourData;
             

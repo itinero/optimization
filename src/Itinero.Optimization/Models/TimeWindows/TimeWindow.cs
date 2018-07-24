@@ -49,6 +49,15 @@ namespace Itinero.Optimization.Models.TimeWindows
                                    this.Min == float.MinValue;
 
         /// <summary>
+        /// Returns true if this timewindows is considered empty or 'to be ignored'.
+        /// </summary>
+        public bool IsEmpty => (this.Min == 0 &&
+                                this.Max == 0) || 
+                               (this.Min == float.MaxValue &&
+                                this.Max == float.MinValue);
+
+
+        /// <summary>
         /// Returns the fully qualified type name of this instance.
         /// </summary>
         /// <returns></returns>

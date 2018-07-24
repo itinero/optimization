@@ -71,28 +71,31 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local2Opt
                     // completely re-calculate between-backward (because window min may be violated) and determine feasible at the same time.
                     var feasible = true;
                     var currentWeight = weight11 + weightFunc(edge11, edge21);
-                    if (windows[edge21].Min > currentWeight)
-                    {
-                        // wait here!
-                        currentWeight = windows[edge21].Min;
+                    var edge21Windows = windows[edge21];
+                    if (!edge21Windows.IsEmpty && 
+                        edge21Windows.Min > currentWeight)
+                    { // wait here!
+                        currentWeight = edge21Windows.Min;
                     }
 
                     var previous = edge21;
                     for (var i = edge2 - 1; i > edge1; i--)
                     {
                         var current = customers[i];
+                        var currentWindow = windows[current];
                         currentWeight += weightFunc(previous, current);
-                        if (windows[current].Min > currentWeight)
+                        if (!currentWindow.IsEmpty)
                         {
-                            // wait here!
-                            currentWeight = windows[current].Min;
-                        }
+                            if (currentWindow.Min > currentWeight)
+                            { // wait here!
+                                currentWeight = currentWindow.Min;
+                            }
 
-                        var window = windows[current];
-                        if (window.Max < currentWeight)
-                        {
-                            feasible = false;
-                            break;
+                            if (currentWindow.Max < currentWeight)
+                            { // unfeasible.
+                                feasible = false;
+                                break;
+                            }
                         }
 
                         previous = current;

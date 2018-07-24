@@ -17,7 +17,10 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
+using Itinero.Optimization.Solvers.CVRP_ND.Operators;
+using Itinero.Optimization.Solvers.Shared.Operators;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
 using Itinero.Optimization.Strategies.GA;
@@ -30,20 +33,28 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
     internal class TourExchangeCrossOverOperator : CrossOverOperator<CVRPNDCandidate>
     {
         private readonly Operator<CVRPNDCandidate> _postOperator;
+        private readonly PlacementOperator<CVRPNDCandidate> _placeRemainingOperator;
 
         /// <summary>
         /// Creates a new cross over operator.
         /// </summary>
         /// <param name="postOperator">The operator to apply after cross over, if any.</param>
-        public TourExchangeCrossOverOperator(Operator<CVRPNDCandidate> postOperator = null)
+        /// <param name="placeRemainingOperator">The operator to place remaining visits if tours cannot be exchanged anymore.</param>
+        public TourExchangeCrossOverOperator(Operator<CVRPNDCandidate> postOperator = null,
+            PlacementOperator<CVRPNDCandidate> placeRemainingOperator = null)
         {
-            _postOperator = postOperator;
+            _postOperator = postOperator ?? ExchangeOperator.Default;
+            // TODO: this needs to be an operator that always place all visits but doesn't start seeding immidiately.
+            _placeRemainingOperator = placeRemainingOperator ?? CheapestInsertionPlacementOperator.Default;
         }
         
         public override string Name { get; } = "CROSS_EX_TOURS";
         
         public override CVRPNDCandidate Apply(CVRPNDCandidate candidate1, CVRPNDCandidate candidate2)
         {
+            Debug.Assert(candidate1.GetUnplacedVisits().Count == 0);
+            Debug.Assert(candidate2.GetUnplacedVisits().Count == 0);
+            
             var candidate = new CVRPNDCandidate()
             {
                 Solution = new CVRPNDSolution(),
@@ -66,6 +77,15 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
                 success |= this.SelectAndMoveTour(visits, candidate2, candidate);
             }
 
+            // place remaining.
+            if (visits.Count > 0)
+            { 
+                _placeRemainingOperator.Apply(candidate, visits);
+                
+                Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+            }
+
+            // apply some post-exchange operator if defined.
             _postOperator?.Apply(candidate);
 
             return candidate;

@@ -18,7 +18,7 @@
 
 using System.Collections.Generic;
 
-namespace Itinero.Optimization.Solvers.TSP.EAX
+namespace Itinero.Optimization.Solvers.Shared.EAX
 {
     /// <summary>
     /// Asymmetric cycles.

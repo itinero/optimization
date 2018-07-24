@@ -19,6 +19,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using Itinero.Logging;
 
 namespace Itinero.Optimization.Strategies.GA
 {
@@ -87,6 +88,8 @@ namespace Itinero.Optimization.Strategies.GA
             var population = new TCandidate[_settings.PopulationSize];
             
             // generate initial population.
+            Logger.Log($"{nameof(GAStrategy<TProblem, TCandidate>)}.{nameof(Search)}", TraceEventType.Verbose,
+                $"{this.Name}: Generating population of {_settings.PopulationSize} individuals.");
             var solutionCount = 0;
             while (solutionCount < _settings.PopulationSize)
             {
@@ -108,6 +111,8 @@ namespace Itinero.Optimization.Strategies.GA
             while (stagnation < _settings.StagnationCount &&
                    generation < _settings.MaxGenerations)
             {
+                Logger.Log($"{nameof(GAStrategy<TProblem, TCandidate>)}.{nameof(Search)}", TraceEventType.Verbose,
+                    $"{this.Name}: Started generation {generation} @ stagnation {stagnation}.");
                 // select individuals for crossover.
                 exclude.Clear();
                 for (var i = 0; i < crossOver; i++)
@@ -143,6 +148,8 @@ namespace Itinero.Optimization.Strategies.GA
                 { // the new candidate is better, yay!
                     stagnation = 0;
                     best = population[0];
+                    Logger.Log($"{nameof(GAStrategy<TProblem, TCandidate>)}.{nameof(Search)}", TraceEventType.Verbose,
+                        $"{this.Name}: New best individual found: {best} @ generation {generation} with stagnation {stagnation}.");
                     this.ReportIntermidiateResult(best);
                 }
                 else

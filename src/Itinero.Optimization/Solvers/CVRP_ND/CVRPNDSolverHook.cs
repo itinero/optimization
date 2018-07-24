@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using Itinero.Logging;
 using Itinero.Optimization.Models.Mapping;
 using Itinero.Optimization.Solvers.CVRP_ND.GA;
+using Itinero.Optimization.Solvers.CVRP_ND.SCI;
 using Itinero.Optimization.Solvers.Shared.Seeds;
 
 namespace Itinero.Optimization.Solvers.CVRP_ND
@@ -91,7 +92,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             
             // get the constraints.
             var maxWeight = float.MaxValue;
-            var visitCostConstraints = new List<(string, float, float[])>();
+            var visitCostConstraints = new List<(string metric, float max, float[] costs)>();
             foreach (var capacityConstraint in vehicle.CapacityConstraints)
             {
                 if (capacityConstraint.Metric == metric)
@@ -109,21 +110,25 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             for (var v = 0; v < model.Visits.Length; v++)
             {
                 var visit = model.Visits[v];
-                if (!visit.TryGetVisitCostForMetric(metric, out var visitCost)) continue;
-                if (visitWeights == null) visitWeights = new float[model.Visits.Length];
-                visitWeights[v] = visitCost;
-
-                for (var vcc = 0; vcc < visitCostConstraints.Count; vcc++)
+                if (visit.TryGetVisitCostForMetric(metric, out var visitCost))
                 {
-                    var visitCostConstraint = visitCostConstraints[vcc];
-                    if (!visit.TryGetVisitCostForMetric(visitCostConstraint.Item1, out visitCost)) continue;
-                    if (visitCostConstraint.Item3 == null)
+                    if (visitWeights == null) visitWeights = new float[model.Visits.Length];
+                    visitWeights[v] = visitCost;
+                }
+                else
+                {
+                    for (var vcc = 0; vcc < visitCostConstraints.Count; vcc++)
                     {
-                        visitCostConstraint.Item3 = new float[model.Visits.Length];
-                    }
+                        var visitCostConstraint = visitCostConstraints[vcc];
+                        if (!visit.TryGetVisitCostForMetric(visitCostConstraint.metric, out visitCost)) continue;
+                        if (visitCostConstraint.costs == null)
+                        {
+                            visitCostConstraint.costs = new float[model.Visits.Length];
+                        }
 
-                    visitCostConstraint.Item3[v] = visitCost;
-                    visitCostConstraints[vcc] = visitCostConstraint;
+                        visitCostConstraint.costs[v] = visitCost;
+                        visitCostConstraints[vcc] = visitCostConstraint;
+                    }
                 }
             }
             

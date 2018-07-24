@@ -31,22 +31,25 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
     {
         private readonly float _improvementsThreshold; // the threshold for when the apply inter-tour improvements.
         private readonly PlacementOperator<CVRPNDCandidate> _seedOperator;
-        private readonly PlacementOperator<CVRPNDCandidate> _placementOperator;
+        private readonly PlacementOperator<CVRPNDCandidate> _afterSeedPlacementOperator;
+        private readonly PlacementOperator<CVRPNDCandidate> _beforeSeedPlacementOperator;
         private readonly float _remainingThreshold; // the place remaining threshold percentage.
 
         /// <summary>
         /// Creates a new SCI strategy.
         /// </summary>
         /// <param name="seedOperator">The seed operator, expected is an operator that adds new tours.</param>
-        /// <param name="placementOperator">The placement operator, expected is an operator that places visits in the existing tours.</param>
+        /// <param name="beforeSeedPlacementOperator">The placement operator, expected is an operator that places visits in the existing tours before a new tour was seeded.</param>
+        /// <param name="afterSeedPlacementOperator">The placement operator, expected is an operator that places visits in the existing tours after a new tour was seeded.</param>
         /// <param name="remainingThreshold">The remaining threshold parameter.</param>
         /// <param name="improvementsThreshold">The improvements threshold parameter.</param>
         public SeededCheapestInsertionPlacementOperator(PlacementOperator<CVRPNDCandidate> seedOperator = null,
-            PlacementOperator<CVRPNDCandidate> placementOperator = null, float remainingThreshold = 0.03f, 
-                float improvementsThreshold = 0.25f)
+            PlacementOperator<CVRPNDCandidate> beforeSeedPlacementOperator = null, PlacementOperator<CVRPNDCandidate> afterSeedPlacementOperator = null, 
+            float remainingThreshold = 0.03f, float improvementsThreshold = 0.25f)
         {
             _seedOperator = seedOperator ?? new SeedPlacementOperator((_, visits) => SeedHeuristics.GetSeedRandom(visits));
-            _placementOperator = placementOperator ?? new CheapestInsertionPlacementOperator();
+            _beforeSeedPlacementOperator = beforeSeedPlacementOperator;
+            _afterSeedPlacementOperator = afterSeedPlacementOperator ?? CheapestInsertionPlacementOperator.DefaultLastOnly;
             _remainingThreshold = remainingThreshold;
             _improvementsThreshold = improvementsThreshold;
         }
@@ -61,9 +64,11 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
 
         public override bool Apply(CVRPNDCandidate candidate, ICollection<int> visits)
         {
+            _beforeSeedPlacementOperator?.Apply(candidate, visits);
+            
             while (_seedOperator.Apply(candidate, visits))
             {
-                _placementOperator.Apply(candidate, visits);
+                _afterSeedPlacementOperator.Apply(candidate, visits);
             }
 
             return false;

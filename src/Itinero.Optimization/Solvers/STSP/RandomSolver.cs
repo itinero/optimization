@@ -24,13 +24,13 @@ using Itinero.Optimization.Strategies.Random;
 
 namespace Itinero.Optimization.Solvers.STSP
 {
-    internal class RandomSolver : Strategy<STSProblem, STSPCandidate>
+    internal class RandomSolver : Strategy<STSProblem, Candidate<STSProblem, Tour>>
     {
         public override string Name => "RAN";
 
         private RandomPool _randomPool = null;
 
-        public override STSPCandidate Search(STSProblem problem)
+        public override Candidate<STSProblem, Tour> Search(STSProblem problem)
         {
             // generate random pool to select visits from.
             if (_randomPool == null || _randomPool.Size < problem.WeightsSize)
@@ -69,9 +69,9 @@ namespace Itinero.Optimization.Solvers.STSP
                 fitness += cost;
             }
 
-            return new STSPCandidate()
+            return new Candidate<STSProblem, Tour>()
             {
-                Fitness = fitness,
+                Fitness = tour.Fitness(problem),
                 Problem = problem,
                 Solution = tour
             };

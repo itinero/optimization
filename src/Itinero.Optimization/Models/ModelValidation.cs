@@ -174,7 +174,7 @@ namespace Itinero.Optimization.Models
                     visitCostMetrics.Clear();
                     for (var vc = 0; vc < visitCosts.Length; vc++)
                     {
-                        var visitCost = visitCosts[v];
+                        var visitCost = visitCosts[vc];
                         if (visitCost == null)
                         {
                             message = $"Visit at index {v} has a visit cost at index {vc} that is null.";

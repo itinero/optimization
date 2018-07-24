@@ -44,6 +44,19 @@ namespace Itinero.Optimization.Models.Visits
         /// <summary>
         /// Gets or sets the visit costs.
         /// </summary>
-        public VisitCost[] VisitCosts { get; set; }
+        public VisitCost[] VisitCosts { get; set; }        
+        
+        /// <summary>
+        /// Returns the fully qualified type name of this instance.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            if (this.TimeWindow != null)
+            {
+                return $"@({this.Latitude},{this.Longitude})-{this.TimeWindow}";
+            }
+            return $"@({this.Latitude},{this.Longitude})";
+        }
     }
 }

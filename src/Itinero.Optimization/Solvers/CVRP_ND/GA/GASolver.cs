@@ -41,9 +41,9 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
         public GASolver(Strategy<CVRPNDProblem, CVRPNDCandidate> generator = null, Operator<CVRPNDCandidate> mutation = null,
             CrossOverOperator<CVRPNDCandidate> crossOver = null, GASettings settings = null)
         {
-            generator = generator ?? new SeededCheapestInsertionStrategy();
-            mutation = mutation ?? new RedoPlacementOperator();
-            crossOver = crossOver ?? new TourExchangeCrossOverOperator();
+            generator = generator ?? SeededCheapestInsertionStrategy.Default;
+            mutation = mutation ?? RedoPlacementOperator.Default;
+            crossOver = crossOver ?? TourExchangeCrossOverOperator.Default;
             settings = settings ?? GASettings.Default;
 
             _gaStrategy = new GAStrategy<CVRPNDProblem, CVRPNDCandidate>(

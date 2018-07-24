@@ -50,7 +50,7 @@ namespace Itinero.Optimization.Solvers.STSP
             // use a default solver to solve the STSP here.
             try
             {
-                var solution = RandomSolver.Default.Search(stsp.Value);
+                var solution = GASolver.Default.Search(stsp.Value);
                 return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>(
                     (new (int vehicle, IEnumerable<int> tour) [] { (0, solution.Solution) }));
             }

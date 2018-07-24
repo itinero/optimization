@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System.Threading;
 using Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
@@ -31,35 +32,15 @@ namespace Itinero.Optimization.Solvers.TSP_TW.Operators
         
         public override bool Apply(Candidate<TSPTWProblem, Tour> candidate)
         {
-            var moveDetails = candidate.Solution.MoveViolatedBackward(candidate.Problem.Weight, candidate.Problem.Windows);
-            if (moveDetails.success)
-            {
-                candidate.Fitness = candidate.Solution.Fitness(candidate.Problem);
-                return true;
-            }
+            var moveDetails = candidate.Solution.TryShift(candidate.Problem.Weight, candidate.Problem.Windows);
+            if (!moveDetails.success) return false;
             
-            moveDetails = candidate.Solution.MoveNonViolatedForward(candidate.Problem.Weight, candidate.Problem.Windows);
-            if (moveDetails.success)
-            {
-                candidate.Fitness = candidate.Solution.Fitness(candidate.Problem);
-                return true;
-            }
-            
-            moveDetails = candidate.Solution.MoveNonViolatedBackward(candidate.Problem.Weight, candidate.Problem.Windows);
-            if (moveDetails.success)
-            {
-                candidate.Fitness = candidate.Solution.Fitness(candidate.Problem);
-                return true;
-            }
-            
-            moveDetails = candidate.Solution.MoveViolatedForward(candidate.Problem.Weight, candidate.Problem.Windows);
-            if (moveDetails.success)
-            {
-                candidate.Fitness = candidate.Solution.Fitness(candidate.Problem);
-                return true;
-            }
+            candidate.Fitness = candidate.Solution.Fitness(candidate.Problem);
+            return true;
 
-            return false;
         }
+        
+        private static readonly ThreadLocal<Local1ShiftOperator> DefaultLazy = new ThreadLocal<Local1ShiftOperator>(() => new Local1ShiftOperator());
+        public static Local1ShiftOperator Default => DefaultLazy.Value;
     }
 }

@@ -62,6 +62,24 @@ namespace Itinero.Optimization.Tests.Functional
         /// <summary>
         /// Writes the routes as geojson to the given file names.
         /// </summary>
+        public static void WriteGeoJson(this Result<Route> results, string fileName)
+        {
+            var directory = new DirectoryInfo("result");
+            if (!directory.Exists)
+            {
+                directory.Create();
+            }
+
+            if (results == null || results.IsError || results.Value == null) return;
+
+            var route = results.Value;
+            File.WriteAllText(Path.Combine(directory.FullName,
+                fileName), route.ToGeoJson());
+        }
+
+        /// <summary>
+        /// Writes the routes as geojson to the given file names.
+        /// </summary>
         public static void WriteJson(this IList<Route> routes, string fileName)
         {
             var directory = new DirectoryInfo("result");
@@ -122,7 +140,58 @@ namespace Itinero.Optimization.Tests.Functional
             jsonWriter.WriteArrayClose();
             jsonWriter.WriteClose();
         }
-        
+
+        /// <summary>
+        /// Writes stats about the given routes.
+        /// </summary>
+        /// <param name="result"></param>
+        public static void WriteStats(this Result<Route> result)
+        {
+            Console.Write("route:");
+
+            if (result == null)
+            {
+                Console.WriteLine("null");
+                return;
+            }
+
+            if (result.IsError)
+            {
+                Console.WriteLine($"Error: {result.ErrorMessage}");
+                return;
+            }
+
+            if (result.Value == null)
+            {
+                Console.WriteLine("null");
+                return;
+            }
+
+            var extraTime = 0f;
+            var extraWeight = 0f;
+            var route = result.Value;
+            if (route.Stops != null)
+            {
+                for (var s = 0; s < route.Stops.Length - 1; s++)
+                {
+                    var stop = route.Stops[s];
+                    if (stop.Attributes.TryGetSingle("cost_time", out var localExtraTime))
+                    {
+                        extraTime += localExtraTime;
+                    }
+
+                    if (stop.Attributes.TryGetSingle("cost_weight", out var localExtraWeight))
+                    {
+                        extraWeight += localExtraWeight;
+                    }
+                }
+
+                Console.Write($"{route.TotalTime}s | " +
+                              $"{route.TotalDistance}m | " +
+                              $"{route.Stops.Length} stops with {extraTime}s and {extraWeight}kg");
+            }
+            Console.WriteLine();
+        }
 
         /// <summary>
         /// Writes stats about the given routes.

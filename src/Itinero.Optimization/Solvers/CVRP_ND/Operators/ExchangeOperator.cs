@@ -16,6 +16,8 @@
  *  limitations under the License.
  */
 
+using System.Diagnostics;
+using System.Threading;
 using Itinero.Optimization.Solvers.Shared.Sequences;
 using Itinero.Optimization.Strategies.Random;
 
@@ -98,6 +100,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
 
                     if (!_bestImprovement)
                     {
+                        Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                        
                         // exchange was already done on the first improvement found. 
                         return true;
                     }
@@ -108,7 +112,9 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                     // do the exchange, this is the best one.
                     candidate.TrySwap(best.t1, best.t2, best.s1, best.s2);
                 }
-
+            
+                Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                
                 return true;
             }
             else
@@ -126,6 +132,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                 }
                 // do the exchange, this is the best one.
                 candidate.TrySwap(t1, t2, exchange.s1, exchange.s2);
+            
+                Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                 return true;
             }
         }
@@ -169,6 +177,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                     // do the exchange, this is the best one.
                     candidate.TrySwap(t, best.t2, best.s1, best.s2);
                 }
+            
+                Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
 
                 return true;
             }
@@ -186,6 +196,9 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                 }
                 // do the exchange, this is the best one.
                 candidate.TrySwap(t, t2, exchange.s1, exchange.s2);
+            
+                Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                
                 return true;
             }
         }
@@ -204,6 +217,9 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
             if (!exchange.success) return false;
             
             candidate.TrySwap(t1, t2, exchange.s1, exchange.s2);
+            
+            Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+            
             return true;
         }
 
@@ -385,5 +401,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
 
             return best;
         }
+        
+        private static readonly ThreadLocal<ExchangeOperator> DefaultLazy = new ThreadLocal<ExchangeOperator>(() => new ExchangeOperator());
+        public static ExchangeOperator Default => DefaultLazy.Value;
     }
 }

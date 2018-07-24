@@ -60,7 +60,7 @@ namespace Itinero.Optimization.Strategies.GA
         {
             MaxGenerations = 1000,
             PopulationSize = 100,
-            StagnationCount = 30,
+            StagnationCount = 10,
             ElitismPercentage = 3,
             MutationPercentage = 10,
             CrossOverPercentage = 30

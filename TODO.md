@@ -12,6 +12,9 @@ The main thing left to think about is how to elegantly handle turning costs:
 
 - Convert *all* TSP solvers to solvers that can handle sub-problems of matrices.
 - Take into account visit costs in all solvers.
+  - TSP
+  - TSP-TW
+  - ...
 - Unittest solver registry and solverhooks.
 - Unittest model mappers.
 - Unittest model validation and implement if needed.
@@ -25,3 +28,18 @@ The main thing left to think about is how to elegantly handle turning costs:
 - Have an other look at sequences and seq and their usage in the exchange operator.
 - Create a way to update first of a tour (and use this in swap).
 - Test CVRP solver with a 'null' arrival location.
+- local2shift for time windows:
+  - Implement a best-improvement version of the local1shift operator for timewindows. Currently it's first-improvement.
+  - Make sure this is compatible with visit-lists and cases where the problem has more visits than the solution. This is needed for use in an STSP for example.
+- Fix performance issues in EAX.
+- code review:
+   - C# 7.3 features everywhere!
+   - customers no, visits yes!
+   - only use 'time' on timewindow-specific stuff, otherwise use weight.
+   - don't forget tests.
+- change resulting stop meta in routes using:
+   - visit: the visit id from the original model.
+   - index: remove the index, it's confusing.
+   - position: the position in the current tour.
+   - TimeWindows:
+     - Unify unlimited and IsEmpty

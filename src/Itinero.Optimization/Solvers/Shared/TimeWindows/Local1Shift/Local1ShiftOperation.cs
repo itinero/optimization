@@ -26,6 +26,38 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
     internal static class Local1ShiftOperation
     {
         // TODO: performance test all this stuff.
+
+        /// <summary>
+        /// Tries to move a visit to improve fitness or violations in the time windows.
+        /// </summary>
+        /// <param name="tour">The tour.</param>
+        /// <param name="weightFunc">The function to get weights.</param>
+        /// <param name="windows">The time windows.</param>
+        /// <returns>All details about the move.</returns>
+        public static (bool success, int shifted, int oldBefore,
+            int oldAfter, int newBefore, int newAfter) TryShift(this Tour tour,
+                Func<int, int, float> weightFunc, TimeWindow[] windows)
+        {
+            var moveDetails = tour.MoveViolatedBackward(weightFunc, windows);
+            if (moveDetails.success)
+            {
+                return moveDetails;
+            }
+            
+            moveDetails = tour.MoveNonViolatedForward(weightFunc, windows);
+            if (moveDetails.success)
+            {
+                return moveDetails;
+            }
+            
+            moveDetails = tour.MoveNonViolatedBackward(weightFunc, windows);
+            if (moveDetails.success)
+            {
+                return moveDetails;
+            }
+            
+            return tour.MoveViolatedForward(weightFunc, windows);
+        }
         
         /// <summary>
         /// Tries to move violated time windows backwards until they are not.
@@ -56,21 +88,24 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                     }
 
                     var window = windows[enumerator.Current];
-                    if (window.Max < time && position > 1)
+                    if (!window.IsEmpty)
                     {
-                        // ok, unfeasible and customer is not the first 'moveable' customer.
-                        fitness += time - window.Max;
-                        if (enumerator.Current != tour.Last)
+                        if (window.Max < time && position > 1)
                         {
-                            // when the last customer is fixed, don't try to relocate.
-                            invalids.Add(new Tuple<int, int>(enumerator.Current, position));
+                            // ok, unfeasible and customer is not the first 'moveable' customer.
+                            fitness += time - window.Max;
+                            if (enumerator.Current != tour.Last)
+                            {
+                                // when the last customer is fixed, don't try to relocate.
+                                invalids.Add(new Tuple<int, int>(enumerator.Current, position));
+                            }
                         }
-                    }
 
-                    if (window.Min > time)
-                    {
-                        // wait here!
-                        time = window.Min;
+                        if (window.Min > time)
+                        {
+                            // wait here!
+                            time = window.Min;
+                        }
                     }
 
                     // increase position.
@@ -106,16 +141,19 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                             }
 
                             var window = windows[enumerator.Current];
-                            if (window.Max < time)
+                            if (!window.IsEmpty)
                             {
-                                // ok, unfeasible and customer is not the first 'moveable' customer.
-                                newFitness += time - window.Max;
-                            }
+                                if (window.Max < time)
+                                {
+                                    // ok, unfeasible and customer is not the first 'moveable' customer.
+                                    newFitness += time - window.Max;
+                                }
 
-                            if (window.Min > time)
-                            {
-                                // wait here!
-                                time = window.Min;
+                                if (window.Min > time)
+                                {
+                                    // wait here!
+                                    time = window.Min;
+                                }
                             }
 
                             previous = current;
@@ -123,7 +161,7 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
 
                             // also add the before->invalid.
                             time += weightFunc(current, invalid.Item1);
-                            window = windows[invalid.Item1];
+                            window = windows[invalid.Item1]; // always has a non-empty window, otherwise impossible to be invalid.
                             if (window.Max < time)
                             {
                                 // ok, unfeasible and customer is not the first 'moveable' customer.
@@ -183,7 +221,7 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                     }
 
                     var window = windows[enumerator.Current];
-                    if (window.Max < time)
+                    if (!window.IsEmpty && window.Max < time)
                     {
                         // ok, unfeasible.
                         fitness += time - window.Max;
@@ -198,7 +236,7 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                         }
                     }
 
-                    if (window.Min > time)
+                    if (!window.IsEmpty && window.Min > time)
                     {
                         // wait here!
                         time = window.Min;
@@ -243,21 +281,16 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                             }
 
                             var window = windows[enumerator.Current];
-                            if (window.Max < time)
+                            if (!window.IsEmpty)
                             {
-                                // ok, unfeasible and customer is not the first 'moveable' customer.
-                                newFitness += time - window.Max;
-//                                if (_assumeFeasible)
-//                                {
-//                                    newFitness = float.MaxValue;
-//                                    break;
-//                                }
-                            }
-
-                            if (window.Min > time)
-                            {
-                                // wait here!
-                                time = window.Min;
+                                if (window.Max < time)
+                                { // apply penaly if unfeasible.
+                                    newFitness += time - window.Max;
+                                }
+                                if (window.Min > time)
+                                { // add waiting time.
+                                    time = window.Min;
+                                }
                             }
 
                             previous = current;
@@ -266,16 +299,16 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                             // also add the before->invalid.
                             time += weightFunc(current, valid.Item1);
                             window = windows[valid.Item1];
-                            if (window.Max < time)
+                            if (!window.IsEmpty)
                             {
-                                // ok, unfeasible and customer is not the first 'moveable' customer.
-                                newFitness += time - window.Max;
-                            }
-
-                            if (window.Min > time)
-                            {
-                                // wait here!
-                                time = window.Min;
+                                if (window.Max < time)
+                                { // apply penaly if unfeasible.
+                                    newFitness += time - window.Max;
+                                }
+                                if (window.Min > time)
+                                { // add waiting time.
+                                    time = window.Min;
+                                }
                             }
 
                             previous = valid.Item1;
@@ -324,7 +357,7 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                     }
 
                     var window = windows[enumerator.Current];
-                    if (window.Max < time)
+                    if (!window.IsEmpty && window.Max < time)
                     {
                         // ok, unfeasible.
                         fitness += time - window.Max;
@@ -339,7 +372,7 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                         }
                     }
 
-                    if (window.Min > time)
+                    if (!window.IsEmpty && window.Min > time)
                     {
                         // wait here!
                         time = window.Min;
@@ -378,22 +411,20 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                             }
 
                             var window = windows[enumerator.Current];
-                            if (window.Max < time)
+                            if (!window.IsEmpty)
                             {
-                                // ok, unfeasible and customer is not the first 'moveable' customer.
-                                newFitness += time - window.Max;
-//                                if (_assumeFeasible)
-//                                {
-//                                    newFitness = float.MaxValue;
-//                                    break;
-//                                }
+                                if (window.Max < time)
+                                {
+                                    // ok, unfeasible and customer is not the first 'moveable' customer.
+                                    newFitness += time - window.Max;
+                                }
+                                if (window.Min > time)
+                                {
+                                    // wait here!
+                                    time = window.Min;
+                                }
                             }
-
-                            if (window.Min > time)
-                            {
-                                // wait here!
-                                time = window.Min;
-                            }
+                            
 
                             previous = current;
                             if (current != before) continue;
@@ -401,16 +432,19 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                             // also add the before->invalid.
                             time += weightFunc(current, valid.Item1);
                             window = windows[valid.Item1];
-                            if (window.Max < time)
+                            if (!window.IsEmpty)
                             {
-                                // ok, unfeasible and customer is not the first 'moveable' customer.
-                                newFitness += time - window.Max;
-                            }
+                                if (window.Max < time)
+                                {
+                                    // ok, unfeasible and customer is not the first 'moveable' customer.
+                                    newFitness += time - window.Max;
+                                }
 
-                            if (window.Min > time)
-                            {
-                                // wait here!
-                                time = window.Min;
+                                if (window.Min > time)
+                                {
+                                    // wait here!
+                                    time = window.Min;
+                                }
                             }
 
                             previous = valid.Item1;
@@ -436,6 +470,7 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
         /// <param name="tour">The tour.</param>
         /// <param name="weightFunc">The function to get weights.</param>
         /// <param name="windows">The time windows.</param>
+        /// <param name="last">The last visit if fixed, it will no be considered as a move.</param>
         /// <returns>All details about the move.</returns>
         public static (bool success, int shifted, int oldBefore,
             int oldAfter, int newBefore, int newAfter) MoveViolatedForward(this Tour tour,

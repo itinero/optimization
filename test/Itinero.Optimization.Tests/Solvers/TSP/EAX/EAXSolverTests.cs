@@ -199,7 +199,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP.EAX
         /// Tests the solver.
         /// </summary>
         [Fact]
-        public void EAXSolver_ShouldUsedOnlyProvidedVisits()
+        public void EAXSolver_ShouldUseOnlyProvidedVisits()
         {
             // create the problem and make sure 0->2->4->6->8 is the solution.
             var weights = WeightMatrixHelpers.Build(10, 10);

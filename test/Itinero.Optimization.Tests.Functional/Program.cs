@@ -35,9 +35,10 @@ namespace Itinero.Optimization.Tests.Functional
 #endif
             // invoke case-specific tests.
             // TSP.TSPTests.Run();
-            // STSP.STSPTests.Run();
-            //CVRP.CVRPTests.Run();
-            CVRP_ND.CVRPNDTests.Run();
+            // TSP_TW.TSPTWTests.Run();
+            STSP.STSPTests.Run();
+            // CVRP.CVRPTests.Run();
+            // CVRP_ND.CVRPNDTests.Run();
         }
 
         private static void EnableLogging()
@@ -55,12 +56,12 @@ namespace Itinero.Optimization.Tests.Functional
             };
             Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
-#if RELEASE
-                 if (level == "verbose")
-                 {
-                     return;
-                 }
-#endif
+//#if RELEASE
+//                 if (level == "verbose")
+//                 {
+//                     return;
+//                 }
+//#endif
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
             };
         }
