@@ -18,17 +18,19 @@
 
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Itinero.Logging;
 using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
 using Itinero.Optimization.Solvers.Tours;
 
+[assembly: InternalsVisibleTo("Itinero.Optimization.Tests")]
+[assembly: InternalsVisibleTo("Itinero.Optimization.Tests.Benchmarks")]
 namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
 {
-
     /// <summary>
     /// Contains the core of the 3-OPT hill climbing algorithm. 
     /// </summary>
-    internal static class HillClimbing3Opt
+    internal static class HillClimbing3OptHelper
     {
         private const float E = 0.001f;
         

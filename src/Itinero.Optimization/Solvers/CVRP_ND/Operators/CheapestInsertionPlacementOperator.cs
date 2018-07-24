@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Itinero.Optimization.Solvers.Shared.CheapestInsertion;
 using Itinero.Optimization.Solvers.Shared.Operators;
@@ -27,11 +28,11 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
     /// <summary>
     /// A placement operator that uses cheapest insertion to insert unplaced visit in the last tour until no more visits can be placed.
     /// </summary>
-    internal class CheapestInsertionPlacementOperator : PlacementOperator<CVRPNDCandidate>
+    internal class CheapestInsertionLastTourPlacementOperator : PlacementOperator<CVRPNDCandidate>
     {
         private readonly Func<int, int, float> _insertionCostHeuristic;
         
-        public CheapestInsertionPlacementOperator(Func<int, int, float> insertionCostHeuristic = null)
+        public CheapestInsertionLastTourPlacementOperator(Func<int, int, float> insertionCostHeuristic = null)
         {
             _insertionCostHeuristic = insertionCostHeuristic;
         }
@@ -74,7 +75,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
             return false;
         }
         
-        private static readonly ThreadLocal<CheapestInsertionPlacementOperator> DefaultLazy = new ThreadLocal<CheapestInsertionPlacementOperator>(() => new CheapestInsertionPlacementOperator());
-        public static CheapestInsertionPlacementOperator Default => DefaultLazy.Value;
+        private static readonly ThreadLocal<CheapestInsertionLastTourPlacementOperator> DefaultLazy = new ThreadLocal<CheapestInsertionLastTourPlacementOperator>(() => new CheapestInsertionLastTourPlacementOperator());
+        public static CheapestInsertionLastTourPlacementOperator Default => DefaultLazy.Value;
     }
 }
