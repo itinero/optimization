@@ -71,7 +71,7 @@ namespace Itinero.Optimization.Models.Mapping
                 WeightMatrixAlgorithm weightMatrixAlgorithm;
                 if (this.Model.Locations != null)
                 {
-                    weightMatrixAlgorithm = new WeightMatrixAlgorithm(_router, profile, this.Model.Locations);
+                    weightMatrixAlgorithm = new WeightMatrixAlgorithm(_router, profile, this.Model.Visits, this.Model.Locations);
                 }
                 else
                 {
@@ -88,7 +88,7 @@ namespace Itinero.Optimization.Models.Mapping
                 DirectedWeightMatrixAlgorithm weightMatrixAlgorithm;
                 if (this.Model.Locations != null)
                 {
-                    weightMatrixAlgorithm = new DirectedWeightMatrixAlgorithm(_router, profile, this.Model.Locations);
+                    weightMatrixAlgorithm = new DirectedWeightMatrixAlgorithm(_router, profile, this.Model.Visits, this.Model.Locations);
                 }
                 else
                 {
