@@ -68,18 +68,34 @@ namespace Itinero.Optimization.Models.Mapping
             _weightMatrix = null;
             if (this.Model.VehiclePool.Vehicles[0].TurnPentalty == 0)
             {
-                var weightMatrixAlgorithm = new WeightMatrixAlgorithm(_router, profile, 
-                    new MassResolvingAlgorithm(_router, new Profiles.IProfileInstance[] { profile }, 
-                        this.Model.Visits));
+                WeightMatrixAlgorithm weightMatrixAlgorithm;
+                if (this.Model.Locations != null)
+                {
+                    weightMatrixAlgorithm = new WeightMatrixAlgorithm(_router, profile, this.Model.Locations);
+                }
+                else
+                {
+                    weightMatrixAlgorithm = new WeightMatrixAlgorithm(_router, profile,
+                        new MassResolvingAlgorithm(_router, new Profiles.IProfileInstance[] { profile },
+                            this.Model.Visits));
+                }
                 weightMatrixAlgorithm.Run();
 
                 _weightMatrix = new WeightMatrix(weightMatrixAlgorithm);
             }
             else
             {
-                var weightMatrixAlgorithm = new DirectedWeightMatrixAlgorithm(_router, profile, 
-                    new MassResolvingAlgorithm(_router, new Profiles.IProfileInstance[] { profile }, 
-                        this.Model.Visits));
+                DirectedWeightMatrixAlgorithm weightMatrixAlgorithm;
+                if (this.Model.Locations != null)
+                {
+                    weightMatrixAlgorithm = new DirectedWeightMatrixAlgorithm(_router, profile, this.Model.Locations);
+                }
+                else
+                {
+                    weightMatrixAlgorithm = new DirectedWeightMatrixAlgorithm(_router, profile,
+                        new MassResolvingAlgorithm(_router, new Profiles.IProfileInstance[] { profile },
+                           this.Model.Visits));
+                }
                 weightMatrixAlgorithm.Run();
                 
                 _weightMatrix = new WeightMatrixDirected(weightMatrixAlgorithm);
