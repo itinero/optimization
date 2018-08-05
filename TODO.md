@@ -59,3 +59,4 @@ The main thing left to think about is how to elegantly handle turning costs:
  Ideas for speeding up CI:
 
  - Limit the visits being considered to only nearest neighbours.
+ - Don't use pair but GetNext() on tour, this way we can exclude visits too far 'from' first before even considering 'to'.
