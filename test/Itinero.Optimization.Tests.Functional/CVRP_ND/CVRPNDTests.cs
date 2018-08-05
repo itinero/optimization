@@ -33,8 +33,8 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
         /// </summary>
         public static void Run()
         {
-            //Run1Wechelderzande();
-            //Run1WechelderzandeCapacitated();
+            Run1Wechelderzande();
+            Run1WechelderzandeCapacitated();
             Run2Spijkenisse();
         }
 
@@ -139,7 +139,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
                 Staging.StagingHelpers.GetFeatureCollection("CVRP_ND.data.problem2-spijkenisse.geojson"));  
             
             // build vehicle pool.
-            var vehicles = VehiclePool.FromProfile(vehicle.Fastest(), null, null, 5400, true);
+            var vehicles = VehiclePool.FromProfile(vehicle.Fastest(), null, null, max, true);
             
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>

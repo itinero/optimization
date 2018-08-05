@@ -38,12 +38,16 @@ namespace Itinero.Optimization.Tests.Functional
                 "Performance tests are running in Debug, please run in Release mode.");
 #endif
             // invoke case-specific tests.
-            //TSP.TSPTests.Run();
-            //TSP_TW.TSPTWTests.Run();
-            //STSP.STSPTests.Run();
-            ///CVRP.CVRPTests.Run();
+            TSP.TSPTests.Run();
+            TSP_TW.TSPTWTests.Run();
+            STSP.STSPTests.Run();
+            CVRP.CVRPTests.Run();
             CVRP_ND.CVRPNDTests.Run();
+
+            //Console.ReadLine();
         }
+
+        public static bool DoIntermediates { get; set; } = false;
 
         private static void EnableLogging()
         {

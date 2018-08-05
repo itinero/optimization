@@ -45,8 +45,6 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             Action<IEnumerable<(int vehicle, IEnumerable<int>)>> intermediateResult)
         {
             var cvrp = model.TryToCVRPND();
-
-            var json = model.ToJson();
             if (cvrp.IsError)
             {
                 return cvrp.ConvertError<IEnumerable<(int vehicle, IEnumerable<int> tour)>>();
@@ -55,8 +53,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             // use a default solver to solve the TSP here.
             try
             {
-                //var solver = GASolver.Default;
-                var solver = SeededCheapestInsertionStrategy.Default;
+                var solver = GASolver.Default;
+                //var solver = SeededCheapestInsertionStrategy.Default;
                 var candidate = solver.Search(cvrp.Value);
                 var solution = candidate.Solution;
 
