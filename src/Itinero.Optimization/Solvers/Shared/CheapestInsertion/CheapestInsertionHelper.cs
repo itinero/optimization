@@ -45,12 +45,73 @@ namespace Itinero.Optimization.Solvers.Shared.CheapestInsertion
         {
             (float cost, Pair location, int visit) best = (float.MaxValue, new Pair(int.MaxValue, int.MaxValue), -1);
 
-            foreach (var visit in visits)
+            //foreach (var visit in visits)
+            //{
+            //    var insertDetails = tour.CalculateCheapest(weightFunc, visit, insertionCostHeuristic, canPlace);
+            //    if (insertDetails.cost < best.cost)
+            //    {
+            //        best = (insertDetails.cost, insertDetails.location, visit);
+            //    }
+            //}
+
+            //return best;
+            //(float cost, Pair location) best = (float.MaxValue, new Pair(int.MaxValue, int.MaxValue));
+
+            if (tour.Count == 1)
             {
-                var insertDetails = tour.CalculateCheapest(weightFunc, visit, insertionCostHeuristic, canPlace);
-                if (insertDetails.cost < best.cost)
+                var first = tour.First;
+                if (tour.IsClosed())
                 {
-                    best = (insertDetails.cost, insertDetails.location, visit);
+                    foreach (var visit in visits)
+                    {
+                        var cost = (weightFunc(first, visit) +
+                                    weightFunc(visit, first));
+                        if (!(canPlace?.Invoke(cost, visit) ?? true))
+                        {
+                            continue;
+                        }
+                        cost += (insertionCostHeuristic?.Invoke(visit) ?? 0);
+                        if (cost < best.cost)
+                        {
+                            var location = new Pair(first, first);
+                            best = (cost, location, visit);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var visit in visits)
+                    {
+                        var cost = weightFunc(first, visit);
+                        if ((!(canPlace?.Invoke(cost, visit) ?? true))) continue;
+
+                        cost += (insertionCostHeuristic?.Invoke(visit) ?? 0);
+                        if (cost < best.cost)
+                        {
+                            var location = new Pair(first, first);
+                            best = (cost, location, visit);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var pair in tour.Pairs())
+                {
+                    var pairWeight = weightFunc(pair.From, pair.To);
+                    foreach (var visit in visits)
+                    {
+                        var cost = weightFunc(pair.From, visit) +
+                               weightFunc(visit, pair.To) -
+                               pairWeight;
+                        if ((!(canPlace?.Invoke(cost, visit) ?? true))) continue;
+
+                        cost += (insertionCostHeuristic?.Invoke(visit) ?? 0);
+                        if (cost < best.cost)
+                        {
+                            best = (cost, pair, visit);
+                        }
+                    }
                 }
             }
 

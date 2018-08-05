@@ -19,6 +19,20 @@
     <None Remove="CVRP\data\problem2-spijkenisse.geojson" />
     <EmbeddedResource Include="CVRP\data\problem2-spijkenisse.geojson" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Staging\query1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Staging\query2.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Staging\query3.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Staging\query4.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>

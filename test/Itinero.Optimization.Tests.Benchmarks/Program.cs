@@ -7,9 +7,18 @@ namespace Itinero.Optimization.Tests.Benchmarks
     {
         private static void Main(string[] args)
         {
-            BenchmarkRunner.Run<Strategies.CandidateComparisonBenchmark>();
-            BenchmarkRunner.Run<Solvers.TSP.EAX.EAXSolverBenchmark>();
-            BenchmarkRunner.Run<Solvers.Tours.Sequences.SequenceEnumerableTests>();
+            //BenchmarkRunner.Run<Strategies.CandidateComparisonBenchmark>();
+            //BenchmarkRunner.Run<Solvers.TSP.EAX.EAXSolverBenchmark>();
+            //BenchmarkRunner.Run<Solvers.Tours.Sequences.SequenceEnumerableTests>();
+            BenchmarkRunner.Run<Solvers.CVRP_ND.SCI.SeededCheapestInsertionBenchmark>();
+
+            //var sciTests = new Solvers.CVRP_ND.SCI.SeededCheapestInsertionBenchmark();
+            //for (var i = 0; i < 100; i++)
+            //{
+            //    sciTests.SolveModel1Spijkenisse5400();
+            //}
+
+            Console.ReadLine();
         }
     }
 }

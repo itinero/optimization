@@ -45,3 +45,17 @@ The main thing left to think about is how to elegantly handle turning costs:
    - Unify unlimited and IsEmpty.
  - Functional tests: conver all problems in CVRP and CVRP-ND.
  - Implement intermediate results handling on all solvers.
+
+
+ Ideas for speeding up tour():
+
+ - Implement an O(1) contains, this can be done by always proper resetting NEXT.
+ - Then it's very fast to update contains on insertafter for example and that also becomes O(1).
+
+ Ideas for speeding up GA:
+
+ - Use multithreading everywhere but make sure not to use multiple operators on the same candidate at the same time.
+
+ Ideas for speeding up CI:
+
+ - Limit the visits being considered to only nearest neighbours.

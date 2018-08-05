@@ -33,8 +33,8 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
         /// </summary>
         public static void Run()
         {
-            Run1Wechelderzande();
-            Run1WechelderzandeCapacitated();
+            //Run1Wechelderzande();
+            //Run1WechelderzandeCapacitated();
             Run2Spijkenisse();
         }
 
@@ -70,12 +70,12 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             // build problem1.
             var locations = Staging.StagingHelpers.GetLocations(
                 Staging.StagingHelpers.GetFeatureCollection("CVRP_ND.data.problem1.geojson"));
-            
+
             // build vehicle pool and capacity constraints.
             var vehicles = new VehiclePool()
             {
                 Reusable = true,
-                Vehicles = new []
+                Vehicles = new[]
                 {
                     new Vehicle()
                     {
@@ -118,7 +118,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
                     }
                 };
             }
-            
+
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, visits, out _, intermediateRoutesFunc);

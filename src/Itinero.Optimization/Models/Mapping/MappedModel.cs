@@ -63,7 +63,7 @@ namespace Itinero.Optimization.Models.Mapping
         /// <returns></returns>
         public static MappedModel FromJson(string json)
         {
-            return IO.Json.JsonSerializer.FromJsonFunc(json, typeof(Model)) as MappedModel;
+            return IO.Json.JsonSerializer.FromJsonFunc(json, typeof(MappedModel)) as MappedModel;
         }
     }
 }

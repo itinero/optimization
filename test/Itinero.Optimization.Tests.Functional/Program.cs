@@ -29,15 +29,19 @@ namespace Itinero.Optimization.Tests.Functional
         {
             EnableLogging();
 
+            // setup json stuff.
+            Itinero.Optimization.IO.Json.JsonSerializer.ToJsonFunc = Newtonsoft.Json.JsonConvert.SerializeObject;
+            Itinero.Optimization.IO.Json.JsonSerializer.FromJsonFunc = Newtonsoft.Json.JsonConvert.DeserializeObject;
+
 #if DEBUG
             Logger.Log($"{typeof(Program)}.{nameof(Main)}", TraceEventType.Information,
                 "Performance tests are running in Debug, please run in Release mode.");
 #endif
             // invoke case-specific tests.
-            TSP.TSPTests.Run();
-            TSP_TW.TSPTWTests.Run();
-            STSP.STSPTests.Run();
-            CVRP.CVRPTests.Run();
+            //TSP.TSPTests.Run();
+            //TSP_TW.TSPTWTests.Run();
+            //STSP.STSPTests.Run();
+            ///CVRP.CVRPTests.Run();
             CVRP_ND.CVRPNDTests.Run();
         }
 
