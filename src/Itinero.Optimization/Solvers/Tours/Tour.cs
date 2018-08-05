@@ -725,7 +725,15 @@ namespace Itinero.Optimization.Solvers.Tours
         {
             if (_count < 0)
             {
-                _count = (this as IEnumerable<int>).Count();
+                _count = 0;
+                foreach (var i in (this as IEnumerable<int>))
+                {
+                    _count++;
+                    if (_count > this._nextArray.Length + 1)
+                    {
+                        throw new Exception($"Found at least {_count} element when there is only room for {this._nextArray.Length + 1}.");
+                    }
+                }
             }
         }
 
@@ -737,8 +745,14 @@ namespace Itinero.Optimization.Solvers.Tours
         {
             var previous = -1;
             var result = new StringBuilder();
+            var c = 0;
             foreach (var visit in this)
             {
+                c++;
+                if (c > this._nextArray.Length + 1)
+                {
+                    return "INVALID";
+                }
                 if (previous < 0)
                 {
                     result.Append('[');

@@ -39,15 +39,15 @@ namespace Itinero.Optimization.Tests.Functional.STSP
             };
             
             // calculate TSP.
-            Func<Action<Result<Route>>, Result<Route>> func = (intermediateRoutesFunc) =>
-                router.Optimize("car", locations, out _, 0, 0, 600, intermediateRoutesFunc);
-            var route = func.RunWithIntermedidates("STSP-wechel-closed");
-            func = (intermediateRoutesFunc) =>
-                router.Optimize("car", locations, out _, 0, locations.Length - 1, 600, intermediateRoutesFunc);
-            route = func.RunWithIntermedidates("STSP-wechel-fixed");
-            func = (intermediateRoutesFunc) =>
-                router.Optimize("car", locations, out _, 0, null, 600, intermediateRoutesFunc);
-            route = func.RunWithIntermedidates("STSP-wechel-open");
+            Func<Result<Route>> func = () =>
+                router.Optimize("car", locations, out _, 0, 0, 600);
+            var route = func.Run("STSP-wechel-closed");
+            func = () =>
+                router.Optimize("car", locations, out _, 0, locations.Length - 1, 600);
+            route = func.Run("STSP-wechel-fixed");
+            func = () =>
+                router.Optimize("car", locations, out _, 0, null, 600);
+            route = func.Run("STSP-wechel-open");
         }
     }
 }

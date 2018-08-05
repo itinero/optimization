@@ -16,6 +16,8 @@
     <EmbeddedResource Include="CVRP_ND\data\problem2-spijkenisse.geojson" />
     <None Remove="TSP_TW\data\problem1.geojson" />
     <EmbeddedResource Include="TSP_TW\data\problem1.geojson" />
+    <None Remove="CVRP\data\problem2-spijkenisse.geojson" />
+    <EmbeddedResource Include="CVRP\data\problem2-spijkenisse.geojson" />
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>

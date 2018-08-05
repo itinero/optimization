@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Itinero.LocalGeo;
 
 namespace Itinero.Optimization.Tests.Functional.TSP
@@ -66,11 +67,11 @@ namespace Itinero.Optimization.Tests.Functional.TSP
 
             // calculate TSP.
             var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0));
-            var route = func.TestPerf("Testing TSP (0->0)");
+            func.Run("TSP-wechel-closed");
             func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1));
-            route = func.TestPerf("Testing TSP (0->last)");
+            func.Run("TSP-wechel-fixed");
             func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null));
-            route = func.TestPerf("Testing TSP (0->...)");
+            func.Run("TSP-wechel-open");
 
 //            // calculate Directed TSP.
 //            func = new Func<Route>(() => router.CalculateTSPDirected(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), locations, 60, 0, 0));

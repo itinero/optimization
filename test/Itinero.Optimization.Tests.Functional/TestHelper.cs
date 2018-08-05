@@ -6,6 +6,14 @@ namespace Itinero.Optimization.Tests.Functional
 {
     public static class TestHelper
     {
+        public static Result<Route> Run(this Func<Result<Route>> func, string name)
+        {
+            var result = func.TestPerf(name);
+            result.WriteStats();
+            result.WriteGeoJson(name + ".geojson");
+            return result;
+        }
+        
         public static Result<Route> RunWithIntermedidates(this Func<Action<Result<Route>>, Result<Route>> func, string name)
         {
             var allIintermediateRoutes = new List<Route>();

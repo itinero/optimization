@@ -40,7 +40,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
         public SeededCheapestInsertionStrategy(
             SeededCheapestInsertionPlacementOperator seededCheapestInsertionPlacementOperator = null)
         {
-            _seededCheapestInsertionPlacementOperator = seededCheapestInsertionPlacementOperator ?? SeededCheapestInsertionPlacementOperator.Default;
+            _seededCheapestInsertionPlacementOperator = seededCheapestInsertionPlacementOperator ?? SeededCheapestInsertionPlacementOperator.DefaultLastOnly;
         }
      
         /// <inheritdoc />

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Itinero.Optimization.Solvers.CVRP_ND.Operators;
+using Itinero.Optimization.Solvers.CVRP_ND.SCI;
 using Itinero.Optimization.Solvers.Shared.Operators;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
@@ -44,8 +45,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
             PlacementOperator<CVRPNDCandidate> placeRemainingOperator = null)
         {
             _postOperator = postOperator ?? ExchangeOperator.Default;
-            // TODO: this needs to be an operator that always place all visits but doesn't start seeding immidiately.
-            _placeRemainingOperator = placeRemainingOperator ?? CheapestInsertionPlacementOperator.Default;
+            _placeRemainingOperator = placeRemainingOperator ?? SeededCheapestInsertionPlacementOperator.Default;
         }
         
         public override string Name { get; } = "CROSS_EX_TOURS";

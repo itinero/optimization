@@ -13,6 +13,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP
         public static void Run()
         {
             Run1Wechelderzande();
+            Run2Spijkenisse();
         }
 
         public static void Run1Wechelderzande()
@@ -34,9 +35,28 @@ namespace Itinero.Optimization.Tests.Functional.CVRP
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, locations, out _, intermediateRoutesFunc);
             func.RunWithIntermedidates("CVRP-" + "lille");
+        }
 
-//            WriteStats(routes);
-//            routes.WriteGeoJson(DepotCVRPTests.Name + "lille-{0}.geojson");
+        public static void Run2Spijkenisse()
+        {
+            // SPIJKENISSE
+            // build routerdb and save the result.
+            var spijkenisse = Staging.RouterDbBuilder.Build("query4");
+            var vehicle = spijkenisse.GetSupportedVehicle("car");
+            var router = new Router(spijkenisse);
+
+            // build problem2.
+            const int max = 5400;
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("CVRP.data.problem2-spijkenisse.geojson"));
+            
+            // build vehicle pool.
+            var vehicles = VehiclePool.FromProfile(vehicle.Fastest(), 0, 0, max, true);
+            
+            // run
+            Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
+                router.Optimize(vehicles, locations, out _, intermediateRoutesFunc);
+            func.RunWithIntermedidates("CVRP-spijkenisse");
         }
     }
 }

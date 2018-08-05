@@ -41,5 +41,7 @@ The main thing left to think about is how to elegantly handle turning costs:
    - visit: the visit id from the original model.
    - index: remove the index, it's confusing.
    - position: the position in the current tour.
-   - TimeWindows:
-     - Unify unlimited and IsEmpty
+ - TimeWindows:
+   - Unify unlimited and IsEmpty.
+ - Functional tests: conver all problems in CVRP and CVRP-ND.
+ - Implement intermediate results handling on all solvers.

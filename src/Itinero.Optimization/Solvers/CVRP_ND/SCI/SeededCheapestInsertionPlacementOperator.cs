@@ -74,7 +74,11 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
             return false;
         }
         
-        private static readonly ThreadLocal<SeededCheapestInsertionPlacementOperator> DefaultLazy = new ThreadLocal<SeededCheapestInsertionPlacementOperator>(() => new SeededCheapestInsertionPlacementOperator());
+        private static readonly ThreadLocal<SeededCheapestInsertionPlacementOperator> DefaultLastOnlyLazy = new ThreadLocal<SeededCheapestInsertionPlacementOperator>(() => new SeededCheapestInsertionPlacementOperator());
+        public static SeededCheapestInsertionPlacementOperator DefaultLastOnly => DefaultLastOnlyLazy.Value;
+        
+        private static readonly ThreadLocal<SeededCheapestInsertionPlacementOperator> DefaultLazy = new ThreadLocal<SeededCheapestInsertionPlacementOperator>(() => 
+            new SeededCheapestInsertionPlacementOperator(afterSeedPlacementOperator: CheapestInsertionPlacementOperator.Default));
         public static SeededCheapestInsertionPlacementOperator Default => DefaultLazy.Value;
     }
 }

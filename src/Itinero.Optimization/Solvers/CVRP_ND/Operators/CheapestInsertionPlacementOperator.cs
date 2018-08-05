@@ -110,6 +110,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                     {
                         break;
                     }
+
+                    best = (float.MaxValue, new Pair(), Tour.NOT_SET, int.MaxValue);
                 }
             }
 

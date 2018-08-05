@@ -88,7 +88,7 @@ namespace Itinero.Optimization.Solvers
                 reasonsWhy.Append(Environment.NewLine);
             }
 
-            throw new Exception("The given model cannot be solved by any of the registered solvers: " + reasonsWhy.ToString());
+            throw new Exception("The given model cannot be solved by any of the registered solvers or an unhandled exception occurred: " + reasonsWhy.ToString());
         }
         
         /// <summary>
