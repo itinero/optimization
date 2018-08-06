@@ -62,6 +62,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
                 Fitness = 0
             };
             var visits = new HashSet<int>(candidate.Problem.Visits);
+            var remainingThreshold = (int) (0.03f * candidate.Problem.Count);
             
             // try to use as many tours as possible.
             var success = true;
@@ -72,9 +73,19 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
                 
                 // try to select a tour from solution1 to use in the given solution.
                 success |= this.SelectAndMoveTour(visits, candidate1, candidate);
+                if (visits.Count < remainingThreshold)
+                {
+                    _placeRemainingOperator.Apply(candidate, visits);
+                    break;
+                }
                 
                 // try to select a tour from solution2 to use in the given solution.
                 success |= this.SelectAndMoveTour(visits, candidate2, candidate);
+                if (visits.Count < remainingThreshold)
+                {
+                    _placeRemainingOperator.Apply(candidate, visits);
+                    break;
+                }
             }
 
             // place remaining.
