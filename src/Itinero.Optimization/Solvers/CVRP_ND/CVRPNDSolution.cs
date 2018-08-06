@@ -17,14 +17,16 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using Itinero.Optimization.Solvers.Tours;
+using Itinero.Optimization.Strategies;
 
 namespace Itinero.Optimization.Solvers.CVRP_ND
 {
     /// <summary>
     /// Represents a solution to the CVRP no-depot.
     /// </summary>
-    internal class CVRPNDSolution
+    internal class CVRPNDSolution : ICloneable<CVRPNDSolution>
     {
         private readonly List<Tour> _tours;
 
@@ -34,6 +36,11 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         public CVRPNDSolution()
         {
             _tours = new List<Tour>();
+        }
+
+        private CVRPNDSolution(List<Tour> tours)
+        {
+            _tours = tours;
         }
 
         /// <summary>
@@ -88,5 +95,21 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         /// The number of tours in this solution.
         /// </summary>
         public int Count => _tours.Count;
+
+        /// <summary>
+        /// Creates a deep-copy of this solution.
+        /// </summary>
+        /// <returns>A copy of this solution.</returns>
+        public CVRPNDSolution Clone()
+        {
+            var tours = new List<Tour>();
+            
+            foreach (var tour in _tours)
+            {
+                tours.Add(tour.Clone() as Tour);
+            }
+
+            return new CVRPNDSolution(tours);
+        }
     }
 }

@@ -23,6 +23,8 @@ using Itinero.Optimization.Models.Mapping;
 using Itinero.Optimization.Solvers.CVRP_ND.GA;
 using Itinero.Optimization.Solvers.CVRP_ND.SCI;
 using Itinero.Optimization.Solvers.Shared.Seeds;
+using Itinero.Optimization.Strategies;
+using Itinero.Optimization.Strategies.GA;
 
 namespace Itinero.Optimization.Solvers.CVRP_ND
 {
@@ -53,8 +55,18 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             // use a default solver to solve the TSP here.
             try
             {
-                var solver = GASolver.Default;
-                //var solver = SeededCheapestInsertionStrategy.Default;
+                //var solver = GASolver.Default;
+                var solver = new GASolver(settings: new GASettings()
+                {
+                    PopulationSize = 100,
+                    ElitismPercentage = 1,
+                    CrossOverPercentage = 10,
+                    MutationPercentage = 5,
+                    StagnationCount = 15
+                });
+                
+                // Strategy<CVRPNDProblem, CVRPNDCandidate> solver = SeededCheapestInsertionStrategy.Default;
+                
                 var candidate = solver.Search(cvrp.Value);
                 var solution = candidate.Solution;
 

@@ -17,10 +17,12 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Itinero.Optimization.Solvers.Shared.Sequences;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Solvers.Tours.Sequences;
+using Itinero.Optimization.Strategies;
 
 namespace Itinero.Optimization.Solvers.CVRP_ND
 {
@@ -367,7 +369,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             if (s2.Wraps)
             { // move first.
                 this.Solution.UpdateFirst(t2, s2[s2.Length - 1]);
-                tour1 = this.Tour(t2);
+                tour2 = this.Tour(t2);
             }
             
             // do the swap.
@@ -398,6 +400,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             // update total fitness.
             this.TravelWeight += difference;
             this.Fitness = this.TravelWeight * this.Count;
+            
+            Debug.Assert(this.GetUnplacedVisits().Count == 0);
             
             // don't do the swap.
             return (true, difference);
@@ -434,7 +438,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 float end = 0;
                 float betweenReversed = 0;
                 var visitCost = 0f;
-                foreach (var s in tourSequence.SubSequences(length, length, false))
+                foreach (var s in tourSequence.SubSequences(length, length, true))
                 {
                     float start = 0;
                     if (between == null)

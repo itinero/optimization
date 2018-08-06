@@ -26,44 +26,36 @@ namespace Itinero.Optimization.Strategies.GA
         /// <summary>
         /// Gets or sets the population size.
         /// </summary>
-        public int PopulationSize { get; set; }
+        public int PopulationSize { get; set; } = 100;
 
         /// <summary>
         /// Gets or sets the maximum generations.
         /// </summary>
-        public int MaxGenerations { get; set; }
+        public int MaxGenerations { get; set; } = 1000;
 
         /// <summary>
         /// Gets or sets the stagnation count.
         /// </summary>
-        public int StagnationCount { get; set; }
+        public int StagnationCount { get; set; } = 10;
 
         /// <summary>
         /// Gets or sets the elitism in percentage.
         /// </summary>
-        public int ElitismPercentage { get; set; }
+        public int ElitismPercentage { get; set; } = 3;
 
         /// <summary>
         /// Gets or sets the crossover percentage.
         /// </summary>
-        public int CrossOverPercentage { get; set; }
+        public int CrossOverPercentage { get; set; } = 30;
 
         /// <summary>
         /// Gets or sets the mutation percentage.
         /// </summary>
-        public int MutationPercentage { get; set; }
+        public int MutationPercentage { get; set; } = 10;
 
         /// <summary>
         /// Returns default GA settings.
         /// </summary>
-        public static GASettings Default => new GASettings()
-        {
-            MaxGenerations = 1000,
-            PopulationSize = 100,
-            StagnationCount = 10,
-            ElitismPercentage = 3,
-            MutationPercentage = 10,
-            CrossOverPercentage = 30
-        };
+        public static GASettings Default => new GASettings();
     }
 }

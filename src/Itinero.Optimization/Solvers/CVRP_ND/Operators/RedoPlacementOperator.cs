@@ -35,7 +35,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
         public RedoPlacementOperator(PlacementOperator<CVRPNDCandidate> placementOperator = null, int tourRemoveCount = 2)
         {
             _removeCount = tourRemoveCount;
-            _placementOperator = placementOperator ?? new SeededCheapestInsertionPlacementOperator();
+            _placementOperator = placementOperator ?? new SeededCheapestInsertionPlacementOperator(
+                                     beforeSeedPlacementOperator: new CheapestInsertionPlacementOperator());
         }
 
         public override string Name => $"REDO_{_placementOperator.Name}";

@@ -50,7 +50,7 @@ namespace Itinero.Optimization.Strategies
         }
         
         /// <summary>
-        /// Converts the given operator into an operator that runs applies the given operator until it fails but for a given number of times.
+        /// Converts the given operator into an operator that runs applies the given operator until it fails but maximum for a given number of times.
         /// </summary>
         /// <param name="oper">The operator.</param>
         /// <param name="n">The number of times to iterate.</param>

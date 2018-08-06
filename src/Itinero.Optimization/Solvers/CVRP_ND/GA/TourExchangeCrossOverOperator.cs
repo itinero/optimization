@@ -44,7 +44,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
         public TourExchangeCrossOverOperator(Operator<CVRPNDCandidate> postOperator = null,
             PlacementOperator<CVRPNDCandidate> placeRemainingOperator = null)
         {
-            _postOperator = postOperator ?? ExchangeOperator.Default;
+            _postOperator = postOperator ?? new ExchangeOperator(onlyLast: false, bestImprovement: false, tryAll: false, minWindowSize: 0, maxWindowSize: 5);
             _placeRemainingOperator = placeRemainingOperator ?? SeededCheapestInsertionPlacementOperator.Default;
         }
         

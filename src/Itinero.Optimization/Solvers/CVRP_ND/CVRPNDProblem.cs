@@ -117,7 +117,12 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         /// <summary>
         /// Gets the visits.
         /// </summary>
-        public IEnumerable<int> Visits => _visits ?? System.Linq.Enumerable.Range(0, _travelWeights.Length);
+        public IEnumerable<int> Visits => _visits ?? Enumerable.Range(0, _travelWeights.Length);
+
+        /// <summary>
+        /// Gets the highest visit id.
+        /// </summary>
+        public int MaxVisit => _travelWeights.Length;
 
         /// <summary>
         /// Gets the number of visits.

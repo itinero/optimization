@@ -21,8 +21,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Itinero.Optimization.Solvers.Shared.CheapestInsertion;
+using Itinero.Optimization.Solvers.Shared.HillClimbing3Opt;
 using Itinero.Optimization.Solvers.Shared.Operators;
 using Itinero.Optimization.Solvers.Tours;
+using Itinero.Optimization.Strategies;
 
 namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
 {
@@ -31,14 +33,26 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
     /// </summary>
     internal class CheapestInsertionPlacementOperator : PlacementOperator<CVRPNDCandidate>
     {
+        private readonly float _improvementsThreshold; // the threshold for when the apply inter-tour improvements.
         private readonly Func<int, int, float> _insertionCostHeuristic;
         private readonly bool _lastOnly = false;
+        private readonly Operator<CVRPNDCandidate> _exchangeOperator;
         
+        /// <summary>
+        /// Creates a new placement operator.
+        /// </summary>
+        /// <param name="insertionCostHeuristic">The insertion cost heuristic in any.</param>
+        /// <param name="lastOnly">When true inserts in the last tour only.</param>
+        /// <param name="improvementsThreshold">The improvements threshold parameter.</param>
         public CheapestInsertionPlacementOperator(Func<int, int, float> insertionCostHeuristic = null,
-            bool lastOnly = false)
+            bool lastOnly = false, float improvementsThreshold = 0.05f)
         {
             _insertionCostHeuristic = insertionCostHeuristic;
             _lastOnly = lastOnly;
+            _improvementsThreshold = improvementsThreshold;
+
+            _exchangeOperator = new ExchangeOperator(onlyLast: _lastOnly, bestImprovement: true, minWindowSize: 0, maxWindowSize: 1);
+            _exchangeOperator = _exchangeOperator.ApplyUntil();
         }
 
         public override string Name => "CI_PLACE";
@@ -51,6 +65,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
 
         public override bool Apply(CVRPNDCandidate candidate, ICollection<int> visits)
         {
+            var relativeThreshold = (int) (_improvementsThreshold * candidate.Problem.Count);
+            var insertedCount = 0;
             if (_lastOnly)
             {
                 // try to place in the last tour.
@@ -68,9 +84,19 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                 {
                     candidate.InsertAfter(t, cheapest.location.From, cheapest.visit);
                     visits.Remove(cheapest.visit);
+                    insertedCount++;
                     if (visits.Count == 0)
                     {
                         break;
+                    }
+                    
+                    if (insertedCount == relativeThreshold)
+                    { // apply exchanges if needed.
+                        var last = candidate.Solution.Tour(candidate.Solution.Count - 1);
+                        last.Do3Opt(candidate.Problem.TravelWeight, candidate.Problem.MaxVisit);
+                        
+                        insertedCount = 0;
+                        _exchangeOperator.Apply(candidate);
                     }
 
                     cheapest = tour.CalculateCheapest(candidate.Problem.TravelWeight, visits,

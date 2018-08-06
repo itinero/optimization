@@ -29,7 +29,6 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
     /// </summary>
     internal class SeededCheapestInsertionPlacementOperator : PlacementOperator<CVRPNDCandidate>
     {
-        private readonly float _improvementsThreshold; // the threshold for when the apply inter-tour improvements.
         private readonly PlacementOperator<CVRPNDCandidate> _seedOperator;
         private readonly PlacementOperator<CVRPNDCandidate> _afterSeedPlacementOperator;
         private readonly PlacementOperator<CVRPNDCandidate> _beforeSeedPlacementOperator;
@@ -42,16 +41,14 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
         /// <param name="beforeSeedPlacementOperator">The placement operator, expected is an operator that places visits in the existing tours before a new tour was seeded.</param>
         /// <param name="afterSeedPlacementOperator">The placement operator, expected is an operator that places visits in the existing tours after a new tour was seeded.</param>
         /// <param name="remainingThreshold">The remaining threshold parameter.</param>
-        /// <param name="improvementsThreshold">The improvements threshold parameter.</param>
         public SeededCheapestInsertionPlacementOperator(PlacementOperator<CVRPNDCandidate> seedOperator = null,
             PlacementOperator<CVRPNDCandidate> beforeSeedPlacementOperator = null, PlacementOperator<CVRPNDCandidate> afterSeedPlacementOperator = null, 
-            float remainingThreshold = 0.03f, float improvementsThreshold = 0.25f)
+            float remainingThreshold = 0.03f)
         {
             _seedOperator = seedOperator ?? new SeedPlacementOperator((_, visits) => SeedHeuristics.GetSeedRandom(visits));
             _beforeSeedPlacementOperator = beforeSeedPlacementOperator;
             _afterSeedPlacementOperator = afterSeedPlacementOperator ?? CheapestInsertionPlacementOperator.DefaultLastOnly;
             _remainingThreshold = remainingThreshold;
-            _improvementsThreshold = improvementsThreshold;
         }
         
         public override string Name => "SCI_PLACE";

@@ -32,6 +32,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
         private readonly int _minWindowSize;
         private readonly bool _tryAll;
         private readonly bool _bestImprovement;
+        private readonly bool _onlyLast;
         
         /// <summary>
         /// Creates a new operator.
@@ -39,13 +40,16 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
         /// <param name="minWindowSize">The minimum window size to search for sequences to exchange.</param>
         /// <param name="maxWindowSize">The maximum window size to search for sequences to exchange.</param>
         /// <param name="tryAll">When true all tour pairs are tried out.</param>
+        /// <param name="onlyLast">When true only exchange between the last and other tours are considered.</param>
         /// <param name="bestImprovement">When true all options are tried before choosing the best.</param>
-        public ExchangeOperator(int minWindowSize = 0, int maxWindowSize = 4, bool tryAll = false, bool bestImprovement = false)
+        public ExchangeOperator(int minWindowSize = 0, int maxWindowSize = 4, bool tryAll = false, bool bestImprovement = false,
+            bool onlyLast = false)
         {
             _tryAll = tryAll;
             _bestImprovement = bestImprovement;
             _minWindowSize = minWindowSize;
             _maxWindowSize = maxWindowSize;
+            _onlyLast = onlyLast;
         }
 
         /// <summary>
@@ -79,8 +83,45 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
         /// <remarks>The candidate will be modified in-place but this should *only* happen in the case when there is an improvement or this operator is explicitly used as a mutation operator.</remarks>
         public override bool Apply(CVRPNDCandidate candidate)
         {
-            if (_tryAll)
+            if (_onlyLast)
             {
+                (bool success, Seq s1, Seq s2, float fitnessDelta, int t1, int t2) best = (false, new Seq(), new Seq(),
+                    float.MaxValue, -1, -1);
+                
+                // try all pairs and keep the best exchange around if any.
+                var t1 = candidate.Solution.Count - 1;
+                for (var t2 = 0; t2 < t1; t2++)
+                {
+                    var exchange = this.Try(candidate, t1, t2);
+                    if (!exchange.success || !(exchange.fitnessDelta < best.fitnessDelta)) continue;
+
+                    best.fitnessDelta = exchange.fitnessDelta;
+                    best.t1 = t1;
+                    best.t2 = t2;
+                    best.s1 = exchange.s1;
+                    best.s2 = exchange.s2;
+                    best.success = true;
+
+                    if (!_bestImprovement)
+                    {
+                        // exchange was already done on the first improvement found. 
+                        return true;
+                    }
+                }
+
+                if (best.success)
+                {
+                    // do the exchange, this is the best one.
+                    candidate.TrySwap(best.t1, best.t2, best.s1, best.s2);
+                    return true;
+                }
+                
+                return false;
+            }
+            else if (_tryAll)
+            {
+                Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                
                 (bool success, Seq s1, Seq s2, float fitnessDelta, int t1, int t2) best = (false, new Seq(), new Seq(),
                     float.MaxValue, -1, -1);
                 
@@ -100,9 +141,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
 
                     if (!_bestImprovement)
                     {
-                        Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
-                        
                         // exchange was already done on the first improvement found. 
+                        Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                         return true;
                     }
                 }
@@ -111,14 +151,15 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                 {
                     // do the exchange, this is the best one.
                     candidate.TrySwap(best.t1, best.t2, best.s1, best.s2);
+                    Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                    return true;
                 }
-            
+                return false;
+            }
+            else 
+            {
                 Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                 
-                return true;
-            }
-            else
-            {
                 // choose two random tours.
                 Strategies.Random.RandomGenerator.Generate2(candidate.Solution.Count, out var t1, out var t2);
 
@@ -128,11 +169,11 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                 if (!_bestImprovement)
                 {
                     // exchange was already done on the first improvement found. 
+                    Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                     return true;
                 }
                 // do the exchange, this is the best one.
                 candidate.TrySwap(t1, t2, exchange.s1, exchange.s2);
-            
                 Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                 return true;
             }
@@ -168,6 +209,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                     if (!_bestImprovement)
                     {
                         // exchange was already done on the first improvement found. 
+                        Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                         return true;
                     }
                 }
@@ -176,11 +218,11 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                 {
                     // do the exchange, this is the best one.
                     candidate.TrySwap(t, best.t2, best.s1, best.s2);
+                    Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                    return true;
                 }
-            
-                Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
 
-                return true;
+                return false;
             }
             else
             { // choose a random second tour.

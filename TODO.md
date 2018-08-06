@@ -60,3 +60,15 @@ The main thing left to think about is how to elegantly handle turning costs:
 
  - Limit the visits being considered to only nearest neighbours.
  - Don't use pair but GetNext() on tour, this way we can exclude visits too far 'from' first before even considering 'to'.
+ 
+ General ideas:
+ - See if we can (quickly) figure out if the shortest path between two locations is along other locations.
+ 
+ 
+ Best found spijkenisse-5400:
+ 
+ route_0:3321.945s | 20408.01m | 80stops with 0s 0kg
+ route_1:2155.409s | 17148.18m | 60stops with 0s 0kg
+ route_2:2974.917s | 14349.19m | 59stops with 0s 0kg
+ route_3:4342.102s | 33175.39m | 134stops with 0s 0kg
+ total:12794.37s | 85080.77m | 333stops
