@@ -130,6 +130,11 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         public (string metric, float max, float[] costs)[] CapacityConstraints { get; }
 
         /// <summary>
+        /// Gets the nearest neighbour cache.
+        /// </summary>
+        internal NearestNeighbourCache NearestNeighbourCache => _nearestNeighbourCacheLazy.Value;
+
+        /// <summary>
         /// Gets the visits.
         /// </summary>
         public IEnumerable<int> Visits => _visits ?? Enumerable.Range(0, _travelWeights.Length);

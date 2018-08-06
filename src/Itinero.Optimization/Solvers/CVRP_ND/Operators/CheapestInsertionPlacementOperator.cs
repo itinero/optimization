@@ -93,7 +93,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                     { // apply exchanges if needed.
                         var last = candidate.Solution.Tour(candidate.Solution.Count - 1);
                         // TODO: use nearest neighbours.
-                        last.Do3Opt(candidate.Problem.TravelWeight, candidate.Problem.MaxVisit);
+                        last.Do3Opt(candidate.Problem.TravelWeight, candidate.Problem.MaxVisit, candidate.Problem.NearestNeighbourCache.GetNNearestNeighbours(10));
                         
                         insertedCount = 0;
                         _improvementOperator?.Apply(candidate);
