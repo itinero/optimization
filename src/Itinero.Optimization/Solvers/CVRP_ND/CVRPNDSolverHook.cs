@@ -59,9 +59,9 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 //var solver = GASolver.Default;
                 var solver = new GASolver(settings: new GASettings()
                 {
-                    PopulationSize = 20,
+                    PopulationSize = 1000,
                     ElitismPercentage = 1,
-                    CrossOverPercentage = 10,
+                    CrossOverPercentage = 15,
                     MutationPercentage = 0,
                     StagnationCount = 20
                 });

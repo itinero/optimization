@@ -66,7 +66,6 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
         {
             _beforeSeedPlacementOperator?.Apply(candidate, visits);
             
-            // TODO: implement 'place remaining'.
             var remainingThreshold = (int) (_remainingThreshold * candidate.Problem.Count);
             while (visits.Count > 0)
             {
@@ -91,7 +90,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
         public static SeededCheapestInsertionPlacementOperator DefaultLastOnly => DefaultLastOnlyLazy.Value;
         
         private static readonly ThreadLocal<SeededCheapestInsertionPlacementOperator> DefaultLazy = new ThreadLocal<SeededCheapestInsertionPlacementOperator>(() => 
-            new SeededCheapestInsertionPlacementOperator(afterSeedPlacementOperator: CheapestInsertionPlacementOperator.Default));
+            new SeededCheapestInsertionPlacementOperator(beforeSeedPlacementOperator: CheapestInsertionPlacementOperator.Default, 
+                afterSeedPlacementOperator: CheapestInsertionPlacementOperator.DefaultLastOnly));
         public static SeededCheapestInsertionPlacementOperator Default => DefaultLazy.Value;
     }
 }
