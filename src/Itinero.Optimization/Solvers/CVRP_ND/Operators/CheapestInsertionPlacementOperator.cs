@@ -36,23 +36,22 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
         private readonly float _improvementsThreshold; // the threshold for when the apply inter-tour improvements.
         private readonly Func<int, int, float> _insertionCostHeuristic;
         private readonly bool _lastOnly = false;
-        private readonly Operator<CVRPNDCandidate> _exchangeOperator;
+        private readonly Operator<CVRPNDCandidate> _improvementOperator;
         
         /// <summary>
         /// Creates a new placement operator.
         /// </summary>
+        /// <param name="improvementOperator">The operator to apply at intermediate stages of the placement.</param>
         /// <param name="insertionCostHeuristic">The insertion cost heuristic in any.</param>
         /// <param name="lastOnly">When true inserts in the last tour only.</param>
         /// <param name="improvementsThreshold">The improvements threshold parameter.</param>
-        public CheapestInsertionPlacementOperator(Func<int, int, float> insertionCostHeuristic = null,
+        public CheapestInsertionPlacementOperator(Operator<CVRPNDCandidate> improvementOperator = null, Func<int, int, float> insertionCostHeuristic = null,
             bool lastOnly = false, float improvementsThreshold = 0.05f)
         {
             _insertionCostHeuristic = insertionCostHeuristic;
             _lastOnly = lastOnly;
             _improvementsThreshold = improvementsThreshold;
-
-            _exchangeOperator = new ExchangeOperator(onlyLast: _lastOnly, bestImprovement: true, minWindowSize: 0, maxWindowSize: 1);
-            _exchangeOperator = _exchangeOperator.ApplyUntil();
+            _improvementOperator = improvementOperator ?? (new ExchangeOperator(onlyLast: _lastOnly, bestImprovement: true, minWindowSize: 0, maxWindowSize: 10)).ApplyUntil();
         }
 
         public override string Name => "CI_PLACE";
@@ -93,14 +92,18 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                     if (insertedCount == relativeThreshold)
                     { // apply exchanges if needed.
                         var last = candidate.Solution.Tour(candidate.Solution.Count - 1);
+                        // TODO: use nearest neighbours.
                         last.Do3Opt(candidate.Problem.TravelWeight, candidate.Problem.MaxVisit);
                         
                         insertedCount = 0;
-                        _exchangeOperator.Apply(candidate);
+                        _improvementOperator?.Apply(candidate);
                     }
 
                     cheapest = tour.CalculateCheapest(candidate.Problem.TravelWeight, visits,
                         insertionCostHeuristic, (travelCost, v) => candidate.CanInsert(t, v, travelCost));
+                    
+                    // TODO: if placement fails, try 3OPT and exchange one last time.
+                    // TODO: see if we can do 3opt and ex at seperate paces.
                 }
             }
             else
@@ -144,7 +147,9 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
             return false;
         }
         
-        private static readonly ThreadLocal<CheapestInsertionPlacementOperator> DefaultLastOnlyLazy = new ThreadLocal<CheapestInsertionPlacementOperator>(() => new CheapestInsertionPlacementOperator(null, true));
+        private static readonly ThreadLocal<CheapestInsertionPlacementOperator> DefaultLastOnlyLazy = new ThreadLocal<CheapestInsertionPlacementOperator>(
+            () => new CheapestInsertionPlacementOperator(new ExchangeOperator(onlyLast: true, bestImprovement: false, minWindowSize: 0, maxWindowSize: 1), 
+                null, true));
         public static CheapestInsertionPlacementOperator DefaultLastOnly => DefaultLastOnlyLazy.Value;
         
         private static readonly ThreadLocal<CheapestInsertionPlacementOperator> DefaultLazy = new ThreadLocal<CheapestInsertionPlacementOperator>(() => new CheapestInsertionPlacementOperator());

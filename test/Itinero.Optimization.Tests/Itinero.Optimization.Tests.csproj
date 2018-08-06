@@ -12,4 +12,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Itinero.Optimization\Itinero.Optimization.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Solvers\CVRP_ND\data\model1.json" />
+    <EmbeddedResource Include="Solvers\CVRP_ND\data\model1.json" />
+  </ItemGroup>
 </Project>

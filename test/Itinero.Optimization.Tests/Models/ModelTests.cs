@@ -46,7 +46,7 @@ namespace Itinero.Optimization.Tests.Models
                     {
                         Latitude = 1.01f,
                         Longitude =  1.02f,
-                        TimeWindow = TimeWindow.Unlimited,
+                        TimeWindow = new TimeWindow(),
                         VisitCosts = new []
                         {
                             new VisitCost()
@@ -60,7 +60,7 @@ namespace Itinero.Optimization.Tests.Models
                     {
                         Latitude = 2.01f,
                         Longitude =  2.02f,
-                        TimeWindow = TimeWindow.Unlimited,
+                        TimeWindow = new TimeWindow(),
                         VisitCosts = new []
                         {
                             new VisitCost()
@@ -96,7 +96,7 @@ namespace Itinero.Optimization.Tests.Models
             };
             
             var json = model.ToJson();
-            Assert.Equal("{\"Visits\":[{\"Latitude\":1.01,\"Longitude\":1.02,\"TimeWindow\":{\"Min\":-3.40282347E+38,\"Max\":3.40282347E+38,\"IsUnlimited\":true},\"VisitCosts\":[{\"Metric\":\"time\",\"Value\":100.0}]},{\"Latitude\":2.01,\"Longitude\":2.02,\"TimeWindow\":{\"Min\":-3.40282347E+38,\"Max\":3.40282347E+38,\"IsUnlimited\":true},\"VisitCosts\":[{\"Metric\":\"time\",\"Value\":200.0}]}],\"VehiclePool\":{\"Vehicles\":[{\"Metric\":\"time\",\"Profile\":\"car\",\"Departure\":null,\"Arrival\":null,\"TurnPentalty\":0.0,\"CapacityConstraints\":[{\"Metric\":\"weight\",\"Capacity\":100.0}]}],\"Reusable\":false}}",
+            Assert.Equal("{\"Visits\":[{\"Latitude\":1.01,\"Longitude\":1.02,\"TimeWindow\":{\"Min\":0.0,\"Max\":0.0,\"IsEmpty\":true},\"VisitCosts\":[{\"Metric\":\"time\",\"Value\":100.0}]},{\"Latitude\":2.01,\"Longitude\":2.02,\"TimeWindow\":{\"Min\":0.0,\"Max\":0.0,\"IsEmpty\":true},\"VisitCosts\":[{\"Metric\":\"time\",\"Value\":200.0}]}],\"VehiclePool\":{\"Vehicles\":[{\"Metric\":\"time\",\"Profile\":\"car\",\"Departure\":null,\"Arrival\":null,\"TurnPentalty\":0.0,\"CapacityConstraints\":[{\"Metric\":\"weight\",\"Capacity\":100.0}]}],\"Reusable\":false}}",
                 json);
         }
     }

@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Itinero.LocalGeo;
 using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
 
 namespace Itinero.Optimization.Solvers.CVRP_ND
@@ -30,6 +31,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
     {
         private readonly float[][] _travelWeights;
         private readonly float[] _visitWeights;
+        private readonly Coordinate[] _visitLocations;
         private readonly HashSet<int> _visits;
         private readonly float _maxWeight;
         private readonly Lazy<NearestNeighbourCache> _nearestNeighbourCacheLazy;
@@ -42,12 +44,15 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         /// <param name="maxWeight">The maximum weight per vehicle, if any.</param>
         /// <param name="capacityConstraints">The visit costs per metric for each visit and a max per vehicle.</param>
         /// <param name="visits">The required visits, all visits required if null.</param>
+        /// <param name="visitLocations">The visit locations if available.</param>
         public CVRPNDProblem(float[][] travelWeights, float[] visitWeights = null, float maxWeight = float.MaxValue, 
-            IEnumerable<(string metric, float max, float[] costs)> capacityConstraints = null, IEnumerable<int> visits = null)
+            IEnumerable<(string metric, float max, float[] costs)> capacityConstraints = null, IEnumerable<int> visits = null,
+            Coordinate[] visitLocations = null)
         {
             _travelWeights = travelWeights;
             _visitWeights = visitWeights;
             _maxWeight = maxWeight;
+            _visitLocations = visitLocations;
             CapacityConstraints = capacityConstraints?.ToArray() ?? new (string metric, float max, float[] costs)[0];
 
             if (visits != null)
@@ -95,6 +100,16 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             return _visitWeights[visit];
         }
 
+        /// <summary>
+        /// Gets the location of the given visit.
+        /// </summary>
+        /// <param name="visit">The visit.</param>
+        /// <returns></returns>
+        public Coordinate? VisitLocation(int visit)
+        {
+            return _visitLocations?[visit];
+        }
+        
         /// <summary>
         /// Returns true if the visit is part of this problem.
         /// </summary>

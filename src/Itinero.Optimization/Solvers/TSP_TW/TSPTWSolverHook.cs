@@ -94,7 +94,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW
             {
                 var visit = model.Visits[v];
                 
-                windows[v] = TimeWindow.Unlimited;
+                windows[v] = new TimeWindow();
                 if (visit.TimeWindow != null &&
                     !visit.TimeWindow.IsEmpty)
                 {
@@ -132,7 +132,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW
             var timeWindow = false;
             foreach (var visit in model.Visits)
             {
-                if (visit.TimeWindow == null || visit.TimeWindow.IsUnlimited) continue;
+                if (visit.TimeWindow == null || visit.TimeWindow.IsEmpty) continue;
                 timeWindow = true;
             }
             if (!timeWindow)

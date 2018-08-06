@@ -44,7 +44,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
         public TourExchangeCrossOverOperator(Operator<CVRPNDCandidate> postOperator = null,
             PlacementOperator<CVRPNDCandidate> placeRemainingOperator = null)
         {
-            _postOperator = postOperator ?? new ExchangeOperator(onlyLast: false, bestImprovement: false, tryAll: false, minWindowSize: 0, maxWindowSize: 5);
+            _postOperator = postOperator ?? new ExchangeOperator(onlyLast: false, bestImprovement: false, tryAll: false, minWindowSize: 0, maxWindowSize: 10);
             _placeRemainingOperator = placeRemainingOperator ?? SeededCheapestInsertionPlacementOperator.Default;
         }
         
@@ -87,6 +87,9 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
 
             // apply some post-exchange operator if defined.
             _postOperator?.Apply(candidate);
+            
+            Debug.Assert(candidate1.GetUnplacedVisits().Count == 0);
+            Debug.Assert(candidate2.GetUnplacedVisits().Count == 0);
 
             return candidate;
         }
@@ -98,7 +101,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
                 return false;
             }
             
-            // TODO: figure out if it makes senses to keep track of previously select tours and exclude them.
+            // TODO: figure out if it makes senses to keep track of previously selected tours and exclude them.
             Tour tour = null;
             if (target.Count == 0)
             { // target is empty, select random tour.
@@ -170,7 +173,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
                     previous = pair.From;
                 }
                 if (!visits.Remove(pair.To))
-                { // TODO: do we need to close the tour here or not?
+                {
                     continue;
                 }
                 if (targetTour == null)

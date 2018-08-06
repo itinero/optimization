@@ -255,6 +255,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
         /// <remarks>The candidate will be modified in-place but this should *only* happen in the case when there is an improvement or this operator is explicitly used as a mutation operator.</remarks>
         public override bool Apply(CVRPNDCandidate candidate, int t1, int t2)
         {
+            if (!candidate.Overlap(t1, t2)) return false; // no potential overlaps.
+            
             var exchange = this.Try(candidate, t1, t2);
             if (!exchange.success) return false;
             
@@ -275,6 +277,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
         private (bool success, Seq s1, Seq s2, float fitnessDelta) Try(CVRPNDCandidate candidate, int t1, int t2)
         {
             (bool success, Seq s1, Seq s2, float fitnessDelta) best = (false, new Seq(), new Seq(), 0);
+
+            if (!candidate.Overlap(t1, t2)) return best; // no potential overlaps.
 
             var tryReversed = true; // TODO: make this candidate-dependent.
             var tour1Enumerable = candidate.SeqAndSmaller(t1, _minWindowSize + 2, _maxWindowSize + 2);

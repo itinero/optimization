@@ -68,7 +68,7 @@ namespace Itinero.Optimization.Strategies.GA
             _crossOver = crossOver;
             _generator = generator;
             _mutation = mutation;
-            _selector = selector ?? new TournamentSelector<TCandidate>();
+            _selector = selector ?? new TournamentSelector<TCandidate>(50, 0.8f);
 
             _settings = settings;
         }
@@ -105,17 +105,27 @@ namespace Itinero.Optimization.Strategies.GA
             var stagnation = 0;
             var generation = 0;
             var elitism = (int)(_settings.PopulationSize * (_settings.ElitismPercentage / 100.0));
-            var crossOver = (int)(_settings.PopulationSize * (_settings.CrossOverPercentage / 100.0));
-            var crossOverIndividuals = new TCandidate[crossOver];
+            if (elitism == 0 && _settings.ElitismPercentage != 0)
+            { // make sure we have at least one, elitism was requested but population was too small.
+                elitism = 1;
+            }
+
+            var selectionPoolSize = _settings.PopulationSize / 10; // (int)(_settings.PopulationSize * (_settings.CrossOverPercentage / 100.0));
+            if (selectionPoolSize < 2 &&
+                _settings.CrossOverPercentage != 0)
+            { // make sure we have at least 2, some crossover was requested but population was too small.
+                selectionPoolSize = 2;
+            }
+            var crossOverIndividuals = new TCandidate[selectionPoolSize];
             var exclude = new HashSet<int>();
             while (stagnation < _settings.StagnationCount &&
                    generation < _settings.MaxGenerations)
             {
                 Logger.Log($"{nameof(GAStrategy<TProblem, TCandidate>)}.{nameof(Search)}", TraceEventType.Verbose,
-                    $"{this.Name}: Started generation {generation} @ stagnation {stagnation}.");
+                    $"{this.Name}: Started generation {generation} @ stagnation {stagnation} with {population[0]} and {population[population.Length -1 ]}.");
                 // select individuals for crossover.
                 exclude.Clear();
-                for (var i = 0; i < crossOver; i++)
+                for (var i = 0; i < selectionPoolSize; i++)
                 { // select individual.
                     var selected = -1;
                     while (selected < 0)
@@ -129,8 +139,10 @@ namespace Itinero.Optimization.Strategies.GA
                 // replace part of the population by offspring.
                 for (var i = elitism; i < population.Length; i++)
                 {
-                    Random.RandomGenerator.Generate2(crossOver, out var c1, out var c2);
-                    population[i] = _crossOver.Apply(population[c1], population[c2]);
+                    if (Random.RandomGenerator.Default.Generate(100) > _settings.CrossOverPercentage) continue; 
+                    
+                    Random.RandomGenerator.Generate2(selectionPoolSize, out var c1, out var c2);
+                    population[i] = _crossOver.Apply(crossOverIndividuals[c1], crossOverIndividuals[c2]);
                 }
 
                 // mutate part of the population.

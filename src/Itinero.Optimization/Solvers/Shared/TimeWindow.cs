@@ -66,15 +66,6 @@ namespace Itinero.Optimization.Solvers.Shared
         }
 
         /// <summary>
-        /// Returns a default timewindow with unlimited arrival/departure times.
-        /// </summary>
-        public static TimeWindow Unlimited => new TimeWindow()
-        {
-            Max = float.MaxValue,
-            Min = float.MinValue
-        };
-
-        /// <summary>
         /// Returns true if this timewindows is considered empty or 'to be ignored'.
         /// </summary>
         public bool IsEmpty => (this.Min == 0 &&

@@ -470,7 +470,6 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
         /// <param name="tour">The tour.</param>
         /// <param name="weightFunc">The function to get weights.</param>
         /// <param name="windows">The time windows.</param>
-        /// <param name="last">The last visit if fixed, it will no be considered as a move.</param>
         /// <returns>All details about the move.</returns>
         public static (bool success, int shifted, int oldBefore,
             int oldAfter, int newBefore, int newAfter) MoveViolatedForward(this Tour tour,

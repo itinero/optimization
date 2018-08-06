@@ -119,7 +119,7 @@ namespace Itinero.Optimization.Solvers.STSP
             }
             foreach (var visit in model.Visits)
             {
-                if (visit.TimeWindow == null || visit.TimeWindow.IsUnlimited) continue;
+                if (visit.TimeWindow == null || visit.TimeWindow.IsEmpty) continue;
                 reasonIfNot = "Timewindows detected.";
                 return false;
             }

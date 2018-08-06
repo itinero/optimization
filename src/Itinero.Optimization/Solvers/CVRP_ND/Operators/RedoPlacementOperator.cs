@@ -43,9 +43,12 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
 
         public override bool Apply(CVRPNDCandidate candidate)
         {
+            // TODO: perhaps consider an operator that tries to remove a small tour and redistribute into the others.
+
+            var removeCount = Strategies.Random.RandomGenerator.Default.Generate(_removeCount - 1) + 1;
             var before = candidate.Fitness;
             var originalCount = candidate.Count;
-            while (candidate.Count > originalCount - _removeCount &&
+            while (candidate.Count > originalCount - removeCount &&
                    candidate.Count > 0)
             {
                 var t = Strategies.Random.RandomGenerator.Default.Generate(candidate.Count);

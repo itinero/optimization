@@ -215,7 +215,7 @@ namespace Itinero.Optimization.Models
                 message = string.Empty;
                 return true;
             }
-            if (tw.IsUnlimited)
+            if (tw.IsEmpty)
             {
                 message = string.Empty;
                 return true;

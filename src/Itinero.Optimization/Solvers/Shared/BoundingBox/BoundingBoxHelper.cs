@@ -16,28 +16,35 @@
  *  limitations under the License.
  */
 
-using Itinero.Optimization.Solvers.Shared;
+using System;
+using Itinero.LocalGeo;
+using Itinero.Optimization.Solvers.Tours;
 
-namespace Itinero.Optimization.Tests.Solvers
+namespace Itinero.Optimization.Solvers.Shared.BoundingBox
 {
     /// <summary>
-    /// Helper methods to create time window arrays.
+    /// Contains functions to help with the calculation of bounding boxes.
     /// </summary>
-    internal static class TimeWindowHelpers
+    internal static class BoundingBoxHelper
     {
         /// <summary>
-        /// Builds an array of unlimited time windows.
+        /// Calculates a bounding box.
         /// </summary>
-        /// <param name="size">The size of the array.</param>
+        /// <param name="tour"></param>
+        /// <param name="visitLocationFunc"></param>
         /// <returns></returns>
-        public static TimeWindow[] Unlimited(int size)
+        public static Box? BoundingBox(this Tour tour, Func<int, Coordinate?> visitLocationFunc)
         {
-            var windows = new TimeWindow[size];
-            for (var w = 0; w < windows.Length; w++)
+            Box? box = null;
+            foreach (var visit in tour)
             {
-                windows[w] = new TimeWindow();
+                var visitLocation = visitLocationFunc(visit);
+                if (!visitLocation.HasValue) break; // if any visit doesn't have a location then the result could be invalid, assume the worst.
+                
+                box = box?.ExpandWith(visitLocation.Value.Latitude, visitLocation.Value.Longitude) ?? 
+                      new Box(visitLocation.Value, visitLocation.Value);
             }
-            return windows;
+            return box;
         }
     }
 }

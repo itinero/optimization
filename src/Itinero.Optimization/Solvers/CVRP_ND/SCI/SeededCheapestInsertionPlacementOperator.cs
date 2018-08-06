@@ -32,6 +32,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
         private readonly PlacementOperator<CVRPNDCandidate> _seedOperator;
         private readonly PlacementOperator<CVRPNDCandidate> _afterSeedPlacementOperator;
         private readonly PlacementOperator<CVRPNDCandidate> _beforeSeedPlacementOperator;
+        private readonly PlacementOperator<CVRPNDCandidate> _remainingPlacementOperator;
         private readonly float _remainingThreshold; // the place remaining threshold percentage.
 
         /// <summary>
@@ -49,6 +50,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
             _beforeSeedPlacementOperator = beforeSeedPlacementOperator;
             _afterSeedPlacementOperator = afterSeedPlacementOperator ?? CheapestInsertionPlacementOperator.DefaultLastOnly;
             _remainingThreshold = remainingThreshold;
+            
+            _remainingPlacementOperator = CheapestInsertionPlacementOperator.Default;
         }
         
         public override string Name => "SCI_PLACE";
@@ -63,15 +66,28 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
         {
             _beforeSeedPlacementOperator?.Apply(candidate, visits);
             
-            while (_seedOperator.Apply(candidate, visits))
+            // TODO: implement 'place remaining'.
+            var remainingThreshold = (int) (_remainingThreshold * candidate.Problem.Count);
+            while (visits.Count > 0)
             {
+                if (!_seedOperator.Apply(candidate, visits))
+                {
+                    break;
+                }
+
+                if (visits.Count <= remainingThreshold)
+                {
+                    _remainingPlacementOperator.Apply(candidate, visits);
+                }
+                
                 _afterSeedPlacementOperator.Apply(candidate, visits);
             }
 
             return false;
         }
         
-        private static readonly ThreadLocal<SeededCheapestInsertionPlacementOperator> DefaultLastOnlyLazy = new ThreadLocal<SeededCheapestInsertionPlacementOperator>(() => new SeededCheapestInsertionPlacementOperator());
+        private static readonly ThreadLocal<SeededCheapestInsertionPlacementOperator> DefaultLastOnlyLazy = new ThreadLocal<SeededCheapestInsertionPlacementOperator>(
+            () => new SeededCheapestInsertionPlacementOperator());
         public static SeededCheapestInsertionPlacementOperator DefaultLastOnly => DefaultLastOnlyLazy.Value;
         
         private static readonly ThreadLocal<SeededCheapestInsertionPlacementOperator> DefaultLazy = new ThreadLocal<SeededCheapestInsertionPlacementOperator>(() => 

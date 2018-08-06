@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using Itinero.LocalGeo;
 using Itinero.Logging;
 using Itinero.Optimization.Models.Mapping;
 using Itinero.Optimization.Solvers.CVRP_ND.GA;
@@ -58,14 +59,14 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 //var solver = GASolver.Default;
                 var solver = new GASolver(settings: new GASettings()
                 {
-                    PopulationSize = 100,
+                    PopulationSize = 20,
                     ElitismPercentage = 1,
                     CrossOverPercentage = 10,
-                    MutationPercentage = 5,
-                    StagnationCount = 15
+                    MutationPercentage = 0,
+                    StagnationCount = 20
                 });
                 
-                // Strategy<CVRPNDProblem, CVRPNDCandidate> solver = SeededCheapestInsertionStrategy.Default;
+                //Strategy<CVRPNDProblem, CVRPNDCandidate> solver = SeededCheapestInsertionStrategy.Default;
                 
                 var candidate = solver.Search(cvrp.Value);
                 var solution = candidate.Solution;
@@ -118,11 +119,17 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 }
             }
             
-            // visit weights if any.
+            // collect visit weights if any and visit locations.
             float[] visitWeights = null;
+            var visitLocations = new Coordinate[model.Visits.Length];
             for (var v = 0; v < model.Visits.Length; v++)
             {
                 var visit = model.Visits[v];
+                visitLocations[v] = new Coordinate()
+                {
+                    Latitude = visit.Latitude,
+                    Longitude = visit.Longitude
+                };
                 if (visit.TryGetVisitCostForMetric(metric, out var visitCost))
                 {
                     if (visitWeights == null) visitWeights = new float[model.Visits.Length];
@@ -145,7 +152,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 }
             }
             
-            return new Result<CVRPNDProblem>(new CVRPNDProblem(weights.Costs, visitWeights, maxWeight, visitCostConstraints));
+            return new Result<CVRPNDProblem>(new CVRPNDProblem(weights.Costs, visitWeights, maxWeight, visitCostConstraints, 
+                visitLocations: visitLocations));
         }
 
         private static bool IsCVRPND(this MappedModel model, out string reasonIfNot)
@@ -177,7 +185,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             }
             foreach (var visit in model.Visits)
             {
-                if (visit.TimeWindow == null || visit.TimeWindow.IsUnlimited) continue;
+                if (visit.TimeWindow == null || visit.TimeWindow.IsEmpty) continue;
                 reasonIfNot = "Timewindows detected.";
                 return false;
             }

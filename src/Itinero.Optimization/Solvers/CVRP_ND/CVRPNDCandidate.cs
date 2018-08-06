@@ -19,6 +19,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Itinero.Optimization.Solvers.Shared.BoundingBox;
 using Itinero.Optimization.Solvers.Shared.Sequences;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Solvers.Tours.Sequences;
@@ -97,6 +98,23 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         public Tour Tour(int t)
         {
             return this.Solution.Tour(t);
+        }
+
+        /// <summary>
+        /// Returns true if the two tour's bounding boxes overlap, false otherwise. Also returns true if now locations are available.
+        /// </summary>
+        /// <param name="t1">The first tour.</param>
+        /// <param name="t2">The second tour.</param>
+        /// <returns>True if the two overlap.</returns>
+        public bool Overlap(int t1, int t2)
+        { 
+            // TODO: consider caching the bounding boxes.
+            var box1 = this.Tour(t1).BoundingBox(this.Problem.VisitLocation);
+            if (!box1.HasValue) return true;
+            var box2 = this.Tour(t2).BoundingBox(this.Problem.VisitLocation);
+            if (!box2.HasValue) return true;
+
+            return box1.Value.Overlaps(box2.Value);
         }
 
         /// <summary>
@@ -212,18 +230,45 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         {
             const float e = 0.01f;
 
+            // check for 2 empty sequences.
+            if (s1.Length == 2 && s2.Length == 2) return (false, 0);
+
             var pair1 = new Pair(s1[0], s1[s1.Length - 1]);
-            var pair1Between = new Pair(s1[1], s1[s1.Length - 2]);
+            Pair? pair1Between = null;
+            if (s1.Length > 2)
+            { // s1 is not empty.
+                pair1Between = new Pair(s1[1], s1[s1.Length - 2]);
+            }
             var pair2 = new Pair(s2[0], s2[s2.Length - 1]);
-            var pair2Between = new Pair(s2[1], s2[s2.Length - 2]);
+            Pair? pair2Between = null;
+            if (s2.Length > 2)
+            { // s2 is not empty.
+                pair2Between = new Pair(s2[1], s2[s2.Length - 2]);
+            }
 
             var tour1Current = s1.TotalOriginal;
-            var tour1Future = this.Problem.TravelWeight(pair1.From,pair2Between.From) +
-                              this.Problem.TravelWeight(pair2Between.To, pair1.To) + s2.Between;
+            var tour1Future = 0f;
+            if (!pair2Between.HasValue)
+            { // future is a direct connection.
+                tour1Future = this.Problem.TravelWeight(pair1.From, pair1.To);
+            }
+            else
+            { // future is the inserted sequence.
+                tour1Future = this.Problem.TravelWeight(pair1.From, pair2Between.Value.From) +
+                                  this.Problem.TravelWeight(pair2Between.Value.To, pair1.To) + s2.Between;
+            }
 
             var tour2Current = s2.TotalOriginal;
-            var tour2Future = this.Problem.TravelWeight(pair2.From, pair1Between.From) +
-                this.Problem.TravelWeight(pair1Between.To, pair2.To) + s1.Between;
+            var tour2Future = 0f;
+            if (!pair1Between.HasValue)
+            { // future is a direction connection.
+                tour2Future = this.Problem.TravelWeight(pair2.From, pair2.To);
+            }
+            else
+            { // future is the inserted sequence. 
+                tour2Future = this.Problem.TravelWeight(pair2.From, pair1Between.Value.From) +
+                                  this.Problem.TravelWeight(pair1Between.Value.To, pair2.To) + s1.Between;
+            }
 
             var difference = tour1Current - tour1Future +
                              tour2Current - tour2Future;
@@ -312,18 +357,45 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         {
             const float e = 0.01f;
 
+            // check for 2 empty sequences.
+            if (s1.Length == 2 && s2.Length == 2) return (false, 0);
+
             var pair1 = new Pair(s1[0], s1[s1.Length - 1]);
-            var pair1Between = new Pair(s1[1], s1[s1.Length - 2]);
+            Pair? pair1Between = null;
+            if (s1.Length > 2)
+            { // s1 is not empty.
+                pair1Between = new Pair(s1[1], s1[s1.Length - 2]);
+            }
             var pair2 = new Pair(s2[0], s2[s2.Length - 1]);
-            var pair2Between = new Pair(s2[1], s2[s2.Length - 2]);
+            Pair? pair2Between = null;
+            if (s2.Length > 2)
+            { // s2 is not empty.
+                pair2Between = new Pair(s2[1], s2[s2.Length - 2]);
+            }
 
             var tour1Current = s1.TotalOriginal;
-            var tour1Future = this.Problem.TravelWeight(pair1.From,pair2Between.From) +
-                              this.Problem.TravelWeight(pair2Between.To, pair1.To) + s2.Between;
+            var tour1Future = 0f;
+            if (!pair2Between.HasValue)
+            { // future is a direct connection.
+                tour1Future = this.Problem.TravelWeight(pair1.From, pair1.To);
+            }
+            else
+            { // future is the inserted sequence.
+                tour1Future = this.Problem.TravelWeight(pair1.From, pair2Between.Value.From) +
+                              this.Problem.TravelWeight(pair2Between.Value.To, pair1.To) + s2.Between;
+            }
 
             var tour2Current = s2.TotalOriginal;
-            var tour2Future = this.Problem.TravelWeight(pair2.From, pair1Between.From) +
-                              this.Problem.TravelWeight(pair1Between.To, pair2.To) + s1.Between;
+            var tour2Future = 0f;
+            if (!pair1Between.HasValue)
+            { // future is a direction connection.
+                tour2Future = this.Problem.TravelWeight(pair2.From, pair2.To);
+            }
+            else
+            { // future is the inserted sequence. 
+                tour2Future = this.Problem.TravelWeight(pair2.From, pair1Between.Value.From) +
+                              this.Problem.TravelWeight(pair1Between.Value.To, pair2.To) + s1.Between;
+            }
 
             var difference = tour1Current - tour1Future +
                              tour2Current - tour2Future;
@@ -400,8 +472,6 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             // update total fitness.
             this.TravelWeight += difference;
             this.Fitness = this.TravelWeight * this.Count;
-            
-            Debug.Assert(this.GetUnplacedVisits().Count == 0);
             
             // don't do the swap.
             return (true, difference);
