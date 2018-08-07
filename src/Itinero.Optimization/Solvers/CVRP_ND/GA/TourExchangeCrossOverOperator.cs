@@ -112,57 +112,50 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
                 return false;
             }
             
-            // TODO: figure out if it makes senses to keep track of previously selected tours and exclude them.
-            Tour tour = null;
+            // TODO: figure out if it makes sense to keep track of previously selected tours and exclude them.
+            (int tour, int insertionCount, int overlap) selectedTour = (-1, -1, -1);
             if (target.Count == 0)
             { // target is empty, select random tour.
-                tour = source.Tour(Strategies.Random.RandomGenerator.Default.Generate(source.Count));
+                selectedTour = (Strategies.Random.RandomGenerator.Default.Generate(source.Count), -1, 0);
             }
             else
             {
                 // search for a tour that has the least overlapping visits.
-                // TODO: this may give smaller (and worse) tours an advantage. Perhaps change this to a metric with the most visits inserted or something similar.
-                var bestT = -1;
-                var bestOverlap = int.MaxValue;
                 for (var t = 0; t < source.Count; t++)
                 {
-                    tour = source.Tour(t);
-                    var tourOverlap = 0;
-                    var hasUnplaced = false;
+                    var tour = source.Tour(t);
+                    var insertCount = 0;
+                    var overlap = 0;
                     foreach (var v in tour)
                     {
-                        if (!visits.Contains(v))
+                        if (visits.Contains(v))
                         {
-                            tourOverlap++;
+                            insertCount++;
                         }
                         else
                         {
-                            hasUnplaced = true;
+                            overlap++;
                         }
                     }
 
-                    if (tourOverlap > tour.Count / 4)
+                    if (insertCount < tour.Count / 4)
                     {
                         continue;
                     }
-                    if (hasUnplaced &&
-                        tourOverlap < bestOverlap)
+                    if (insertCount > selectedTour.insertionCount)
                     {
-                        bestOverlap = tourOverlap;
-                        bestT = t;
+                        selectedTour = (t, insertCount, overlap);
                     }
                 }
 
-                if (bestT < 0)
+                if (selectedTour.tour < 0)
                 {
                     return false;
                 }
-
-                tour = source.Tour(bestT);
             }
             
             // copy over tour.
-            var bestTour = tour;
+            var bestTour = source.Tour(selectedTour.tour);
             var targetT = -1;
             Tour targetTour = null;
             if (visits.Remove(bestTour.First))

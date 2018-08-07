@@ -51,7 +51,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
             _insertionCostHeuristic = insertionCostHeuristic;
             _lastOnly = lastOnly;
             _improvementsThreshold = improvementsThreshold;
-            _improvementOperator = improvementOperator ?? (new ExchangeOperator(onlyLast: _lastOnly, bestImprovement: true, minWindowSize: 0, maxWindowSize: 20)).ApplyUntil();
+            _improvementOperator = improvementOperator ?? (new ExchangeOperator(onlyLast: _lastOnly, bestImprovement: false, minWindowSize: 0, maxWindowSize: 10)).ApplyUntil();
         }
 
         public override string Name => "CI_PLACE";

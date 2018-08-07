@@ -44,7 +44,7 @@ namespace Itinero.Optimization.Tests.Functional
             //CVRP.CVRPTests.Run();
             CVRP_ND.CVRPNDTests.Run();
 
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
         public static bool DoIntermediates { get; set; } = false;

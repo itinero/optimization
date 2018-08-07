@@ -59,11 +59,11 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 //var solver = GASolver.Default;
                 var solver = new GASolver(settings: new GASettings()
                 {
-                    PopulationSize = 100,
+                    PopulationSize = 20,
                     ElitismPercentage = 1,
-                    CrossOverPercentage = 15,
-                    MutationPercentage = 0,
-                    StagnationCount = 20
+                    CrossOverPercentage = 25,
+                    MutationPercentage = 10,
+                    StagnationCount = 10
                 });
                 
                 //Strategy<CVRPNDProblem, CVRPNDCandidate> solver = SeededCheapestInsertionStrategy.Default;
