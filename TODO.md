@@ -63,6 +63,7 @@ The main thing left to think about is how to elegantly handle turning costs:
  
  General ideas:
  - See if we can (quickly) figure out if the shortest path between two locations is along other locations.
+ - Build a generic highly optimized tour building heuristic based on CI and 3OPT.
  
  
  Best found spijkenisse-5400:

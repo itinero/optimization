@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Itinero.LocalGeo;
+using Itinero.Optimization.Solvers.CVRP_ND.TourSeeded;
 using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
 
 namespace Itinero.Optimization.Solvers.CVRP_ND
@@ -35,6 +36,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         private readonly HashSet<int> _visits;
         private readonly float _maxWeight;
         private readonly Lazy<NearestNeighbourCache> _nearestNeighbourCacheLazy;
+        private readonly Lazy<SeededTourPool> _seededTourPool;
 
         /// <summary>
         /// Creates a new problem.
@@ -69,6 +71,12 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             
             _nearestNeighbourCacheLazy = new Lazy<NearestNeighbourCache>(() =>
                 new NearestNeighbourCache(_travelWeights.Length, (x, y) => _travelWeights[x][y]));
+            _seededTourPool = new Lazy<SeededTourPool>(() =>
+            {
+                var pool = new SeededTourPool(this, 20);
+                pool.Build();
+                return pool;
+            });
         }
 
         /// <summary>
@@ -133,6 +141,11 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         /// Gets the nearest neighbour cache.
         /// </summary>
         internal NearestNeighbourCache NearestNeighbourCache => _nearestNeighbourCacheLazy.Value;
+
+        /// <summary>
+        /// Gets the seeded tour pool.
+        /// </summary>
+        internal SeededTourPool SeededTourPool => _seededTourPool.Value;
 
         /// <summary>
         /// Gets the visits.
