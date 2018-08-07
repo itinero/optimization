@@ -17,6 +17,7 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Itinero.Optimization.Solvers.CVRP_ND.Operators;
 using Itinero.Optimization.Solvers.Shared.Operators;
@@ -80,6 +81,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
                 }
                 
                 _afterSeedPlacementOperator.Apply(candidate, visits);
+                Debug.Assert(candidate.IsFeasible());
             }
 
             return false;

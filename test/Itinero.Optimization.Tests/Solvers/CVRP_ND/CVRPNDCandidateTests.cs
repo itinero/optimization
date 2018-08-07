@@ -17,6 +17,7 @@
  */
 
 using Itinero.Optimization.Solvers.CVRP_ND;
+using System;
 using Xunit;
 
 namespace Itinero.Optimization.Tests.Solvers.CVRP_ND
@@ -108,6 +109,32 @@ namespace Itinero.Optimization.Tests.Solvers.CVRP_ND
             
             candidate.Remove(0);
             Assert.Equal(0, candidate.Count);
+        }
+
+        [Fact]
+        public void CVRPCandidate_SeqAndSmallerWith2ShouldEnumeratePairs()
+        {
+            var candidate = new CVRPNDCandidate()
+            {
+                Solution = new CVRPNDSolution(),
+                Fitness = 0,
+                Problem = new CVRPNDProblem(new[]
+                {
+                    new [] { 0f, 1f, 2f },
+                    new [] { 3f, 4f, 5f },
+                    new [] { 6f, 7f, 8f }
+                })
+            };
+
+            var tour = candidate.Tour(candidate.AddNew(0));
+            tour.InsertAfter(0, 1);
+            tour.InsertAfter(1, 2);
+
+            var seqs = candidate.SeqAndSmaller(0, 2, 2);
+            foreach (var s in seqs)
+            {
+                Console.WriteLine(s);
+            }
         }
     }
 }

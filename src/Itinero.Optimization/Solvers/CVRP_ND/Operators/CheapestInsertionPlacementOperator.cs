@@ -46,7 +46,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
         /// <param name="lastOnly">When true inserts in the last tour only.</param>
         /// <param name="improvementsThreshold">The improvements threshold parameter.</param>
         public CheapestInsertionPlacementOperator(Operator<CVRPNDCandidate> improvementOperator = null, Func<int, int, float> insertionCostHeuristic = null,
-            bool lastOnly = false, float improvementsThreshold = 0.05f)
+            bool lastOnly = false, float improvementsThreshold = 0.1f)
         {
             _insertionCostHeuristic = insertionCostHeuristic;
             _lastOnly = lastOnly;
@@ -82,6 +82,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                 while (cheapest.cost < float.MaxValue)
                 {
                     candidate.InsertAfter(t, cheapest.location.From, cheapest.visit);
+                    Debug.Assert(candidate.IsFeasible());
                     visits.Remove(cheapest.visit);
                     insertedCount++;
                     if (visits.Count == 0)
@@ -91,20 +92,42 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                     
                     if (insertedCount == relativeThreshold)
                     { // apply exchanges if needed.
-                        var last = candidate.Solution.Tour(candidate.Solution.Count - 1);
-                        // TODO: use nearest neighbours.
-                        last.Do3Opt(candidate.Problem.TravelWeight, candidate.Problem.MaxVisit, candidate.Problem.NearestNeighbourCache.GetNNearestNeighbours(10));
-                        
+                        var last = candidate.Tour(candidate.Solution.Count - 1);
+                        var result = last.Do3Opt(candidate.Problem.TravelWeight, candidate.Problem.MaxVisit, candidate.Problem.NearestNeighbourCache.GetNNearestNeighbours(10));
+                        if (result.improved)
+                        {
+                            candidate.UpdateTourData(candidate.Solution.Count - 1, result.delta);
+                        }
+                        Debug.Assert(candidate.IsFeasible());
+
                         insertedCount = 0;
                         _improvementOperator?.Apply(candidate);
+                        Debug.Assert(candidate.IsFeasible());
                     }
 
                     cheapest = tour.CalculateCheapest(candidate.Problem.TravelWeight, visits,
                         insertionCostHeuristic, (travelCost, v) => candidate.CanInsert(t, v, travelCost));
-                    
-                    // TODO: if placement fails, try 3OPT and exchange one last time.
-                    // TODO: see if we can do 3opt and ex at seperate paces.
+
+                    if (cheapest.cost >= float.MaxValue &&
+                        insertedCount != 0)
+                    { // try improvements and then retry cheapest.
+                        var last = candidate.Solution.Tour(candidate.Solution.Count - 1);
+                        var result = last.Do3Opt(candidate.Problem.TravelWeight, candidate.Problem.MaxVisit, candidate.Problem.NearestNeighbourCache.GetNNearestNeighbours(10));
+                        if (result.improved)
+                        {
+                            candidate.UpdateTourData(candidate.Solution.Count - 1, result.delta);
+                        }
+                        Debug.Assert(candidate.IsFeasible());
+
+                        insertedCount = 0;
+                        _improvementOperator?.Apply(candidate);
+                        Debug.Assert(candidate.IsFeasible());
+
+                        cheapest = tour.CalculateCheapest(candidate.Problem.TravelWeight, visits,
+                            insertionCostHeuristic, (travelCost, v) => candidate.CanInsert(t, v, travelCost));
+                    }
                 }
+                Debug.Assert(candidate.IsFeasible());
             }
             else
             {

@@ -128,6 +128,18 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         }
 
         /// <summary>
+        /// Updates the tour data if the tour was optimized but visits didn't change.
+        /// </summary>
+        /// <param name="t">The tour to update.</param>
+        /// <param name="travelWeightDiff">The difference in travel weight, negative if the weight decreases.</param>
+        public void UpdateTourData(int t, float travelWeightDiff)
+        {
+            var tourData = _tourData[t];
+            tourData.weight += travelWeightDiff;
+            _tourData[t] = tourData;
+        }
+
+        /// <summary>
         /// Returns true if the given visit can be inserted into the given tour with the given travel cost increase.
         /// </summary>
         /// <param name="t">The tour.</param>
@@ -149,6 +161,73 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             {
                 var constraint = this.Problem.CapacityConstraints[c];
                 var cost = constraint.costs[visit] + tourData.constraints[c].value;
+                if (cost > constraint.max)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if this candidate is feasible.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsFeasible()
+        {
+            for (var t = 0; t < this.Count; t++)
+            {
+                if (!this.IsFeasible(t))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if this candidate is feasible.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsFeasible(int t)
+        {
+            var tourData = _tourData[t];
+
+            // update tour data.
+            var tour = this.Tour(t);
+            var travelWeight = 0f;
+            var previous = -1;
+            foreach (var visit in tour)
+            {
+                if (previous != -1)
+                {
+                    travelWeight += this.Problem.TravelWeight(previous, visit);
+                }
+                travelWeight += this.Problem.VisitWeight(visit);
+                previous = visit;
+            }
+            if (tour.First == tour.Last &&
+                previous != -1)
+            {
+                travelWeight += this.Problem.TravelWeight(previous, tour.First);
+            }
+            if (System.Math.Abs(tourData.weight - travelWeight) > 5)
+            {
+                return false;
+            }
+            tourData.weight = travelWeight;
+
+            // check travel weight.
+            if (tourData.weight > this.Problem.MaxWeight)
+            { // too much travel weight.
+                return false;
+            }
+
+            // calculate constraints.
+            for (var c = 0; c < this.Problem.CapacityConstraints.Length; c++)
+            {
+                var constraint = this.Problem.CapacityConstraints[c];
+                var cost = tourData.constraints[c].value;
                 if (cost > constraint.max)
                 {
                     return false;
@@ -357,6 +436,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         {
             const float e = 0.01f;
 
+            Debug.Assert(this.IsFeasible());
+
             // check for 2 empty sequences.
             if (s1.Length == 2 && s2.Length == 2) return (false, 0);
 
@@ -472,6 +553,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             // update total fitness.
             this.TravelWeight += difference;
             this.Fitness = this.TravelWeight * this.Count;
+
+            Debug.Assert(this.IsFeasible());
             
             // don't do the swap.
             return (true, difference);
