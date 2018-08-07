@@ -563,11 +563,12 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         /// <summary>
         /// Enumerates all sequences of sizes in the given range.
         /// </summary>
-        /// <param name="t"></param>
-        /// <param name="minSize"></param>
-        /// <param name="maxSize"></param>
-        /// <returns></returns>
-        public IEnumerable<Seq> SeqAndSmaller(int t, int minSize, int maxSize)
+        /// <param name="t">The tour.</param>
+        /// <param name="minSize">The minimum sequence size to consider.</param>
+        /// <param name="maxSize">The maximum sequence size to consider.</param>
+        /// <param name="removeGoodSequences">When true it removes sequences that are likely to be too good to be replaced.</param>
+        /// <returns>An enumerable of all sequences.</returns>
+        public IEnumerable<Seq> SeqAndSmaller(int t, int minSize, int maxSize, bool removeGoodSequences = true)
         {
             var tour = this.Solution.Tour(t);
             var problem = this.Problem;
@@ -600,7 +601,14 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                         var betweenSeq = s.SubSequence(1, s.Length - 2);
                         between = betweenSeq.Weight(problem.TravelWeight);
                         start = problem.TravelWeight(s[0], s[1]);
-                        end = problem.TravelWeight(s[s.Length - 2], s[s.Length - 1]);
+                        if (s.Length > 2)
+                        {
+                            end = problem.TravelWeight(s[s.Length - 2], s[s.Length - 1]);
+                        }
+                        else
+                        {
+                            end = 0;
+                        }
                         betweenReversed = betweenSeq.WeightReversed(problem.TravelWeight);
                         visitCost = betweenSeq.Cost(problem.VisitWeight);
                     }
@@ -608,18 +616,27 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                     {
                         // move weights along.
                         var newStart = problem.TravelWeight(s[0], s[1]);
-                        var newEnd = problem.TravelWeight(s[s.Length - 2], s[s.Length - 1]);
-                        between -= newStart;
-                        between += end;
-                        betweenReversed -= problem.TravelWeight(s[1], s[0]);
-                        betweenReversed += problem.TravelWeight(s[s.Length - 2], s[s.Length - 3]);
+                        var newEnd = 0f;
+                        if (s.Length > 2)
+                        {
+                            newEnd = problem.TravelWeight(s[s.Length - 2], s[s.Length - 1]);
+                            between -= newStart;
+                            between += end;
+                            betweenReversed -= problem.TravelWeight(s[1], s[0]);
+                            betweenReversed += problem.TravelWeight(s[s.Length - 2], s[s.Length - 3]);
+                        }
+                        else
+                        {
+                            newEnd = 0;
+                        }
                         start = newStart;
                         end = newEnd;
                         visitCost -= problem.VisitWeight(s[0]);
                         visitCost += problem.VisitWeight(s[s.Length - 2]);
                     }
 
-                    if (between + start + end < problem.TravelWeight(s[0], s[s.Length - 1]) * 2f)
+                    if (removeGoodSequences &&
+                        between + start + end < problem.TravelWeight(s[0], s[s.Length - 1]) * 2f)
                     {
                         continue;
                     }

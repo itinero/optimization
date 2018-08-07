@@ -130,10 +130,48 @@ namespace Itinero.Optimization.Tests.Solvers.CVRP_ND
             tour.InsertAfter(0, 1);
             tour.InsertAfter(1, 2);
 
-            var seqs = candidate.SeqAndSmaller(0, 2, 2);
+            var seqs = candidate.SeqAndSmaller(0, 2, 2, false);
             foreach (var s in seqs)
             {
-                Console.WriteLine(s);
+                Assert.Equal(2, s.Length);
+                Assert.Equal(0, s.Between);
+                Assert.Equal(0, s.BetweenTravelCost);
+                Assert.Equal(0, s.BetweenTravelCostReversed);
+                Assert.Equal(0, s.BetweenVisitCost);
+                Assert.Equal(candidate.Problem.TravelWeight(s[0], s[1]),
+                    s.TotalOriginal);
+            }
+        }
+
+        [Fact]
+        public void CVRPCandidate_SeqAndSmallerWith3ShouldEnumerateTriples()
+        {
+            var candidate = new CVRPNDCandidate()
+            {
+                Solution = new CVRPNDSolution(),
+                Fitness = 0,
+                Problem = new CVRPNDProblem(new[]
+                {
+                    new [] { 0f, 1f, 2f },
+                    new [] { 3f, 4f, 5f },
+                    new [] { 6f, 7f, 8f }
+                })
+            };
+
+            var tour = candidate.Tour(candidate.AddNew(0));
+            tour.InsertAfter(0, 1);
+            tour.InsertAfter(1, 2);
+
+            var seqs = candidate.SeqAndSmaller(0, 3, 3, false);
+            foreach (var s in seqs)
+            {
+                Assert.Equal(3, s.Length);
+                Assert.Equal(0, s.Between);
+                Assert.Equal(0, s.BetweenTravelCost);
+                Assert.Equal(0, s.BetweenTravelCostReversed);
+                Assert.Equal(0, s.BetweenVisitCost);
+                Assert.Equal(candidate.Problem.TravelWeight(s[0], s[1]) + candidate.Problem.TravelWeight(s[1], s[2]),
+                    s.TotalOriginal);
             }
         }
     }
