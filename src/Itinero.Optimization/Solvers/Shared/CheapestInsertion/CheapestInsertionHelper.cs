@@ -40,22 +40,9 @@ namespace Itinero.Optimization.Solvers.Shared.CheapestInsertion
         /// <param name="canPlace">A function to determine if a visit can be place given it's cost (use this to check constraints).</param>
         /// <returns>The increase/decrease in weight and the location.</returns>
         public static (float cost, Pair location, int visit) CalculateCheapest(this Tour tour, Func<int, int, float> weightFunc,
-            IEnumerable<int> visits,
-            Func<int, float> insertionCostHeuristic = null, Func<float, int, bool> canPlace = null)
+            IEnumerable<int> visits, Func<int, float> insertionCostHeuristic = null, Func<float, int, bool> canPlace = null)
         {
             (float cost, Pair location, int visit) best = (float.MaxValue, new Pair(int.MaxValue, int.MaxValue), -1);
-
-            //foreach (var visit in visits)
-            //{
-            //    var insertDetails = tour.CalculateCheapest(weightFunc, visit, insertionCostHeuristic, canPlace);
-            //    if (insertDetails.cost < best.cost)
-            //    {
-            //        best = (insertDetails.cost, insertDetails.location, visit);
-            //    }
-            //}
-
-            //return best;
-            //(float cost, Pair location) best = (float.MaxValue, new Pair(int.MaxValue, int.MaxValue));
 
             if (tour.Count == 1)
             {

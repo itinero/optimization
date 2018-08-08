@@ -21,7 +21,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
     /// <summary>
     /// Enumerates possible directions at a visit.
     /// </summary>
-    public enum DirectionEnum : byte
+    internal enum DirectionEnum : byte
     {
         /// <summary>
         /// Forward arrival or departure.
@@ -31,5 +31,22 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
         /// Backward arrival or departure.
         /// </summary>
         Backward = 1,
+    }
+    
+    /// <summary>
+    /// Contains extensions methods for the direction enum.
+    /// </summary>
+    internal static class DirectionEnumExtensions
+    {
+        /// <summary>
+        /// Builds the weight id for the given visit and given direction.
+        /// </summary>
+        /// <param name="visit">The visit.</param>
+        /// <param name="direction">The direction.</param>
+        /// <returns>The weight id.</returns>
+        public static int WeightId(this DirectionEnum direction, int visit)
+        {
+            return (visit * 2) + (byte) direction;
+        }
     }
 }

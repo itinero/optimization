@@ -16,6 +16,9 @@
  *  limitations under the License.
  */
 
+using System;
+using Itinero.Optimization.Solvers.Tours;
+
 namespace Itinero.Optimization.Solvers.Shared.Directed
 {
     /// <summary>
@@ -42,36 +45,6 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
     /// </remarks>
     internal static class DirectedHelper
     {
-//        /// <summary>
-//        /// Builds a directed id.
-//        /// </summary>
-//        public static int BuildDirectedId(int id, int turn)
-//        {
-//            if (turn < 0 || turn >= 4) throw new ArgumentOutOfRangeException("turn");
-//
-//            return (id * 4) + turn;
-//        }
-//
-//        /// <summary>
-//        /// Extracts the departure id.
-//        /// </summary>
-//        public static int ExtractDepartureId(int directedId)
-//        {
-//            int arrivalId, departureId, id, turn;
-//            ExtractAll(directedId, out arrivalId, out departureId, out id, out turn);
-//            return departureId;
-//        }
-//
-//        /// <summary>
-//        /// Extracts the arrival id.
-//        /// </summary>
-//        public static int ExtractArrivalId(int directedId)
-//        {
-//            int arrivalId, departureId, id, turn;
-//            ExtractAll(directedId, out arrivalId, out departureId, out id, out turn);
-//            return arrivalId;
-//        }
-
         /// <summary>
         /// Builds the weight id for the given visit and given direction.
         /// </summary>
@@ -113,6 +86,60 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
             var turn = (directedVisit % 4);
             return ((directedVisit - turn) / 4, (TurnEnum)turn);
         }
+        
+        /// <summary>
+        /// Calculates the total weight.
+        /// </summary>
+        /// <param name="tour">The tour.</param>
+        /// <param name="weightsFunc">The weight function.</param>
+        /// <returns>The total weight.</returns>
+        internal static float WeightDirected(this Tour tour, Func<int, int, float> weightsFunc, Func<TurnEnum, float> turnPenaltyFunc)
+        {
+            var weight = 0f;
+
+            (int visit, TurnEnum turn) previous1 = (-1, TurnEnum.ForwardForward);
+            (int visit, TurnEnum turn) previous2 = (-1, TurnEnum.ForwardForward);
+            foreach (var directedVisit in tour)
+            {
+                var current = Extract(directedVisit);
+                if (previous1.visit == -1)
+                {
+                    previous1 = current;
+                    continue;
+                }
+
+                // add travel weight.
+                weight += weightsFunc(previous1.turn.Departure().WeightId(previous1.visit),
+                    current.turn.Arrival().WeightId(current.visit));
+
+                // add turn cost for the previous(-2) if any.
+                if (previous2.visit != -1)
+                {
+                    weight += turnPenaltyFunc(previous2.turn);
+                }
+                
+                // prepare for next iteration.
+                previous1 = current;
+                previous2 = previous1;
+            }
+
+            if (tour.IsClosedDirected() &&
+                previous1.visit != -1)
+            {
+                var current = Extract(tour.First);
+                weight += weightsFunc(previous1.turn.Departure().WeightId(previous1.visit),
+                    current.turn.Arrival().WeightId(current.visit));
+            }
+
+            // add last turn cost for the previous(-2) if any.
+            if (previous2.visit != -1)
+            {
+                weight += turnPenaltyFunc(previous2.turn);
+            }
+            
+            return weight;
+        }
+        
 //
 //        /// <summary>
 //        /// Builds a turn from an arrival and departure offset.

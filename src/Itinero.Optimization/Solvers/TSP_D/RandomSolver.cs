@@ -44,7 +44,7 @@ namespace Itinero.Optimization.Solvers.TSP_D
             }
             else
             {
-                tour = new Tour(new [] { TurnEnum.ForwardForward.DirectedVisit(problem.First) });
+                tour = new Tour(new [] { TurnEnum.ForwardForward.DirectedVisit(problem.First) }, null);
             }
             
             
@@ -74,8 +74,7 @@ namespace Itinero.Optimization.Solvers.TSP_D
                 // add all visits by using cheapest insertion.
                 for (var i = 0; i < visits.Count; i++)
                 {
-                    var result = tour.CalculateCheapestDirected(problem.Weight, problem.TurnPenalty,
-                        visits[i]);
+                    var result = tour.CalculateCheapestDirected(visits[i], problem.Weight, problem.TurnPenalty);
                     tour.InsertAfter(result.location.From, result.turn.DirectedVisit(visits[i]));
                     var from = DirectedHelper.Extract(result.location.From);
                     var to = DirectedHelper.Extract(result.location.To);
@@ -98,7 +97,7 @@ namespace Itinero.Optimization.Solvers.TSP_D
                 {
                     Problem = problem,
                     Solution = tour,
-                    Fitness = tour.Weight(problem.Weight)
+                    Fitness = tour.WeightDirected(problem.Weight, problem.TurnPenalty)
                 };
             }
         }

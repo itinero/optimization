@@ -45,23 +45,28 @@ The main thing left to think about is how to elegantly handle turning costs:
    - Unify unlimited and IsEmpty.
  - Functional tests: conver all problems in CVRP and CVRP-ND.
  - Implement intermediate results handling on all solvers.
+ 
+ 
+Ideas direction-enabled solvers:
+- See if there is **really really** not a way to unify solvers and have directed optional.
+- Implement a tour specificially for directed tours. 
 
 
- Ideas for speeding up tour():
+Ideas for speeding up tour():
 
  - Implement an O(1) contains, this can be done by always proper resetting NEXT.
  - Then it's very fast to update contains on insertafter for example and that also becomes O(1).
 
- Ideas for speeding up GA:
+Ideas for speeding up GA:
 
  - Use multithreading everywhere but make sure not to use multiple operators on the same candidate at the same time.
 
- Ideas for speeding up CI:
+Ideas for speeding up CI:
 
  - Limit the visits being considered to only nearest neighbours.
  - Don't use pair but GetNext() on tour, this way we can exclude visits too far 'from' first before even considering 'to'.
  
- General ideas:
+General ideas:
  - See if we can (quickly) figure out if the shortest path between two locations is along other locations.
  - Build a generic highly optimized tour building heuristic based on CI and 3OPT.
  

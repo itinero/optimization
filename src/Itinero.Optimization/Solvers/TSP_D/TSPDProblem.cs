@@ -141,7 +141,7 @@ namespace Itinero.Optimization.Solvers.TSP_D
         {
             get
             {
-                var visits = _visits ?? System.Linq.Enumerable.Range(0, _weights.Length);
+                var visits = _visits ?? System.Linq.Enumerable.Range(0, _weights.Length / 2);
                 if (_behaveAsClosed)
                 {
                     foreach (var visit in visits)
