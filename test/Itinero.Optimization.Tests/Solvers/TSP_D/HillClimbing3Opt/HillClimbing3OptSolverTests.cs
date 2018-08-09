@@ -55,33 +55,35 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_D.HillClimbing3Opt
             }
         }
         
-//        [Fact]
-//        public void HillClimbing3OptSolver_ShouldUseOnlyProvidedVisits()
-//        {
-//            var weights = WeightMatrixHelpers.Build(10, 10);
-//            weights[0][2] = 1;
-//            weights[2][4] = 1;
-//            weights[4][6] = 1;
-//            weights[6][8] = 1;
-//            weights[8][0] = 1;
-//            var problem = new TSProblem(0, 0, weights,
-//                new int[] { 0, 2, 4, 6, 8 });
-//
-//            // solve problem.
-//            var solution = HillClimbing3OptSolver.Default.Search(problem);
-//            var tour = solution.Solution;
-//            var fitness = solution.Fitness;
-//
-//            // check result.
-//            Assert.NotNull(tour);
-//            Assert.Equal(5, fitness);
-//            Assert.Equal(5, tour.Count);
-//            Assert.Equal(0, tour.GetVisitAt(0));
-//            Assert.Equal(2, tour.GetVisitAt(1));
-//            Assert.Equal(4, tour.GetVisitAt(2));
-//            Assert.Equal(6, tour.GetVisitAt(3));
-//            Assert.Equal(8, tour.GetVisitAt(4));
-//            Assert.Equal(0, tour.Last);
-//        }
+        [Fact]
+        public void HillClimbing3OptSolver_ShouldUseOnlyProvidedVisits()
+        {
+            var weights = WeightMatrixHelpers.BuildDirected(10, 10);
+            weights[DirectionEnum.Forward.WeightId(0)][DirectionEnum.Forward.WeightId(2)] = 1;
+            weights[DirectionEnum.Forward.WeightId(2)][DirectionEnum.Forward.WeightId(4)] = 1;
+            weights[DirectionEnum.Forward.WeightId(4)][DirectionEnum.Forward.WeightId(6)] = 1;
+            weights[DirectionEnum.Forward.WeightId(6)][DirectionEnum.Forward.WeightId(8)] = 1;
+            weights[DirectionEnum.Forward.WeightId(8)][DirectionEnum.Forward.WeightId(0)] = 1;
+            var problem = new TSPDProblem(0, 0, weights, 2,
+                new [] { 0, 2, 4, 6, 8 });
+
+            for (var t = 0; t < 100; t++)
+            {
+                // solve problem.
+                var solution = HillClimbing3OptSolver.Default.Search(problem);
+                var tour = solution.Solution;
+
+                // check result.
+                Assert.NotNull(tour);
+                Assert.Equal(5, tour.Count);
+                Assert.Equal(0, DirectedHelper.ExtractVisit(tour.GetVisitAt(0)));
+                Assert.Equal(2, DirectedHelper.ExtractVisit(tour.GetVisitAt(1)));
+                Assert.Equal(4, DirectedHelper.ExtractVisit(tour.GetVisitAt(2)));
+                Assert.Equal(6, DirectedHelper.ExtractVisit(tour.GetVisitAt(3)));
+                Assert.Equal(8, DirectedHelper.ExtractVisit(tour.GetVisitAt(4)));
+                Assert.NotNull(tour.Last);
+                Assert.Equal(0, DirectedHelper.ExtractVisit(tour.Last.Value));
+            }
+        }
     }
 }
