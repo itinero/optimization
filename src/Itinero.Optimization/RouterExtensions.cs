@@ -42,11 +42,12 @@ namespace Itinero.Optimization
         /// <param name="first">The location to start from, should point to an element in the locations index.</param>
         /// <param name="last">The location to stop at, should point to an element in the locations index if set.</param>
         /// <param name="max">The maximum relative to the profile defined, means maximum travel time when using 'fastest', maximum distance when using 'shortest'.</param>
+        /// <param name="turnPenalty">The turn penalty in the same metric as the profile.</param>
         /// <param name="errors">The locations in error and associated errors message if any.</param>
         /// <param name="intermediateResultsCallback">A callback to report on any intermediate solutions.</param>
         /// <returns>A tours that visit the given locations using the vehicle respecting the contraints.</returns>
         public static Result<Route> Optimize(this RouterBase router, string profileName, Coordinate[] locations,
-            out IEnumerable<(int location, string message)> errors, int first = 0, int? last = 0, float max = float.MaxValue,
+            out IEnumerable<(int location, string message)> errors, int first = 0, int? last = 0, float max = float.MaxValue, float turnPenalty = 0,
                 Action<Result<Route>> intermediateResultsCallback = null)
         {
             if (!router.Db.SupportProfile(profileName))

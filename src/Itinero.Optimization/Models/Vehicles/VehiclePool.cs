@@ -43,10 +43,11 @@ namespace Itinero.Optimization.Models.Vehicles
         /// <param name="departure">The departure visit, if any.</param>
         /// <param name="arrival">The arrival visit, if any.</param>
         /// <param name="max">The maximum, defined in the metric of the profile (fastest means time, shortest, distance).</param>
+        /// <param name="turnPenalty">The turnPenalty, defined in the metric of the profile (fastest means time, shortest, distance).</param>
         /// <param name="reusable">False if there is just one vehicle avialable, true if the vehicle is reusable.</param>
         /// <returns></returns>
-        public static VehiclePool FromProfile(Itinero.Profiles.Profile profile, int? departure = 0, int? arrival = 0, float max = float.MaxValue,
-            bool reusable = false)
+        public static VehiclePool FromProfile(Itinero.Profiles.Profile profile, int? departure = 0, int? arrival = 0, float max = float.MaxValue, 
+            float turnPenalty = 0, bool reusable = false)
         {
             CapacityConstraint[] constraints = null;
             if (max < float.MaxValue)
@@ -71,7 +72,8 @@ namespace Itinero.Optimization.Models.Vehicles
                         Metric =  profile.Metric.ToModelMetric(),
                         Departure = departure,
                         Arrival = arrival,
-                        CapacityConstraints = constraints
+                        CapacityConstraints = constraints,
+                        TurnPentalty = turnPenalty
                     }
                 }
             };

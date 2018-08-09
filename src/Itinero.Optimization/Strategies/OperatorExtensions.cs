@@ -114,5 +114,45 @@ namespace Itinero.Optimization.Strategies
                 return success;
             };
         }
+        
+        /// <summary>
+        /// Converts the given operator into an operator that also applies a set of other given operators..
+        /// </summary>
+        /// <param name="oper">The operator.</param>
+        /// <param name="operators">The other operators to apply after.</param>
+        /// <typeparam name="TCandidate">The candidate type.</typeparam>
+        /// <returns>The new operator.</returns>
+        public static Operator<TCandidate> ApplyAfter<TCandidate>(this Operator<TCandidate> oper, params Operator<TCandidate>[] operators)
+            where TCandidate : class
+        {
+            return new CombinedOperator<TCandidate>(oper, operators);
+        }
+        
+        /// <summary>
+        /// Converts the given operator into an operator that also applies a set of other given operators..
+        /// </summary>
+        /// <param name="oper">The operator.</param>
+        /// <param name="operators">The other operators to apply after.</param>
+        /// <typeparam name="TCandidate">The candidate type.</typeparam>
+        /// <returns>The new operator.</returns>>
+        public static Func<TCandidate, bool> Iterate<TCandidate>(this Func<TCandidate, bool> oper, params Func<TCandidate, bool>[] operators)
+            where TCandidate : class
+        {
+            return (candidate) =>
+            {
+                var success = oper(candidate);
+
+                if (operators == null) return success;
+                for (var i = 0; i < operators.Length; i++)
+                {
+                    if (operators[i](candidate))
+                    {
+                        success = true;
+                    }
+                }
+
+                return success;
+            };
+        }
     }
 }

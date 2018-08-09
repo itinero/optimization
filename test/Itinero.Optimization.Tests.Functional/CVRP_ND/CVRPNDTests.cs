@@ -51,7 +51,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
                 Staging.StagingHelpers.GetFeatureCollection("CVRP_ND.data.problem1.geojson"));
             
             // build vehicle pool.
-            var vehicles = VehiclePool.FromProfile(vehicle.Fastest(), null, null, 1000, true);
+            var vehicles = VehiclePool.FromProfile(vehicle.Fastest(), null, null, 1000, 0, true);
             
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
@@ -139,7 +139,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
                 Staging.StagingHelpers.GetFeatureCollection("CVRP_ND.data.problem2-spijkenisse.geojson"));  
             
             // build vehicle pool.
-            var vehicles = VehiclePool.FromProfile(vehicle.Fastest(), null, null, max, true);
+            var vehicles = VehiclePool.FromProfile(vehicle.Fastest(), null, null, max, 0, true);
             
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>

@@ -50,5 +50,20 @@ namespace Itinero.Optimization.Strategies
         {
             return new Iterative.IterativeStrategy<TProblem, TCandidate>(strategy, n);
         }
+
+        /// <summary>
+        /// Creates a new strategy that uses the given strategy and applies the given operator after.
+        /// </summary>
+        /// <param name="strategy">The strategy.</param>
+        /// <param name="op">The operator to apply after.</param>
+        /// <typeparam name="TProblem">The problem.</typeparam>
+        /// <typeparam name="TCandidate">The candidate.</typeparam>
+        /// <returns></returns>
+        public static Strategy<TProblem, TCandidate> ApplyAfter<TProblem, TCandidate>(
+            this Strategy<TProblem, TCandidate> strategy, Operator<TCandidate> op)
+            where TCandidate : class
+        {
+            return new StrategyAndOperatorStrategy<TProblem, TCandidate>(strategy, op);
+        }
     }
 }

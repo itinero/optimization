@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Diagnostics;
 using Itinero.Optimization.Solvers.Shared.Directed;
 
 namespace Itinero.Optimization.Tests.Solvers
@@ -118,7 +119,12 @@ namespace Itinero.Optimization.Tests.Solvers
         /// </summary>
         internal static Func<int, int, float> ToFunc(this float[][] matrix)
         {
-            return (x, y) => matrix[x][y];
+            return (x, y) =>
+            {
+                Debug.Assert(x >= 0 && x < matrix.Length &&
+                             y >= 0 && y < matrix[x].Length);
+                return matrix[x][y];
+            };
         }
         
         /// <summary>

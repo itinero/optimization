@@ -117,7 +117,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
         public static int ExtractArrivalWeightId(int directedVisit)
         {
             var turn = (TurnEnum)(directedVisit % 4);
-            return (directedVisit / 2) + (int)turn.Arrival();
+            return ((directedVisit - (int)turn) / 2) + (int)(turn.Arrival());
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
         public static int ExtractDepartureWeightId(int directedVisit)
         {
             var turn = (TurnEnum)(directedVisit % 4);
-            return (directedVisit / 2) + (int)turn.Departure();
+            return ((directedVisit - (int)turn) / 2) + (int)(turn.Departure());
         }
         
         /// <summary>
@@ -136,6 +136,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
         /// </summary>
         /// <param name="tour">The tour.</param>
         /// <param name="weightsFunc">The weight function.</param>
+        /// <param name="turnPenaltyFunc">The turn penalty function.</param>
         /// <returns>The total weight.</returns>
         internal static float WeightDirected(this Tour tour, Func<int, int, float> weightsFunc, Func<TurnEnum, float> turnPenaltyFunc)
         {
