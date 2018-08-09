@@ -57,6 +57,28 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
         }
         
         /// <summary>
+        /// Builds the weight id for the given directed visit and given direction.
+        /// </summary>
+        /// <param name="directedVisit">The directed visit.</param>
+        /// <returns>The weight id.</returns>
+        public static int WeightIdArrival(int directedVisit)
+        {
+            var extracted = Extract(directedVisit);
+            return WeightId(extracted.visit, extracted.turn.Arrival());
+        }
+        
+        /// <summary>
+        /// Builds the weight id for the given directed visit and given direction.
+        /// </summary>
+        /// <param name="directedVisit">The directed visit.</param>
+        /// <returns>The weight id.</returns>
+        public static int WeightIdDeparture(int directedVisit)
+        {
+            var extracted = Extract(directedVisit);
+            return WeightId(extracted.visit, extracted.turn.Departure());
+        }
+        
+        /// <summary>
         /// Extracts the original visit.
         /// </summary>
         /// <param name="directedVisit">The directed visit.</param>
@@ -85,6 +107,28 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
         {
             var turn = (directedVisit % 4);
             return ((directedVisit - turn) / 4, (TurnEnum)turn);
+        }
+
+        /// <summary>
+        /// Extracts the arrival weight id.
+        /// </summary>
+        /// <param name="directedVisit">The directed visit.</param>
+        /// <returns>The arrival weight id.</returns>
+        public static int ExtractArrivalWeightId(int directedVisit)
+        {
+            var turn = (TurnEnum)(directedVisit % 4);
+            return (directedVisit / 2) + (int)turn.Arrival();
+        }
+
+        /// <summary>
+        /// Extracts the departure weight id.
+        /// </summary>
+        /// <param name="directedVisit">The directed visit.</param>
+        /// <returns>The departure weight id.</returns>
+        public static int ExtractDepartureWeightId(int directedVisit)
+        {
+            var turn = (TurnEnum)(directedVisit % 4);
+            return (directedVisit / 2) + (int)turn.Departure();
         }
         
         /// <summary>

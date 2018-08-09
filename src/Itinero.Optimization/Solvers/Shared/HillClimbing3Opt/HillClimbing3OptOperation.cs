@@ -30,7 +30,7 @@ namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
     /// <summary>
     /// Contains the core of the 3-OPT hill climbing algorithm. 
     /// </summary>
-    internal static class HillClimbing3OptHelper
+    internal static class HillClimbing3OptOperation
     {
         private const float E = 0.001f;
         
@@ -52,7 +52,7 @@ namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
             // TODO: check and see if we can apply this to an open problem anyway. This would remove the need to convert existing TSP's.
             if (!candidate.Last.HasValue)
             {
-                Logger.Log($"{typeof(HillClimbing3OptHelper)}.{nameof(Do3Opt)}", TraceEventType.Warning,
+                Logger.Log($"{typeof(HillClimbing3OptOperation)}.{nameof(Do3Opt)}", TraceEventType.Warning,
                     "Cannot apply this operator to an open problem, skipping.");
                 delta = 0;
                 return (false, delta);
@@ -60,7 +60,7 @@ namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
 
             if (candidate.First != candidate.Last)
             {
-                Logger.Log($"{typeof(HillClimbing3OptHelper)}.{nameof(Do3Opt)}", TraceEventType.Warning,
+                Logger.Log($"{typeof(HillClimbing3OptOperation)}.{nameof(Do3Opt)}", TraceEventType.Warning,
                     "Cannot apply this operator to an open tour, skipping.");
                 delta = 0;
                 return (false, delta);

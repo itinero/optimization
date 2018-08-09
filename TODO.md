@@ -10,6 +10,8 @@ The main thing left to think about is how to elegantly handle turning costs:
 
 **make sure to check to TODO's in the code**
 
+- 3Opt uses NN when set to false, should be true.
+- nearest neighbours still return '10' when there are less than 10 visits.
 - Convert *all* TSP solvers to solvers that can handle sub-problems of matrices.
 - Take into account visit costs in all solvers.
   - TSP
@@ -50,7 +52,7 @@ The main thing left to think about is how to elegantly handle turning costs:
 Ideas direction-enabled solvers:
 - See if there is **really really** not a way to unify solvers and have directed optional.
 - Implement a tour specificially for directed tours. 
-
+- Implement a turn-optimizing version of 3Opt.
 
 Ideas for speeding up tour():
 

@@ -34,6 +34,7 @@ namespace Itinero.Optimization.Solvers.TSP_D
     {
         private readonly float[][] _weights;
         private readonly float[] _turnPenalties;
+        private readonly Lazy<NearestNeighbourCache> _nearestNeighbourCacheLazy;
         private readonly Lazy<TSPDProblem> _closedEquivalent;
         private readonly bool _behaveAsClosed = false;
         private readonly int? _last;
@@ -73,6 +74,20 @@ namespace Itinero.Optimization.Solvers.TSP_D
                 0
             };
             
+            _nearestNeighbourCacheLazy = new Lazy<NearestNeighbourCache>(() =>
+                new NearestNeighbourCache(_weights.Length / 2, (x, y) =>
+                {
+                    var x2 = x * 2;
+                    var y2 = y * 2;
+                    var w = _weights[x2][y2];
+                    var wfb = _weights[x2][y2 + 1];
+                    if (w > wfb) w = wfb;
+                    var wbf = _weights[x2 + 1][y2];
+                    if (w > wbf) w = wbf;
+                    var wbb = _weights[x2 + 1][y2 + 1];
+                    if (w > wbb) w = wbb;
+                    return _weights[x][y];
+                }));
             _closedEquivalent = new Lazy<TSPDProblem>(() => 
                 new TSPDProblem(this, true));
 
@@ -216,6 +231,11 @@ namespace Itinero.Optimization.Solvers.TSP_D
         /// Gets the number of weights.
         /// </summary>
         public int WeightsSize => _weights.Length;
+
+        /// <summary>
+        /// Gets the nearest neighbour cache.
+        /// </summary>
+        internal NearestNeighbourCache NearestNeighbourCache => _nearestNeighbourCacheLazy.Value;
 
         /// <summary>
         /// Gets the closed equivalent of this problem.
