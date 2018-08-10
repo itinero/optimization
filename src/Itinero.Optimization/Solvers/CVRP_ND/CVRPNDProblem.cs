@@ -73,7 +73,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 new NearestNeighbourCache(_travelWeights.Length, (x, y) => _travelWeights[x][y]));
             _seededTourPool = new Lazy<SeededTourPool>(() =>
             {
-                var pool = new SeededTourPool(this, 20);
+                var pool = new SeededTourPool(this, 100);
                 pool.Build();
                 return pool;
             });

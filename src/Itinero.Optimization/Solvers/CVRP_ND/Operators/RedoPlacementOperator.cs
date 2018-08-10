@@ -32,7 +32,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
         private readonly PlacementOperator<CVRPNDCandidate> _placementOperator;
         private readonly int _removeCount;
 
-        public RedoPlacementOperator(PlacementOperator<CVRPNDCandidate> placementOperator = null, int tourRemoveCount = 2)
+        public RedoPlacementOperator(PlacementOperator<CVRPNDCandidate> placementOperator = null, int tourRemoveCount = 0)
         {
             _removeCount = tourRemoveCount;
             _placementOperator = placementOperator ?? new SeededCheapestInsertionPlacementOperator(
@@ -45,7 +45,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
         {
             // TODO: perhaps consider an operator that tries to remove a small tour and redistribute into the others.
 
-            var removeCount = Strategies.Random.RandomGenerator.Default.Generate(_removeCount - 1) + 1;
+            var removeCount = Strategies.Random.RandomGenerator.Default.Generate(_removeCount) + 1;
             var before = candidate.Fitness;
             var originalCount = candidate.Count;
             while (candidate.Count > originalCount - removeCount &&

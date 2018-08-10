@@ -57,20 +57,17 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             // use a default solver to solve the TSP here.
             try
             {
-                //var solver = new SeededTourStrategy();
-                
-                //var solver = GASolver.Default;
+                // var solver = new SeededTourStrategy();
+
                 var solver = new GASolver(settings: new GASettings()
                 {
-                    PopulationSize = 200,
-                    ElitismPercentage = 1,
+                    PopulationSize = 1000,
+                    ElitismPercentage = 0.1f,
                     CrossOverPercentage = 10,
-                    MutationPercentage = 0,
+                    MutationPercentage = 1,
                     StagnationCount = 10
                 }, generator: new SeededTourStrategy());
-                
-                //Strategy<CVRPNDProblem, CVRPNDCandidate> solver = SeededCheapestInsertionStrategy.Default;
-                
+
                 var candidate = solver.Search(cvrp.Value);
                 var solution = candidate.Solution;
 

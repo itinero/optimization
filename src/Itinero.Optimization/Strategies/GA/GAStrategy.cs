@@ -19,6 +19,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Itinero.Logging;
 
 namespace Itinero.Optimization.Strategies.GA
@@ -90,12 +91,10 @@ namespace Itinero.Optimization.Strategies.GA
             // generate initial population.
             Logger.Log($"{nameof(GAStrategy<TProblem, TCandidate>)}.{nameof(Search)}", TraceEventType.Verbose,
                 $"{this.Name}: Generating population of {_settings.PopulationSize} individuals.");
-            var solutionCount = 0;
-            while (solutionCount < _settings.PopulationSize)
+            Parallel.For(0, _settings.PopulationSize, (i) =>
             {
-                population[solutionCount] = _generator.Search(problem);
-                solutionCount++;
-            }
+                population[i] = _generator.Search(problem);
+            });
             
             // sort population & determine the best candidate.
             Array.Sort(population);
@@ -139,23 +138,37 @@ namespace Itinero.Optimization.Strategies.GA
                 // replace part of the population by offspring.
                 for (var i = elitism; i < population.Length; i++)
                 {
-                    if (Random.RandomGenerator.Default.Generate(100) > _settings.CrossOverPercentage) continue; 
-                    
+                    if (Random.RandomGenerator.Default.Generate(100f) > _settings.CrossOverPercentage) continue;
+
                     Random.RandomGenerator.Generate2(selectionPoolSize, out var c1, out var c2);
                     population[i] = _crossOver.Apply(crossOverIndividuals[c1], crossOverIndividuals[c2]);
                 }
+                //Parallel.For(elitism, population.Length, (i) =>
+                //{
+                //    if (Random.RandomGenerator.Default.Generate(100f) > _settings.CrossOverPercentage) return;
+
+                //    Random.RandomGenerator.Generate2(selectionPoolSize, out var c1, out var c2);
+                //    population[i] = _crossOver.Apply(crossOverIndividuals[c1], crossOverIndividuals[c2]);
+                //});
 
                 // mutate part of the population.
-                for (var i = elitism; i < population.Length; i++)
-                {
-                    if (Random.RandomGenerator.Default.Generate(100) > _settings.MutationPercentage) continue; 
+                //for (var i = elitism; i < population.Length; i++)
+                //{
+                //    if (_settings.MutationPercentage == 0 || Random.RandomGenerator.Default.Generate(100) > _settings.MutationPercentage) continue; 
                     
+                //    // ok, mutate this individual.
+                //    _mutation.Apply(population[i]); // by ref so should be fine.
+                //}
+                Parallel.For(elitism, population.Length, (i) =>
+                {
+                    if (_settings.MutationPercentage == 0 || Random.RandomGenerator.Default.Generate(100f) > _settings.MutationPercentage) return;
+
                     // ok, mutate this individual.
                     _mutation.Apply(population[i]); // by ref so should be fine.
-                }
-                
-                // again, sort things and check for the best.
-                Array.Sort(population);
+                });
+
+                    // again, sort things and check for the best.
+                    Array.Sort(population);
                 if (CandidateComparison.Compare(best, population[0]) > 0)
                 { // the new candidate is better, yay!
                     stagnation = 0;

@@ -41,17 +41,17 @@ namespace Itinero.Optimization.Strategies.GA
         /// <summary>
         /// Gets or sets the elitism in percentage.
         /// </summary>
-        public int ElitismPercentage { get; set; } = 3;
+        public float ElitismPercentage { get; set; } = 3;
 
         /// <summary>
         /// Gets or sets the crossover percentage.
         /// </summary>
-        public int CrossOverPercentage { get; set; } = 30;
+        public float CrossOverPercentage { get; set; } = 30;
 
         /// <summary>
         /// Gets or sets the mutation percentage.
         /// </summary>
-        public int MutationPercentage { get; set; } = 10;
+        public float MutationPercentage { get; set; } = 10;
 
         /// <summary>
         /// Returns default GA settings.

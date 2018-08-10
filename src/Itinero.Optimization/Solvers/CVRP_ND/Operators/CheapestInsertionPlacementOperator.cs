@@ -46,12 +46,12 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
         /// <param name="lastOnly">When true inserts in the last tour only.</param>
         /// <param name="improvementsThreshold">The improvements threshold parameter.</param>
         public CheapestInsertionPlacementOperator(Operator<CVRPNDCandidate> improvementOperator = null, Func<int, int, float> insertionCostHeuristic = null,
-            bool lastOnly = false, float improvementsThreshold = 0.1f)
+            bool lastOnly = false, float improvementsThreshold = 0.15f)
         {
             _insertionCostHeuristic = insertionCostHeuristic;
             _lastOnly = lastOnly;
             _improvementsThreshold = improvementsThreshold;
-            _improvementOperator = improvementOperator ?? (new ExchangeOperator(onlyLast: _lastOnly, bestImprovement: false, minWindowSize: 0, maxWindowSize: 5)).ApplyUntil();
+            _improvementOperator = improvementOperator ?? (new ExchangeOperator(onlyLast: _lastOnly, bestImprovement: false, minWindowSize: 0, maxWindowSize: 1)).ApplyUntil();
         }
 
         public override string Name => "CI_PLACE";

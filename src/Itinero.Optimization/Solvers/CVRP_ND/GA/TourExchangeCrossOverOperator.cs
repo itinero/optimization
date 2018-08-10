@@ -44,7 +44,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
         public TourExchangeCrossOverOperator(Operator<CVRPNDCandidate> postOperator = null,
             PlacementOperator<CVRPNDCandidate> placeRemainingOperator = null)
         {
-            _postOperator = postOperator ?? new ExchangeOperator(onlyLast: false, bestImprovement: false, tryAll: false, minWindowSize: 0, maxWindowSize: 10);
+            _postOperator = postOperator ?? new ExchangeOperator(onlyLast: false, bestImprovement: false, tryAll: false, minWindowSize: 0, maxWindowSize: 1);
             _placeRemainingOperator = placeRemainingOperator ?? SeededCheapestInsertionPlacementOperator.Default;
         }
         
@@ -152,10 +152,18 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
                 {
                     return false;
                 }
+                if (selectedTour.insertionCount == 0)
+                {
+                    return false;
+                }
             }
             
             // copy over tour.
             var bestTour = source.Tour(selectedTour.tour);
+            if (bestTour.Count < 2)
+            {
+                return false;
+            }
             var targetT = -1;
             Tour targetTour = null;
             if (visits.Remove(bestTour.First))

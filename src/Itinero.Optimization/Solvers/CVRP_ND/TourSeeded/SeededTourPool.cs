@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using Itinero.Optimization.Solvers.Shared.CheapestInsertion;
 using Itinero.Optimization.Solvers.Shared.HillClimbing3Opt;
 using Itinero.Optimization.Solvers.Tours;
@@ -56,13 +57,19 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
                 visits.Shuffle();
             }
 
-            while (SeededTours.Count < _count)
+            var paralellTours = new SeededTour[_count];
+            Parallel.For(0, _count, (i) =>
             {
-                var visit = visits[visits.Count - 1];
-                visits.RemoveAt(visits.Count - 1);
-                
-                SeedTour(visit);
-            }
+                paralellTours[i] = SeedTour(visits[i]);
+            });
+            //while (SeededTours.Count < _count)
+            //{
+            //    var visit = visits[visits.Count - 1];
+            //    visits.RemoveAt(visits.Count - 1);
+
+            //    SeedTour(visit);
+            //}
+            SeededTours.AddRange(paralellTours);
 
             if (_count != _problem.Count)
             { // make sure all visits are in at least one tour.
@@ -86,7 +93,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
                         }
                     }
 
-                    SeedTour(visitNotInPool);
+                    SeededTours.Add(SeedTour(visitNotInPool));
                     visitsInPool.UnionWith(this.SeededTours[this.SeededTours.Count - 1].Visits);
                 }
             }
@@ -125,7 +132,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
             return count;
         }
 
-        private void SeedTour(int visit)
+        private SeededTour SeedTour(int visit)
         {
             var visits = new HashSet<int>(_problem.Visits);
             visits.Remove(visit);
@@ -136,7 +143,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
             var thresholdWindow = 0;
             while (true)
             {
-                var result = tour.CalculateCheapest(_problem.TravelWeight, visits);
+                var result = tour.CalculateCheapest(_problem.TravelWeight, visits, nearestNeighbours: _problem.NearestNeighbourCache.GetNNearestNeighboursForward(100));
                 if (result.visit == -1) break;
                 
                 var visitTravelWeight = _problem.VisitWeight(result.visit);
@@ -171,12 +178,12 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
                 }
             }
 
-            SeededTours.Add(new SeededTour()
+            return new SeededTour()
             {
                 Tour = tour,
                 TourData = (travelWeight, null),
                 Visits = new HashSet<int>(tour)
-            });
+            };
         }
     }
 }

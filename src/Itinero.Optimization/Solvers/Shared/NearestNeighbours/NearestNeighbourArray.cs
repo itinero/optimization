@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Itinero.Optimization.Solvers.Shared.NearestNeighbours
@@ -24,7 +25,7 @@ namespace Itinero.Optimization.Solvers.Shared.NearestNeighbours
     /// <summary>
     /// A nearest neighbour array, keeps 'n' nearest neighbours for each entry in the given weight matrix.
     /// </summary>
-    internal class NearestNeighbourArray
+    internal class NearestNeighbourArray : IEnumerable<int>
     {
         private readonly int[] _nn; // Contains the nearest neigbour per visit.
 
@@ -133,6 +134,16 @@ namespace Itinero.Optimization.Solvers.Shared.NearestNeighbours
         public void CopyTo(int v, int[] nn, int index, int count)
         {
             _nn.CopyTo(nn, index, v * N, count);
+        }
+
+        public IEnumerator<int> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -40,9 +40,9 @@ namespace Itinero.Optimization.Solvers.Shared.NearestNeighbours
             _weightFunc = weightFunc;
         }
         
-        private Dictionary<int, NearestNeighbourArray> _nearestNeighbours; // Holds the nearest neighbours.
-        private Dictionary<int, NearestNeighbourArray> _forwardNearestNeighbours; // Holds the nearest neighbours in forward direction.
-        private Dictionary<int, NearestNeighbourArray> _backwardNearestNeighbours; // Holds the nearest neighbours in backward direction.
+        private Dictionary<int, NearestNeighbourArray> _nearestNeighbours = new Dictionary<int, NearestNeighbourArray>(); // Holds the nearest neighbours.
+        private Dictionary<int, NearestNeighbourArray> _forwardNearestNeighbours = new Dictionary<int, NearestNeighbourArray>(); // Holds the nearest neighbours in forward direction.
+        private Dictionary<int, NearestNeighbourArray> _backwardNearestNeighbours = new Dictionary<int, NearestNeighbourArray>(); // Holds the nearest neighbours in backward direction.
         
         /// <summary>
         /// Gets the nearest neighbours for the given 'n'.
@@ -50,17 +50,15 @@ namespace Itinero.Optimization.Solvers.Shared.NearestNeighbours
         /// <returns>The nearest neighbour array.</returns>
         public NearestNeighbourArray GetNNearestNeighbours(int n)
         {
-            if (_nearestNeighbours == null)
-            { // not there yet, create.
-                _nearestNeighbours = new Dictionary<int, NearestNeighbourArray>();
-            }
+            lock (_nearestNeighbours)
+            {
+                if (_nearestNeighbours.TryGetValue(n, out var nearestNeighbours)) return nearestNeighbours;
 
-            if (_nearestNeighbours.TryGetValue(n, out var nearestNeighbours)) return nearestNeighbours; 
-            
-            // not found for n, create.
-            nearestNeighbours = new NearestNeighbourArray((x, y) => _weightFunc(y, x), _count, n);
-            _nearestNeighbours.Add(n, nearestNeighbours);
-            return nearestNeighbours;
+                // not found for n, create.
+                nearestNeighbours = new NearestNeighbourArray((x, y) => _weightFunc(y, x), _count, n);
+                _nearestNeighbours.Add(n, nearestNeighbours);
+                return nearestNeighbours;
+            }
         }
 
         /// <summary>
@@ -69,17 +67,15 @@ namespace Itinero.Optimization.Solvers.Shared.NearestNeighbours
         /// <returns>The nearest neighbour array.</returns>
         public NearestNeighbourArray GetNNearestNeighboursForward(int n)
         {
-            if (_forwardNearestNeighbours == null)
-            { // not there yet, create.
-                _forwardNearestNeighbours = new Dictionary<int, NearestNeighbourArray>();
-            }
+            lock (_forwardNearestNeighbours)
+            {
+                if (_forwardNearestNeighbours.TryGetValue(n, out var nearestNeighbours)) return nearestNeighbours;
 
-            if (_forwardNearestNeighbours.TryGetValue(n, out var nearestNeighbours)) return nearestNeighbours; 
-            
-            // not found for n, create.
-            nearestNeighbours = new NearestNeighbourArray((x, y) => _weightFunc(x, y), _count, n);
-            _forwardNearestNeighbours.Add(n, nearestNeighbours);
-            return nearestNeighbours;
+                // not found for n, create.
+                nearestNeighbours = new NearestNeighbourArray((x, y) => _weightFunc(x, y), _count, n);
+                _forwardNearestNeighbours.Add(n, nearestNeighbours);
+                return nearestNeighbours;
+            }
         }
         
         /// <summary>
@@ -88,17 +84,15 @@ namespace Itinero.Optimization.Solvers.Shared.NearestNeighbours
         /// <returns>The nearest neighbour array.</returns>
         public NearestNeighbourArray GetNNearestNeighboursBackward(int n, int customer)
         {
-            if (_backwardNearestNeighbours == null)
-            { // not there yet, create.
-                _backwardNearestNeighbours = new Dictionary<int, NearestNeighbourArray>();
-            }
+            lock (_backwardNearestNeighbours)
+            {
+                if (_backwardNearestNeighbours.TryGetValue(n, out var nearestNeighbours)) return nearestNeighbours;
 
-            if (_backwardNearestNeighbours.TryGetValue(n, out var nearestNeighbours)) return nearestNeighbours; 
-            
-            // not found for n, create.
-            nearestNeighbours = new NearestNeighbourArray((x, y) => _weightFunc(y, x), _count, n);
-            _backwardNearestNeighbours.Add(n, nearestNeighbours);
-            return nearestNeighbours;
+                // not found for n, create.
+                nearestNeighbours = new NearestNeighbourArray((x, y) => _weightFunc(y, x), _count, n);
+                _backwardNearestNeighbours.Add(n, nearestNeighbours);
+                return nearestNeighbours;
+            }
         }
     }
 }

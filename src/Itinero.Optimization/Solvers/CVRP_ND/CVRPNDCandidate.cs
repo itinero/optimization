@@ -436,7 +436,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         {
             const float e = 0.01f;
 
-            Debug.Assert(this.IsFeasible());
+            //Debug.Assert(!this.IsFeasible());
 
             // check for 2 empty sequences.
             if (s1.Length == 2 && s2.Length == 2) return (false, 0);
@@ -554,7 +554,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             this.TravelWeight += difference;
             this.Fitness = this.TravelWeight * this.Count;
 
-            Debug.Assert(this.IsFeasible());
+            //Debug.Assert(!this.IsFeasible());
             
             // don't do the swap.
             return (true, difference);
