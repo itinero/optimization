@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Itinero.Optimization.Models.Mapping.Default;
+using Itinero.Optimization.Models.Mapping.Directed;
 
 namespace Itinero.Optimization.Models.Mapping
 {
@@ -34,6 +35,11 @@ namespace Itinero.Optimization.Models.Mapping
             {
                 Name = "Default",
                 TryMap = DefaultModelMapper.TryMap
+            },
+            new ModelMapperHook()
+            {
+                Name = "Directed",
+                TryMap = DirectedModelMapper.TryMap
             }
         });
         

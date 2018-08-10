@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -163,6 +164,7 @@ namespace Itinero.Optimization.Solvers.Tours
         {
             if (from < 0)
             { // a new visit cannot be negative!
+                Debug.Fail("Cannot add a visit after a visit with a negative index!");
                 throw new ArgumentOutOfRangeException(nameof(from), "Cannot add a visit after a visit with a negative index!");
             }
 
@@ -174,9 +176,12 @@ namespace Itinero.Optimization.Solvers.Tours
             }
 
             if (_nextArray.Length <= @from)
+            {
+                Debug.Fail("visit(s) do not exist in this tour!");
                 throw new ArgumentOutOfRangeException(nameof(@from),
                     "visit(s) do not exist in this tour!"); // visits should exist.
-            
+            }
+
             // resize the array if needed.
             if (_nextArray.Length <= visit)
             { // resize the array.
@@ -232,14 +237,17 @@ namespace Itinero.Optimization.Solvers.Tours
         {
             if (visit < 0)
             { // a new visit cannot be negative!
+                Debug.Fail("Cannot add visits with a negative id!");
                 throw new ArgumentOutOfRangeException(nameof(visit), "Cannot add visits with a negative id!");
             }
             if (from < 0)
             { // a new visit cannot be negative!
+                Debug.Fail("Cannot add a visit after a visit with a negative id!");
                 throw new ArgumentOutOfRangeException(nameof(@from), "Cannot add a visit after a visit with a negative id!");
             }
             if (from == visit)
             { // the visit are identical.
+                Debug.Fail($"Cannot add a visit after itself. You tried to add visit {visit} after itself");
                 throw new ArgumentException($"Cannot add a visit after itself. You tried to add visit {visit} after itself");
             }
 
@@ -258,6 +266,7 @@ namespace Itinero.Optimization.Solvers.Tours
             var to = _nextArray[from];
             if (to == NOT_SET)
             { // the to field is not set.
+                Debug.Fail($"Visit {from} does not exist.");
                 throw new ArgumentOutOfRangeException(nameof(@from), $"Visit {from} does not exist.");
             }
 

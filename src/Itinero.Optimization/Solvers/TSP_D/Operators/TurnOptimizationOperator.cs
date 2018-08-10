@@ -33,6 +33,10 @@ namespace Itinero.Optimization.Solvers.TSP_D.Operators
         public override bool Apply(Candidate<TSPDProblem, Tour> candidate)
         {
             var fitness = candidate.Solution.OptimizeTurns(candidate.Problem.Weight, candidate.Problem.TurnPenalty);
+            if (fitness >= float.MaxValue)
+            {
+                return false;
+            }
             var success = fitness < candidate.Fitness;
             candidate.Fitness = fitness;
             return success;

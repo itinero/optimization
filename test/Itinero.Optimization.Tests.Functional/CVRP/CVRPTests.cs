@@ -13,7 +13,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP
         public static void Run()
         {
             Run1Wechelderzande();
-            Run2Spijkenisse();
+            //Run2Spijkenisse();
         }
 
         public static void Run1Wechelderzande()

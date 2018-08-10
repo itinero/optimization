@@ -17,6 +17,7 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Itinero.Optimization.Solvers.Shared.Directed;
 using Itinero.Optimization.Solvers.Shared.Directed.CheapestInsertion;
@@ -37,7 +38,7 @@ namespace Itinero.Optimization.Solvers.TSP_D.Operators
         /// Creates a new operator.
         /// </summary>
         /// <param name="fraction">The fraction in ]0, 1] of the visits that will be removed and reinserted.</param>
-        public CheapestReinsertionOperator(float fraction = 0.1f)
+        public CheapestReinsertionOperator(float fraction = 0.25f)
         {
             _fraction = fraction;
         }
@@ -50,40 +51,55 @@ namespace Itinero.Optimization.Solvers.TSP_D.Operators
             var problem = candidate.Problem;
 
             // select fraction of the visits and randomize the list. 
-            var visits = new List<int>();
-            foreach (var visit in candidate.Solution)
+            var visits = new List<(int visit, int directedVisit)>();
+            foreach (var directedVisit in candidate.Solution)
             {
-                if (visit == candidate.Solution.Last) continue;
+                if (directedVisit == candidate.Solution.First) continue;
+                if (directedVisit == candidate.Solution.Last) continue;
                 if (Strategies.Random.RandomGenerator.Default.Generate(1f) < _fraction)
                 {
-                    visits.Add(visit);
+                    visits.Add((DirectedHelper.ExtractVisit(directedVisit), directedVisit));
                 }
             }
+            if (visits.Count == 0) return false;
+            
             visits.Shuffle();
+
+            // remove selected visits.
+            var originalTour = tour.Clone() as Tour;
+            foreach (var visitPair in visits)
+            {
+                tour.Remove(visitPair.directedVisit);
+            }
                 
             // add all visits by using cheapest insertion.
-            foreach (var t in visits)
+            foreach (var visitPair in visits)
             {
-                var result = tour.CalculateCheapestDirected(t, problem.Weight, problem.TurnPenalty);
-                tour.InsertAfter(result.location.From, result.turn.DirectedVisit(t));
+                var result = tour.CalculateCheapestDirected(visitPair.visit, problem.Weight, problem.TurnPenalty);
+                tour.InsertAfter(result.location.From, result.turn.DirectedVisit(visitPair.visit));
                 var from = DirectedHelper.Extract(result.location.From);
                 var to = DirectedHelper.Extract(result.location.To);
-                var fromDirectedVisit = @from.turn.ApplyDeparture(result.fromDepartureDirection)
-                    .DirectedVisit(@from.visit);
+                var fromDirectedVisit = from.turn.ApplyDeparture(result.fromDepartureDirection)
+                    .DirectedVisit(from.visit);
                 var toDirectedVisit = to.turn.ApplyArrival(result.toArrivalDirection)
                     .DirectedVisit(to.visit);
                 if (result.location.From != fromDirectedVisit)
                 {
                     tour.Replace(result.location.From, fromDirectedVisit);
                 }
-                if (@from.visit != to.visit &&
+                if (from.visit != to.visit &&
                     result.location.To != toDirectedVisit)
                 {
                     tour.Replace(result.location.To, toDirectedVisit);
                 }
             }
-
             var fitness = tour.WeightDirected(problem.Weight, problem.TurnPenalty);
+            if (fitness >= float.MaxValue)
+            { // tour became impossible.
+                candidate.Solution = originalTour;
+                return false;
+            }
+
             var success = fitness < candidate.Fitness;
             candidate.Fitness = fitness;
             return success;

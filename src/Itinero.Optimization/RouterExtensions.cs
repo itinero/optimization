@@ -56,7 +56,7 @@ namespace Itinero.Optimization
             }
             var profile = router.Db.GetSupportedProfile(profileName);
 
-            var vehiclePool = VehiclePool.FromProfile(profile, departure: first, arrival: last, reusable: false, max: max);
+            var vehiclePool = VehiclePool.FromProfile(profile, departure: first, arrival: last, reusable: false, max: max, turnPenalty: turnPenalty);
 
             Action<IEnumerable<Result<Route>>> internalCallback = null;
             if (intermediateResultsCallback != null)

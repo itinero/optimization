@@ -38,11 +38,12 @@ namespace Itinero.Optimization.Tests.Functional
                 "Performance tests are running in Debug, please run in Release mode.");
 #endif
             // invoke case-specific tests.
-            //TSP.TSPTests.Run();
+            TSP.TSPTests.Run();
+            TSP_D.TSPDTests.Run();
             //TSP_TW.TSPTWTests.Run();
-            //STSP.STSPTests.Run();
-            //CVRP.CVRPTests.Run();
-            CVRP_ND.CVRPNDTests.Run();
+            STSP.STSPTests.Run();
+            CVRP.CVRPTests.Run();
+            //CVRP_ND.CVRPNDTests.Run();
 
             //Console.ReadLine();
         }
@@ -64,12 +65,12 @@ namespace Itinero.Optimization.Tests.Functional
             };
             Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
-//#if RELEASE
-//                 if (level == "verbose")
-//                 {
-//                     return;
-//                 }
-//#endif
+#if RELEASE
+                 if (level == "verbose")
+                 {
+                     return;
+                 }
+#endif
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
             };
         }

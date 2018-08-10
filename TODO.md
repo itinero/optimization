@@ -10,6 +10,16 @@ The main thing left to think about is how to elegantly handle turning costs:
 
 **make sure to check to TODO's in the code**
 
+Known issues:
+- The directed weight matrix can still contain invalid visits or some visit pairs cannot be reached.
+- The directed turn optimization operation can't handle invalid visits, it never succeeds.
+- The directed 3opt can't handle open problem, we should use the closed equivalence there.
+- The STSP solver uses 3OPt and can't handle open problems, we should use the closed equivalence there.
+- The hengelo and spijknesse problems don't solve in the TSP.
+- The spijkenisse problems don't solve in the CVRP.
+- The CVRP-ND solver is completely broken.
+
+General todos:
 - 3Opt uses NN when set to false, should be true.
 - nearest neighbours still return '10' when there are less than 10 visits.
 - Convert *all* TSP solvers to solvers that can handle sub-problems of matrices.

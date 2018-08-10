@@ -139,6 +139,10 @@ namespace Itinero.Optimization.Solvers.Shared.Directed.CheapestInsertion
                     // use the cost between 'from -> visit'.
                     current.cost = weightFunc(DirectedHelper.WeightId(from.visit, current.fromDepartureDirection),
                         DirectedHelper.WeightId(visit, turnArrival));
+                    if (current.cost >= float.MaxValue)
+                    {
+                        continue;
+                    }
 
                     if (current.cost < best.cost)
                     {
@@ -169,13 +173,23 @@ namespace Itinero.Optimization.Solvers.Shared.Directed.CheapestInsertion
                         // add turn penalty of turn at 'from'.
                         current.cost = turnPenaltyFunc(from.turn.ApplyDeparture(current.fromDepartureDirection));
                         // add travel weight 'from -> visit'.
-                        current.cost += weightFunc(DirectedHelper.WeightId(from.visit, current.fromDepartureDirection),
+                        var travelWeight = weightFunc(DirectedHelper.WeightId(from.visit, current.fromDepartureDirection),
                             DirectedHelper.WeightId(visit, current.turn.Arrival()));
+                        if (travelWeight >= float.MaxValue)
+                        {
+                            continue;
+                        }
+                        current.cost += travelWeight;
                         // add turning cost at 'visit'.
                         current.cost += turnPenaltyFunc(current.turn);
                         // add travel weight 'visit -> 'to'.
-                        current.cost += weightFunc(DirectedHelper.WeightId(visit, current.turn.Departure()),
+                        travelWeight = weightFunc(DirectedHelper.WeightId(visit, current.turn.Departure()),
                             DirectedHelper.WeightId(to.visit, current.toArrivalDirection));
+                        if (travelWeight >= float.MaxValue)
+                        {
+                            continue;
+                        }
+                        current.cost += travelWeight;
                         // add turning cost at 'to'.
                         current.cost += turnPenaltyFunc(to.turn.ApplyArrival(current.toArrivalDirection));
 

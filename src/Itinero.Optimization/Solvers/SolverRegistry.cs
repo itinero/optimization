@@ -35,6 +35,7 @@ namespace Itinero.Optimization.Solvers
             CVRP.CVRPSolverHook.Default,
             STSP.STSPSolverHook.Default,
             TSP_TW.TSPTWSolverHook.Default,
+            TSP_D.TSPDSolverHook.Default,
             TSP.TSPSolverHook.Default
         });
         
@@ -107,6 +108,15 @@ namespace Itinero.Optimization.Solvers
             /// </summary>
             /// <returns></returns>
             internal SolverRegistry.TrySolveDelegate TrySolve { get; set; }
+
+            /// <summary>
+            /// Returns a description.
+            /// </summary>
+            /// <returns></returns>
+            public override string ToString()
+            {
+                return $"SolverHook -> {this.Name}";
+            }
         }
     }
 }

@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Itinero.Algorithms.PriorityQueues;
 using Itinero.Optimization.Solvers.Tours;
@@ -36,9 +37,11 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
         {
             // TODO: this now uses a form of dykstra but we think there is a better algorithm.
             // TODO: this can be way more efficient, we haven't done any performance work on this.
+            // TODO: check if we can reuse arrays.
             
             // build a small sequence of the original visits.
-            var nextArray = new int[tour.Capacity];
+            var capacity = tour.Capacity + 3; // make sure all turns fit.
+            var nextArray = new int[capacity / 4];
             var first = DirectedHelper.ExtractVisit(tour.First);
             var previous = -1;
             foreach (var directedVisit in tour)
@@ -54,7 +57,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
             
             var settled = new HashSet<int>();
             var queue = new BinaryHeap<int>();
-            var paths = new (int previous, float cost)[tour.Capacity];
+            var paths = new (int previous, float cost)[capacity];
             for (var i = 0; i < paths.Length; i++)
             {
                 paths[i] = (int.MaxValue, float.MaxValue);
@@ -95,9 +98,15 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                     }
                     var weight = turnPenaltyFunc(turn);
                     var arrivalWeightId = turn.Departure().WeightId(next);
-                    weight += weightFunc(departureWeightId, arrivalWeightId);
+                    var travelCost = weightFunc(departureWeightId, arrivalWeightId);
+                    if (travelCost >= float.MaxValue)
+                    { // this connection is impossible.
+                        continue;
+                    }
+                    weight += travelCost;
                     weight += currentWeight;
 
+                    Debug.Assert(nextDirected >= 0 && nextDirected < paths.Length);
                     if (paths[nextDirected].cost > weight)
                     {
                         paths[nextDirected] = (current, weight);
@@ -106,8 +115,14 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                 }
             }
 
+            if (bestLast == -1)
+            { // tour is impossible.
+                return float.MaxValue;
+            }
+
             var best = bestLast;
             var newTour = new List<int>();
+            Debug.Assert(best >= 0 && best < paths.Length);
             while (paths[best].previous > -1)
             {
                 newTour.Add(best);
@@ -116,12 +131,15 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                 {
                     break;
                 }
+                Debug.Assert(best >= 0 && best < paths.Length);
             }
             newTour.Add(best);
-            
+
+            var tourDebug = tour.Clone();
             tour.Clear();
             tour.Replace(tour.First, newTour[newTour.Count - 1]);
-            if (tour.Last.HasValue)
+            if (tour.Last.HasValue && 
+                tour.First != tour.Last)
             {
                 tour.Replace(tour.Last.Value, newTour[0]);
             }
