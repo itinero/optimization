@@ -17,6 +17,7 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Itinero.Optimization.Solvers.Shared.EAX
 {
@@ -75,6 +76,7 @@ namespace Itinero.Optimization.Solvers.Shared.EAX
         {
             _cycles = null;
             // set the next to.
+            Debug.Assert(from >= 0 && from < NextArray.Length);
             NextArray[from] = to;
         }
 

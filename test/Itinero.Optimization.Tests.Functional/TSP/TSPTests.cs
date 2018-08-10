@@ -30,8 +30,8 @@ namespace Itinero.Optimization.Tests.Functional.TSP
         public static void Run()
         {
             Run1Wechelderzande();
-            //Run2Hengelo();
-            //Run3Spijkenisse();
+            Run2Hengelo();
+            Run3Spijkenisse();
         }
 
         public static void Run1Wechelderzande()

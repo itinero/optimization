@@ -26,7 +26,7 @@ namespace Itinero.Optimization.Strategies.GA
         /// <summary>
         /// Gets or sets the population size.
         /// </summary>
-        public int PopulationSize { get; set; } = 100;
+        public int PopulationSize { get; set; } = 20;
 
         /// <summary>
         /// Gets or sets the maximum generations.

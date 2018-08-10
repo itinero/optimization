@@ -221,8 +221,12 @@ namespace Itinero.Optimization.Solvers.Shared.EAX
                         }
                     }
 
-                    a.AddEdge(selectedFrom1, selectedTo2);
-                    a.AddEdge(selectedFrom2, selectedTo1);
+                    if (selectedFrom1 != -1 && selectedTo1 != -1 &&
+                        selectedFrom2 != -1 && selectedTo2 != -1)
+                    {
+                        a.AddEdge(selectedFrom1, selectedTo2);
+                        a.AddEdge(selectedFrom2, selectedTo1);
+                    }
 
                     cycleCount--;
                 }
