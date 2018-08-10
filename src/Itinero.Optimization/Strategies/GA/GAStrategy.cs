@@ -136,26 +136,26 @@ namespace Itinero.Optimization.Strategies.GA
                 }
 
                 // replace part of the population by offspring.
-                for (var i = elitism; i < population.Length; i++)
-                {
-                    if (Random.RandomGenerator.Default.Generate(100f) > _settings.CrossOverPercentage) continue;
-
-                    Random.RandomGenerator.Generate2(selectionPoolSize, out var c1, out var c2);
-                    population[i] = _crossOver.Apply(crossOverIndividuals[c1], crossOverIndividuals[c2]);
-                }
-                //Parallel.For(elitism, population.Length, (i) =>
+                //for (var i = elitism; i < population.Length; i++)
                 //{
-                //    if (Random.RandomGenerator.Default.Generate(100f) > _settings.CrossOverPercentage) return;
+                //    if (Random.RandomGenerator.Default.Generate(100f) > _settings.CrossOverPercentage) continue;
 
                 //    Random.RandomGenerator.Generate2(selectionPoolSize, out var c1, out var c2);
                 //    population[i] = _crossOver.Apply(crossOverIndividuals[c1], crossOverIndividuals[c2]);
-                //});
+                //}
+                Parallel.For(elitism, population.Length, (i) =>
+                {
+                    if (Random.RandomGenerator.Default.Generate(100f) > _settings.CrossOverPercentage) return;
+
+                    Random.RandomGenerator.Generate2(selectionPoolSize, out var c1, out var c2);
+                    population[i] = _crossOver.Apply(crossOverIndividuals[c1], crossOverIndividuals[c2]);
+                });
 
                 // mutate part of the population.
                 //for (var i = elitism; i < population.Length; i++)
                 //{
                 //    if (_settings.MutationPercentage == 0 || Random.RandomGenerator.Default.Generate(100) > _settings.MutationPercentage) continue; 
-                    
+
                 //    // ok, mutate this individual.
                 //    _mutation.Apply(population[i]); // by ref so should be fine.
                 //}
