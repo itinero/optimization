@@ -17,6 +17,7 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 using Itinero.Optimization.Solvers.Shared.CheapestInsertion;
@@ -33,6 +34,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
     {
         private readonly int _count;
         private readonly CVRPNDProblem _problem;
+        private readonly bool _useParalell = false;
 
         public SeededTourPool(CVRPNDProblem problem, int count = -1)
         {
@@ -57,19 +59,25 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
                 visits.Shuffle();
             }
 
-            var paralellTours = new SeededTour[_count];
-            Parallel.For(0, _count, (i) =>
+            if (_useParalell)
             {
-                paralellTours[i] = SeedTour(visits[i]);
-            });
-            //while (SeededTours.Count < _count)
-            //{
-            //    var visit = visits[visits.Count - 1];
-            //    visits.RemoveAt(visits.Count - 1);
+                var paralellTours = new SeededTour[_count];
+                Parallel.For(0, _count, (i) =>
+                {
+                    paralellTours[i] = SeedTour(visits[i]);
+                });
+                SeededTours.AddRange(paralellTours);
+            }
+            else
+            {
+                while (SeededTours.Count < _count)
+                {
+                    var visit = visits[visits.Count - 1];
+                    visits.RemoveAt(visits.Count - 1);
 
-            //    SeedTour(visit);
-            //}
-            SeededTours.AddRange(paralellTours);
+                    SeededTours.Add(SeedTour(visit));
+                }
+            }
 
             if (_count != _problem.Count)
             { // make sure all visits are in at least one tour.
@@ -137,22 +145,58 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
             var visits = new HashSet<int>(_problem.Visits);
             visits.Remove(visit);
             var tour = new Tour(new [] { visit }, visit);
-            var travelWeight = 0f;
+            (float weight, (string metric, float value)[] constraints) tourData = (0, new(string, float)[_problem.CapacityConstraints.Length]);
+            tourData.weight = _problem.VisitWeight(visit);
+            for (var c = 0; c < _problem.CapacityConstraints.Length; c++)
+            {
+                var constraint = _problem.CapacityConstraints[c];
+                tourData.constraints[c] = (constraint.metric,
+                    constraint.costs[visit] + tourData.constraints[c].value);
+                Debug.Assert(constraint.max >= tourData.constraints[c].value);
+            }
 
             var threshold = 10;
             var thresholdWindow = 0;
             while (true)
             {
-                var result = tour.CalculateCheapest(_problem.TravelWeight, visits, nearestNeighbours: _problem.NearestNeighbourCache.GetNNearestNeighboursForward(100));
-                if (result.visit == -1) break;
-                
-                var visitTravelWeight = _problem.VisitWeight(result.visit);
-                if (result.cost + travelWeight < _problem.MaxWeight)
+                var result = tour.CalculateCheapest(_problem.TravelWeight, visits, nearestNeighbours: _problem.NearestNeighbourCache.GetNNearestNeighboursForward(100),
+                    canPlace: (w, v) =>
+                    {
+                        // check travel weight.
+                        var vw = _problem.VisitWeight(v);
+                        if (tourData.weight + w + vw > _problem.MaxWeight)
+                        { // too much travel weight.
+                            return false;
+                        }
+
+                        // calculate constraints.
+                        for (var c = 0; c < _problem.CapacityConstraints.Length; c++)
+                        {
+                            var constraint = _problem.CapacityConstraints[c];
+                            var cost = constraint.costs[visit] + tourData.constraints[c].value;
+                            if (cost > constraint.max)
+                            {
+                                return false;
+                            }
+                        }
+                        return true;
+                    });
+                if (result.visit != -1)
                 {
+                    var visitTravelWeight = _problem.VisitWeight(result.visit);
                     thresholdWindow++;
                     tour.InsertAfter(result.location.From, result.visit);
-                    travelWeight += visitTravelWeight + result.cost;
                     visits.Remove(result.visit);
+
+                    // update tour data.
+                    tourData.weight += visitTravelWeight + result.cost;
+                    for(var c = 0; c < _problem.CapacityConstraints.Length; c++)
+                    {
+                        var constraint = _problem.CapacityConstraints[c];
+                        tourData.constraints[c] = (constraint.metric,
+                            constraint.costs[visit] + tourData.constraints[c].value);
+                        Debug.Assert(constraint.max >= tourData.constraints[c].value);
+                    }
 
                     if (thresholdWindow == threshold)
                     {
@@ -160,7 +204,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
                             _problem.NearestNeighbourCache.GetNNearestNeighbours(10));
                         if (result3Opt.improved)
                         {
-                            travelWeight += result3Opt.delta;
+                            tourData.weight += result3Opt.delta;
                         }
 
                         thresholdWindow = 0;
@@ -174,14 +218,14 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
                     {
                         break;
                     }
-                    travelWeight += result3Opt.delta;
+                    tourData.weight += result3Opt.delta;
                 }
             }
 
             return new SeededTour()
             {
                 Tour = tour,
-                TourData = (travelWeight, null),
+                TourData = tourData,
                 Visits = new HashSet<int>(tour)
             };
         }

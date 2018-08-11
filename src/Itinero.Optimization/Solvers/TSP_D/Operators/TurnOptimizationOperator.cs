@@ -26,7 +26,7 @@ namespace Itinero.Optimization.Solvers.TSP_D.Operators
     /// <summary>
     /// An operator that optimizes turns.
     /// </summary>
-    internal class TurnOptimizationOperator: Operator<Candidate<TSPDProblem, Tour>>
+    public class TurnOptimizationOperator: Operator<Candidate<TSPDProblem, Tour>>
     {
         public override string Name { get; } = "TURN";
 

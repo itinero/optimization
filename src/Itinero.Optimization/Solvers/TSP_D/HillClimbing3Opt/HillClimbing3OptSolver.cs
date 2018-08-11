@@ -31,7 +31,7 @@ namespace Itinero.Optimization.Solvers.TSP_D.HillClimbing3Opt
     /// - Make sure nearest neighbours are cached.
     /// - Use don't look bits.
     /// </remarks>
-    internal sealed class HillClimbing3OptSolver : Strategy<TSPDProblem, Candidate<TSPDProblem, Tour>>
+    public sealed class HillClimbing3OptSolver : Strategy<TSPDProblem, Candidate<TSPDProblem, Tour>>
     {
         private readonly Strategy<TSPDProblem, Candidate<TSPDProblem, Tour>> _generator;
         private readonly bool _nearestNeighbours = false;

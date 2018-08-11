@@ -30,7 +30,7 @@ namespace Itinero.Optimization.Solvers.TSP_D
     /// <summary>
     /// The directed TSP.
     /// </summary>
-    internal sealed class TSPDProblem
+    public sealed class TSPDProblem
     {
         private readonly float[][] _weights;
         private readonly float[] _turnPenalties;
@@ -205,7 +205,7 @@ namespace Itinero.Optimization.Solvers.TSP_D
         /// <summary>
         /// Gets or sets the turn penalties per type of turn.
         /// </summary>
-        public float TurnPenalty(TurnEnum turn)
+        internal float TurnPenalty(TurnEnum turn)
         {
             return _turnPenalties[(byte) turn];
         }

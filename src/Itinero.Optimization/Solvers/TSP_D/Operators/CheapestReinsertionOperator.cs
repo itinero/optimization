@@ -30,7 +30,7 @@ namespace Itinero.Optimization.Solvers.TSP_D.Operators
     /// <summary>
     /// A reinsertion operator, takes out a fraction of the visits and reinserts them using CI.
     /// </summary>
-    internal class CheapestReinsertionOperator : Operator<Candidate<TSPDProblem, Tour>>
+    public class CheapestReinsertionOperator : Operator<Candidate<TSPDProblem, Tour>>
     {
         private readonly float _fraction;
 

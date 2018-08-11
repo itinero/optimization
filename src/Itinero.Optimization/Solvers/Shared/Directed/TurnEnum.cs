@@ -21,7 +21,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
     /// <summary>
     /// Enumerates possible directions at a visit.
     /// </summary>
-    internal enum TurnEnum : byte
+    public enum TurnEnum : byte
     {
         /// <summary>
         /// Arrival forward, departure forward.
@@ -44,7 +44,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
     /// <summary>
     /// Contains extension methods for the turn enum.
     /// </summary>
-    internal static class TurnEnumExtensions
+    public static class TurnEnumExtensions
     {
         /// <summary>
         /// Returns a directed visit for the given turn and visit.

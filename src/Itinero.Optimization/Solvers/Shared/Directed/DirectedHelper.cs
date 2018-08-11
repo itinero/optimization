@@ -43,7 +43,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
     ///         - departureId  : the departure id at that customer.
     ///         
     /// </remarks>
-    internal static class DirectedHelper
+    public static class DirectedHelper
     {
         /// <summary>
         /// Builds the weight id for the given visit and given direction.

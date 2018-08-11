@@ -207,7 +207,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 previous = visit;
             }
             if (tour.First == tour.Last &&
-                previous != -1)
+                previous != -1 && previous != tour.First)
             {
                 travelWeight += this.Problem.TravelWeight(previous, tour.First);
             }
@@ -278,6 +278,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 var constraint = this.Problem.CapacityConstraints[c];
                 tourData.constraints[c] = (constraint.metric, 
                     constraint.costs[visit] + tourData.constraints[c].value);
+                Debug.Assert(constraint.max >= tourData.constraints[c].value);
             }
             var diff = this.Problem.TravelWeight(before, visit);
             if (after != Tours.Tour.NOT_SET)

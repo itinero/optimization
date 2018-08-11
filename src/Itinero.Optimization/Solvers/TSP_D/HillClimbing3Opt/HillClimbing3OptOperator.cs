@@ -31,7 +31,7 @@ namespace Itinero.Optimization.Solvers.TSP_D.HillClimbing3Opt
     /// - Make sure nearest neighbours are cached.
     /// - Use don't look bits.
     /// </remarks>
-    internal sealed class HillClimbing3OptOperator : Operator<Candidate<TSPDProblem, Tour>>
+    public sealed class HillClimbing3OptOperator : Operator<Candidate<TSPDProblem, Tour>>
     {
         private readonly bool _nearestNeighbours = false;
         private readonly bool _dontLook = false;
