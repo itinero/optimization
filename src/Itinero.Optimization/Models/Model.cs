@@ -20,6 +20,7 @@ using Itinero.LocalGeo;
 using Itinero.Optimization.Models.Costs;
 using Itinero.Optimization.Models.TimeWindows;
 using Itinero.Optimization.Models.Vehicles;
+using System.Collections.Generic;
 
 namespace Itinero.Optimization.Models
 {
@@ -33,6 +34,12 @@ namespace Itinero.Optimization.Models
         /// </summary>
         /// <returns></returns>
         public Coordinate[] Visits { get; set; }
+
+        /// <summary>
+        /// Gets or sets the resolved locations
+        /// </summary>
+        /// <returns></returns>
+        public List<RouterPoint> Locations { get; set; }
 
         /// <summary>
         /// Gets or sets the time windows.
