@@ -27,7 +27,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
     /// <summary>
     /// A solver using a GA and the edge-assembly crossover.
     /// </summary> 
-    internal class GASolver : Strategy<CVRPNDProblem, CVRPNDCandidate>
+    public class GASolver : Strategy<CVRPNDProblem, CVRPNDCandidate>
     {
         private readonly GAStrategy<CVRPNDProblem, CVRPNDCandidate> _gaStrategy;
         

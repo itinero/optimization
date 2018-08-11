@@ -82,7 +82,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                 while (cheapest.cost < float.MaxValue)
                 {
                     candidate.InsertAfter(t, cheapest.location.From, cheapest.visit);
-                    Debug.Assert(candidate.IsFeasible());
+                    //Debug.Assert(candidate.IsFeasible());
                     visits.Remove(cheapest.visit);
                     insertedCount++;
                     if (visits.Count == 0)
@@ -98,11 +98,11 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                         {
                             candidate.UpdateTourData(candidate.Solution.Count - 1, result.delta);
                         }
-                        Debug.Assert(candidate.IsFeasible());
+                        //Debug.Assert(candidate.IsFeasible());
 
                         insertedCount = 0;
                         _improvementOperator?.Apply(candidate);
-                        Debug.Assert(candidate.IsFeasible());
+                        //Debug.Assert(candidate.IsFeasible());
                     }
 
                     cheapest = tour.CalculateCheapest(candidate.Problem.TravelWeight, visits,
@@ -117,17 +117,17 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                         {
                             candidate.UpdateTourData(candidate.Solution.Count - 1, result.delta);
                         }
-                        Debug.Assert(candidate.IsFeasible());
+                        //Debug.Assert(candidate.IsFeasible());
 
                         insertedCount = 0;
                         _improvementOperator?.Apply(candidate);
-                        Debug.Assert(candidate.IsFeasible());
+                        //Debug.Assert(candidate.IsFeasible());
 
                         cheapest = tour.CalculateCheapest(candidate.Problem.TravelWeight, visits,
                             insertionCostHeuristic, (travelCost, v) => candidate.CanInsert(t, v, travelCost));
                     }
                 }
-                Debug.Assert(candidate.IsFeasible());
+                //Debug.Assert(candidate.IsFeasible());
             }
             else
             {

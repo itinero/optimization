@@ -26,7 +26,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
     /// <summary>
     /// Represents a solution to the CVRP no-depot.
     /// </summary>
-    internal class CVRPNDSolution : ICloneable<CVRPNDSolution>
+    public class CVRPNDSolution : ICloneable<CVRPNDSolution>
     {
         private readonly List<Tour> _tours;
 

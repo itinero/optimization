@@ -62,7 +62,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
             // apply the operator.
             _seededCheapestInsertionPlacementOperator.Apply(candidate, visits);
             
-            Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+            //Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
             
             return candidate;
         }

@@ -120,7 +120,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
             }
             else if (_tryAll)
             {
-                Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                //Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                 
                 (bool success, Seq s1, Seq s2, float fitnessDelta, int t1, int t2) best = (false, new Seq(), new Seq(),
                     float.MaxValue, -1, -1);
@@ -142,7 +142,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                     if (!_bestImprovement)
                     {
                         // exchange was already done on the first improvement found. 
-                        Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                        //Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                         return true;
                     }
                 }
@@ -151,14 +151,14 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                 {
                     // do the exchange, this is the best one.
                     candidate.TrySwap(best.t1, best.t2, best.s1, best.s2);
-                    Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                    //Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                     return true;
                 }
                 return false;
             }
             else 
             {
-                Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                //Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                 
                 // choose two random tours.
                 Strategies.Random.RandomGenerator.Generate2(candidate.Solution.Count, out var t1, out var t2);
@@ -169,12 +169,12 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                 if (!_bestImprovement)
                 {
                     // exchange was already done on the first improvement found. 
-                    Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                    //Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                     return true;
                 }
                 // do the exchange, this is the best one.
                 candidate.TrySwap(t1, t2, exchange.s1, exchange.s2);
-                Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                //Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                 return true;
             }
         }
@@ -209,7 +209,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                     if (!_bestImprovement)
                     {
                         // exchange was already done on the first improvement found. 
-                        Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                        //Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                         return true;
                     }
                 }
@@ -218,7 +218,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                 {
                     // do the exchange, this is the best one.
                     candidate.TrySwap(t, best.t2, best.s1, best.s2);
-                    Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                    //Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                     return true;
                 }
 
@@ -239,7 +239,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
                 // do the exchange, this is the best one.
                 candidate.TrySwap(t, t2, exchange.s1, exchange.s2);
             
-                Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                //Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
                 
                 return true;
             }
@@ -262,7 +262,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
             
             candidate.TrySwap(t1, t2, exchange.s1, exchange.s2);
             
-            Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+            //Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
             
             return true;
         }

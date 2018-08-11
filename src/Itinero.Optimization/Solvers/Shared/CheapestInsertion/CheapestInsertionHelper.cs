@@ -29,7 +29,7 @@ namespace Itinero.Optimization.Solvers.Shared.CheapestInsertion
     /// <summary>
     /// Contains shared methods to do 'cheapest insertion' or 'best placement'. 
     /// </summary>
-    internal static class CheapestInsertionHelper
+    public static class CheapestInsertionHelper
     {
         /// <summary>
         /// Calculates the best positions to insert a given visits.

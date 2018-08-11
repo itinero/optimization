@@ -28,7 +28,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
     /// <summary>
     /// Represents a capacitated VRP.
     /// </summary>
-    internal class CVRPNDProblem
+    public class CVRPNDProblem
     {
         private readonly float[][] _travelWeights;
         private readonly float[] _visitWeights;
@@ -92,7 +92,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         /// <returns>The travel weight from 'from' to 'to'.</returns>
         public float TravelWeight(int from, int to)
         {
-            System.Diagnostics.Debug.Assert(from >= 0 && from < _travelWeights.Length && to >= 0 && to < _travelWeights.Length);
+            //System.Diagnostics.Debug.Assert(from >= 0 && from < _travelWeights.Length && to >= 0 && to < _travelWeights.Length);
             return _travelWeights[from][to];
         }
 

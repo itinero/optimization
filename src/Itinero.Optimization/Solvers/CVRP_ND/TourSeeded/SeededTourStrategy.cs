@@ -26,7 +26,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
     /// <summary>
     /// A strategy using seeded tours as the basis to generate a new candidate.
     /// </summary>
-    internal class SeededTourStrategy : Strategy<CVRPNDProblem, CVRPNDCandidate>
+    public class SeededTourStrategy : Strategy<CVRPNDProblem, CVRPNDCandidate>
     {
         public override string Name { get; } = "SEED_TOUR";
         

@@ -30,7 +30,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
     /// <summary>
     /// Represents a CVRP-no depot candidate solution.
     /// </summary>
-    internal class CVRPNDCandidate : Candidate<CVRPNDProblem, CVRPNDSolution>
+    public class CVRPNDCandidate : Candidate<CVRPNDProblem, CVRPNDSolution>
     {
         private readonly List<(float weight, (string metric, float value)[] constraints)> _tourData = 
             new List<(float weight, (string metric, float value)[] constraints)>();
@@ -278,7 +278,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 var constraint = this.Problem.CapacityConstraints[c];
                 tourData.constraints[c] = (constraint.metric, 
                     constraint.costs[visit] + tourData.constraints[c].value);
-                Debug.Assert(constraint.max >= tourData.constraints[c].value);
+                //Debug.Assert(constraint.max >= tourData.constraints[c].value);
             }
             var diff = this.Problem.TravelWeight(before, visit);
             if (after != Tours.Tour.NOT_SET)
@@ -306,7 +306,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         /// <param name="s1">The sequence from the first tour.</param>
         /// <param name="s2">The sequence from the second tour.</param>
         /// <returns>True and a delta if the swap is possible, false otherwise.</returns>
-        public (bool success, float fitnessDelta) SimulateSwap(int t1, int t2, Seq s1, Seq s2)
+        internal (bool success, float fitnessDelta) SimulateSwap(int t1, int t2, Seq s1, Seq s2)
         {
             const float e = 0.01f;
 
@@ -433,7 +433,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         /// <param name="s1">The sequence from the first tour.</param>
         /// <param name="s2">The sequence from the second tour.</param>
         /// <returns>True and a delta if the swap was executed, false otherwise.</returns>
-        public (bool success, float fitnessDelta) TrySwap(int t1, int t2, Seq s1, Seq s2)
+        internal (bool success, float fitnessDelta) TrySwap(int t1, int t2, Seq s1, Seq s2)
         {
             const float e = 0.01f;
 
@@ -569,7 +569,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         /// <param name="maxSize">The maximum sequence size to consider.</param>
         /// <param name="removeGoodSequences">When true it removes sequences that are likely to be too good to be replaced.</param>
         /// <returns>An enumerable of all sequences.</returns>
-        public IEnumerable<Seq> SeqAndSmaller(int t, int minSize, int maxSize, bool removeGoodSequences = true)
+        internal IEnumerable<Seq> SeqAndSmaller(int t, int minSize, int maxSize, bool removeGoodSequences = true)
         {
             var tour = this.Solution.Tour(t);
             var problem = this.Problem;

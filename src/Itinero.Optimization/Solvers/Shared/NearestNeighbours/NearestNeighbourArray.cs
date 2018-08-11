@@ -25,7 +25,7 @@ namespace Itinero.Optimization.Solvers.Shared.NearestNeighbours
     /// <summary>
     /// A nearest neighbour array, keeps 'n' nearest neighbours for each entry in the given weight matrix.
     /// </summary>
-    internal class NearestNeighbourArray : IEnumerable<int>
+    public class NearestNeighbourArray : IEnumerable<int>
     {
         private readonly int[] _nn; // Contains the nearest neigbour per visit.
 

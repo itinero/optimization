@@ -76,7 +76,7 @@ namespace Itinero.Optimization.Solvers.Shared.EAX
         {
             _cycles = null;
             // set the next to.
-            Debug.Assert(from >= 0 && from < NextArray.Length);
+            //Debug.Assert(from >= 0 && from < NextArray.Length);
             NextArray[from] = to;
         }
 

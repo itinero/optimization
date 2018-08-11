@@ -106,7 +106,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                     weight += travelCost;
                     weight += currentWeight;
 
-                    Debug.Assert(nextDirected >= 0 && nextDirected < paths.Length);
+                    //Debug.Assert(nextDirected >= 0 && nextDirected < paths.Length);
                     if (paths[nextDirected].cost > weight)
                     {
                         paths[nextDirected] = (current, weight);
@@ -122,7 +122,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
 
             var best = bestLast;
             var newTour = new List<int>();
-            Debug.Assert(best >= 0 && best < paths.Length);
+            //Debug.Assert(best >= 0 && best < paths.Length);
             while (paths[best].previous > -1)
             {
                 newTour.Add(best);
@@ -131,7 +131,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                 {
                     break;
                 }
-                Debug.Assert(best >= 0 && best < paths.Length);
+                //Debug.Assert(best >= 0 && best < paths.Length);
             }
             newTour.Add(best);
 

@@ -183,7 +183,7 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                     // there is improvement!
                     var result = tour.ShiftAfter(invalid.Item1, before, out var oldBefore, out var oldAfter,
                         out var newAfter);
-                    Debug.Assert(result, "Shift after failed, should always succeed");
+                    //Debug.Assert(result, "Shift after failed, should always succeed");
                     return (true, invalid.Item1, oldBefore, oldAfter, before, newAfter);
                 }
             }
@@ -320,7 +320,7 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                     // there is improvement!
                     var result = tour.ShiftAfter(valid.Item1, before, out var oldBefore, out var oldAfter,
                         out var newAfter);
-                    Debug.Assert(result, "Shift after failed, should always succeed");
+                    //Debug.Assert(result, "Shift after failed, should always succeed");
                     return (true, valid.Item1, oldBefore, oldAfter, before, newAfter);
                 }
             }
@@ -456,7 +456,7 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                     // there is improvement!
                     var result = tour.ShiftAfter(valid.Item1, before, out var oldBefore, out var oldAfter,
                         out var newAfter);
-                    Debug.Assert(result, "Shift after failed, should always succeed");
+                    //Debug.Assert(result, "Shift after failed, should always succeed");
                     return (true, valid.Item1, oldBefore, oldAfter, before, newAfter);
                 }
             }
@@ -587,7 +587,7 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                     // there is improvement!
                     var result = tour.ShiftAfter(invalid.Item1, before, out var oldBefore, out var oldAfter,
                         out var newAfter);
-                    Debug.Assert(result, "Shift after failed, should always succeed");
+                    //Debug.Assert(result, "Shift after failed, should always succeed");
                     return (true, invalid.Item1, oldBefore, oldAfter, before, newAfter);
                 }
             }

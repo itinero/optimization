@@ -44,7 +44,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
         internal static bool TryMap(RouterBase router, Model model, out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
             out string message)
         {
-            Debug.Assert(model.IsValid(out var _)); // model is asumed to be valid.
+            //Debug.Assert(model.IsValid(out var _)); // model is asumed to be valid.
             
             // Verify if this mapper can handle this model:
             // - check if there is at least one vehicle with a turn-cost.

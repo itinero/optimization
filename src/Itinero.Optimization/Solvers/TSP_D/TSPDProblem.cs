@@ -127,8 +127,8 @@ namespace Itinero.Optimization.Solvers.TSP_D
                     return _weights[from][to];
                 }
             }
-            Debug.Assert(from >= 0 && from < _weights.Length &&
-                         to >= 0 && to < _weights[from].Length);
+            //Debug.Assert(from >= 0 && from < _weights.Length &&
+            //             to >= 0 && to < _weights[from].Length);
             return _weights[from][to];
         }
 

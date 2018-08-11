@@ -81,7 +81,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.SCI
                 }
                 
                 _afterSeedPlacementOperator.Apply(candidate, visits);
-                Debug.Assert(candidate.IsFeasible());
+                //Debug.Assert(candidate.IsFeasible());
             }
 
             return false;

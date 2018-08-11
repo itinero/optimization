@@ -52,8 +52,8 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
         
         public override CVRPNDCandidate Apply(CVRPNDCandidate candidate1, CVRPNDCandidate candidate2)
         {
-            Debug.Assert(candidate1.GetUnplacedVisits().Count == 0);
-            Debug.Assert(candidate2.GetUnplacedVisits().Count == 0);
+            //Debug.Assert(candidate1.GetUnplacedVisits().Count == 0);
+            //Debug.Assert(candidate2.GetUnplacedVisits().Count == 0);
             
             var candidate = new CVRPNDCandidate()
             {
@@ -93,14 +93,14 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
             { 
                 _placeRemainingOperator.Apply(candidate, visits);
                 
-                Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
+                //Debug.Assert(candidate.GetUnplacedVisits().Count == 0);
             }
 
             // apply some post-exchange operator if defined.
             _postOperator?.Apply(candidate);
             
-            Debug.Assert(candidate1.GetUnplacedVisits().Count == 0);
-            Debug.Assert(candidate2.GetUnplacedVisits().Count == 0);
+            //Debug.Assert(candidate1.GetUnplacedVisits().Count == 0);
+            //Debug.Assert(candidate2.GetUnplacedVisits().Count == 0);
 
             return candidate;
         }

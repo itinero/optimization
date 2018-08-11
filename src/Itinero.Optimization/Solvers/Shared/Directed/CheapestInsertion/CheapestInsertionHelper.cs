@@ -119,7 +119,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed.CheapestInsertion
         public static (float cost, TurnEnum turn, DirectionEnum fromDepartureDirection, DirectionEnum toArrivalDirection) CalculateCheapestDirected(
                 this Pair pair, int visit, Func<int, int, float> weightFunc, Func<TurnEnum, float> turnPenaltyFunc)
         {
-            Debug.Assert(pair.From >= 0);
+            //Debug.Assert(pair.From >= 0);
 
             if (pair.To == -1)
             {

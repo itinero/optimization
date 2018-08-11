@@ -34,12 +34,12 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
     /// <summary>
     /// Hooks the CVRP no-depot solvers into the solver registry.
     /// </summary>
-    internal static class CVRPNDSolverHook
+    public static class CVRPNDSolverHook
     {
         /// <summary>
         /// The default solver hook for the TSP.
         /// </summary>
-        public static readonly SolverRegistry.SolverHook Default = new SolverRegistry.SolverHook()
+        internal static readonly SolverRegistry.SolverHook Default = new SolverRegistry.SolverHook()
         {
             Name = "CVRP-ND",
             TrySolve = CVRPNDSolverHook.Solve
@@ -89,7 +89,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
         /// <summary>
         /// Converts the given abstract model to a CVRP-ND.
         /// </summary>
-        internal static Result<CVRPNDProblem> TryToCVRPND(this MappedModel model)
+        public static Result<CVRPNDProblem> TryToCVRPND(this MappedModel model)
         {
             if (!model.IsCVRPND(out var reasonWhenFailed))
             {

@@ -93,7 +93,7 @@ namespace Itinero.Optimization.Solvers.CVRP
         /// <returns>The travel weight from 'from' to 'to'.</returns>
         public float TravelWeight(int from, int to)
         {
-            System.Diagnostics.Debug.Assert(from >= 0 && from < _travelWeights.Length && to >= 0 && to < _travelWeights.Length);
+            //System.Diagnostics.Debug.Assert(from >= 0 && from < _travelWeights.Length && to >= 0 && to < _travelWeights.Length);
             return _travelWeights[from][to];
         }
 

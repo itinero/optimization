@@ -32,7 +32,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
     /// <summary>
     /// A default model mapper.
     /// </summary>
-    internal static class DefaultModelMapper
+    public static class DefaultModelMapper
     {
         /// <summary>
         /// Implements the default model mapper.
@@ -45,7 +45,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
         internal static bool TryMap(RouterBase router, Model model, out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
             out string message)
         {
-            Debug.Assert(model.IsValid(out var _)); // model is asumed to be valid.
+            //Debug.Assert(model.IsValid(out var _)); // model is asumed to be valid.
             
             // Verify if this mapper can handle this model:
             // - check if there are any vehicles with a turn-cost.
@@ -231,7 +231,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
             return true;
         }
         
-        private static Visit[] AdjustToMapping(this IWeightMatrixAlgorithm<float> algorithm, Visit[] ar)
+        public static Visit[] AdjustToMapping(this IWeightMatrixAlgorithm<float> algorithm, Visit[] ar)
         {
             if (algorithm.Weights.Length == ar.Length)
             { // don't copy if no errors.

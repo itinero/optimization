@@ -156,7 +156,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
                 var constraint = _problem.CapacityConstraints[c];
                 tourData.constraints[c] = (constraint.metric,
                     constraint.costs[visit] + tourData.constraints[c].value);
-                Debug.Assert(constraint.max >= tourData.constraints[c].value);
+                //Debug.Assert(constraint.max >= tourData.constraints[c].value);
             }
 
             var threshold = 10;
@@ -199,7 +199,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
                         var constraint = _problem.CapacityConstraints[c];
                         tourData.constraints[c] = (constraint.metric,
                             constraint.costs[visit] + tourData.constraints[c].value);
-                        Debug.Assert(constraint.max >= tourData.constraints[c].value);
+                        //Debug.Assert(constraint.max >= tourData.constraints[c].value);
                     }
 
                     if (thresholdWindow == threshold)
