@@ -32,6 +32,7 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             Run1Wechelderzande();
             Run2Hengelo();
             Run3Spijkenisse();
+            Run4Hengelo();
         }
 
         public static void Run1Wechelderzande()
@@ -66,11 +67,11 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
 
             // calculate TSPD.
             var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
-            func.Run("TSPD-wechel-closed");
+            func.Run("TSPD-1-wechel-closed");
             func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
-            func.Run("TSPD-wechel-fixed");
+            func.Run("TSPD-1-wechel-fixed");
             func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
-            func.Run("TSPD-wechel-open");
+            func.Run("TSPD-1-wechel-open");
         }
 
         public static void Run2Hengelo()
@@ -98,11 +99,11 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
 
             // calculate TSPD.
             var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
-            func.Run("TSPD-hengelo-closed");
+            func.Run("TSPD-2-hengelo-closed");
             func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
-            func.Run("TSPD-hengelo-fixed");
+            func.Run("TSPD-2-hengelo-fixed");
             func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
-            func.Run("TSPD-hengelo-open");  
+            func.Run("TSPD-2-hengelo-open");  
         }
 
         public static void Run3Spijkenisse()
@@ -117,11 +118,30 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
 
             // calculate TSPD.
             var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
-            func.Run("TSPD-spijkenisse-open");  
+            func.Run("TSPD-3-spijkenisse-open");  
             func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
-            func.Run("TSPD-spijkenisse-closed");
+            func.Run("TSPD-3-spijkenisse-closed");
             func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
-            func.Run("TSPD-spijkenisse-fixed");
+            func.Run("TSPD-3-spijkenisse-fixed");
+        }
+
+        public static void Run4Hengelo()
+        {
+            // build routerdb and save the result.
+            var hengelo = Staging.RouterDbBuilder.Build("query2");
+            var vehicle = hengelo.GetSupportedVehicle("car");
+            var router = new Router(hengelo);
+
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("TSP_D.data.problem2-hengelo.geojson"));
+
+            // calculate TSPD.
+            var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
+            func.Run("TSPD-4-hengelo-open");
+            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
+            func.Run("TSPD-4-hengelo-closed");
+            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
+            func.Run("TSPD-4-hengelo-fixed");
         }
     }
 }

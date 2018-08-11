@@ -11,11 +11,13 @@
     <EmbeddedResource Include="CVRP_ND\data\problem1.geojson" />
     <EmbeddedResource Include="data\**\*.geojson" />
     <None Remove="CVRP\data\problem1.geojson" />
+    <None Remove="TSP_D\data\problem2-hengelo.geojson" />
     <EmbeddedResource Include="CVRP\data\problem1.geojson" />
     <None Remove="CVRP_ND\data\problem2-spijkenisse.geojson" />
     <EmbeddedResource Include="CVRP_ND\data\problem2-spijkenisse.geojson" />
     <None Remove="TSP_TW\data\problem1.geojson" />
     <EmbeddedResource Include="TSP\data\problem1-spijkenisse.geojson" />
+    <EmbeddedResource Include="TSP_D\data\problem2-hengelo.geojson" />
     <EmbeddedResource Include="TSP_TW\data\problem1.geojson" />
     <None Remove="CVRP\data\problem2-spijkenisse.geojson" />
     <EmbeddedResource Include="CVRP\data\problem2-spijkenisse.geojson" />
@@ -35,6 +37,9 @@
     <None Update="Staging\query4.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="result\" />
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>

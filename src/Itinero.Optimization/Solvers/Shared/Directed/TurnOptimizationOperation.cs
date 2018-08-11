@@ -44,8 +44,10 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
             var nextArray = new int[capacity / 4];
             var first = DirectedHelper.ExtractVisit(tour.First);
             var previous = -1;
+            var count = 0;
             foreach (var directedVisit in tour)
             {
+                count++;
                 var visit = DirectedHelper.ExtractVisit(directedVisit);
                 if (previous != -1)
                 {
@@ -53,6 +55,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                 }
                 previous = visit;
             }
+            if (count == 1) return 0;
             var last = previous;
             
             var settled = new HashSet<int>();
