@@ -135,20 +135,19 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                     if (visitWeights == null) visitWeights = new float[model.Visits.Length];
                     visitWeights[v] = visitCost;
                 }
-                else
-                {
-                    for (var vcc = 0; vcc < visitCostConstraints.Count; vcc++)
-                    {
-                        var visitCostConstraint = visitCostConstraints[vcc];
-                        if (!visit.TryGetVisitCostForMetric(visitCostConstraint.metric, out visitCost)) continue;
-                        if (visitCostConstraint.costs == null)
-                        {
-                            visitCostConstraint.costs = new float[model.Visits.Length];
-                        }
 
-                        visitCostConstraint.costs[v] = visitCost;
-                        visitCostConstraints[vcc] = visitCostConstraint;
+                for (var vcc = 0; vcc < visitCostConstraints.Count; vcc++)
+                {
+                    var visitCostConstraint = visitCostConstraints[vcc];
+                    if (visitCostConstraint.metric == metric) continue;
+                    if (!visit.TryGetVisitCostForMetric(visitCostConstraint.metric, out visitCost)) continue;
+                    if (visitCostConstraint.costs == null)
+                    {
+                        visitCostConstraint.costs = new float[model.Visits.Length];
                     }
+
+                    visitCostConstraint.costs[v] = visitCost;
+                    visitCostConstraints[vcc] = visitCostConstraint;
                 }
             }
             

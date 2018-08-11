@@ -15,9 +15,8 @@ Known issues:
 - The directed turn optimization operation can't handle invalid visits, it never succeeds.
 - The directed 3opt can't handle open problem, we should use the closed equivalence there.
 - The STSP solver uses 3OPt and can't handle open problems, we should use the closed equivalence there.
-- The hengelo and spijknesse problems don't solve in the TSP.
-- The spijkenisse problems don't solve in the CVRP.
-- The CVRP-ND solver is completely broken.
+- wechelderzande CVRP-ND won't solve when paralell options is on. HINT: probably due to the size of the problem.
+- idem STSP.
 
 General todos:
 - 3Opt uses NN when set to false, should be true.

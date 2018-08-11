@@ -34,7 +34,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
     {
         private readonly int _count;
         private readonly CVRPNDProblem _problem;
-        private readonly bool _useParalell = false;
+        private readonly bool _useParalell = true;
 
         public SeededTourPool(CVRPNDProblem problem, int count = -1)
         {
@@ -42,6 +42,10 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
             _count = count;
             
             if (_count == -1)
+            {
+                _count = problem.Count;
+            }
+            if (_count > problem.Count)
             {
                 _count = problem.Count;
             }
