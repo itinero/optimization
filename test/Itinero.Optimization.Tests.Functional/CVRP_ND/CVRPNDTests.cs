@@ -148,7 +148,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             func.RunWithIntermedidates("CVRP-ND-spijkenisse");
         }
 
-        public static void Run2SpijkenisseCapacitated()
+        public static void Run3SpijkenisseCapacitated()
         {
             // SPIJKENISSE
             // build routerdb and save the result.
@@ -157,7 +157,6 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             var router = new Router(spijkenisse);
 
             // build problem.
-            const int max = 5400;
             var locations = Staging.StagingHelpers.GetLocations(
                 Staging.StagingHelpers.GetFeatureCollection("CVRP_ND.data.problem2-spijkenisse.geojson"));
 
@@ -213,6 +212,77 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, visits, out _, intermediateRoutesFunc);
             func.RunWithIntermedidates("CVRP-ND-spijkenisse-capacitated");
+        }
+
+        public static void Run4SpijkenisseCapacitatedAndVisitCosts()
+        {
+            // SPIJKENISSE
+            // build routerdb and save the result.
+            var spijkenisse = Staging.RouterDbBuilder.Build("query4");
+            var vehicle = spijkenisse.GetSupportedVehicle("car");
+            var router = new Router(spijkenisse);
+
+            // build problem.
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("CVRP_ND.data.problem2-spijkenisse.geojson"));
+
+            // build vehicle pool and capacity constraints.
+            var vehicles = new VehiclePool()
+            {
+                Reusable = true,
+                Vehicles = new[]
+                {
+                    new Vehicle()
+                    {
+                        Profile = vehicle.Fastest().FullName,
+                        Metric =  vehicle.Fastest().Metric.ToModelMetric(),
+                        Departure = null,
+                        Arrival = null,
+                        CapacityConstraints = new CapacityConstraint[]
+                        {
+                            new CapacityConstraint()
+                            {
+                                Metric = Itinero.Optimization.Models.Metrics.Time,
+                                Capacity = 3600 * 7
+                            },
+                            new CapacityConstraint()
+                            {
+                                Metric = Itinero.Optimization.Models.Metrics.Weight,
+                                Capacity = 25000
+                            }
+                        }
+                    }
+                }
+            };
+
+            // build visits.
+            var visits = new Visit[locations.Length];
+            for (var v = 0; v < locations.Length; v++)
+            {
+                visits[v] = new Visit()
+                {
+                    Latitude = locations[v].Latitude,
+                    Longitude = locations[v].Longitude,
+                    VisitCosts = new VisitCost[]
+                    {
+                        new VisitCost()
+                        {
+                            Metric = Itinero.Optimization.Models.Metrics.Time,
+                            Value = 180
+                        },
+                        new VisitCost()
+                        {
+                            Metric = Itinero.Optimization.Models.Metrics.Weight,
+                            Value = 400
+                        }
+                    }
+                };
+            }
+
+            // run
+            Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
+                router.Optimize(vehicles, visits, out _, intermediateRoutesFunc);
+            func.RunWithIntermedidates("CVRP-ND-spijkenisse-visit-costs");
         }
     }
 }
