@@ -35,8 +35,9 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
         {
             //Run1Wechelderzande();
             //Run1WechelderzandeCapacitated();
-            Run2Spijkenisse();
-            Run2SpijkenisseCapacitated();
+            //Run2Spijkenisse();
+            //Run3SpijkenisseCapacitated();
+            Run4SpijkenisseCapacitatedAndVisitCosts();
         }
 
         public static void Run1Wechelderzande()

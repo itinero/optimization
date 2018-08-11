@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 
@@ -56,7 +57,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
                 // PROBLEM: this doesn't support the case where we have a vehicle with arrival and departure null and we generate open-tours.
                 // SUGGESTED FIX: look at the enumerable differently include all visits, even if that means closing the tour in the enumerable.
                 var vehicle = _mappedModel.VehiclePool.Vehicles[vehicleAndTour.vehicle];
-                
+
                 Route route = null;
                 var previous = -1;
                 var first = -1;
@@ -123,9 +124,9 @@ namespace Itinero.Optimization.Models.Mapping.Default
             var visit2RouterPoint = _weightMatrixAlgorithm.OriginalIndexOf(visit2);
             var routerPoint1 = _weightMatrixAlgorithm.RouterPoints[visit1RouterPoint];
             var routerPoint2 = _weightMatrixAlgorithm.RouterPoints[visit2RouterPoint];
-            var localRoute = _weightMatrixAlgorithm.Router.TryCalculate(_weightMatrixAlgorithm.Profile,
+            var localRouteResult = _weightMatrixAlgorithm.Router.TryCalculate(_weightMatrixAlgorithm.Profile,
                 routerPoint1, routerPoint2);
-            if (localRoute.IsError)
+            if (localRouteResult.IsError)
             {
                 var originalVisit1 = _weightMatrixAlgorithm.OriginalLocationIndex(visit1);
                 var originalVisit2 = _weightMatrixAlgorithm.OriginalLocationIndex(visit2);
@@ -133,8 +134,65 @@ namespace Itinero.Optimization.Models.Mapping.Default
                     $"Route could not be calculated between visit {visit1}->{visit2} " +
                     $"between routerpoints {visit1RouterPoint}({routerPoint1})->{visit2RouterPoint}({routerPoint2})");
             }
+            var localRoute = localRouteResult.Value;
 
-            route = route == null ? localRoute.Value : route.Concatenate(localRoute.Value);
+            if (localRoute.Stops != null &&
+                localRoute.Stops.Length == 2)
+            {
+                var visit1Stop = localRoute.Stops[0];
+                var visit2Stop = localRoute.Stops[1];
+
+                // add visit1 costs to the stop meta data.
+                var visit1Costs = _mappedModel.Visits[visit1].VisitCosts;
+                if (visit1Costs != null)
+                {
+                    foreach (var visitCost in visit1Costs)
+                    {
+                        visit1Stop.Attributes.AddOrReplace("cost_" + visitCost.Metric.ToLowerInvariant(), visitCost.Value.ToInvariantString());
+                    }
+
+                    if (route == null)
+                    { // this is the first route, add visit cost of visit1.
+                        var visit1Cost = visit1Costs.FirstOrDefault(x => x.Metric == Metrics.Time)?.Value;
+                        if (visit1Cost.HasValue)
+                        {
+                            if (localRoute.ShapeMeta != null &&
+                                localRoute.ShapeMeta.Length > 0)
+                            {
+                                for (var sm = 0; sm < localRoute.ShapeMeta.Length; sm++)
+                                {
+                                    localRoute.ShapeMeta[sm].Time += visit1Cost.Value;
+                                }
+                            }
+                            localRoute.TotalTime += visit1Cost.Value;
+                        }
+                    }
+                }
+
+                // add visit2 costs to the stop meta data.
+                var visit2Costs = _mappedModel.Visits[visit2].VisitCosts;
+                if (visit2Costs != null)
+                {
+                    foreach (var visitCost in visit2Costs)
+                    {
+                        visit2Stop.Attributes.AddOrReplace("cost_" + visitCost.Metric.ToLowerInvariant(), visitCost.Value.ToInvariantString());
+                    }
+
+                    // if there is a cost with travel time also add the travel time.
+                    var visit2Cost = visit2Costs.FirstOrDefault(x => x.Metric == Metrics.Time)?.Value;
+                    if (visit2Cost.HasValue)
+                    { // this is the second stop, add the travel time at the end.
+                        if (localRoute.ShapeMeta != null &&
+                            localRoute.ShapeMeta.Length > 0)
+                        {
+                            localRoute.ShapeMeta[localRoute.ShapeMeta.Length - 1].Time += visit2Cost.Value;
+                        }
+                        localRoute.TotalTime += visit2Cost.Value;
+                    }
+                }
+            }
+
+            route = route == null ? localRoute : route.Concatenate(localRoute);
             
             return new Result<Route>(route);
         }
