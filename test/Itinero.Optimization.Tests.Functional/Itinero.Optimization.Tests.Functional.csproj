@@ -11,11 +11,19 @@
     <EmbeddedResource Include="CVRP_ND\data\problem1.geojson" />
     <EmbeddedResource Include="data\**\*.geojson" />
     <None Remove="CVRP\data\problem1.geojson" />
+    <None Remove="CVRP_ND\data\problem3-de-hague.geojson" />
+    <None Remove="CVRP_ND\data\problem4-rotterdam.geojson" />
+    <None Remove="CVRP_ND\data\problem5-capelle.geojson" />
+    <None Remove="CVRP_ND\data\problem6-hogeveen.geojson" />
     <None Remove="TSP_D\data\problem2-hengelo.geojson" />
     <EmbeddedResource Include="CVRP\data\problem1.geojson" />
     <None Remove="CVRP_ND\data\problem2-spijkenisse.geojson" />
     <EmbeddedResource Include="CVRP_ND\data\problem2-spijkenisse.geojson" />
     <None Remove="TSP_TW\data\problem1.geojson" />
+    <EmbeddedResource Include="CVRP_ND\data\problem3-de-hague.geojson" />
+    <EmbeddedResource Include="CVRP_ND\data\problem4-rotterdam.geojson" />
+    <EmbeddedResource Include="CVRP_ND\data\problem5-capelle.geojson" />
+    <EmbeddedResource Include="CVRP_ND\data\problem6-hogeveen.geojson" />
     <EmbeddedResource Include="TSP\data\problem1-spijkenisse.geojson" />
     <EmbeddedResource Include="TSP_D\data\problem2-hengelo.geojson" />
     <EmbeddedResource Include="TSP_TW\data\problem1.geojson" />
@@ -35,6 +43,27 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Staging\query4.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Staging\query5.osm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Staging\query5.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Staging\query6.osm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Staging\query6.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Staging\query7.osm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Staging\query7.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Staging\query8.osm.pbf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -34,6 +34,7 @@ namespace Itinero.Optimization.Strategies.GA
     {
         private readonly Strategy<TProblem, TCandidate> _generator;
         private readonly Operator<TCandidate> _mutation;
+        private readonly Operator<TCandidate> _improvement;
         private readonly CrossOverOperator<TCandidate> _crossOver;
         private readonly ISelector<TCandidate> _selector;
         private readonly GASettings _settings;
@@ -47,10 +48,11 @@ namespace Itinero.Optimization.Strategies.GA
         /// <param name="mutation">The mutation operator.</param>
         /// <param name="selector">The selector.</param>
         /// <param name="settings">The settings.</param>
+        /// <param name="improvement">The improvement operator, if any.</param>
         public GAStrategy(Func<TProblem, TCandidate> generator, Func<TCandidate, TCandidate, TCandidate> crossOver,
             Func<TCandidate, bool> mutation, GASettings settings,
-            ISelector<TCandidate> selector = null)
-            : this(generator.ToStrategy(), crossOver, mutation, settings, selector)
+            ISelector<TCandidate> selector = null, Func<TCandidate, bool> improvement = null)
+            : this(generator.ToStrategy(), crossOver, mutation, settings, selector, improvement)
         {
             
         }
@@ -63,14 +65,16 @@ namespace Itinero.Optimization.Strategies.GA
         /// <param name="mutation">The mutation operator.</param>
         /// <param name="selector">The selector.</param>
         /// <param name="settings">The settings.</param>
+        /// <param name="improvement">The improvement operator, if any.</param>
         public GAStrategy(Strategy<TProblem, TCandidate> generator, CrossOverOperator<TCandidate> crossOver,
             Operator<TCandidate> mutation, GASettings settings,
-            ISelector<TCandidate> selector = null)
+            ISelector<TCandidate> selector = null, Operator<TCandidate> improvement = null)
         {
             _crossOver = crossOver;
             _generator = generator;
             _mutation = mutation;
             _selector = selector ?? new TournamentSelector<TCandidate>(50, 0.8f);
+            _improvement = improvement;
 
             _settings = settings;
         }
@@ -187,6 +191,41 @@ namespace Itinero.Optimization.Strategies.GA
 
                         // ok, mutate this individual.
                         _mutation.Apply(population[i]); // by ref so should be fine.
+                    }
+                }
+
+                // select individuals for improvement.
+                exclude.Clear();
+                for (var i = 0; i < selectionPoolSize; i++)
+                { // select individual.
+                    var selected = -1;
+                    while (selected < 0)
+                    {
+                        selected = _selector.Select(population, (c) => exclude.Contains(c));
+                    }
+                    exclude.Add(selected);
+                }
+
+                // improve part of the population.
+                if (_improvement != null)
+                {
+                    if (_useParalell)
+                    {
+                        Parallel.ForEach(exclude, (i) =>
+                        { // ok, mutate this individual.
+                            if (_settings.ImprovementPercentage == 0 || Random.RandomGenerator.Default.Generate(100) > _settings.ImprovementPercentage) return;
+
+                            _improvement.Apply(population[i]); // by ref so should be fine.
+                        });
+                    }
+                    else
+                    {
+                        foreach (var i in exclude)
+                        { // ok, mutate this individual.
+                            if (_settings.ImprovementPercentage == 0 || Random.RandomGenerator.Default.Generate(100) > _settings.ImprovementPercentage) continue;
+
+                            _improvement.Apply(population[i]); // by ref so should be fine.
+                        }
                     }
                 }
 

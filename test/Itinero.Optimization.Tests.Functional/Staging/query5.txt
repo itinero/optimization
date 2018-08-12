@@ -1,0 +1,12 @@
+<osm-script output-config="" timeout="25">
+  <id-query into="searchArea" ref="3600192737" type="area"/>
+  <union into="_">
+    <query into="_" type="way">
+      <has-kv k="highway" modv="" v=""/>
+      <area-query from="searchArea" into="_" ref=""/>
+    </query>
+  </union>
+  <print e="" from="_" geometry="skeleton" limit="" mode="meta" n="" order="id" s="" w=""/>
+  <recurse from="_" into="_" type="down"/>
+  <print e="" from="_" geometry="skeleton" limit="" mode="meta" n="" order="quadtile" s="" w=""/>
+</osm-script>

@@ -34,10 +34,14 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
         public static void Run()
         {
             //Run1Wechelderzande();
-            Run1WechelderzandeCapacitated();
-            Run2Spijkenisse();
-            Run3SpijkenisseCapacitated();
-            Run4SpijkenisseCapacitatedAndVisitCosts();
+            //Run1WechelderzandeCapacitated();
+            //Run2Spijkenisse();
+            //Run3SpijkenisseCapacitated();
+            //Run4SpijkenisseCapacitatedAndVisitCosts();
+            //Run5DeHague();
+            //Run6Rotterdam();
+            //Run7Capelle();
+            //Run8Hogeveen();
         }
 
         public static void Run1Wechelderzande()
@@ -178,12 +182,12 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
                             new CapacityConstraint()
                             {
                                 Metric = Itinero.Optimization.Models.Metrics.Time,
-                                Capacity = 3600
+                                Capacity = 3600 * 4
                             },
                             new CapacityConstraint()
                             {
                                 Metric = Itinero.Optimization.Models.Metrics.Weight,
-                                Capacity = 3000
+                                Capacity = 6000
                             }
                         }
                     }
@@ -274,7 +278,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
                         new VisitCost()
                         {
                             Metric = Itinero.Optimization.Models.Metrics.Weight,
-                            Value = 400
+                            Value = 300
                         }
                     }
                 };
@@ -284,6 +288,93 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, visits, out _, intermediateRoutesFunc);
             func.RunWithIntermedidates("CVRP-ND-spijkenisse-visit-costs");
+        }
+
+        public static void Run5DeHague()
+        {
+            // DE-HAGUE
+            // build routerdb and save the result.
+            var dehague = Staging.RouterDbBuilder.Build("query5");
+            var vehicle = dehague.GetSupportedVehicle("car");
+            var router = new Router(dehague);
+
+            // build problem.
+            var max = 3800;
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("CVRP_ND.data.problem3-de-hague.geojson"));
+
+            // build vehicle pool.
+            var vehicles = VehiclePool.FromProfile(vehicle.Fastest(), null, null, max, 0, true);
+
+            // run
+            Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
+                router.Optimize(vehicles, locations, out _, intermediateRoutesFunc);
+            func.RunWithIntermedidates("CVRP-ND-de-hague");
+        }
+
+        public static void Run6Rotterdam()
+        {
+            // ROTTERDAM
+            // build routerdb and save the result.
+            var rotterdam = Staging.RouterDbBuilder.Build("query6");
+            var vehicle = rotterdam.GetSupportedVehicle("car");
+            var router = new Router(rotterdam);
+
+            // build problem.
+            var max = 4500;
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("CVRP_ND.data.problem4-rotterdam.geojson"));
+
+            // build vehicle pool.
+            var vehicles = VehiclePool.FromProfile(vehicle.Fastest(), null, null, max, 0, true);
+
+            // run
+            Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
+                router.Optimize(vehicles, locations, out _, intermediateRoutesFunc);
+            func.RunWithIntermedidates("CVRP-ND-rotterdam");
+        }
+
+        public static void Run7Capelle()
+        {
+            // ROTTERDAM
+            // build routerdb and save the result.
+            var capelle = Staging.RouterDbBuilder.Build("query7");
+            var vehicle = capelle.GetSupportedVehicle("car");
+            var router = new Router(capelle);
+
+            // build problem.
+            var max = 4500;
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("CVRP_ND.data.problem5-capelle.geojson"));
+
+            // build vehicle pool.
+            var vehicles = VehiclePool.FromProfile(vehicle.Fastest(), null, null, max, 0, true);
+
+            // run
+            Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
+                router.Optimize(vehicles, locations, out _, intermediateRoutesFunc);
+            func.RunWithIntermedidates("CVRP-ND-capelle");
+        }
+
+        public static void Run8Hogeveen()
+        {
+            // build routerdb and save the result.
+            var hogeveen = Staging.RouterDbBuilder.Build("query8");
+            var vehicle = hogeveen.GetSupportedVehicle("car");
+            var router = new Router(hogeveen);
+
+            // build problem.
+            var max = 3600 * 4;
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("CVRP_ND.data.problem6-hogeveen.geojson"));
+
+            // build vehicle pool.
+            var vehicles = VehiclePool.FromProfile(vehicle.Fastest(), null, null, max, 0, true);
+
+            // run
+            Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
+                router.Optimize(vehicles, locations, out _, intermediateRoutesFunc);
+            func.RunWithIntermedidates("CVRP-ND-hogeveen");
         }
     }
 }

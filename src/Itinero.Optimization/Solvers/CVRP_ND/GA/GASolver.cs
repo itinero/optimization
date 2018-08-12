@@ -30,7 +30,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
     public class GASolver : Strategy<CVRPNDProblem, CVRPNDCandidate>
     {
         private readonly GAStrategy<CVRPNDProblem, CVRPNDCandidate> _gaStrategy;
-        
+
         /// <summary>
         /// Creates a new GA solver.
         /// </summary>
@@ -38,8 +38,9 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
         /// <param name="mutation">The mutation operator, if any.</param>
         /// <param name="crossOver">The cross over operator, if any.</param>
         /// <param name="settings">The settings, if not default.</param>
+        /// <param name="improvement">The improvement operator, if any.</param>
         public GASolver(Strategy<CVRPNDProblem, CVRPNDCandidate> generator = null, Operator<CVRPNDCandidate> mutation = null,
-            CrossOverOperator<CVRPNDCandidate> crossOver = null, GASettings settings = null)
+            CrossOverOperator<CVRPNDCandidate> crossOver = null, Operator<CVRPNDCandidate> improvement = null, GASettings settings = null)
         {
             generator = generator ?? SeededCheapestInsertionStrategy.Default;
             mutation = mutation ?? RedoPlacementOperator.Default;
@@ -47,7 +48,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
             settings = settings ?? GASettings.Default;
 
             _gaStrategy = new GAStrategy<CVRPNDProblem, CVRPNDCandidate>(
-                generator, crossOver, mutation, settings);
+                generator, crossOver, mutation, settings, null, improvement);
         }
 
         public override string Name => _gaStrategy.Name;

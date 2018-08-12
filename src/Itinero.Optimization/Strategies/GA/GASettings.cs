@@ -54,6 +54,11 @@ namespace Itinero.Optimization.Strategies.GA
         public float MutationPercentage { get; set; } = 10;
 
         /// <summary>
+        /// Gets or sets the improvement percentage.
+        /// </summary>
+        public float ImprovementPercentage { get; set; } = 1;
+
+        /// <summary>
         /// Returns default GA settings.
         /// </summary>
         public static GASettings Default => new GASettings();
