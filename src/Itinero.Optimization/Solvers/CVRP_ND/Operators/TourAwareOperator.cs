@@ -23,7 +23,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
     /// <summary>
     /// An operator that is also aware of the candidate structure having tours.
     /// </summary>
-    internal abstract class TourAwareOperator : Operator<CVRPNDCandidate>
+    public abstract class TourAwareOperator : Operator<CVRPNDCandidate>
     {
         /// <summary>
         /// Applies this operator to the given candidate.

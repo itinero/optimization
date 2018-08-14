@@ -26,7 +26,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
     /// <summary>
     /// A tour-aware operator that exchange sub sequences between tours.
     /// </summary>
-    internal class ExchangeOperator : TourAwareOperator
+    public class ExchangeOperator : TourAwareOperator
     {
         private readonly int _maxWindowSize;
         private readonly int _minWindowSize;
