@@ -19,8 +19,10 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Itinero.Logging;
+using Itinero.Optimization.Strategies.Random;
 
 namespace Itinero.Optimization.Strategies.GA
 {
@@ -155,9 +157,10 @@ namespace Itinero.Optimization.Strategies.GA
                 {
                     Parallel.For(elitism, population.Length, (i) =>
                     {
-                        if (Random.RandomGenerator.Default.Generate(100f) > _settings.CrossOverPercentage) return;
+                        var random = Random.RandomGenerator.Default;
+                        if (random.Generate(100f) > _settings.CrossOverPercentage) return;
 
-                        Random.RandomGenerator.Generate2(selectionPoolSize, out var c1, out var c2);
+                        random.Generate2(selectionPoolSize, out var c1, out var c2);
                         population[i] = _crossOver.Apply(crossOverIndividuals[c1], crossOverIndividuals[c2]);
                     });
                 }
@@ -167,7 +170,7 @@ namespace Itinero.Optimization.Strategies.GA
                     {
                         if (Random.RandomGenerator.Default.Generate(100f) > _settings.CrossOverPercentage) continue;
 
-                        Random.RandomGenerator.Generate2(selectionPoolSize, out var c1, out var c2);
+                        Random.RandomGenerator.Default.Generate2(selectionPoolSize, out var c1, out var c2);
                         population[i] = _crossOver.Apply(crossOverIndividuals[c1], crossOverIndividuals[c2]);
                     }
                 }

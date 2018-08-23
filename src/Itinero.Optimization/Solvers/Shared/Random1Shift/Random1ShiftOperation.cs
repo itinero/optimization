@@ -38,7 +38,7 @@ namespace Itinero.Optimization.Solvers.Shared.Random1Shift
                 count--;
             }
             
-            RandomGenerator.Generate2(count, out var moved, out var newBefore);
+            RandomGenerator.Default.Generate2(count, out var moved, out var newBefore);
 
             // TODO: perhaps for some problems without a visit list this can be optimized, also getting the two at the same time is faster.
             moved = tour.GetVisitAt(moved);
@@ -64,7 +64,7 @@ namespace Itinero.Optimization.Solvers.Shared.Random1Shift
                 count--;
             }
             
-            RandomGenerator.Generate2(count, out moved, out newBefore);
+            RandomGenerator.Default.Generate2(count, out moved, out newBefore);
 
             // TODO: perhaps for some problems without a visit list this can be optimized, also getting the two at the same time is faster.
             moved = tour.GetVisitAt(moved);

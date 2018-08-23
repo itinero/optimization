@@ -114,7 +114,7 @@ namespace Itinero.Optimization.Solvers.CVRP.Operators
             else
             {
                 // choose two random tours.
-                Strategies.Random.RandomGenerator.Generate2(candidate.Solution.Count, out var t1, out var t2);
+                Strategies.Random.RandomGenerator.Default.Generate2(candidate.Solution.Count, out var t1, out var t2);
 
                 var exchange = this.Try(candidate, t1, t2);
                 if (!exchange.success) return false;
@@ -174,7 +174,7 @@ namespace Itinero.Optimization.Solvers.CVRP.Operators
             }
             else
             { // choose a random second tour.
-                if (!RandomGenerator.GenerateSecond(candidate.Solution.Count, t, out var t2)) return false;
+                if (!RandomGenerator.Default.GenerateSecond(candidate.Solution.Count, t, out var t2)) return false;
 
                 var exchange = this.Try(candidate, t, t2);
                 if (!exchange.success) return false;

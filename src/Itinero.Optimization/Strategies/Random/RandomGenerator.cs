@@ -42,7 +42,75 @@ namespace Itinero.Optimization.Strategies.Random
         /// </summary>
         public abstract int Generate(int max);
 
-        private static Lazy<RandomGenerator> DefaultRandomGenerator = new Lazy<RandomGenerator>(() =>
+        /// <summary>
+        /// Generates 2 random int's.
+        /// </summary>
+        /// <param name="max">The # of elements.</param>
+        /// <param name="t1">The first random result.</param>
+        /// <param name="t2">The second random result.</param>
+        /// <returns>False if max is smaller <![CDATA[< 2]]></returns>
+        public bool Generate2(int max, out int t1, out int t2)
+        {
+            return Generate2Between(0, max, out t1, out t2);
+        }
+
+        /// <summary>
+        /// Generates 2 distinct random int's in the given range.
+        /// </summary>
+        /// <param name="start">The start of the range.</param>
+        /// <param name="count">The # of elements.</param>
+        /// <param name="t1">The first random result.</param>
+        /// <param name="t2">The second random result.</param>
+        /// <returns>False if count is smaller <![CDATA[< 2]]></returns>
+        public bool Generate2Between(int start, int count, out int t1, out int t2)
+        {
+            if (count < 2)
+            {
+                t1 = 0;
+                t2 = 0;
+                return false;
+            }
+
+            t1 = this.Generate(count);
+            t2 = this.Generate(count - 1);
+            if (t2 >= t1)
+            {
+                t2++;
+            }
+
+            if (start == 0) return true;
+
+            t1 += count;
+            t2 += count;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Generates a second random int distinct from the first.
+        /// </summary>
+        /// <param name="max">The # of elements.</param>
+        /// <param name="first">The existing integer.</param>
+        /// <param name="second">The second distinct integer.</param>
+        /// <returns>False if max is smaller <![CDATA[< 2]]></returns>
+        public bool GenerateSecond(int max, int first, out int second)
+        {
+            if (max < 2)
+            {
+                second = 0;
+                return false;
+            }
+
+            second = this.Generate(max - 1);
+            if (second >= first)
+            {
+                second++;
+            }
+
+            return true;
+        }
+
+        private static ThreadLocal<RandomGenerator> DefaultRandomGenerator = new ThreadLocal<RandomGenerator>(() =>
         {
             if (RandomGenerator.GetGetNewRandom != null)
             {
@@ -61,7 +129,7 @@ namespace Itinero.Optimization.Strategies.Random
         {
             if (DefaultRandomGenerator.IsValueCreated)
             { 
-                DefaultRandomGenerator = new Lazy<RandomGenerator>(() =>
+                DefaultRandomGenerator = new ThreadLocal<RandomGenerator>(() =>
                 {
                     if (RandomGenerator.GetGetNewRandom != null)
                     {
@@ -87,76 +155,6 @@ namespace Itinero.Optimization.Strategies.Random
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// Generates a second random int distinct from the first.
-        /// </summary>
-        /// <param name="max">The # of elements.</param>
-        /// <param name="first">The existing integer.</param>
-        /// <param name="second">The second distinct integer.</param>
-        /// <returns>False if max is smaller <![CDATA[< 2]]></returns>
-        public static bool GenerateSecond(int max, int first, out int second)
-        {
-            if (max < 2)
-            {
-                second = 0;
-                return false;
-            }
-            
-            var random = RandomGenerator.Default;
-            second = random.Generate(max - 1);
-            if (second >= first)
-            {
-                second++;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Generates 2 random int's.
-        /// </summary>
-        /// <param name="max">The # of elements.</param>
-        /// <param name="t1">The first random result.</param>
-        /// <param name="t2">The second random result.</param>
-        /// <returns>False if max is smaller <![CDATA[< 2]]></returns>
-        public static bool Generate2(int max, out int t1, out int t2)
-        {
-            return Generate2Between(0, max, out t1, out t2);
-        }
-
-        /// <summary>
-        /// Generates 2 distinct random int's in the given range.
-        /// </summary>
-        /// <param name="start">The start of the range.</param>
-        /// <param name="count">The # of elements.</param>
-        /// <param name="t1">The first random result.</param>
-        /// <param name="t2">The second random result.</param>
-        /// <returns>False if count is smaller <![CDATA[< 2]]></returns>
-        public static bool Generate2Between(int start, int count, out int t1, out int t2)
-        {
-            if(count < 2)
-            {
-                t1 = 0;
-                t2 = 0;
-                return false;
-            }
-
-            var random = RandomGenerator.Default;
-            t1 = random.Generate(count);
-            t2 = random.Generate(count - 1);
-            if (t2 >= t1)
-            {
-                t2++;
-            }
-
-            if (start == 0) return true;
-            
-            t1 += count;
-            t2 += count;
-
-            return true;
         }
     }
 }

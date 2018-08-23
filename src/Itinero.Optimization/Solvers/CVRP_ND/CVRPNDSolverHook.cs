@@ -60,11 +60,11 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             {
                 var solver = new GASolver(settings: new GASettings()
                 {
-                    PopulationSize = 2000,
+                    PopulationSize = 500,
                     ElitismPercentage = 0.1f,
-                    CrossOverPercentage = 10,
+                    CrossOverPercentage = 25,
                     MutationPercentage = 2,
-                    StagnationCount = 10,
+                    StagnationCount = 20,
                     ImprovementPercentage = 50
                 }, generator: new SeededTourStrategy(), improvement: new ExchangeOperator(maxWindowSize: 5));
 
