@@ -24,7 +24,7 @@ namespace Itinero.Optimization.Solvers.Tours.Sequences
     /// <summary>
     /// Represents a sequence.
     /// </summary>
-    internal struct Sequence
+    public struct Sequence
     {
         private readonly int[] _visits;
         private readonly int _start;

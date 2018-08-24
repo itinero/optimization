@@ -40,7 +40,7 @@ namespace Itinero.Optimization.Strategies.GA
         private readonly CrossOverOperator<TCandidate> _crossOver;
         private readonly ISelector<TCandidate> _selector;
         private readonly GASettings _settings;
-        private const bool _useParalell = true;
+        private readonly bool _useParallel = true;
 
         /// <summary>
         /// Creates a new genetic algorithm.
@@ -51,10 +51,11 @@ namespace Itinero.Optimization.Strategies.GA
         /// <param name="selector">The selector.</param>
         /// <param name="settings">The settings.</param>
         /// <param name="improvement">The improvement operator, if any.</param>
+        /// <param name="useParallel">Flag to control parallelism.</param>
         public GAStrategy(Func<TProblem, TCandidate> generator, Func<TCandidate, TCandidate, TCandidate> crossOver,
             Func<TCandidate, bool> mutation, GASettings settings,
-            ISelector<TCandidate> selector = null, Func<TCandidate, bool> improvement = null)
-            : this(generator.ToStrategy(), crossOver, mutation, settings, selector, improvement)
+            ISelector<TCandidate> selector = null, Func<TCandidate, bool> improvement = null, bool useParallel = true)
+            : this(generator.ToStrategy(), crossOver, mutation, settings, selector, improvement, useParallel)
         {
             
         }
@@ -68,9 +69,10 @@ namespace Itinero.Optimization.Strategies.GA
         /// <param name="selector">The selector.</param>
         /// <param name="settings">The settings.</param>
         /// <param name="improvement">The improvement operator, if any.</param>
+        /// <param name="useParallel">Flag to control parallelism.</param>
         public GAStrategy(Strategy<TProblem, TCandidate> generator, CrossOverOperator<TCandidate> crossOver,
             Operator<TCandidate> mutation, GASettings settings,
-            ISelector<TCandidate> selector = null, Operator<TCandidate> improvement = null)
+            ISelector<TCandidate> selector = null, Operator<TCandidate> improvement = null, bool useParallel = true)
         {
             _crossOver = crossOver;
             _generator = generator;
@@ -79,6 +81,7 @@ namespace Itinero.Optimization.Strategies.GA
             _improvement = improvement;
 
             _settings = settings;
+            _useParallel = useParallel;
         }
 
         /// <summary>
@@ -98,7 +101,7 @@ namespace Itinero.Optimization.Strategies.GA
             // generate initial population.
             Logger.Log($"{nameof(GAStrategy<TProblem, TCandidate>)}.{nameof(Search)}", TraceEventType.Verbose,
                 $"{this.Name}: Generating population of {_settings.PopulationSize} individuals.");
-            if (_useParalell)
+            if (_useParallel)
             {
                 Parallel.For(0, _settings.PopulationSize, (i) =>
                 {
@@ -153,7 +156,7 @@ namespace Itinero.Optimization.Strategies.GA
                 }
 
                 // replace part of the population by offspring.
-                if (_useParalell)
+                if (_useParallel)
                 {
                     Parallel.For(elitism, population.Length, (i) =>
                     {
@@ -176,7 +179,7 @@ namespace Itinero.Optimization.Strategies.GA
                 }
 
                 // mutate part of the population.
-                if (_useParalell)
+                if (_useParallel)
                 {
                     Parallel.For(elitism, population.Length, (i) =>
                     {
@@ -212,7 +215,7 @@ namespace Itinero.Optimization.Strategies.GA
                 // improve part of the population.
                 if (_improvement != null)
                 {
-                    if (_useParalell)
+                    if (_useParallel)
                     {
                         Parallel.ForEach(exclude, (i) =>
                         { // ok, mutate this individual.

@@ -24,7 +24,7 @@ namespace Itinero.Optimization.Models.Mapping
     /// <summary>
     /// Contains extensions methods related to the models.
     /// </summary>
-    internal static class MappedModelExtensions
+    public static class MappedModelExtensions
     {
         /// <summary>
         /// Gets the travel cost for the given metric.
@@ -70,6 +70,5 @@ namespace Itinero.Optimization.Models.Mapping
             cost = 0;
             return false;
         }
-            
     }
 }

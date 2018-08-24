@@ -25,7 +25,7 @@ namespace Itinero.Optimization.Solvers.Shared.BoundingBox
     /// <summary>
     /// Contains functions to help with the calculation of bounding boxes.
     /// </summary>
-    internal static class BoundingBoxHelper
+    public static class BoundingBoxHelper
     {
         /// <summary>
         /// Calculates a bounding box.

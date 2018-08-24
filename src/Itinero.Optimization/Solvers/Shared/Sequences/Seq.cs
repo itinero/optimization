@@ -25,7 +25,7 @@ namespace Itinero.Optimization.Solvers.Shared.Sequences
     /// <summary>
     /// Represents a sequence.
     /// </summary>
-    internal struct Seq
+    public struct Seq
     {
         /// <summary>
         /// Creates a new sequence with the given visits.

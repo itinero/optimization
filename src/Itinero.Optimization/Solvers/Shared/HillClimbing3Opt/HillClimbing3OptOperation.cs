@@ -30,7 +30,7 @@ namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
     /// <summary>
     /// Contains the core of the 3-OPT hill climbing algorithm. 
     /// </summary>
-    internal static class HillClimbing3OptOperation
+    public static class HillClimbing3OptOperation
     {
         private const float E = 0.001f;
         
@@ -44,7 +44,7 @@ namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
         /// <param name="useDontLookBits">The don't look bits flag.</param>
         /// <returns>True if there was an improvement and the associated cost.</returns>
         /// <exception cref="ArgumentException"></exception>
-        internal static (bool improved, float delta) Do3Opt(this Tour candidate, Func<int, int, float> weightFunc,
+        public static (bool improved, float delta) Do3Opt(this Tour candidate, Func<int, int, float> weightFunc,
             int size, NearestNeighbourArray nearestNeighbours = null, bool useDontLookBits = true)
         {
             float delta;

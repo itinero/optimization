@@ -24,7 +24,7 @@ namespace Itinero.Optimization.Solvers.Shared.NearestNeighbours
     /// <summary>
     /// A nearest neighbour cache.
     /// </summary>
-    internal sealed class NearestNeighbourCache
+    public sealed class NearestNeighbourCache
     {
         private readonly int _count;
         private readonly Func<int, int, float> _weightFunc;

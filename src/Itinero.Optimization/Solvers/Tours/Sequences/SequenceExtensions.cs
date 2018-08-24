@@ -24,7 +24,7 @@ namespace Itinero.Optimization.Solvers.Tours.Sequences
     /// <summary>
     /// Contains extension methods for sequences.
     /// </summary>
-    internal static class SequenceExtensions
+    public static class SequenceExtensions
     {
         /// <summary>
         /// Calculates the cost of a sequence.

@@ -25,7 +25,7 @@ namespace Itinero.Optimization.Solvers.Shared.Seeds
     /// <summary>
     /// Contains seed heuristics.
     /// </summary>
-    internal static class SeedHeuristics
+    public static class SeedHeuristics
     {
         /// <summary>
         /// Select a random seed from the given visits pool.

@@ -95,19 +95,19 @@ namespace Itinero.Optimization.Solvers
         /// <summary>
         /// Represents 
         /// </summary>
-        internal class SolverHook
+        public class SolverHook
         {
             /// <summary>
             /// Gets or sets the name.
             /// </summary>
             /// <returns></returns>
-            internal string Name { get; set; }
+            public string Name { get; set; }
 
             /// <summary>
             /// Gets or sets the try solve function.
             /// </summary>
             /// <returns></returns>
-            internal SolverRegistry.TrySolveDelegate TrySolve { get; set; }
+            public SolverRegistry.TrySolveDelegate TrySolve { get; set; }
 
             /// <summary>
             /// Returns a description.
