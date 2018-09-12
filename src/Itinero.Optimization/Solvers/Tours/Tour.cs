@@ -730,16 +730,17 @@ namespace Itinero.Optimization.Solvers.Tours
         private void UpdateCount()
         {
             if (_count < 0)
-            {
-                _count = 0;
+            { // WARNING: this can be called from multiple threads at the same time, make sure to only write to '_count' once.
+                var count = 0;
                 foreach (var i in (this as IEnumerable<int>))
                 {
-                    _count++;
-                    if (_count > this._nextArray.Length + 1)
+                    count++;
+                    if (count > this._nextArray.Length + 1)
                     {
                         throw new Exception($"Found at least {_count} element when there is only room for {this._nextArray.Length + 1}.");
                     }
                 }
+                _count = count;
             }
         }
 
