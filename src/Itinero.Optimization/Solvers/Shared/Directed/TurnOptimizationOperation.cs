@@ -19,7 +19,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using Itinero.Algorithms;
 using Itinero.Algorithms.PriorityQueues;
 using Itinero.Optimization.Solvers.Tours;
 
@@ -32,6 +34,25 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
     /// </summary>
     internal static class TurnOptimizationOperation
     {
+        /// <summary>
+        /// Converts the given undirected tour into a directed tour and minimizes the weight (without changing the sequence).
+        /// </summary>
+        /// <param name="undirectedTour">The undirected tour.</param>
+        /// <param name="weightFunc">The weight function.</param>
+        /// <param name="turnPenaltyFunc">The turn penalty function.</param>
+        /// <returns>A directed tour and it's weight.</returns>
+        internal static (float weight, Tour tour) ConvertToDirectedAndOptimizeTurns(this Tour undirectedTour, Func<int, int, float> weightFunc,
+            Func<TurnEnum, float> turnPenaltyFunc)
+        {
+            // build an initial directed tour.
+            var directedTour = new Tour(undirectedTour.Select(x => DirectedHelper.BuildVisit(x, TurnEnum.ForwardForward)),
+                DirectedHelper.BuildVisit(undirectedTour.Last, TurnEnum.ForwardForward));
+
+            // optimize turns.
+            var weight = directedTour.OptimizeTurns(weightFunc, turnPenaltyFunc);
+            return (weight, directedTour);
+        }
+        
         internal static float OptimizeTurns(this Tour tour, Func<int, int, float> weightFunc,
             Func<TurnEnum, float> turnPenaltyFunc)
         {
@@ -78,6 +99,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                 { // was already settled.
                     continue;
                 }
+                
                 settled.Add(current);
                 
                 // TODO: pretty sure we can mark other directed visits for the same as settled here but not sure.
@@ -91,6 +113,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
 
                 var next = nextArray[currentVisit];
                 var departureWeightId = DirectedHelper.ExtractDepartureWeightId(current);
+                var deadend = true;
                 for (var t = 0; t < 4; t++)
                 {
                     var turn = (TurnEnum) t;
@@ -100,7 +123,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                         continue;
                     }
                     var weight = turnPenaltyFunc(turn);
-                    var arrivalWeightId = turn.Departure().WeightId(next);
+                    var arrivalWeightId = turn.Arrival().WeightId(next);
                     var travelCost = weightFunc(departureWeightId, arrivalWeightId);
                     if (travelCost >= float.MaxValue)
                     { // this connection is impossible.
@@ -108,13 +131,19 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                     }
                     weight += travelCost;
                     weight += currentWeight;
-
+                    deadend = false;
+                    
                     //Debug.Assert(nextDirected >= 0 && nextDirected < paths.Length);
                     if (paths[nextDirected].cost > weight)
                     {
                         paths[nextDirected] = (current, weight);
                         queue.Push(nextDirected, weight);
                     }
+                }
+
+                if (deadend)
+                {
+                    Console.WriteLine($"DEADEND at: {currentVisit} with {DirectedHelper.ExtractTurn(current)}({current}): depw: {departureWeightId}");
                 }
             }
 

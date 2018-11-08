@@ -23,6 +23,7 @@ using System.Runtime.CompilerServices;
 using Itinero.Navigation.Directions;
 using Itinero.Optimization.Solvers.Shared.Directed;
 using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
+using Itinero.Optimization.Solvers.TSP;
 
 [assembly: InternalsVisibleTo("Itinero.Optimization.Tests")]
 namespace Itinero.Optimization.Solvers.TSP_D
@@ -36,6 +37,7 @@ namespace Itinero.Optimization.Solvers.TSP_D
         private readonly float[] _turnPenalties;
         private readonly Lazy<NearestNeighbourCache> _nearestNeighbourCacheLazy;
         private readonly Lazy<TSPDProblem> _closedEquivalent;
+        private readonly Lazy<TSProblem> _undirectedEquivalentLazy;
         private readonly bool _behaveAsClosed = false;
         private readonly int? _last;
         private readonly HashSet<int> _visits;
@@ -90,6 +92,8 @@ namespace Itinero.Optimization.Solvers.TSP_D
                 }));
             _closedEquivalent = new Lazy<TSPDProblem>(() => 
                 new TSPDProblem(this, true));
+            _undirectedEquivalentLazy = new Lazy<TSProblem>(() => new TSProblem(DirectedHelper.ExtractVisit(this.First), DirectedHelper.ExtractVisit(_last), 
+                _weights.ConvertToUndirected(), DirectedHelper.ExtractVisits(_visits)));
 
             if (visits != null)
             {
@@ -255,5 +259,10 @@ namespace Itinero.Optimization.Solvers.TSP_D
                 return this;
             }
         }
+
+        /// <summary>
+        /// Gets the undirected equivalent of this problem.
+        /// </summary>
+        internal TSProblem UndirectedEquivalent => _undirectedEquivalentLazy.Value;
     }
 }

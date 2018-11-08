@@ -52,9 +52,11 @@ namespace Itinero.Optimization.Solvers.TSP_D
             // use a default solver to solve the TSPD here.
             try
             {
-                var op = CheapestReinsertionOperator.Default.ApplyAfter(
-                    TurnOptimizationOperator.Default).Iterate(10);
-                var solver = HillClimbing3OptSolver.Default.Iterate(1000);
+//                var op = CheapestReinsertionOperator.Default.ApplyAfter(
+//                    TurnOptimizationOperator.Default).Iterate(10);
+//                var solver = HillClimbing3OptSolver.Default.Iterate(100).ApplyAfter(op);
+                
+                var solver = Undirected.UndirectedSolver.Default.ApplyAfter(HillClimbing3OptOperator.Default);
                 
                 var solution = solver.Search(tsp.Value);
                 return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>(

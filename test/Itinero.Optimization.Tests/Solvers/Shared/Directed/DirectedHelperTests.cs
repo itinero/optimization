@@ -73,5 +73,14 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.Directed
             }, TurnEnum.ForwardForward.DirectedVisit(0));
             Assert.Equal(10 + 20 + 2 + 10 + 10, tour.WeightDirected(weightsFunc, turnPenaltyFunc));
         }
+
+        [Fact]
+        public void DirectedHelper_ConvertToUndirectedShouldUseMinimumByDefault()
+        {
+            var directedWeights = WeightMatrixHelpers.BuildDirected(5, 10, 20);
+            var undirectedWeights = directedWeights.ConvertToUndirected();
+            
+            
+        }
     }
 }

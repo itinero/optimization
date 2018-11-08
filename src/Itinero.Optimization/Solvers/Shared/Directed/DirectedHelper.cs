@@ -17,6 +17,9 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using Itinero.Optimization.Solvers.Tours;
 
 namespace Itinero.Optimization.Solvers.Shared.Directed
@@ -77,6 +80,29 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
             var extracted = Extract(directedVisit);
             return WeightId(extracted.visit, extracted.turn.Departure());
         }
+
+        /// <summary>
+        /// Builds a directed visit from the given visit and it's turn.
+        /// </summary>
+        /// <param name="visit">The visit.</param>
+        /// <param name="turn">The turn.</param>
+        /// <returns>The directed visit.</returns>
+        public static int BuildVisit(int visit, TurnEnum turn)
+        {
+            return visit * 4 + (int) turn;
+        }
+
+        /// <summary>
+        /// Builds a directed visit from the given visit and it's turn.
+        /// </summary>
+        /// <param name="visit">The visit.</param>
+        /// <param name="turn">The turn.</param>
+        /// <returns>The directed visit.</returns>
+        public static int? BuildVisit(int? visit, TurnEnum turn)
+        {
+            if (visit == null) return null;
+            return BuildVisit(visit.Value, turn);
+        }
         
         /// <summary>
         /// Extracts the original visit.
@@ -86,6 +112,31 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
         public static int ExtractVisit(int directedVisit)
         {
             return (directedVisit - (directedVisit % 4)) / 4;
+        }
+        
+        /// <summary>
+        /// Extracts the original visit.
+        /// </summary>
+        /// <param name="directedVisit">The directed visit.</param>
+        /// <returns>The original visit id.</returns>
+        public static int? ExtractVisit(int? directedVisit)
+        {
+            if (directedVisit == null)
+            {
+                return null;
+            }
+
+            return ExtractVisit(directedVisit.Value);
+        }
+        
+        /// <summary>
+        /// Extracts the original visits.
+        /// </summary>
+        /// <param name="directedVisits">The directed visits.</param>
+        /// <returns>The original visit ids.</returns>
+        public static IEnumerable<int> ExtractVisits(IEnumerable<int> directedVisits)
+        {
+            return directedVisits?.Select(ExtractVisit);
         }
         
         /// <summary>
@@ -193,6 +244,57 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
             }
             
             return weight;
+        }
+        
+        /// <summary>
+        /// A default function to reduce the directed weights to it's minimum.
+        /// </summary>
+        public static Func<(float w00, float w01, float w10, float w11), float> ReduceMinimum = (dw) =>
+        {
+            var min = dw.w00;
+            if (min > dw.w01)
+            {
+                min = dw.w01;
+            }
+
+            if (min > dw.w10)
+            {
+                min = dw.w10;
+            }
+
+            if (min > dw.w11)
+            {
+                min = dw.w11;
+            }
+            return min;
+        };
+        
+        /// <summary>
+        /// Converts the given directed weight matrix to it's undirected cousin.
+        /// </summary>
+        /// <param name="directed">The directed weight matrix.</param>
+        /// <param name="reduce">The function to </param>
+        /// <returns>The undirected weight matrix.</returns>
+        public static float[][] ConvertToUndirected(this float[][] directed, Func<(float w00, float w01, float w10, float w11), float> reduce = null)
+        {
+            if (reduce == null) reduce = ReduceMinimum;
+
+            var undirected = new float[directed.Length / 2][];
+            for (var x = 0; x < undirected.Length; x++)
+            {
+                undirected[x] = new float[directed.Length / 2];
+                var undirectedx = undirected[x];
+                var xd = x * 2;
+
+                for (var y = 0; y < undirectedx.Length; y++)
+                {
+                    var yd = y * 2;
+                    undirectedx[y] = reduce((directed[xd + 0][yd + 0], directed[xd + 0][yd + 1],
+                        directed[xd + 1][yd + 0], directed[xd + 1][yd + 1]));
+                }
+            }
+
+            return undirected;
         }
     }
 }
