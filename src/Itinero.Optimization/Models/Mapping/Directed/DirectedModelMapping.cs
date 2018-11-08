@@ -63,10 +63,13 @@ namespace Itinero.Optimization.Models.Mapping.Directed
                 var vehicle = _mappedModel.VehiclePool.Vehicles[vehicleAndTour.vehicle];
                 
                 Route route = null;
+                var index = -1;
                 var previous = -1;
                 var first = -1;
                 foreach (var v in vehicleAndTour.tour)
                 {
+                    index++;
+
                     if (first < 0)
                     {
                         first = v;
@@ -77,7 +80,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
                         continue;
                     }
 
-                    var localResult = AppendRoute(route, previous, v);
+                    var localResult = AppendRoute(route, index - 1, previous, index, v);
                     if (localResult.IsError)
                     {
                         return localResult;
@@ -92,7 +95,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
                     vehicle.Arrival == vehicle.Departure &&
                     previous != 0)
                 {
-                    var localResult = AppendRoute(route, previous, vehicle.Departure.Value);
+                    var localResult = AppendRoute(route, index, previous,  0,vehicle.Departure.Value);
                     if (localResult.IsError)
                     {
                         return localResult;
@@ -105,7 +108,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
                     !vehicle.Departure.HasValue &&
                     previous != 0)
                 {
-                    var localResult = AppendRoute(route, previous, first);
+                    var localResult = AppendRoute(route, index, previous, 0, first);
                     if (localResult.IsError)
                     {
                         return localResult;
@@ -122,7 +125,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
             }
         }
 
-        private Result<Route> AppendRoute(Route route, int directedVisit1, int directedVisit2)
+        private Result<Route> AppendRoute(Route route, int directedVisit1Index, int directedVisit1, int directedVisit2Index, int directedVisit2)
         {
             var weightHandler = _weightMatrixAlgorithm.Profile.DefaultWeightHandler(_weightMatrixAlgorithm.Router);
             var pairFromDepartureId = _weightMatrixAlgorithm.SourcePaths[DirectedHelper.WeightIdDeparture(directedVisit1)];
@@ -145,6 +148,9 @@ namespace Itinero.Optimization.Models.Mapping.Directed
             
             var fromRouterPoint = _weightMatrixAlgorithm.RouterPoints[pairFromId];
             var toRouterPoint = _weightMatrixAlgorithm.RouterPoints[pairToId];
+
+            fromRouterPoint.Attributes.AddOrReplace("order", directedVisit1Index.ToInvariantString());
+            toRouterPoint.Attributes.AddOrReplace("order", directedVisit2Index.ToInvariantString());
             
             var localRouteRawResult = _weightMatrixAlgorithm.Router.TryCalculateRaw(_weightMatrixAlgorithm.Profile, weightHandler, pairFromEdgeId, pairToEdgeId, null);
             if (localRouteRawResult.IsError)

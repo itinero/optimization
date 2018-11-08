@@ -59,10 +59,13 @@ namespace Itinero.Optimization.Models.Mapping.Default
                 var vehicle = _mappedModel.VehiclePool.Vehicles[vehicleAndTour.vehicle];
 
                 Route route = null;
+                var index = -1;
                 var previous = -1;
                 var first = -1;
                 foreach (var v in vehicleAndTour.tour)
                 {
+                    index++;
+
                     if (first < 0)
                     {
                         first = v;
@@ -73,7 +76,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
                         continue;
                     }
 
-                    var localResult = AppendRoute(route, previous, v);
+                    var localResult = AppendRoute(route, index - 1, previous, index, v);
                     if (localResult.IsError)
                     {
                         return localResult;
@@ -88,7 +91,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
                     vehicle.Arrival == vehicle.Departure &&
                     previous != 0)
                 {
-                    var localResult = AppendRoute(route, previous, vehicle.Departure.Value);
+                    var localResult = AppendRoute(route, index, previous, 0, vehicle.Departure.Value);
                     if (localResult.IsError)
                     {
                         return localResult;
@@ -101,7 +104,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
                     !vehicle.Departure.HasValue &&
                     previous != 0)
                 {
-                    var localResult = AppendRoute(route, previous, first);
+                    var localResult = AppendRoute(route, index, previous, 0, first);
                     if (localResult.IsError)
                     {
                         return localResult;
@@ -118,7 +121,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
             }
         }
 
-        private Result<Route> AppendRoute(Route route, int visit1, int visit2)
+        private Result<Route> AppendRoute(Route route, int visit1Index, int visit1, int visit2Index, int visit2)
         {
             var visit1RouterPoint = _weightMatrixAlgorithm.OriginalIndexOf(visit1);
             var visit2RouterPoint = _weightMatrixAlgorithm.OriginalIndexOf(visit2);
@@ -142,7 +145,8 @@ namespace Itinero.Optimization.Models.Mapping.Default
                 var visit1Stop = localRoute.Stops[0];
                 var visit2Stop = localRoute.Stops[1];
 
-                // add visit1 costs to the stop meta data.
+                // add visit1 costs & order to the stop meta data.
+                visit1Stop.Attributes.AddOrReplace("order", visit1Index.ToInvariantString());
                 var visit1Costs = _mappedModel.Visits[visit1].VisitCosts;
                 if (visit1Costs != null)
                 {
@@ -152,7 +156,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
                     }
 
                     if (route == null)
-                    { // this is the first route, add visit cost of visit1.
+                    { // this is the first route, update visit1.
                         var visit1Cost = visit1Costs.FirstOrDefault(x => x.Metric == Metrics.Time)?.Value;
                         if (visit1Cost.HasValue)
                         {
@@ -169,7 +173,8 @@ namespace Itinero.Optimization.Models.Mapping.Default
                     }
                 }
 
-                // add visit2 costs to the stop meta data.
+                // add visit2 costs & order to the stop meta data.
+                visit2Stop.Attributes.AddOrReplace("order", visit2Index.ToInvariantString());
                 var visit2Costs = _mappedModel.Visits[visit2].VisitCosts;
                 if (visit2Costs != null)
                 {

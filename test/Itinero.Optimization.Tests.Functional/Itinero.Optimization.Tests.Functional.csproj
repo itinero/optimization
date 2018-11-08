@@ -15,7 +15,10 @@
     <None Remove="CVRP_ND\data\problem4-rotterdam.geojson" />
     <None Remove="CVRP_ND\data\problem5-capelle.geojson" />
     <None Remove="CVRP_ND\data\problem6-hogeveen.geojson" />
+    <None Remove="TSP\data\problem2-hengelo.geojson" />
+    <None Remove="TSP\data\problem3.geojson" />
     <None Remove="TSP_D\data\problem2-hengelo.geojson" />
+    <None Remove="TSP_D\data\problem3.geojson" />
     <EmbeddedResource Include="CVRP\data\problem1.geojson" />
     <None Remove="CVRP_ND\data\problem2-spijkenisse.geojson" />
     <EmbeddedResource Include="CVRP_ND\data\problem2-spijkenisse.geojson" />
@@ -25,7 +28,10 @@
     <EmbeddedResource Include="CVRP_ND\data\problem5-capelle.geojson" />
     <EmbeddedResource Include="CVRP_ND\data\problem6-hogeveen.geojson" />
     <EmbeddedResource Include="TSP\data\problem1-spijkenisse.geojson" />
+    <EmbeddedResource Include="TSP\data\problem2-hengelo.geojson" />
+    <EmbeddedResource Include="TSP\data\problem3.geojson" />
     <EmbeddedResource Include="TSP_D\data\problem2-hengelo.geojson" />
+    <EmbeddedResource Include="TSP_D\data\problem3.geojson" />
     <EmbeddedResource Include="TSP_TW\data\problem1.geojson" />
     <None Remove="CVRP\data\problem2-spijkenisse.geojson" />
     <EmbeddedResource Include="CVRP\data\problem2-spijkenisse.geojson" />

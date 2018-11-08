@@ -29,10 +29,11 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
         /// </summary>
         public static void Run()
         {
-            Run1Wechelderzande();
-            Run2Hengelo();
-            Run3Spijkenisse();
-            Run4Hengelo();
+            //Run1Wechelderzande();
+            //Run2Hengelo();
+            //Run3Spijkenisse();
+            //Run4Hengelo();
+            Run5Problem3();
         }
 
         public static void Run1Wechelderzande()
@@ -106,7 +107,7 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             func.Run("TSPD-2-hengelo-open");  
         }
 
-        public static void Run3Spijkenisse()
+        public static void Run3Problem1Spijkenisse()
         {
             // build routerdb and save the result.
             var spijkenisse = Staging.RouterDbBuilder.Build("query4");
@@ -125,7 +126,7 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             func.Run("TSPD-3-spijkenisse-fixed");
         }
 
-        public static void Run4Hengelo()
+        public static void Run4Problem2Hengelo()
         {
             // build routerdb and save the result.
             var hengelo = Staging.RouterDbBuilder.Build("query2");
@@ -142,6 +143,25 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             func.Run("TSPD-4-hengelo-closed");
             func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
             func.Run("TSPD-4-hengelo-fixed");
+        }
+
+        public static void Run5Problem3()
+        {
+            // build routerdb and save the result.
+            var hengelo = Staging.RouterDbBuilder.Build("query4");
+            var vehicle = hengelo.GetSupportedVehicle("car");
+            var router = new Router(hengelo);
+
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("TSP_D.data.problem3.geojson"));
+
+            // calculate TSPD.
+            var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
+            func.Run("TSPD-5-problem3-open");
+            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
+            func.Run("TSPD-5-problem3-closed");
+            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
+            func.Run("TSPD-5-problem3-fixed");
         }
     }
 }

@@ -29,9 +29,11 @@ namespace Itinero.Optimization.Tests.Functional.TSP
         /// </summary>
         public static void Run()
         {
-            Run1Wechelderzande();
-            Run2Hengelo();
-            Run3Spijkenisse();
+            //Run1Wechelderzande();
+            //Run2Hengelo();
+            //Run3Problem1Spijkenisse();
+            //Run4Problem2Hengelo();
+            Run5Problem3();
         }
 
         public static void Run1Wechelderzande()
@@ -105,7 +107,7 @@ namespace Itinero.Optimization.Tests.Functional.TSP
             func.Run("TSP-hengelo-open");  
         }
 
-        public static void Run3Spijkenisse()
+        public static void Run3Problem1Spijkenisse()
         {
             // build routerdb and save the result.
             var spijkenisse = Staging.RouterDbBuilder.Build("query4");
@@ -117,11 +119,49 @@ namespace Itinero.Optimization.Tests.Functional.TSP
 
             // calculate TSPD.
             var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null));
-            func.Run("TSP-spijkenisse-open");  
+            func.Run("TSP-3-problem1-spijkenisse-open");  
             func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0));
-            func.Run("TSP-spijkenisse-closed");
+            func.Run("TSP-3-problem1-spijkenisse-closed");
             func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1));
-            func.Run("TSP-spijkenisse-fixed");
+            func.Run("TSP-3-problem1-spijkenisse-fixed");
+        }
+
+        public static void Run4Problem2Hengelo()
+        {
+            // build routerdb and save the result.
+            var spijkenisse = Staging.RouterDbBuilder.Build("query2");
+            var vehicle = spijkenisse.GetSupportedVehicle("car");
+            var router = new Router(spijkenisse);
+
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("TSP_D.data.problem2-hengelo.geojson"));
+
+            // calculate TSPD.
+            var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null));
+            func.Run("TSP-4-problem2-hengelo-open");
+            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0));
+            func.Run("TSP-4-problem2-hengelo-closed");
+            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1));
+            func.Run("TSP-4-problem2-hengelo-fixed");
+        }
+
+        public static void Run5Problem3()
+        {
+            // build routerdb and save the result.
+            var spijkenisse = Staging.RouterDbBuilder.Build("query4");
+            var vehicle = spijkenisse.GetSupportedVehicle("car");
+            var router = new Router(spijkenisse);
+
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("TSP_D.data.problem3.geojson"));
+
+            // calculate TSPD.
+            var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null));
+            func.Run("TSP-5-problem3-open");
+            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0));
+            func.Run("TSP-5-problem3-closed");
+            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1));
+            func.Run("TSP-5-problem3-fixed");
         }
     }
 }

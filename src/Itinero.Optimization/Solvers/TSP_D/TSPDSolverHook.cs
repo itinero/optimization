@@ -54,7 +54,7 @@ namespace Itinero.Optimization.Solvers.TSP_D
             {
                 var op = CheapestReinsertionOperator.Default.ApplyAfter(
                     TurnOptimizationOperator.Default).Iterate(10);
-                var solver = HillClimbing3OptSolver.Default.ApplyAfter(op).Iterate(10);
+                var solver = HillClimbing3OptSolver.Default.Iterate(1000);
                 
                 var solution = solver.Search(tsp.Value);
                 return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>(
