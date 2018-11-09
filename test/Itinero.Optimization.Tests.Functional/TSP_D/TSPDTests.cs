@@ -156,12 +156,12 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
                 Staging.StagingHelpers.GetFeatureCollection("TSP_D.data.problem3.geojson"));
 
             // calculate TSPD.
-            var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
-            func.Run("TSPD-5-problem3-open");
-            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
+//            var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
+//            func.Run("TSPD-5-problem3-open");
+            var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
             func.Run("TSPD-5-problem3-closed");
-            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
-            func.Run("TSPD-5-problem3-fixed");
+//            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
+//            func.Run("TSPD-5-problem3-fixed");
         }
     }
 }

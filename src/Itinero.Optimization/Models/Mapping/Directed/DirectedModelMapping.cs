@@ -89,13 +89,37 @@ namespace Itinero.Optimization.Models.Mapping.Directed
                     route = localResult.Value;
                     previous = v;
                 }
-
+                
+                // 3 options:
+                // OPEN:
+                //   when:
+                //     -> vehicle.arrival is not set and vehicle.departure is set.
+                //   action: 
+                //     -> none.
+                // FIXED:
+                //   when:
+                //     -> vehicle.arrival is set and vehicle.departure is set but to different visits.
+                //   action:
+                //     -> none, all visits should be there.
+                // CLOSED:
+                //   when:
+                //     ->  vehicle.arrival and vehicle.departure is not set is treated as closed.
+                //     ->  vehicle.arrival and vehicle.departure are set but both to the same visit and 
+                //            it matches the first directed visit.
+                //   action:
+                //     ->  add connection between the last directed visit and the first directed visit and close the tour.
+                
                 if (vehicle.Arrival.HasValue &&
                     vehicle.Departure.HasValue &&
                     vehicle.Arrival == vehicle.Departure &&
                     previous != 0)
                 {
-                    var localResult = AppendRoute(route, index, previous,  0,vehicle.Departure.Value);
+                    if (DirectedHelper.ExtractVisit(first) != vehicle.Arrival.Value)
+                    {
+                        throw new Exception($"Vehicle should match a tour starting at {vehicle.Departure} but the start of the tour is at:" +
+                                            $"{DirectedHelper.ExtractVisit(first)}");
+                    }
+                    var localResult = AppendRoute(route, index, previous,  0, first);
                     if (localResult.IsError)
                     {
                         return localResult;

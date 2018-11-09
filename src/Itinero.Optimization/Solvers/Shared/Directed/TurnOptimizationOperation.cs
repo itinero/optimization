@@ -23,6 +23,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Itinero.Algorithms;
 using Itinero.Algorithms.PriorityQueues;
+using Itinero.Algorithms.Weights;
 using Itinero.Optimization.Solvers.Tours;
 
 [assembly: InternalsVisibleTo("Itinero.Optimization.Tests")]
@@ -78,6 +79,11 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
             }
             if (count == 1) return 0;
             var last = previous;
+            if (tour.IsClosedDirected())
+            { // previous -> last is also an arc.
+                nextArray[previous] = first;
+                last = first; // replace last with first, stopping condition is different.
+            }
             
             var settled = new HashSet<int>();
             var queue = new BinaryHeap<int>();
@@ -101,19 +107,17 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                 }
                 
                 settled.Add(current);
-                
-                // TODO: pretty sure we can mark other directed visits for the same as settled here but not sure.
 
                 var currentVisit = DirectedHelper.ExtractVisit(current);
                 if (currentVisit == last && currentWeight > 0)
-                {
+                { // make sure there is weight and not to stop at the first occurence
+                  // of the first visit in a closed tour.
                     bestLast = current;
                     break;
                 }
 
                 var next = nextArray[currentVisit];
                 var departureWeightId = DirectedHelper.ExtractDepartureWeightId(current);
-                var deadend = true;
                 for (var t = 0; t < 4; t++)
                 {
                     var turn = (TurnEnum) t;
@@ -131,7 +135,6 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                     }
                     weight += travelCost;
                     weight += currentWeight;
-                    deadend = false;
                     
                     //Debug.Assert(nextDirected >= 0 && nextDirected < paths.Length);
                     if (paths[nextDirected].cost > weight)
@@ -139,11 +142,6 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                         paths[nextDirected] = (current, weight);
                         queue.Push(nextDirected, weight);
                     }
-                }
-
-                if (deadend)
-                {
-                    Console.WriteLine($"DEADEND at: {currentVisit} with {DirectedHelper.ExtractTurn(current)}({current}): depw: {departureWeightId}");
                 }
             }
 
@@ -154,7 +152,6 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
 
             var best = bestLast;
             var newTour = new List<int>();
-            //Debug.Assert(best >= 0 && best < paths.Length);
             while (paths[best].previous > -1)
             {
                 newTour.Add(best);
@@ -163,9 +160,20 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                 {
                     break;
                 }
-                //Debug.Assert(best >= 0 && best < paths.Length);
             }
             newTour.Add(best);
+
+            if (DirectedHelper.ExtractVisit(newTour[0]) ==
+                DirectedHelper.ExtractVisit(newTour[newTour.Count - 1]))
+            { // tour is closed, make one visit with the proper departure/arrival.
+                var departure = DirectedHelper.ExtractTurn(newTour[newTour.Count - 1]).Departure();
+                var arrival = DirectedHelper.ExtractTurn(newTour[0]).Arrival();
+
+                var turn = TurnEnum.ForwardForward.ApplyArrival(arrival).ApplyDeparture(departure);
+                var visit = turn.DirectedVisit(DirectedHelper.ExtractVisit(newTour[0]));
+                newTour[newTour.Count - 1] = visit;
+                newTour.RemoveAt(0);
+            }
 
             var tourDebug = tour.Clone();
             tour.Clear();
