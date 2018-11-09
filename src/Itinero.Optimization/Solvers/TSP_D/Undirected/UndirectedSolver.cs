@@ -28,7 +28,7 @@ namespace Itinero.Optimization.Solvers.TSP_D.Undirected
     /// <summary>
     /// A solver that uses an undirected TSP solver to solve the given directed TSP.
     /// </summary>
-    internal sealed class UndirectedSolver : Strategy<TSPDProblem, Candidate<TSPDProblem, Tour>>
+    public sealed class UndirectedSolver : Strategy<TSPDProblem, Candidate<TSPDProblem, Tour>>
     {
         private readonly Strategy<TSProblem, Candidate<TSProblem, Tour>> _undirectedStrategy = EAXSolver.Default;
         
