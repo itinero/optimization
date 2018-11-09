@@ -29,10 +29,10 @@ namespace Itinero.Optimization.Tests.Functional.TSP
         /// </summary>
         public static void Run()
         {
-            //Run1Wechelderzande();
-            //Run2Hengelo();
-            //Run3Problem1Spijkenisse();
-            //Run4Problem2Hengelo();
+            Run1Wechelderzande();
+            Run2Hengelo();
+            Run3Problem1Spijkenisse();
+            Run4Problem2Hengelo();
             Run5Problem3();
         }
 
