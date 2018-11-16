@@ -22,6 +22,7 @@ using Itinero.Optimization.Solvers.STSP.Operators;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies;
 using Itinero.Optimization.Strategies.GA;
+using Itinero.Optimization.Strategies.Tools.Selectors;
 
 namespace Itinero.Optimization.Solvers.STSP
 {

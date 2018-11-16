@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Itinero.Optimization.Strategies.Random;
 
-namespace Itinero.Optimization.Strategies.GA
+namespace Itinero.Optimization.Strategies.Tools.Selectors
 {
     /// <summary>
     /// A tournament selector.
@@ -33,18 +33,21 @@ namespace Itinero.Optimization.Strategies.GA
         private readonly float _probability;
         private readonly ThreadLocal<List<int>> _candidatesInTournament = 
             new ThreadLocal<List<int>>(() => new List<int>());
+        private readonly Comparison<TCandidate> _comparison = null;
 
         /// <summary>
-        /// Creates a new tournament selector..
+        /// Creates a new tournament selector.
         /// </summary>
-        /// <param name="sizePercentage">The precentage of the population that will be randomly chosen to compete.</param>
-        /// <param name="probablity">The probablity that and individual is chosen.</param>
+        /// <param name="sizePercentage">The percentage of the population that will be randomly chosen to compete.</param>
+        /// <param name="probability">The probability that and individual is chosen.</param>
         /// <param name="random">The random generator to use.</param>
+        /// <param name="comparison">The comparison function to use to determine order.</param>
         public TournamentSelector(float sizePercentage = 10, 
-            float probablity = 0.5f, RandomGenerator random = null)
+            float probability = 0.5f, RandomGenerator random = null, Comparison<TCandidate> comparison = null)
         {
             _sizePercentage = sizePercentage;
-            _probability = probablity;
+            _probability = probability;
+            _comparison = comparison;
         }
         
         /// <summary>
@@ -58,7 +61,7 @@ namespace Itinero.Optimization.Strategies.GA
         /// <param name="population">The population.</param>
         /// <param name="exclude">A function to ignore individuals.</param>
         /// <returns>The index of the selected candidate.</returns>
-        public int Select(TCandidate[] population, Func<int, bool> exclude)
+        public int Select(TCandidate[] population, Func<int, bool> exclude = null)
         {
             var scaledSize = (int)System.Math.Ceiling(((_sizePercentage / 100) * population.Length));
             var tempPop = _candidatesInTournament.Value;
@@ -75,13 +78,13 @@ namespace Itinero.Optimization.Strategies.GA
 
             // sort the population.
             tempPop.Sort((x, y) => CandidateComparison.Compare(
-                population[x], population[y]));
+                population[x], population[y], _comparison));
 
             // choose a candidate.
             for (var i = 0; i < tempPop.Count; i++)
             { // choose a candidate.
                 if (RandomGenerator.Default.Generate(1.0f) < _probability)
-                { // candidate choosen!
+                { // candidate chosen!
                     return tempPop[i];
                 }
             }

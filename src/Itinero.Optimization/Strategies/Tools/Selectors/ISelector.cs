@@ -18,7 +18,7 @@
 
 using System;
 
-namespace Itinero.Optimization.Strategies.GA
+namespace Itinero.Optimization.Strategies.Tools.Selectors
 {
     /// <summary>
     /// Abstract representation of a selection strategy to select individuals.
@@ -37,6 +37,6 @@ namespace Itinero.Optimization.Strategies.GA
         /// <param name="population">The population.</param>
         /// <param name="exclude">A function to ignore individuals.</param>
         /// <returns>The index of the selected candidate.</returns>
-        int Select(TCandidate[] population, Func<int, bool> exclude);
+        int Select(TCandidate[] population, Func<int, bool> exclude = null);
     }
 }

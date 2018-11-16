@@ -18,6 +18,7 @@
 
 using System;
 using Itinero.Optimization.Strategies.GA;
+using Itinero.Optimization.Strategies.Tools.Selectors;
 using Itinero.Optimization.Tests.Strategies.TestProblems.MinimizeInteger;
 using Xunit;
 

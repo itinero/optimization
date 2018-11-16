@@ -22,6 +22,7 @@ using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Solvers.TSP.HillClimbing3Opt;
 using Itinero.Optimization.Strategies;
 using Itinero.Optimization.Strategies.GA;
+using Itinero.Optimization.Strategies.Tools.Selectors;
 
 namespace Itinero.Optimization.Solvers.TSP.EAX
 {

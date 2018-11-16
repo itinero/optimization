@@ -23,6 +23,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Itinero.Logging;
 using Itinero.Optimization.Strategies.Random;
+using Itinero.Optimization.Strategies.Tools.Selectors;
 
 namespace Itinero.Optimization.Strategies.GA
 {
