@@ -59,8 +59,8 @@ namespace Itinero.Optimization.Solvers.TSP_D
         /// - A 'closed' TSP, when last = first.
         /// - A 'fixed' TSP, all other cases, when first != last and last != null.
         /// </summary>
-        /// <param name="first">The first visit.</param>
-        /// <param name="last">The last visit if any.</param>
+        /// <param name="first">The first undirected visit.</param>
+        /// <param name="last">The last undirected visit if any.</param>
         /// <param name="weights">The weights matrix.</param>
         /// <param name="turnPenalty">The turn penalty.</param>
         /// <param name="visits">The possible visits, all visits are possible if null.</param>
@@ -92,8 +92,8 @@ namespace Itinero.Optimization.Solvers.TSP_D
                 }));
             _closedEquivalent = new Lazy<TSPDProblem>(() => 
                 new TSPDProblem(this, true));
-            _undirectedEquivalentLazy = new Lazy<TSProblem>(() => new TSProblem(DirectedHelper.ExtractVisit(this.First), DirectedHelper.ExtractVisit(_last), 
-                _weights.ConvertToUndirected(), DirectedHelper.ExtractVisits(_visits)));
+            _undirectedEquivalentLazy = new Lazy<TSProblem>(() => new TSProblem(this.First, _last, 
+                _weights.ConvertToUndirected(), _visits));
 
             if (visits != null)
             {

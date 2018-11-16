@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
 using Itinero.Optimization.Solvers.Tours;
@@ -161,6 +162,7 @@ namespace Itinero.Optimization.Solvers.Shared.CheapestInsertion
                         { // only use nearest neighbours, if that fails, try all visits.
                             return best;
                         }
+                        return best;
                     }
 
                     foreach (var visit in visits)
@@ -202,6 +204,7 @@ namespace Itinero.Optimization.Solvers.Shared.CheapestInsertion
                         { // only use nearest neighbours, if that fails, try all visits.
                             return best;
                         }
+                        return best;
                     }
 
                     foreach (var visit in visits)
@@ -246,13 +249,36 @@ namespace Itinero.Optimization.Solvers.Shared.CheapestInsertion
                     { // only use nearest neighbours, if that fails, try all visits.
                         return best;
                     }
+
+                    foreach (var pair in tour.Pairs())
+                    {
+                        var neighbours = nearestNeighbours[pair.To];
+                        var pairWeight = weightFunc(pair.From, pair.To);
+                        foreach (var visit in neighbours)
+                        {
+                            if (!visits.Contains(visit)) continue;
+                            var cost = weightFunc(pair.From, visit) +
+                                   weightFunc(visit, pair.To) -
+                                   pairWeight;
+                            if ((!(canPlace?.Invoke(cost, visit) ?? true))) continue;
+
+                            cost += (insertionCostHeuristic?.Invoke(visit) ?? 0);
+                            if (cost < best.cost)
+                            {
+                                best = (cost, pair, visit);
+                            }
+                        }
+                    }
+
+                    return best;
                 }
 
-                foreach (var pair in tour.Pairs())
+                var pairs = tour.Pairs().ToList();
+                foreach (var visit in visits)
                 {
-                    var pairWeight = weightFunc(pair.From, pair.To);
-                    foreach (var visit in visits)
+                    foreach (var pair in pairs)
                     {
+                        var pairWeight = weightFunc(pair.From, pair.To);
                         var cost = weightFunc(pair.From, visit) +
                                weightFunc(visit, pair.To) -
                                pairWeight;
