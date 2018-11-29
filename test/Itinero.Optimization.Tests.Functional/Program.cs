@@ -39,11 +39,11 @@ namespace Itinero.Optimization.Tests.Functional
 #endif
             // invoke case-specific tests.
             //TSP.TSPTests.Run();
-            TSP_D.TSPDTests.Run();
+            //TSP_D.TSPDTests.Run();
             //TSP_TW.TSPTWTests.Run();
             ////STSP.STSPTests.Run();
             //CVRP.CVRPTests.Run();
-            //CVRP_ND.CVRPNDTests.Run();
+            CVRP_ND.CVRPNDTests.Run();
         }
 
         public static bool DoIntermediates { get; set; } = false;
