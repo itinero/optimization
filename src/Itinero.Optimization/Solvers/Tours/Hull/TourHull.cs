@@ -16,15 +16,23 @@
  *  limitations under the License.
  */
 
+using System.Collections.Generic;
 using Itinero.LocalGeo;
 
 namespace Itinero.Optimization.Solvers.Tours.Hull
 {
     public class TourHull
     {
+        private readonly List<(Coordinate location, int visit)> _locations =
+            new List<(Coordinate location, int visit)>();
+        
         public void Add((Coordinate location, int visit) p)
         {
-            
+            _locations.Add(p);
         }
+
+        public int Count => _locations.Count;
+
+        public (Coordinate location, int visit) this[int i] => _locations[i];
     }
 }

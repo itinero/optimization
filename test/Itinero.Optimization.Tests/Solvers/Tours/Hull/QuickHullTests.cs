@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Itinero.LocalGeo;
+using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Solvers.Tours.Hull;
 using Xunit;
 
@@ -109,27 +110,27 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
 
             var result = locations.Partition((1, locations.Count - 2));
             var distance1 = QuickHull.PositionToLine(locations[0].location, locations[locations.Count - 1].location,
-                locations[result.farthest1].location).distance;
+                locations[result.partition1.farthest].location).distance;
             var distance2 = QuickHull.PositionToLine(locations[0].location, locations[locations.Count - 1].location,
-                locations[result.farthest2].location).distance;
-            for (var i = 1; i < result.partition; i++)
+                locations[result.partition2.farthest].location).distance;
+            for (var i = result.partition1.start; i < result.partition1.start + result.partition1.length; i++)
             {
                 var position = QuickHull.PositionToLine(locations[0].location, locations[locations.Count - 1].location,
                     locations[i].location);
                 Assert.True(position.left, $"Location at {i} not to the left, {result} incorrect.");
-                if (i != result.farthest1) Assert.True(position.distance <= distance1);
+                Assert.True(position.distance <= distance1);
             }
-            for (var i = result.partition; i < locations.Count - 2; i++)
+            for (var i = result.partition2.start; i < result.partition2.start + result.partition2.length; i++)
             {
                 var position = QuickHull.PositionToLine(locations[0].location, locations[locations.Count - 1].location,
                     locations[i].location);
                 Assert.False(position.left, $"Location at {i} not to the right, {result} incorrect.");
-                if (i != result.farthest2) Assert.True(position.distance <= distance2);
+                Assert.True(position.distance <= distance2);
             }
         }
 
         [Fact]
-        public void QuickHullPartition_ShouldPartitionWithFarthest()
+        public void QuickHullPartition_ShouldBuildConvexHull()
         {
             var rawLocations = new [,]
             {
@@ -210,26 +211,15 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
                     51.26153888489712
                 }
             };
-            var locations = new List<(Coordinate location, int visit)>();
-            for (var i = 0; i < rawLocations.GetLength(0); i++)
-            {
-                locations.Add((new Coordinate((float)rawLocations[i, 1], (float)rawLocations[i, 0]), 0));
-            }
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
 
-            var result = locations.Partition((1, locations.Count - 2));
-
-            var t = locations[result.farthest1];
-            locations[result.farthest1] = locations[result.partition];
-            locations[result.partition] = t;
-            
-            var recursiveResult = locations.Partition((1, result.partition - 1), 0, locations.Count - 1, result.partition);
-            var partition1 = recursiveResult.partition1;
-            Assert.Equal(1, partition1.start);
-            Assert.Equal(3, partition1.length);
-            var partition2 = recursiveResult.partition2;
-            Assert.Equal(result.partition, partition2.start);
-            Assert.Equal(0, partition2.length);
-            Assert.Equal(result.partition, partition2.farthest);
+            var result = tour.ConvexHull((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
+            Assert.Equal(5, result.Count);
+            Assert.Equal(0, result[0].visit);
+            Assert.Equal(8, result[1].visit);
+            Assert.Equal(16, result[2].visit);
+            Assert.Equal(18, result[3].visit);
+            Assert.Equal(10, result[4].visit);
         }
 
         [Fact]

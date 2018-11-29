@@ -70,65 +70,31 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                     right = locations.Count - 1;
                 }
             }
+            
+            // move left to first and right to last.
+            var t = locations[left];
+            locations[left] = locations[0];
+            locations[0] = t;
+            t = locations[right];
+            locations[right] = locations[locations.Count - 1];
+            locations[locations.Count - 1] = t;
 
             // divide in two partitions.
-            var partition = locations.Partition((1, locations.Count - 2));
+            var a = 0;
+            var b = locations.Count - 1;
+            var partitions = locations.Partition((1, locations.Count - 2));
             
-            // remove inside triangle bits.
-            
+            // create the hull.
+            var hull = new TourHull();
+            hull.Add(locations[a]); // add the left location.
+            hull.AddForPartition(locations, (partitions.partition1.start, partitions.partition1.length), a, b, partitions.partition1.farthest); // do the top half.
+            hull.Add(locations[b]); // add the right location.
+            hull.AddForPartition(locations, (partitions.partition2.start, partitions.partition2.length), b, a, partitions.partition2.farthest); // do the bottom half.
 
-//            // move left to first and right to last.
-//            var t = locations[left];
-//            locations[left] = locations[0];
-//            locations[0] = t;
-//            t = locations[right];
-//            locations[right] = locations[locations.Count - 1];
-//            locations[locations.Count - 1] = t;
-//
-//            // partition into two along the left->right line.
-//            var partition = locations.Partition((1, locations.Count - 2));
-//            var partitionLeftSize = partition - 1;
-//            var partitionRightSize = locations.Count - 1 - partition;
-//            
-//            // create the hull.
-//            var hull = new TourHull();
-//            hull.Add(locations[0]); // add the left location.
-//            BuildHull(hull, locations, );
-            return null;
+            return hull;
         }
-//
-//        internal static (int start, int length) RemoveInner(this List<(Coordinate location, int visit)> locations,
-//            (int start, int length) partition, Coordinate a, Coordinate b, Coordinate c)
-//        {
-//            var length = partition.length;
-//            for (var i = partition.start; i < partition.start + length; i++)
-//            {
-//                var p = locations[i].location;
-//                if (LeftOfLine(a, b, p) && LeftOfLine(b, c, p) && LeftOfLine(c, a, p)) continue;
-//                
-//                // left of all the lines: element of the triangle -> we remove it
-//                locations.RemoveAt(i);
-//                i--; // a location was removed at i.
-//                length--;
-//            }
-//        }
-//
-//        internal static void BuildHull(this TourHull hull, List<(Coordinate location, int visit)> locations,
-//            (int start, int length) partition, Coordinate a, Coordinate b)
-//        {
-//            if (partition.length == 0) return;
-//            if (partition.length == 1)
-//            {
-//                hull.Add(locations[partition.start]);
-//                return;
-//            }
-//            
-//            // partition recursively.
-//            var c = locations[max].location;
-//            var middle = locations.Partition(partition, a, c);
-//        }
 
-        internal static (int partition, int farthest1, int farthest2) Partition(this List<(Coordinate location, int visit)> locations,
+        internal static ((int start, int length, int farthest) partition1, (int start, int length, int farthest) partition2) Partition(this List<(Coordinate location, int visit)> locations,
             (int start, int length) partition)
         {
             var a = locations[partition.start - 1].location;
@@ -210,16 +176,37 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                 rightPointer++;
             }
 
-            return (partition.start + leftPointer, maxLeft, maxRight);
+            (int start, int length, int farthest) partition1 = (partition.start, leftPointer, maxLeft);
+            if (partition1.length > 1)
+            {
+                var t = locations[partition1.start + partition1.length - 1];
+                locations[partition1.start + partition1.length - 1] = locations[partition1.farthest];
+                locations[partition1.farthest] = t;
+                
+                partition1 = (partition1.start, partition1.length - 1, partition1.start + partition1.length - 1);
+            }
+            
+            (int start, int length, int farthest) partition2 = (partition.start + leftPointer, rightPointer, maxRight);
+            if (partition2.length > 1)
+            {
+                var t = locations[partition2.start + partition2.length - 1];
+                locations[partition2.start + partition2.length - 1] = locations[partition2.farthest];
+                locations[partition2.farthest] = t;
+                
+                partition2 = (partition2.start, partition2.length - 1, partition2.start + partition2.length - 1);
+            }
+
+            return (partition1, partition2);
         }
 
-        internal static ((int start, int length, int farthest) partition1, (int start, int length, int farthest) partition2) Partition(this List<(Coordinate location, int visit)> locations,
-            (int start, int length) partition, int a, int b, int farthest)
+        internal static void AddForPartition(this TourHull tourHull,
+            List<(Coordinate location, int visit)> locations, (int start, int length) partition, int a, int b,
+            int farthest)
         {
             var aL = locations[a].location;
             var bL = locations[b].location;
             var c = locations[farthest].location;
-            
+
             var aPointer = partition.start;
             var bPointer = partition.start + partition.length - 1;
             var aDistance = float.MinValue;
@@ -231,7 +218,8 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                 var location = locations[i].location;
                 var position = QuickHull.PositionToLine(aL, c, location);
                 if (position.left)
-                { // to the left of a->c is always include.
+                {
+                    // to the left of a->c is always include.
                     var t = locations[i];
                     locations[i] = locations[aPointer];
                     locations[aPointer] = t;
@@ -241,14 +229,15 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                         aFarthest = aPointer;
                         aDistance = position.distance;
                     }
-                    
+
                     aPointer++;
                     continue;
                 }
 
                 position = QuickHull.PositionToLine(c, bL, location);
                 if (position.left)
-                { // to the left of c->b is always include.
+                {
+                    // to the left of c->b is always include.
                     var t = locations[i];
                     locations[i] = locations[bPointer];
                     locations[bPointer] = t;
@@ -258,20 +247,51 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                         bFarthest = bPointer;
                         bDistance = position.distance;
                     }
-                    
+
                     bPointer--;
                     continue;
                 }
             }
-            
+
             // no need to remove anything, we just ignore these.
             // locations.RemoveRange(partition.start + aPointer, partition.length - aPointer - bPointer);
-            
-            var partition1 = (partition.start, aPointer - partition.start, partition.start + aFarthest);
-            var partition2 = (partition.start + bPointer, partition.length - bPointer , partition.start + partition.length - bFarthest - 1);
-            return (partition1, partition2);
+
+            (int start, int length, int farthest) partition1 = (partition.start, aPointer - partition.start, aFarthest);
+            (int start, int length, int farthest) partition2 = (partition.start + bPointer, partition.start + partition.length - bPointer - 1,
+                bFarthest);
+
+            if (partition1.length > 1)
+            {
+                // if partition 1 is not empty partition it first.
+                var t = locations[partition1.start + partition1.length - 1];
+                locations[partition1.start + partition1.length - 1] = locations[partition1.farthest];
+                locations[partition1.farthest] = t;
+
+                partition1 = (partition1.start, partition1.length - 1, partition1.start + partition1.length - 1);
+
+                // call recursively.
+                tourHull.AddForPartition(locations, (partition1.start, partition1.length), partition.start - 1,
+                    partition.start + partition.length, partition1.start + partition1.length);
+            }
+
+            tourHull.Add(locations[farthest]); // add farthest.
+
+            if (partition2.length > 1)
+            {
+                // if partition 2 is not empty partition it now.
+                var t = locations[partition2.start + partition2.length - 1];
+                locations[partition2.start + partition2.length - 1] = locations[partition2.farthest];
+                locations[partition2.farthest] = t;
+
+                partition2 = (partition2.start, partition2.length - 1, partition2.start + partition2.length - 1);
+
+                // call recursively.
+                tourHull.AddForPartition(locations, (partition2.start, partition2.length),
+                    partition.start + partition.length,
+                    partition.start - 1, partition2.start + partition2.length);
+            }
         }
-        
+
         internal static (bool left, float distance) PositionToLine(Coordinate a, Coordinate b, Coordinate p)
         {
             var ax = a.Longitude;
