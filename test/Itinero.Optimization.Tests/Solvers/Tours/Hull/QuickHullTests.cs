@@ -10,14 +10,58 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
 {
     public class QuickHullTests
     {
-        public void QuickHullPartition_ShouldPartitionEmpty()
+        [Fact]
+        public void QuickHull_PositionToLineShouldReturnTrueWhenLeft()
         {
-            
+            var rawLocations = new [,]
+            {
+                {
+                    4.769268035888672,
+                    51.26460025070665
+                },
+                {
+                    4.792957305908203,
+                    51.26766141261736
+                },
+                {
+                    4.808921813964844,
+                    51.26153888489712
+                }
+            };
+            var locations = new List<(Coordinate location, int visit)>();
+            for (var i = 0; i < rawLocations.GetLength(0); i++)
+            {
+                locations.Add((new Coordinate((float)rawLocations[i, 1], (float)rawLocations[i, 0]), 0));
+            }
+            var result = QuickHull.PositionToLine(locations[0].location, locations[2].location, locations[1].location);
+            Assert.True(result.left);
         }
 
-        public void QuickHullPartition_ShouldPartitionOne()
+        [Fact]
+        public void QuickHull_PositionToLineShouldReturnFalseWhenRight()
         {
-            
+            var rawLocations = new [,]
+            {
+                {
+                    4.769268035888672,
+                    51.26460025070665
+                },
+                {
+                    4.784631729125977,
+                    51.25681216534918
+                },
+                {
+                    4.808921813964844,
+                    51.26153888489712
+                }
+            };
+            var locations = new List<(Coordinate location, int visit)>();
+            for (var i = 0; i < rawLocations.GetLength(0); i++)
+            {
+                locations.Add((new Coordinate((float)rawLocations[i, 1], (float)rawLocations[i, 0]), 0));
+            }
+            var result = QuickHull.PositionToLine(locations[0].location, locations[2].location, locations[1].location);
+            Assert.False(result.left);
         }
 
         [Fact]
@@ -130,7 +174,7 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
         }
 
         [Fact]
-        public void QuickHullPartition_ShouldBuildConvexHull()
+        public void QuickHullPartition_ShouldBuildConvexHull1()
         {
             var rawLocations = new [,]
             {
@@ -214,66 +258,110 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
             var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
 
             var result = tour.ConvexHull((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
-            Assert.Equal(5, result.Count);
+            Assert.Equal(6, result.Count);
             Assert.Equal(0, result[0].visit);
             Assert.Equal(8, result[1].visit);
             Assert.Equal(16, result[2].visit);
             Assert.Equal(18, result[3].visit);
-            Assert.Equal(10, result[4].visit);
+            Assert.Equal(11, result[4].visit);
+            Assert.Equal(10, result[5].visit);
         }
 
         [Fact]
-        public void QuickHull_PositionToLineShouldReturnTrueWhenLeft()
+        public void QuickHullPartition_ShouldBuildConvexHull2()
         {
-            var rawLocations = new [,]
+            var rawLocations = new[,]
             {
                 {
-                    4.769268035888672,
-                    51.26460025070665
+                    3.7105894088745117,
+                    51.06440502028951
                 },
                 {
-                    4.792957305908203,
-                    51.26766141261736
+                    3.718442916870117,
+                    51.05976594881228
                 },
                 {
-                    4.808921813964844,
-                    51.26153888489712
+                    3.7393856048583984,
+                    51.05836334731389
+                },
+                {
+                    3.7316608428955074,
+                    51.066697413052474
+                },
+                {
+                    3.7187862396240234,
+                    51.06815369771887
+                },
+                {
+                    3.723635673522949,
+                    51.04603481029628
+                },
+                {
+                    3.7147521972656254,
+                    51.05830940025386
+                },
+                {
+                    3.6995172500610347,
+                    51.064809568438314
+                },
+                {
+                    3.7061691284179688,
+                    51.02563291294353
+                },
+                {
+                    3.7624740600585933,
+                    51.0107306152741
+                },
+                {
+                    3.77105712890625,
+                    51.062975588514966
+                },
+                {
+                    3.7078857421874996,
+                    51.08325320780629
+                },
+                {
+                    3.6642837524414062,
+                    51.06427017012091
+                },
+                {
+                    3.7168121337890625,
+                    51.042904943831246
+                },
+                {
+                    3.7432479858398438,
+                    51.04743778523849
+                },
+                {
+                    3.7054824829101567,
+                    51.07052680418648
+                },
+                {
+                    3.69140625,
+                    51.044415940251206
+                },
+                {
+                    3.7034225463867183,
+                    51.03858753963084
+                },
+                {
+                    3.7446212768554688,
+                    51.0191542415962
+                },
+                {
+                    3.6127853393554683,
+                    51.003817779005814
                 }
             };
-            var locations = new List<(Coordinate location, int visit)>();
-            for (var i = 0; i < rawLocations.GetLength(0); i++)
-            {
-                locations.Add((new Coordinate((float)rawLocations[i, 1], (float)rawLocations[i, 0]), 0));
-            }
-            var result = QuickHull.PositionToLine(locations[0].location, locations[2].location, locations[1].location);
-            Assert.True(result.left);
-        }
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
 
-        [Fact]
-        public void QuickHull_PositionToLineShouldReturnFalseWhenRight()
-        {
-            var rawLocations = new [,]
-            {
-                {
-                    4.769268035888672,
-                    51.26460025070665
-                },
-                {
-                    4.784631729125977,
-                    51.25681216534918
-                },
-                {
-                    4.808921813964844,
-                    51.26153888489712
-                }
-            };
-            var locations = new List<(Coordinate location, int visit)>();
-            for (var i = 0; i < rawLocations.GetLength(0); i++)
-            {
-                locations.Add((new Coordinate((float)rawLocations[i, 1], (float)rawLocations[i, 0]), 0));
-            }
-            var result = QuickHull.PositionToLine(locations[0].location, locations[2].location, locations[1].location);
-            Assert.False(result.left);
+            var result = tour.ConvexHull((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
+            Assert.Equal(5, result.Count);
+            Assert.Equal(19, result[0].visit);
+            Assert.Equal(12, result[1].visit);
+            Assert.Equal(11, result[2].visit);
+            Assert.Equal(10, result[3].visit);
+            Assert.Equal(9, result[4].visit);
         }
     }
 }

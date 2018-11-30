@@ -177,7 +177,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             }
 
             (int start, int length, int farthest) partition1 = (partition.start, leftPointer, maxLeft);
-            if (partition1.length > 1)
+            if (partition1.length > 0)
             {
                 var t = locations[partition1.start + partition1.length - 1];
                 locations[partition1.start + partition1.length - 1] = locations[partition1.farthest];
@@ -187,7 +187,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             }
             
             (int start, int length, int farthest) partition2 = (partition.start + leftPointer, rightPointer, maxRight);
-            if (partition2.length > 1)
+            if (partition2.length > 0)
             {
                 var t = locations[partition2.start + partition2.length - 1];
                 locations[partition2.start + partition2.length - 1] = locations[partition2.farthest];
@@ -260,7 +260,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             (int start, int length, int farthest) partition2 = (partition.start + bPointer, partition.start + partition.length - bPointer - 1,
                 bFarthest);
 
-            if (partition1.length > 1)
+            if (partition1.length > 0)
             {
                 // if partition 1 is not empty partition it first.
                 var t = locations[partition1.start + partition1.length - 1];
@@ -273,10 +273,9 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                 tourHull.AddForPartition(locations, (partition1.start, partition1.length), partition.start - 1,
                     partition.start + partition.length, partition1.start + partition1.length);
             }
-
             tourHull.Add(locations[farthest]); // add farthest.
 
-            if (partition2.length > 1)
+            if (partition2.length > 0)
             {
                 // if partition 2 is not empty partition it now.
                 var t = locations[partition2.start + partition2.length - 1];
@@ -294,17 +293,17 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
 
         internal static (bool left, float distance) PositionToLine(Coordinate a, Coordinate b, Coordinate p)
         {
-            var ax = a.Longitude;
-            var ay = a.Latitude;
+            double ax = a.Longitude;
+            double ay = a.Latitude;
 
-            var bx = b.Longitude;
-            var by = b.Latitude;
+            double bx = b.Longitude;
+            double by = b.Latitude;
 
-            var x = p.Longitude;
-            var y = p.Latitude;
+            double x = p.Longitude;
+            double y = p.Latitude;
             var d = Math.Abs((by - ay) * x - (bx - ax) * y + bx * ay - by * ax);
             var position = (bx - ax) * (y - ay) - (by - ay) * (x - ax);
-            return (position > 0, d);
+            return (position > 0, (float)d);
         }
     }
 }
