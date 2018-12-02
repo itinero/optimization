@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Itinero.LocalGeo;
+using Itinero.LocalGeo.IO;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Solvers.Tours.Hull;
 using Xunit;
@@ -175,7 +176,7 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
 
         [Fact]
         public void QuickHullPartition_ShouldBuildConvexHull1()
-        {
+        { // based on quickhull-test1 data.
             var rawLocations = new [,]
             {
                 {
@@ -269,7 +270,7 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
 
         [Fact]
         public void QuickHullPartition_ShouldBuildConvexHull2()
-        {
+        { // based on quickhull-test2 data.
             var rawLocations = new[,]
             {
                 {
@@ -356,12 +357,193 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
             var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
 
             var result = tour.ConvexHull((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
+            var geoJson = result.ToPolygon().ToGeoJson();
             Assert.Equal(5, result.Count);
             Assert.Equal(19, result[0].visit);
             Assert.Equal(12, result[1].visit);
             Assert.Equal(11, result[2].visit);
             Assert.Equal(10, result[3].visit);
             Assert.Equal(9, result[4].visit);
+        }
+
+        [Fact]
+        public void QuickHullPartition_ShouldUpdateConvexHullWhenOutsideRemove1()
+        {
+            // based on quickhull-test3 data.
+            var rawLocations = new[,]
+            {
+                {
+                    3.6127853393554683,
+                    51.00403382073359
+                },
+                {
+                    3.663597106933594,
+                    51.06427017012091
+                },
+                {
+                    3.707714080810547,
+                    51.0834688793963
+                },
+                {
+                    3.7705421447753906,
+                    51.06319135463012
+                },
+                {
+                    3.7623023986816406,
+                    51.010838620166446
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+
+            var outsideLocation = (new Coordinate(51.083684549980795f, 3.63321304321289f), rawLocations.GetLength(0));
+            Assert.True(hull.UpdateHull(outsideLocation));
+            var geoJson = hull.ToPolygon().ToGeoJson();
+            Assert.Equal(5, hull.Count);
+            Assert.Equal(0, hull[0].visit);
+            Assert.Equal(5, hull[1].visit);
+            Assert.Equal(2, hull[2].visit);
+            Assert.Equal(3, hull[3].visit);
+            Assert.Equal(4, hull[4].visit);
+        }
+
+        [Fact]
+        public void QuickHullPartition_ShouldUpdateConvexHullWhenOutsideRemove2()
+        {
+            // based on quickhull-test3 data.
+            var rawLocations = new[,]
+            {
+                {
+                    3.6127853393554683,
+                    51.00403382073359
+                },
+                {
+                    3.663597106933594,
+                    51.06427017012091
+                },
+                {
+                    3.707714080810547,
+                    51.0834688793963
+                },
+                {
+                    3.7705421447753906,
+                    51.06319135463012
+                },
+                {
+                    3.7623023986816406,
+                    51.010838620166446
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+
+            var outsideLocation = (new Coordinate(51.11214424141388f, 3.668060302734375f), rawLocations.GetLength(0));
+            Assert.True(hull.UpdateHull(outsideLocation));
+            var geoJson = hull.ToPolygon().ToGeoJson();
+            Assert.Equal(5, hull.Count);
+            Assert.Equal(0, hull[0].visit);
+            Assert.Equal(5, hull[1].visit);
+            Assert.Equal(2, hull[2].visit);
+            Assert.Equal(3, hull[3].visit);
+            Assert.Equal(4, hull[4].visit);
+        }
+
+        [Fact]
+        public void QuickHullPartition_ShouldUpdateConvexHullWhenRemovingFirstLocation()
+        {
+            // based on quickhull-test3 data.
+            var rawLocations = new[,]
+            {
+                {
+                    3.6127853393554683,
+                    51.00403382073359
+                },
+                {
+                    3.663597106933594,
+                    51.06427017012091
+                },
+                {
+                    3.707714080810547,
+                    51.0834688793963
+                },
+                {
+                    3.7705421447753906,
+                    51.06319135463012
+                },
+                {
+                    3.7623023986816406,
+                    51.010838620166446
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+            
+            var outsideLocation = (new Coordinate(50.994094859909154f, 3.573989868164062f), rawLocations.GetLength(0));
+            Assert.True(hull.UpdateHull(outsideLocation));
+            var geoJson = hull.ToPolygon().ToGeoJson();
+            Assert.Equal(5, hull.Count);
+            Assert.Equal(5, hull[0].visit);
+            Assert.Equal(1, hull[1].visit);
+            Assert.Equal(2, hull[2].visit);
+            Assert.Equal(3, hull[3].visit);
+            Assert.Equal(4, hull[4].visit);
+        }
+
+        [Fact]
+        public void QuickHullPartition_ShouldUpdateConvexHullWhenRemovingLastLocations()
+        {
+            // based on quickhull-test3 data.
+            var rawLocations = new[,]
+            {
+                {
+                    3.6127853393554683,
+                    51.00403382073359
+                },
+                {
+                    3.663597106933594,
+                    51.06427017012091
+                },
+                {
+                    3.707714080810547,
+                    51.0834688793963
+                },
+                {
+                    3.7705421447753906,
+                    51.06319135463012
+                },
+                {
+                    3.7623023986816406,
+                    51.010838620166446
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+            
+            var outsideLocation = (new Coordinate(50.99279831675386f, 3.7865066528320312f), rawLocations.GetLength(0));
+            Assert.True(hull.UpdateHull(outsideLocation));
+            var geoJson = hull.ToPolygon().ToGeoJson();
+            Assert.Equal(5, hull.Count);
+            Assert.Equal(0, hull[0].visit);
+            Assert.Equal(1, hull[1].visit);
+            Assert.Equal(2, hull[2].visit);
+            Assert.Equal(3, hull[3].visit);
+            Assert.Equal(5, hull[4].visit);
         }
     }
 }

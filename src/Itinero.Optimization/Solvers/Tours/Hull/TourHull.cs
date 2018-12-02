@@ -25,14 +25,44 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
     {
         private readonly List<(Coordinate location, int visit)> _locations =
             new List<(Coordinate location, int visit)>();
+
+        private float? _surface;
         
         public void Add((Coordinate location, int visit) p)
         {
             _locations.Add(p);
         }
 
+        public void Insert(int index, (Coordinate location, int visit) p)
+        {
+            _locations.Insert(index, p);
+        }
+
+        public void RemoveRange(int index, int count)
+        {
+            _locations.RemoveRange(index, count);
+        }
+
         public int Count => _locations.Count;
 
+        public float? Surface
+        {
+            get
+            {
+                if (!_surface.HasValue)
+                {
+                    _surface = this.CalculateSurface();
+                }
+
+                return _surface.Value;
+            }
+        }
+
         public (Coordinate location, int visit) this[int i] => _locations[i];
+
+        private float CalculateSurface()
+        {
+            return 0;
+        }
     }
 }

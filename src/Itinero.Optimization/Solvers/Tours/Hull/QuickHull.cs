@@ -94,6 +94,98 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             return hull;
         }
 
+        /// <summary>
+        /// Updates the hull with the given location.
+        /// </summary>
+        /// <param name="hull">The hull.</param>
+        /// <param name="location">The location.</param>
+        /// <returns>True if the hull was update, false otherwise.</returns>
+        public static bool UpdateHull(this TourHull hull, (Coordinate location, int visit) location)
+        {
+            if (hull.Count < 1)
+            {
+                hull.Add(location);
+                return true;
+            }
+
+            var lower = 0;
+            var count = 0;
+
+            var location1 = hull[0].location;
+            var location2 = hull[1].location;
+            var position = QuickHull.PositionToLine(location1, location2, location.location);
+            var left = false;
+            if (position.left)
+            {
+                left = true;
+                
+                // first segment on the left, investigate lower segments.
+                count = 1;
+
+                for (var i = 0; i < hull.Count; i++)
+                {
+                    location1 = hull[(hull.Count - i - 1) % hull.Count].location;
+                    location2 = hull[(hull.Count - i - 0) % hull.Count].location;
+                    position = QuickHull.PositionToLine(location1, location2, location.location);
+                    if (!position.left) break;
+                    lower--;
+                    count++;
+                }
+            }
+
+            // investigate higher segments.
+            for (var i = 2; i < hull.Count + 1; i++)
+            {
+                location1 = hull[i - 1].location;
+                location2 = hull[(i - 0) % hull.Count].location;
+                position = QuickHull.PositionToLine(location1, location2, location.location);
+                if (!position.left)
+                {
+                    if (left)
+                    {
+                        left = false;
+                        break;
+                    }
+                }
+                else
+                {
+                    if (!left) lower = i - 1;
+                    count++;
+                    left = true;
+                }
+            }
+
+            // remove if anything to remove.
+            if (count == 0)
+            {
+                return false;
+            }
+
+            // remove whatever needs removing.
+            var insertPosition = lower + 1;
+            if (count > 1)
+            {
+                if (lower < -1)
+                {
+                    hull.RemoveRange(hull.Count + lower - 1, -lower + 1);
+                    count += lower;
+                }
+
+                hull.RemoveRange(lower + 1, count - 1);
+            }
+
+            // insert location.
+            if (insertPosition >= 0)
+            {
+                hull.Insert(insertPosition, location);
+            }
+            else
+            {
+                hull.Add(location);
+            }
+            return true;
+        }
+
         internal static ((int start, int length, int farthest) partition1, (int start, int length, int farthest) partition2) Partition(this List<(Coordinate location, int visit)> locations,
             (int start, int length) partition)
         {
