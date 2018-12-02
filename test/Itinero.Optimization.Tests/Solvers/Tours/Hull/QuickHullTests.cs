@@ -448,12 +448,11 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
             var outsideLocation = (new Coordinate(51.11214424141388f, 3.668060302734375f), rawLocations.GetLength(0));
             Assert.True(hull.UpdateHull(outsideLocation));
             var geoJson = hull.ToPolygon().ToGeoJson();
-            Assert.Equal(5, hull.Count);
+            Assert.Equal(4, hull.Count);
             Assert.Equal(0, hull[0].visit);
             Assert.Equal(5, hull[1].visit);
-            Assert.Equal(2, hull[2].visit);
-            Assert.Equal(3, hull[3].visit);
-            Assert.Equal(4, hull[4].visit);
+            Assert.Equal(3, hull[2].visit);
+            Assert.Equal(4, hull[3].visit);
         }
 
         [Fact]
