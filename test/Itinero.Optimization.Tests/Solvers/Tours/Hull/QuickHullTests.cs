@@ -406,6 +406,63 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
         }
 
         [Fact]
+        public void QuickHullPartition_ShouldBuildConvexHull3()
+        {
+            // based on quickhull-test5 data.
+            var rawLocations = new[,]
+            {
+                {
+                    4.344124,
+                    51.83203
+                },
+                {
+                    4.341613,
+                    51.83187
+                },
+                {
+                    4.341636,
+                    51.83261
+                },
+                {
+                    4.340333,
+                    51.83325
+                },
+                {
+                    4.338998,
+                    51.8319
+                },
+                {
+                    4.33851,
+                    51.82996
+                },
+                {
+                    4.338156,
+                    51.83088
+                },
+                {
+                    4.338167,
+                    51.83089
+                },
+                {
+                    4.336222,
+                    51.83364
+                },
+                {
+                    4.337722,
+                    51.83294
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+
+            var result = tour.ConvexHull((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
+            Assert.Equal(4, result.Count);
+            Assert.Equal(8, result[0].visit);
+            Assert.Equal(3, result[1].visit);
+            Assert.Equal(0, result[2].visit);
+            Assert.Equal(5, result[3].visit);
+        }
+
+        [Fact]
         public void QuickHullPartition_ShouldUpdateConvexHullWhenOutsideRemove1()
         {
             // based on quickhull-test3 data.

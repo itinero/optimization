@@ -45,7 +45,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                 hull.Add((locationFunc(tour.First), tour.First));
                 return hull;
             }
-            
+
             // calculate most left and most right locations and build locations list.
             var locations = new List<(Coordinate location, int visit)>();
             float minLat = float.MaxValue, minLon = float.MaxValue, maxLat = float.MinValue, maxLon = float.MinValue;
@@ -78,11 +78,12 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                     right = locations.Count - 1;
                 }
             }
-            
+
             // move left to first and right to last.
             var t = locations[left];
             locations[left] = locations[0];
             locations[0] = t;
+            if (right == 0) right = left;
             t = locations[right];
             locations[right] = locations[locations.Count - 1];
             locations[locations.Count - 1] = t;
@@ -91,12 +92,14 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             var a = 0;
             var b = locations.Count - 1;
             var partitions = locations.Partition((1, locations.Count - 2));
-            
+
             // create the hull.
             hull.Add(locations[a]); // add the left location.
-            hull.AddForPartition(locations, (partitions.partition1.start, partitions.partition1.length), a, b, partitions.partition1.farthest); // do the top half.
+            hull.AddForPartition(locations, (partitions.partition1.start, partitions.partition1.length), a, b,
+                partitions.partition1.farthest); // do the top half.
             hull.Add(locations[b]); // add the right location.
-            hull.AddForPartition(locations, (partitions.partition2.start, partitions.partition2.length), b, a, partitions.partition2.farthest); // do the bottom half.
+            hull.AddForPartition(locations, (partitions.partition2.start, partitions.partition2.length), b, a,
+                partitions.partition2.farthest); // do the bottom half.
 
             return hull;
         }
@@ -358,7 +361,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             // locations.RemoveRange(partition.start + aPointer, partition.length - aPointer - bPointer);
 
             (int start, int length, int farthest) partition1 = (partition.start, aPointer - partition.start, aFarthest);
-            (int start, int length, int farthest) partition2 = (partition.start + bPointer, partition.start + partition.length - bPointer - 1,
+            (int start, int length, int farthest) partition2 = (bPointer, partition.start + partition.length - bPointer - 1,
                 bFarthest);
 
             if (partition1.length > 0)
