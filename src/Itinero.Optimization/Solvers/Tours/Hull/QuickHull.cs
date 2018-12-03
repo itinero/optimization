@@ -302,6 +302,8 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             List<(Coordinate location, int visit)> locations, (int start, int length) partition, int a, int b,
             int farthest)
         {
+            if (farthest < 0) return;
+            
             var aL = locations[a].location;
             var bL = locations[b].location;
             var c = locations[farthest].location;

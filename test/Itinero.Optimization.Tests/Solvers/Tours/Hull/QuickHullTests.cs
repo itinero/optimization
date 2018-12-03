@@ -192,6 +192,28 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
         }
 
         [Fact]
+        public void QuickHullPartition_ShouldBuildConvexHullWithTwoLocations()
+        { // based on quickhull-test1 data.
+            var rawLocations = new [,]
+            {
+                {
+                    4.769268035888672,
+                    51.26460025070665
+                },
+                {
+                    4.792957305908203,
+                    51.26766141261736
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+
+            var result = tour.ConvexHull((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
+            Assert.Equal(2, result.Count);
+            Assert.Equal(0, result[0].visit);
+            Assert.Equal(1, result[1].visit);
+        }
+
+        [Fact]
         public void QuickHullPartition_ShouldBuildConvexHull1()
         { // based on quickhull-test1 data.
             var rawLocations = new [,]
