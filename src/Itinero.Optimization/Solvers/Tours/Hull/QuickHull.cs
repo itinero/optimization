@@ -28,7 +28,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
     /// <summary>
     /// The quick hull algorithm.
     /// </summary>
-    internal static class QuickHull
+    public static class QuickHull
     {
         /// <summary>
         /// Calculates a convex hull.
@@ -38,6 +38,14 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
         /// <returns>A hull with meta-data.</returns>
         public static TourHull ConvexHull(this Tour tour, Func<int, Coordinate> locationFunc)
         {
+            var hull = new TourHull();
+            if (tour.Count == 0) return hull;
+            if (tour.Count == 1)
+            {
+                hull.Add((locationFunc(tour.First), tour.First));
+                return hull;
+            }
+            
             // calculate most left and most right locations and build locations list.
             var locations = new List<(Coordinate location, int visit)>();
             float minLat = float.MaxValue, minLon = float.MaxValue, maxLat = float.MinValue, maxLon = float.MinValue;
@@ -85,7 +93,6 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             var partitions = locations.Partition((1, locations.Count - 2));
             
             // create the hull.
-            var hull = new TourHull();
             hull.Add(locations[a]); // add the left location.
             hull.AddForPartition(locations, (partitions.partition1.start, partitions.partition1.length), a, b, partitions.partition1.farthest); // do the top half.
             hull.Add(locations[b]); // add the right location.

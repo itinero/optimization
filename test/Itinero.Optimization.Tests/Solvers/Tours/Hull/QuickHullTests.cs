@@ -173,6 +173,23 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
                 Assert.True(position.distance <= distance2);
             }
         }
+        
+        [Fact]
+        public void QuickHullPartition_ShouldBuildConvexHullWithOneLocation()
+        {
+            var rawLocations = new [,]
+            {
+                {
+                    4.769268035888672,
+                    51.26460025070665
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+
+            var result = tour.ConvexHull((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
+            Assert.Equal(1, result.Count);
+            Assert.Equal(0, result[0].visit);
+        }
 
         [Fact]
         public void QuickHullPartition_ShouldBuildConvexHull1()
