@@ -100,7 +100,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
         /// <param name="hull">The hull.</param>
         /// <param name="location">The location.</param>
         /// <returns>True if the hull was update, false otherwise.</returns>
-        public static bool UpdateHull(this TourHull hull, (Coordinate location, int visit) location)
+        internal static bool UpdateHull(this TourHull hull, (Coordinate location, int visit) location)
         {
             if (hull.Count < 1)
             {

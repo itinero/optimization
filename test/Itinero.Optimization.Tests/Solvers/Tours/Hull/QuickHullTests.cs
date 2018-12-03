@@ -544,5 +544,81 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
             Assert.Equal(3, hull[3].visit);
             Assert.Equal(5, hull[4].visit);
         }
+        
+        [Fact]
+        public void QuickHullPartition_BoxShouldBeTheExactBoundingBox()
+        {
+            // based on quickhull-test3 data.
+            var rawLocations = new[,]
+            {
+                {
+                    3.6127853393554683,
+                    51.00403382073359
+                },
+                {
+                    3.663597106933594,
+                    51.06427017012091
+                },
+                {
+                    3.707714080810547,
+                    51.0834688793963
+                },
+                {
+                    3.7705421447753906,
+                    51.06319135463012
+                },
+                {
+                    3.7623023986816406,
+                    51.010838620166446
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+
+            var box = hull.Box;
+            Assert.Equal(51.004033820733590f, box.MinLat);
+            Assert.Equal(51.083468879396300f, box.MaxLat);
+            Assert.Equal(3.6127853393554683f, box.MinLon);
+            Assert.Equal(3.7705421447753906f, box.MaxLon);
+        }
+
+        [Fact]
+        public void QuickHullPartition_ShouldCalculateSurface()
+        {
+            // based on quickhull-test4 data.
+            var rawLocations = new[,]
+            {
+                {
+                    4.0848541259765625,
+                    51.13110763758015
+                },
+                {
+                    4.2194366455078125,
+                    51.13110763758015
+                },
+                {
+                    4.2194366455078125,
+                    51.204732392637645
+                },
+                {
+                    4.0848541259765625,
+                    51.204732392637645
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+
+            var surface = hull.Surface;
+            var boxSurface = (hull.Box.MaxLat - hull.Box.MinLat) * (hull.Box.MaxLon - hull.Box.MinLon);
+            Assert.Equal(boxSurface, surface);
+        }
     }
 }
