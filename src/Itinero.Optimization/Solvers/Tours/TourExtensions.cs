@@ -18,6 +18,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
+using Itinero.IO.Json;
+using Itinero.LocalGeo;
 
 namespace Itinero.Optimization.Solvers.Tours
 {
@@ -37,9 +41,10 @@ namespace Itinero.Optimization.Solvers.Tours
             {
                 list.Add(enumerator.Current);
             }
+
             return list;
-        }        
-        
+        }
+
         /// <summary>
         /// Returns true if the given route is closed.
         /// </summary>
@@ -48,7 +53,7 @@ namespace Itinero.Optimization.Solvers.Tours
             return tour.Last.HasValue &&
                    tour.Last.Value == tour.First;
         }
-        
+
         /// <summary>
         /// Calculates the total weight.
         /// </summary>
@@ -82,7 +87,7 @@ namespace Itinero.Optimization.Solvers.Tours
 
             return weight;
         }
-        
+
         /// <summary>
         /// Calculates the total weight.
         /// </summary>
@@ -119,7 +124,7 @@ namespace Itinero.Optimization.Solvers.Tours
 
             return weight;
         }
-        
+
         /// <summary>
         /// Enumerates all visits starting at the given vist.
         /// </summary>
@@ -134,19 +139,127 @@ namespace Itinero.Optimization.Solvers.Tours
                     {
                         continue;
                     }
+
                     started = true;
                 }
 
                 yield return v;
             }
-            foreach(var v in tour)
+
+            foreach (var v in tour)
             {
                 if (v == visit)
                 {
                     break;
                 }
+
                 yield return v;
             }
+        }
+
+        /// <summary>
+        /// Returns a geojson linestring representing the given tour.
+        /// </summary>
+        /// <param name="tour">The tour.</param>
+        /// <param name="locationFunc">The location function.</param>
+        /// <param name="description">The description for the tour if any.</param>
+        /// <returns>A geojson feature collection with one linestring.</returns>
+        public static string ToGeoJson(this Tour tour, Func<int, Coordinate> locationFunc, string description = null)
+        {
+            var stringWriter = new StringWriter();
+            var jsonWriter = new JsonWriter(stringWriter);
+            jsonWriter.WriteOpen();
+            jsonWriter.WriteProperty("type", "FeatureCollection", true, false);
+            jsonWriter.WritePropertyName("features", false);
+            jsonWriter.WriteArrayOpen();
+
+            // write linestring.
+            if (tour.Count > 1)
+            {
+                jsonWriter.WriteOpen();
+                jsonWriter.WriteProperty("type", "Feature", true, false);
+                jsonWriter.WriteProperty("name", "ShapeMeta", true, false);
+                jsonWriter.WritePropertyName("geometry", false);
+
+                jsonWriter.WriteOpen();
+                jsonWriter.WriteProperty("type", "LineString", true, false);
+                jsonWriter.WritePropertyName("coordinates", false);
+                jsonWriter.WriteArrayOpen();
+
+                foreach (var visit in tour)
+                {
+                    var coordinate = locationFunc(visit);
+
+                    jsonWriter.WriteArrayOpen();
+                    jsonWriter.WriteArrayValue(coordinate.Longitude.ToInvariantString());
+                    jsonWriter.WriteArrayValue(coordinate.Latitude.ToInvariantString());
+                    if (coordinate.Elevation.HasValue)
+                    {
+                        jsonWriter.WriteArrayValue(coordinate.Elevation.Value.ToInvariantString());
+                    }
+
+                    jsonWriter.WriteArrayClose();
+                }
+
+                jsonWriter.WriteArrayClose();
+                jsonWriter.WriteClose();
+
+                jsonWriter.WritePropertyName("properties");
+                jsonWriter.WriteOpen();
+
+                if (description != null)
+                {
+                    jsonWriter.WriteProperty("tour", description, true, true);
+                }
+
+                jsonWriter.WriteClose();
+
+                jsonWriter.WriteClose();
+
+            }
+
+            // write points per visit.
+            foreach (var visit in tour)
+            {
+                var location = locationFunc(visit);
+
+                jsonWriter.WriteOpen();
+                jsonWriter.WriteProperty("type", "Feature", true, false);
+                jsonWriter.WritePropertyName("geometry", false);
+
+                jsonWriter.WriteOpen();
+                jsonWriter.WriteProperty("type", "Point", true, false);
+                jsonWriter.WritePropertyName("coordinates", false);
+                jsonWriter.WriteArrayOpen();
+                jsonWriter.WriteArrayValue(location.Longitude.ToInvariantString());
+                jsonWriter.WriteArrayValue(location.Latitude.ToInvariantString());
+                if (location.Elevation.HasValue)
+                {
+                    jsonWriter.WriteArrayValue(location.Elevation.Value.ToInvariantString());
+                }
+
+                jsonWriter.WriteArrayClose();
+                jsonWriter.WriteClose();
+
+                jsonWriter.WritePropertyName("properties");
+                jsonWriter.WriteOpen();
+
+                jsonWriter.WriteProperty("visit", visit.ToString(), false, false);
+                if (description != null)
+                {
+                    jsonWriter.WriteProperty("tour", description, true, true);
+                }
+
+                jsonWriter.WriteClose();
+
+                jsonWriter.WriteClose();
+            }
+
+            // write feature array close and feature collection close.
+            jsonWriter.WriteArrayClose();
+            jsonWriter.WriteClose();
+
+            return stringWriter.ToInvariantString();
         }
     }
 }
