@@ -23,6 +23,7 @@ using Itinero.LocalGeo;
 
 [assembly: InternalsVisibleTo("Itinero.Optimization.Tests")]
 [assembly: InternalsVisibleTo("Itinero.Optimization.Tests.Benchmarks")]
+[assembly: InternalsVisibleTo("Itinero.Optimization.Tests.Functional")]
 namespace Itinero.Optimization.Solvers.Tours.Hull
 {
     /// <summary>
@@ -211,7 +212,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             var maxRight = -1;
             while (leftPointer + rightPointer < partition.length)
             {
-                (bool left, float distance)? status = (false, float.MinValue);
+                (bool left, bool right, float distance)? status = (false, false, float.MinValue);
                 
                 // move left pointer until it encounters a right positioned location. 
                 while (leftPointer < partition.length)
@@ -317,7 +318,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             var bDistance = float.MinValue;
             var aFarthest = -1;
             var bFarthest = -1;
-            for (var i = partition.start; i < partition.start + partition.length; i++)
+            for (var i = partition.start; i <= bPointer; i++)
             {
                 var location = locations[i].location;
                 var position = QuickHull.PositionToLine(aL, c, location);
@@ -361,7 +362,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             // locations.RemoveRange(partition.start + aPointer, partition.length - aPointer - bPointer);
 
             (int start, int length, int farthest) partition1 = (partition.start, aPointer - partition.start, aFarthest);
-            (int start, int length, int farthest) partition2 = (bPointer, partition.start + partition.length - bPointer - 1,
+            (int start, int length, int farthest) partition2 = (bPointer + 1, partition.start + partition.length - bPointer - 1,
                 bFarthest);
 
             if (partition1.length > 0)
@@ -374,8 +375,8 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                 partition1 = (partition1.start, partition1.length - 1, partition1.start + partition1.length - 1);
 
                 // call recursively.
-                tourHull.AddForPartition(locations, (partition1.start, partition1.length), partition.start - 1,
-                    partition.start + partition.length, partition1.start + partition1.length);
+                tourHull.AddForPartition(locations, (partition1.start, partition1.length), a,
+                    farthest, partition1.start + partition1.length);
             }
             tourHull.Add(locations[farthest]); // add farthest.
 
@@ -390,12 +391,12 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
 
                 // call recursively.
                 tourHull.AddForPartition(locations, (partition2.start, partition2.length),
-                    partition.start + partition.length,
-                    partition.start - 1, partition2.start + partition2.length);
+                    farthest,
+                    b, partition2.start + partition2.length);
             }
         }
 
-        internal static (bool left, float distance) PositionToLine(Coordinate a, Coordinate b, Coordinate p)
+        internal static (bool left, bool right, float distance) PositionToLine(Coordinate a, Coordinate b, Coordinate p)
         {
             double ax = a.Longitude;
             double ay = a.Latitude;
@@ -406,8 +407,12 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             double x = p.Longitude;
             double y = p.Latitude;
             var d = Math.Abs((by - ay) * x - (bx - ax) * y + bx * ay - by * ax);
+            if (d < 1E-7)
+            {
+                return (false, false, 0);
+            }
             var position = (bx - ax) * (y - ay) - (by - ay) * (x - ax);
-            return (position > 0, (float)d);
+            return (position > 0, position < 0, (float)d);
         }
     }
 }

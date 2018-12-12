@@ -215,10 +215,10 @@ namespace Itinero.Optimization.Solvers.Tours
                 jsonWriter.WriteClose();
 
                 jsonWriter.WriteClose();
-
             }
 
             // write points per visit.
+            var i = 0;
             foreach (var visit in tour)
             {
                 var location = locationFunc(visit);
@@ -245,6 +245,7 @@ namespace Itinero.Optimization.Solvers.Tours
                 jsonWriter.WriteOpen();
 
                 jsonWriter.WriteProperty("visit", visit.ToString(), false, false);
+                jsonWriter.WriteProperty("index", i.ToString(), false, false);
                 if (description != null)
                 {
                     jsonWriter.WriteProperty("tour", description, true, true);
@@ -253,6 +254,7 @@ namespace Itinero.Optimization.Solvers.Tours
                 jsonWriter.WriteClose();
 
                 jsonWriter.WriteClose();
+                i++;
             }
 
             // write feature array close and feature collection close.

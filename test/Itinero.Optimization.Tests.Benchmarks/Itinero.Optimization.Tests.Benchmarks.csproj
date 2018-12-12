@@ -9,7 +9,7 @@
     <ProjectReference Include="..\..\src\Itinero.Optimization\Itinero.Optimization.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.10.14" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.11.3" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.15.0" />
   </ItemGroup>
   <PropertyGroup>

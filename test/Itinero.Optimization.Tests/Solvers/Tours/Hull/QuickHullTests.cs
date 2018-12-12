@@ -39,6 +39,89 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
         }
 
         [Fact]
+        public void QuickHull_PositionToLineShouldNotReturnLeftWhenOnLine()
+        {
+            var rawLocations = new[,]
+            {
+                {
+                    4.793214797973633,
+                    51.268238714159686
+                },
+                {
+                    4.795253276824951,
+                    51.265392413036416
+                },
+                {
+                    4.7972917556762695,
+                    51.26259964438126
+                }
+            };
+            var locations = new List<(Coordinate location, int visit)>();
+            for (var i = 0; i < rawLocations.GetLength(0); i++)
+            {
+                locations.Add((new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]), 0));
+            }
+
+            var result = QuickHull.PositionToLine(locations[0].location, locations[2].location, locations[1].location);
+            Assert.False(result.left);
+        }
+        
+        [Fact]
+        public void QuickHull_PositionToLineShouldReturnTrueWhenRight()
+        {
+            var rawLocations = new [,]
+            {
+                {
+                    4.769268035888672,
+                    51.26460025070665
+                },
+                {
+                    4.792957305908203,
+                    51.26766141261736
+                },
+                {
+                    4.808921813964844,
+                    51.26153888489712
+                }
+            };
+            var locations = new List<(Coordinate location, int visit)>();
+            for (var i = 0; i < rawLocations.GetLength(0); i++)
+            {
+                locations.Add((new Coordinate((float)rawLocations[i, 1], (float)rawLocations[i, 0]), 0));
+            }
+            var result = QuickHull.PositionToLine(locations[2].location, locations[0].location, locations[1].location);
+            Assert.True(result.right);
+        }
+
+        [Fact]
+        public void QuickHull_PositionToLineShouldNotReturnRightWhenOnLine()
+        {
+            var rawLocations = new[,]
+            {
+                {
+                    4.793214797973633,
+                    51.268238714159686
+                },
+                {
+                    4.795253276824951,
+                    51.265392413036416
+                },
+                {
+                    4.7972917556762695,
+                    51.26259964438126
+                }
+            };
+            var locations = new List<(Coordinate location, int visit)>();
+            for (var i = 0; i < rawLocations.GetLength(0); i++)
+            {
+                locations.Add((new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]), 0));
+            }
+
+            var result = QuickHull.PositionToLine(locations[2].location, locations[0].location, locations[1].location);
+            Assert.False(result.right);
+        }
+
+        [Fact]
         public void QuickHull_PositionToLineShouldReturnFalseWhenRight()
         {
             var rawLocations = new [,]
@@ -460,6 +543,175 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
             Assert.Equal(3, result[1].visit);
             Assert.Equal(0, result[2].visit);
             Assert.Equal(5, result[3].visit);
+        }
+
+        [Fact]
+        public void QuickHullPartition_ShouldBuildConvexHull4()
+        {
+            // based on quickhull-test6 data.
+            var rawLocations = new[,]
+            {
+                {
+                    4.341386,
+                    51.8541
+                },
+                {
+                    4.342323,
+                    51.85313
+                },
+                {
+                    4.342957,
+                    51.85265
+                },
+                {
+                    4.33011,
+                    51.85273
+                },
+                {
+                    4.316804,
+                    51.85365
+                },
+                {
+                    4.315493,
+                    51.85392
+                },
+                {
+                    4.315526,
+                    51.85396
+                },
+                {
+                    4.315224,
+                    51.85316
+                },
+                {
+                    4.314861,
+                    51.85225
+                },
+                {
+                    4.309917,
+                    51.85264
+                },
+                {
+                    4.311972,
+                    51.85228
+                },
+                {
+                    4.310591,
+                    51.85429
+                },
+                {
+                    4.313155,
+                    51.85436
+                },
+                {
+                    4.312361,
+                    51.85533
+                },
+                {
+                    4.313437,
+                    51.85707
+                },
+                {
+                    4.311151,
+                    51.85653
+                },
+                {
+                    4.310231,
+                    51.85749
+                },
+                {
+                    4.312275,
+                    51.85863
+                },
+                {
+                    4.308912,
+                    51.85757
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+
+            var result = tour.ConvexHull((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
+            Assert.Equal(7, result.Count);
+            Assert.Equal(18, result[0].visit);
+            Assert.Equal(17, result[1].visit);
+            Assert.Equal(0, result[2].visit);
+            Assert.Equal(2, result[3].visit);
+            Assert.Equal(8, result[4].visit);
+            Assert.Equal(10, result[5].visit);
+            Assert.Equal(9, result[6].visit);
+        }
+
+        [Fact]
+        public void QuickHullPartition_ShouldBuildConvexHull5()
+        {
+            // based on quickhull-test7 data.
+            var rawLocations = new[,]
+            {
+                {
+                    4.342957,
+                    51.85265
+                },
+                {
+                    4.343845,
+                    51.85194
+                },
+                {
+                    4.342323,
+                    51.85313
+                },
+                {
+                    4.341386,
+                    51.8541
+                },
+                {
+                    4.342041,
+                    51.85342
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+
+            var result = tour.ConvexHull((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
+            Assert.Equal(3, result.Count);
+            Assert.Equal(3, result[0].visit);
+            Assert.Equal(1, result[1].visit);
+            Assert.Equal(2, result[2].visit);
+        }
+
+        [Fact]
+        public void QuickHullPartition_ShouldBuildConvexHull6()
+        {
+            // based on quickhull-test8 data.
+            var rawLocations = new[,]
+            {
+                {
+                    0.002415606,
+                    -0.006519126
+                },
+                {
+                    0.005151248,
+                    0.008702632
+                },
+                {
+                    0.004671521,
+                    -0.004189965
+                },
+                {
+                    -0.00953385,
+                    -0.006119041
+                },
+                {
+                    0.003975872,
+                    0.0004160181
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+
+            var result = tour.ConvexHull((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
+            Assert.Equal(4, result.Count);
+            Assert.Equal(3, result[0].visit);
+            Assert.Equal(1, result[1].visit);
+            Assert.Equal(2, result[2].visit);
+            Assert.Equal(0, result[3].visit);
         }
 
         [Fact]

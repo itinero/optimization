@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using Itinero.Logging;
+using Itinero.Optimization.Tests.Functional.Solvers.Tours.Hull;
 using Serilog;
 
 namespace Itinero.Optimization.Tests.Functional
@@ -37,13 +38,16 @@ namespace Itinero.Optimization.Tests.Functional
             Logger.Log($"{typeof(Program)}.{nameof(Main)}", TraceEventType.Information,
                 "Performance tests are running in Debug, please run in Release mode.");
 #endif
+            // 
+            QuickHullTests.Test();
+            
             // invoke case-specific tests.
             //TSP.TSPTests.Run();
             //TSP_D.TSPDTests.Run();
             //TSP_TW.TSPTWTests.Run();
             ////STSP.STSPTests.Run();
             //CVRP.CVRPTests.Run();
-            CVRP_ND.CVRPNDTests.Run();
+            //CVRP_ND.CVRPNDTests.Run();
         }
 
         public static bool DoIntermediates { get; set; } = false;

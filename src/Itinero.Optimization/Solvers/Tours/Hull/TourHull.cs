@@ -46,24 +46,28 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
         {
             if (!this.UpdateHull(v)) return false;
             
-            _surface = null;
-            _box = null;
             return true;
         }
         
         internal void Add((Coordinate location, int visit) p)
         {
             _locations.Add(p);
+            _surface = null;
+            _box = null;
         }
         
         internal void Insert(int index, (Coordinate location, int visit) p)
         {
             _locations.Insert(index, p);
+            _surface = null;
+            _box = null;
         }
         
         internal void RemoveRange(int index, int count)
         {
             _locations.RemoveRange(index, count);
+            _surface = null;
+            _box = null;
         }
 
         /// <summary>
@@ -74,7 +78,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
         /// <summary>
         /// Returns the surface of this hull.
         /// </summary>
-        public float? Surface
+        public float Surface
         {
             get
             {
