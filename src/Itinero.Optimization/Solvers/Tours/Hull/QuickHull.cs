@@ -178,8 +178,10 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             {
                 if (lower < -1)
                 {
-                    hull.RemoveRange(hull.Count + lower - 1, -lower + 1);
-                    count += lower;
+                    var index = hull.Count + lower + 1; // don't remove first, start one after that.
+                    hull.RemoveRange(index, -lower - 1);
+                    count -= (-lower - 1); // remove the removed count from count.
+                    lower = -1; // set as if the first to be removed is at index O.
                 }
 
                 hull.RemoveRange(lower + 1, count - 1);

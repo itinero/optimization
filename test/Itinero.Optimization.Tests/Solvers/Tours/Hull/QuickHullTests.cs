@@ -715,7 +715,7 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
         }
 
         [Fact]
-        public void QuickHullPartition_ShouldUpdateConvexHullWhenOutsideRemove1()
+        public void QuickHull_ShouldUpdateConvexHullWhenOutsideRemove1()
         {
             // based on quickhull-test3 data.
             var rawLocations = new[,]
@@ -760,7 +760,7 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
         }
 
         [Fact]
-        public void QuickHullPartition_ShouldUpdateConvexHullWhenOutsideRemove2()
+        public void QuickHull_ShouldUpdateConvexHullWhenOutsideRemove2()
         {
             // based on quickhull-test3 data.
             var rawLocations = new[,]
@@ -804,7 +804,7 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
         }
 
         [Fact]
-        public void QuickHullPartition_ShouldUpdateConvexHullWhenRemovingFirstLocation()
+        public void QuickHull_ShouldUpdateConvexHullWhenRemovingFirstLocation()
         {
             // based on quickhull-test3 data.
             var rawLocations = new[,]
@@ -849,7 +849,7 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
         }
 
         [Fact]
-        public void QuickHullPartition_ShouldUpdateConvexHullWhenRemovingLastLocations()
+        public void QuickHull_ShouldUpdateConvexHullWhenRemovingLastLocations()
         {
             // based on quickhull-test3 data.
             var rawLocations = new[,]
@@ -892,9 +892,88 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
             Assert.Equal(3, hull[3].visit);
             Assert.Equal(5, hull[4].visit);
         }
-        
+
         [Fact]
-        public void QuickHullPartition_BoxShouldBeTheExactBoundingBox()
+        public void QuickHull_ShouldUpdateConvexHull1()
+        {
+            // this is based on a failing case in quickhull-test9.
+            var rawLocations = new[,]
+            {
+                {
+                    -0.007477262,
+                    -0.007843573
+                },
+                {
+                    -0.00407523,
+                    0.007215831
+                },
+                {
+                    0.007546691,
+                    -0.0008975575
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+
+            var outsideLocation = (new Coordinate(-0.007505637f, -0.009466955f), rawLocations.GetLength(0));
+            Assert.True(hull.UpdateHull(outsideLocation));
+            Assert.Equal(4, hull.Count);
+            Assert.Equal(0, hull[0].visit);
+            Assert.Equal(3, hull[1].visit);
+            Assert.Equal(1, hull[2].visit);
+            Assert.Equal(2, hull[3].visit);
+        }
+
+        [Fact]
+        public void QuickHull_ShouldUpdateConvexHull2()
+        {
+            // this is based on a failing case in quickhull-test10.
+            var rawLocations = new[,]
+            {
+                {
+                    -0.004583338,
+                    -0.004557872
+                },
+                {
+                    -0.004224535,
+                    0.009189833
+                },
+                {
+                    0.007053101,
+                    0.003090885
+                },
+                {
+                    0.006746819,
+                    -0.005273492
+                },
+                {
+                    0.003436277,
+                    -0.005789657
+                }
+            };
+            
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+
+            var outsideLocation = (new Coordinate(-0.008669036f, -0.007516229f), rawLocations.GetLength(0));
+            Assert.True(hull.UpdateHull(outsideLocation));
+            Assert.Equal(4, hull.Count);
+            Assert.Equal(1, hull[0].visit);
+            Assert.Equal(2, hull[1].visit);
+            Assert.Equal(3, hull[2].visit);
+            Assert.Equal(5, hull[3].visit);
+        }
+
+        [Fact]
+        public void QuickHull_BoxShouldBeTheExactBoundingBox()
         {
             // based on quickhull-test3 data.
             var rawLocations = new[,]
@@ -935,7 +1014,7 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
         }
 
         [Fact]
-        public void QuickHullPartition_ShouldCalculateSurface()
+        public void QuickHull_ShouldCalculateSurface()
         {
             // based on quickhull-test4 data.
             var rawLocations = new[,]

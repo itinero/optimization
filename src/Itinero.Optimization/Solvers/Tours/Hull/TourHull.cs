@@ -37,6 +37,11 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             
         }
 
+        private TourHull(IEnumerable<(Coordinate location, int visit)> locations)
+        {
+            _locations = new List<(Coordinate location, int visit)>(locations);
+        }
+
         /// <summary>
         /// Updates this hull with a new visit/location.
         /// </summary>
@@ -138,6 +143,15 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             }
 
             return (float)System.Math.Abs(area / 2);
+        }
+
+        /// <summary>
+        /// Clones this hull.
+        /// </summary>
+        /// <returns>A deep copy of this hull.</returns>
+        public TourHull Clone()
+        {
+            return new TourHull(_locations);
         }
     }
 }

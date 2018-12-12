@@ -50,6 +50,50 @@ namespace Itinero.Optimization.Tests.Functional.Solvers.Tours.Hull
                 p--;
             }
         }
+        
+        public static void TestUpdate()
+        {
+            var p = 1000;
+            while (p > 0)
+            {
+                var box = new Box(-0.01f, -0.01f, 0.01f, 0.01f);
+                var locations = new List<Coordinate>();
+                var allHull = new TourHull();
+                var c = 5;
+                while (locations.Count < c)
+                {
+                    locations.Add(box.RandomIn());
+                    allHull.Add((locations[locations.Count - 1], locations.Count - 1));
+                }
+
+                var tour = new Tour(Enumerable.Range(0, c));
+
+                var hull = tour.ConvexHull((v) => locations[v]);
+                var hullGeoJson = hull.ToPolygon().ToGeoJson();
+                var allHullGeoJson = allHull.ToPolygon().ToGeoJson();
+
+                var expandWith = box.RandomIn();
+                var hullClone = hull.Clone();
+                if (hull.UpdateWith((expandWith, locations.Count)))
+                {
+                    for (var i = 2; i < hull.Count; i++)
+                    {
+                        var location1 = hull[i - 2].location;
+                        var location2 = hull[i - 1].location;
+                        var location3 = hull[i - 0].location;
+
+                        var position = QuickHull.PositionToLine(location1, location3, location2);
+                        if (position.right)
+                        {
+                            File.WriteAllText($"invalid-polygon-{p}.geojson", hullGeoJson);
+                            throw new Exception("Invalid polygon generated.");
+                        }
+                    }
+                }
+
+                p--;
+            }
+        }
     
         private static Coordinate RandomIn(this Box box)
         {

@@ -39,7 +39,8 @@ namespace Itinero.Optimization.Tests.Functional
                 "Performance tests are running in Debug, please run in Release mode.");
 #endif
             // 
-            QuickHullTests.Test();
+            //QuickHullTests.Test();
+            QuickHullTests.TestUpdate();
             
             // invoke case-specific tests.
             //TSP.TSPTests.Run();
