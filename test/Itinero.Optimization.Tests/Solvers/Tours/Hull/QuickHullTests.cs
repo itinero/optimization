@@ -1047,5 +1047,113 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
             var boxSurface = (hull.Box.MaxLat - hull.Box.MinLat) * (hull.Box.MaxLon - hull.Box.MinLon);
             Assert.Equal(boxSurface, surface);
         }
+
+        [Fact]
+        public void QuickHull_ShouldIntersect1()
+        {
+            // based on quickhull-intersection-test1 data.
+            var rawLocations = new[,]
+            {
+                {
+                    4.794180393218994,
+                    51.27044044881535
+                },
+                {
+                    4.802184104919434,
+                    51.266211413970844
+                },
+                {
+                    4.792635440826416,
+                    51.263378414241615
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+            
+            rawLocations = new[,]
+            {
+                {
+                    4.797699451446533,
+                    51.26676188180721
+                },
+                {
+                    4.806196689605712,
+                    51.270467298586894
+                },
+                {
+                    4.805574417114258,
+                    51.26272048884518
+                }
+            };
+            tour = new Tour(Enumerable.Range(hull.Count, rawLocations.GetLength(0)));
+            var other = new TourHull();
+            foreach (var visit in tour)
+            {
+                other.Add((new Coordinate((float) rawLocations[visit - hull.Count, 1], (float) rawLocations[visit - hull.Count, 0]), visit));
+            }
+
+            var intersection = hull.Intersection(other);
+            Assert.Equal(4, intersection.Count);
+            Assert.Equal(3, intersection[0].visit);
+            Assert.Equal(-1, intersection[1].visit);
+            Assert.Equal(1, intersection[2].visit);
+            Assert.Equal(-1, intersection[3].visit);
+        }
+
+        [Fact]
+        public void QuickHull_ShouldIntersect2()
+        {
+            // based on quickhull-intersection-test2 data.
+            var rawLocations = new[,]
+            {
+                {
+                    4.794180393218994,
+                    51.27044044881535
+                },
+                {
+                    4.796991348266602,
+                    51.26666789996043
+                },
+                {
+                    4.792635440826416,
+                    51.263378414241615
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+            
+            rawLocations = new[,]
+            {
+                {
+                    4.802055358886719,
+                    51.26643965753241
+                },
+                {
+                    4.806196689605712,
+                    51.270467298586894
+                },
+                {
+                    4.805574417114258,
+                    51.26272048884518
+                }
+            };
+            tour = new Tour(Enumerable.Range(hull.Count, rawLocations.GetLength(0)));
+            var other = new TourHull();
+            foreach (var visit in tour)
+            {
+                other.Add((new Coordinate((float) rawLocations[visit - hull.Count, 1], (float) rawLocations[visit - hull.Count, 0]), visit));
+            }
+
+            var intersection = hull.Intersection(other);
+            Assert.Null(intersection);
+        }
     }
 }

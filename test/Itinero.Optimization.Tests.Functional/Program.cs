@@ -38,9 +38,8 @@ namespace Itinero.Optimization.Tests.Functional
             Logger.Log($"{typeof(Program)}.{nameof(Main)}", TraceEventType.Information,
                 "Performance tests are running in Debug, please run in Release mode.");
 #endif
-            // 
-            //QuickHullTests.Test();
-            QuickHullTests.TestUpdate();
+            // quick hull functional testing.
+            QuickHullTests.Run();
             
             // invoke case-specific tests.
             //TSP.TSPTests.Run();

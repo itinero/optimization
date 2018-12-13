@@ -49,7 +49,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
 
             // calculate most left and most right locations and build locations list.
             var locations = new List<(Coordinate location, int visit)>();
-            float minLat = float.MaxValue, minLon = float.MaxValue, maxLat = float.MinValue, maxLon = float.MinValue;
+            float minLon = float.MaxValue, maxLon = float.MinValue;
             var left = -1;
             var right = -1;
             foreach (var visit in tour)
@@ -57,20 +57,10 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                 var location = locationFunc(visit);
                 locations.Add((location, visit));
 
-                if (minLat > location.Latitude)
-                {
-                    minLat = location.Latitude;
-                }
-
                 if (minLon > location.Longitude)
                 {
                     minLon = location.Longitude;
                     left = locations.Count - 1;
-                }
-
-                if (maxLat < location.Latitude)
-                {
-                    maxLat = location.Latitude;
                 }
 
                 if (maxLon < location.Longitude)
@@ -80,6 +70,13 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                 }
             }
 
+            ConvexHull(hull, locations, left, right);
+
+            return hull;
+        }
+
+        private static void ConvexHull(TourHull hull, List<(Coordinate location, int visit)> locations, int left, int right)
+        {
             // move left to first and right to last.
             var t = locations[left];
             locations[left] = locations[0];
@@ -101,8 +98,6 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             hull.Add(locations[b]); // add the right location.
             hull.AddForPartition(locations, (partitions.partition2.start, partitions.partition2.length), b, a,
                 partitions.partition2.farthest); // do the bottom half.
-
-            return hull;
         }
 
         /// <summary>
@@ -197,6 +192,112 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                 hull.Add(location);
             }
             return true;
+        }
+
+        /// <summary>
+        /// The intersection between the two hulls, if any.
+        /// </summary>
+        /// <param name="hull">The hull.</param>
+        /// <param name="other">The other hull.</param>
+        /// <returns>The convex polygon that represents the overlap between the two.</returns>
+        internal static TourHull Intersection(this TourHull hull, TourHull other)
+        {
+            float minLon = float.MaxValue, maxLon = float.MinValue;
+            var left = -1;
+            var right = -1;
+            var intersections = new List<(Coordinate location, int visit)>();
+            var hOutside = new HashSet<int>();
+            var oOutside = new HashSet<int>();
+            for (var h = 0; h < hull.Count; h++)
+            {
+                var h0 = hull[h + 0];
+                var h1 = hull[(h + 1) % hull.Count];
+                var hBox = new Box(h0.location, h1.location);
+                var hLine = new Line(h0.location, h1.location);
+                for (var o = 0; o < other.Count; o++)
+                {
+                    var o0 = other[o + 0];
+                    var o1 = other[(o + 1) % other.Count];
+
+                    var h0pos = QuickHull.PositionToLine(o0.location, o1.location,
+                        h0.location);
+                    if (h0pos.left)
+                    {
+                        hOutside.Add(h);
+                    }
+                    var o0pos = QuickHull.PositionToLine(h0.location, h1.location,
+                        o0.location);
+                    if (o0pos.left)
+                    {
+                        oOutside.Add(o);
+                    }
+                    
+                    var oBox = new Box(o0.location, o1.location);
+                    
+                    if (!oBox.Overlaps(hBox)) continue;
+                    
+                    var oLine = new Line(o0.location, o1.location);
+
+                    var intersection = hLine.Intersect(oLine);
+                    if (intersection == null) continue;
+                    
+                    intersections.Add((intersection.Value, -1));
+                    if (minLon > intersection.Value.Longitude)
+                    {
+                        minLon = intersection.Value.Longitude;
+                        left = intersections.Count - 1;
+                    }
+                    if (maxLon < intersection.Value.Longitude)
+                    {
+                        maxLon = intersection.Value.Longitude;
+                        right = intersections.Count - 1;
+                    }
+                }
+            }
+
+            for (var h = 0; h < hull.Count; h++)
+            {
+                if (hOutside.Contains(h)) continue;
+
+                var intersection = hull[h].location;
+                intersections.Add(hull[h]);
+                if (minLon > intersection.Longitude)
+                {
+                    minLon = intersection.Longitude;
+                    left = intersections.Count - 1;
+                }
+                if (maxLon < intersection.Longitude)
+                {
+                    maxLon = intersection.Longitude;
+                    right = intersections.Count - 1;
+                }
+            }
+
+            for (var o = 0; o < other.Count; o++)
+            {
+                if (oOutside.Contains(o)) continue;
+
+                var intersection = other[o].location;
+                intersections.Add(other[o]);
+                if (minLon > intersection.Longitude)
+                {
+                    minLon = intersection.Longitude;
+                    left = intersections.Count - 1;
+                }
+                if (maxLon < intersection.Longitude)
+                {
+                    maxLon = intersection.Longitude;
+                    right = intersections.Count - 1;
+                }
+            }
+
+            if (oOutside.Count == other.Count && hOutside.Count == hull.Count) return null;
+
+            var intersectionHull = new TourHull();
+            
+            ConvexHull(intersectionHull, intersections, left, right);
+
+            return intersectionHull;
         }
 
         internal static ((int start, int length, int farthest) partition1, (int start, int length, int farthest) partition2) Partition(this List<(Coordinate location, int visit)> locations,
