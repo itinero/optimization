@@ -671,10 +671,11 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
             var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
 
             var result = tour.ConvexHull((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
-            Assert.Equal(3, result.Count);
+            Assert.Equal(4, result.Count);
             Assert.Equal(3, result[0].visit);
             Assert.Equal(1, result[1].visit);
             Assert.Equal(2, result[2].visit);
+            Assert.Equal(4, result[3].visit);
         }
 
         [Fact]
@@ -712,6 +713,54 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
             Assert.Equal(1, result[1].visit);
             Assert.Equal(2, result[2].visit);
             Assert.Equal(0, result[3].visit);
+        }
+
+        [Fact]
+        public void QuickHull_ShouldBuildConvexHull7()
+        {
+            // based on quickhull-test11 data.
+            var rawLocations = new[,]
+            {
+                {
+                    -0.007315006,
+                    -0.0001693517
+                },
+                {
+                    -0.001336997,
+                    0.005998321
+                },
+                {
+                    0.00500018,
+                    0.005652796
+                },
+                {
+                    0.006917862,
+                    -0.005973452
+                },
+                {
+                    -0.006302843,
+                    -0.004737647
+                },
+                {
+                    0.00933788,
+                    0.003706268
+                },
+                {
+                    0.004019398,
+                    0.005818535
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+
+            var result = tour.ConvexHull((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
+            Assert.Equal(7, result.Count);
+            Assert.Equal(0, result[0].visit);
+            Assert.Equal(1, result[1].visit);
+            Assert.Equal(6, result[2].visit);
+            Assert.Equal(2, result[3].visit);
+            Assert.Equal(5, result[4].visit);
+            Assert.Equal(3, result[5].visit);
+            Assert.Equal(4, result[6].visit);
         }
 
         [Fact]
@@ -973,6 +1022,44 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
         }
 
         [Fact]
+        public void QuickHull_ShouldUpdateConvexHull3()
+        {
+            // [0] = {Coordinate} "0.001734379,-0.001513266"
+            // [1] = {Coordinate} "0.001536993,-0.001658821"
+            // [2] = {Coordinate} "0.002626118,-0.0004367537"
+            var rawLocations = new[,]
+            {
+                {
+                    -0.001658821,
+                    0.001536993
+                },
+                {
+                    -0.001513266,
+                    0.001734379
+                },
+                {
+                    -0.0004367537,
+                    0.002626118
+                }
+            };
+            
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+
+            var outsideLocation = (new Coordinate(0.009651674f,-0.00747337f), rawLocations.GetLength(0));
+            Assert.True(hull.UpdateHull(outsideLocation));
+            Assert.True(hull.IsConvex());
+            Assert.Equal(3, hull.Count);
+            Assert.Equal(0, hull[0].visit);
+            Assert.Equal(3, hull[1].visit);
+            Assert.Equal(2, hull[2].visit);
+        }
+
+        [Fact]
         public void QuickHull_BoxShouldBeTheExactBoundingBox()
         {
             // based on quickhull-test3 data.
@@ -1154,6 +1241,38 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
 
             var intersection = hull.Intersection(other);
             Assert.Null(intersection);
+        }
+
+        [Fact]
+        public void QuickHull_ShouldDetectNonConvexHull1()
+        {
+            var rawLocations = new[,]
+            {
+                {
+                    0.002130098,
+                    -0.007514731
+                },
+                {
+                    0.002142694,
+                    -0.004911603
+                },
+                {
+                    0.002158383,
+                    -0.007077035
+                },
+                {
+                    0.002138421,
+                    -0.00709069
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+            
+            Assert.False(hull.IsConvex());
         }
     }
 }

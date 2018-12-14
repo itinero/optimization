@@ -114,6 +114,20 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                 return true;
             }
 
+            if (hull.Count == 1)
+            {
+                if (hull[0].location.Longitude < location.location.Longitude)
+                {
+                    hull.Add(location);
+                }
+                else
+                {
+                    hull.Insert(0, location);
+                }
+
+                return true;
+            }
+
             var lower = 0;
             var count = 0;
 
@@ -195,12 +209,63 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
         }
 
         /// <summary>
+        /// Returns true if this is actually a convex hull.
+        /// </summary>
+        /// <param name="hull">The hull.</param>
+        /// <returns>True if this hull is convex.</returns>
+        /// <exception cref="Exception"></exception>
+        public static bool IsConvex(this TourHull hull)
+        {
+            for (var i = 1; i < hull.Count + 1; i++)
+            {
+                var location1 = hull[i - 1].location;
+                var location2 = hull[(i - 0) % hull.Count].location;
+
+                for (var j = 0; j < hull.Count; j++)
+                {
+                    if (j == (i - 0) % hull.Count || j == i - 1) continue;
+                    
+                    var position = QuickHull.PositionToLine(location1, location2, hull[j].location);
+                    if (position.left)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if this hull contains the given location.
+        /// </summary>
+        /// <param name="hull">The hull.</param>
+        /// <param name="location">The location.</param>
+        /// <returns>True if the location is inside the hull.</returns>
+        public static bool Contains(this TourHull hull, Coordinate location)
+        {
+            for (var i = 1; i < hull.Count + 1; i++)
+            {
+                var location1 = hull[i - 1].location;
+                var location2 = hull[(i - 0) % hull.Count].location;
+                
+                var position = QuickHull.PositionToLine(location1, location2, location);
+                if (position.left)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// The intersection between the two hulls, if any.
         /// </summary>
         /// <param name="hull">The hull.</param>
         /// <param name="other">The other hull.</param>
         /// <returns>The convex polygon that represents the overlap between the two.</returns>
-        internal static TourHull Intersection(this TourHull hull, TourHull other)
+        public static TourHull Intersection(this TourHull hull, TourHull other)
         {
             float minLon = float.MaxValue, maxLon = float.MinValue;
             var left = -1;
@@ -438,6 +503,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                         aDistance = position.distance;
                     }
 
+                    if (aPointer != i) i--;
                     aPointer++;
                     continue;
                 }
@@ -456,6 +522,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                         bDistance = position.distance;
                     }
 
+                    i--;
                     bPointer--;
                     continue;
                 }
@@ -510,10 +577,10 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
             double x = p.Longitude;
             double y = p.Latitude;
             var d = Math.Abs((by - ay) * x - (bx - ax) * y + bx * ay - by * ax);
-            if (d < 1E-7)
-            {
-                return (false, false, 0);
-            }
+//            if (d < 1E-8)
+//            {
+//                return (false, false, 0);
+//            }
             var position = (bx - ax) * (y - ay) - (by - ay) * (x - ax);
             return (position > 0, position < 0, (float)d);
         }

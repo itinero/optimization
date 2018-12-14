@@ -21,36 +21,45 @@ namespace Itinero.Optimization.Tests.Functional.Solvers.Tours.Hull
         
         public static void Test()
         {
-            var p = 1000;
+            var p = 10000;
             while (p > 0)
             {
+                // generate random points.
                 var box = new Box(-0.01f, -0.01f, 0.01f, 0.01f);
                 var locations = new List<Coordinate>();
                 var allHull = new TourHull();
-                var c = 5;
+                var c = RandomGenerator.Default.Generate(5) + 3;
                 while (locations.Count < c)
                 {
                     locations.Add(box.RandomIn());
                     allHull.Add((locations[locations.Count - 1], locations.Count - 1));
                 }
 
+                // calculate hull.
                 var tour = new Tour(Enumerable.Range(0, c));
-
                 var hull = tour.ConvexHull((v) => locations[v]);
                 var hullGeoJson = hull.ToPolygon().ToGeoJson();
                 var allHullGeoJson = allHull.ToPolygon().ToGeoJson();
 
-                for (var i = 2; i < hull.Count; i++)
+                // check if the hull is convex.
+                if (!hull.IsConvex())
                 {
-                    var location1 = hull[i - 2].location;
-                    var location2 = hull[i - 1].location;
-                    var location3 = hull[i - 0].location;
+                    throw new Exception("hull is not convex!");
+                }
+                
+                // check if all non-boundary visits are inside the hull.
+                var hullVisits = new HashSet<int>();
+                foreach (var visit in hull)
+                {
+                    hullVisits.Add(visit.visit);
+                }
+                foreach (var visit in tour)
+                {
+                    if (hullVisits.Contains(visit)) continue;
 
-                    var position = QuickHull.PositionToLine(location1, location3, location2);
-                    if (position.right)
+                    if (!hull.Contains(locations[visit]))
                     {
-                        File.WriteAllText($"invalid-polygon-{p}.geojson", hullGeoJson);
-                        throw new Exception("Invalid polygon generated.");
+                        throw new Exception("one of the visits is not in the hull!?");
                     }
                 }
 
@@ -60,42 +69,50 @@ namespace Itinero.Optimization.Tests.Functional.Solvers.Tours.Hull
         
         public static void TestUpdate()
         {
+            var box = new Box(-0.01f, -0.01f, 0.01f, 0.01f);
             var p = 1000;
             while (p > 0)
             {
-                var box = new Box(-0.01f, -0.01f, 0.01f, 0.01f);
+                // generate a random box and generate a hull in there.
+                var box1 = new Box(box.RandomIn(), box.RandomIn());
                 var locations = new List<Coordinate>();
                 var allHull = new TourHull();
-                var c = 5;
+                var c = RandomGenerator.Default.Generate(5) + 3;
                 while (locations.Count < c)
                 {
-                    locations.Add(box.RandomIn());
+                    locations.Add(box1.RandomIn());
                     allHull.Add((locations[locations.Count - 1], locations.Count - 1));
                 }
-
                 var tour = new Tour(Enumerable.Range(0, c));
-
                 var hull = tour.ConvexHull((v) => locations[v]);
+                var originalHullClone = hull.Clone();
                 var hullGeoJson = hull.ToPolygon().ToGeoJson();
                 var allHullGeoJson = allHull.ToPolygon().ToGeoJson();
 
-                var expandWith = box.RandomIn();
-                var hullClone = hull.Clone();
-                if (hull.UpdateWith((expandWith, locations.Count)))
+                // check if hull is convex.
+                if (!hull.IsConvex())
                 {
-                    for (var i = 2; i < hull.Count; i++)
-                    {
-                        var location1 = hull[i - 2].location;
-                        var location2 = hull[i - 1].location;
-                        var location3 = hull[i - 0].location;
+                    throw new Exception("Invalid polygon generated.");
+                }
 
-                        var position = QuickHull.PositionToLine(location1, location3, location2);
-                        if (position.right)
-                        {
-                            File.WriteAllText($"invalid-polygon-{p}.geojson", hullGeoJson);
-                            throw new Exception("Invalid polygon generated.");
-                        }
+                // update with other locations.
+                var u = 15;
+                while (u > 0)
+                {
+                    var expandWith = box.RandomIn();
+                    var hullClone = hull.Clone();
+                    if (hull.UpdateWith((expandWith, locations.Count)))
+                    {
+                        System.Diagnostics.Debug.WriteLine(string.Empty);
                     }
+
+                    // check if hull is convex.
+                    if (!hull.IsConvex())
+                    {
+                        throw new Exception("Invalid polygon generated.");
+                    }
+
+                    u--;
                 }
 
                 p--;
@@ -125,19 +142,10 @@ namespace Itinero.Optimization.Tests.Functional.Solvers.Tours.Hull
                 var intersection = hull1.Intersection(hull2);
                 if (intersection != null)
                 {
-                    var intersectionGeoJson = intersection.ToPolygon().ToGeoJson();
-                    for (var i = 2; i < intersection.Count; i++)
+                    if (!intersection.IsConvex())
                     {
-                        var location1 = intersection[i - 2].location;
-                        var location2 = intersection[i - 1].location;
-                        var location3 = intersection[i - 0].location;
-
-                        var position = QuickHull.PositionToLine(location1, location3, location2);
-                        if (position.right)
-                        {
-                            File.WriteAllText($"invalid-intersection-polygon-{p}.geojson", intersectionGeoJson);
-                            throw new Exception("Invalid intersection polygon generated.");
-                        }
+                        //File.WriteAllText($"invalid-intersection-polygon-{p}.geojson", intersection.ToPolygon().ToGeoJson());
+                        throw new Exception("Invalid intersection polygon generated.");
                     }
                 }
 

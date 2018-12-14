@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System.Collections;
 using System.Collections.Generic;
 using Itinero.LocalGeo;
 
@@ -24,7 +25,7 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
     /// <summary>
     /// A convex hull around a tour.
     /// </summary>
-    public class TourHull
+    public class TourHull : IEnumerable<(Coordinate location, int visit)>
     {
         private readonly List<(Coordinate location, int visit)> _locations =
             new List<(Coordinate location, int visit)>();
@@ -152,6 +153,20 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
         public TourHull Clone()
         {
             return new TourHull(_locations);
+        }
+
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<(Coordinate location, int visit)> GetEnumerator()
+        {
+            return _locations.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
