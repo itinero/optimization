@@ -260,6 +260,46 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
         }
 
         /// <summary>
+        /// Returns true if the two hulls have an intersection.
+        /// </summary>
+        /// <param name="hull">The hull.</param>
+        /// <param name="other">The other hull.</param>
+        /// <returns>True if there is an intersection.</returns>
+        public static bool HasIntersection(this TourHull hull, TourHull other)
+        { 
+            for (var h = 0; h < hull.Count; h++)
+            {
+                var h0 = hull[h + 0];
+                var h1 = hull[(h + 1) % hull.Count];
+                var hBox = new Box(h0.location, h1.location);
+                var hLine = new Line(h0.location, h1.location);
+                for (var o = 0; o < other.Count; o++)
+                {
+                    var o0 = other[o + 0];
+                    var o1 = other[(o + 1) % other.Count];
+
+                    var h0pos = QuickHull.PositionToLine(o0.location, o1.location,
+                        h0.location);
+                    var o0pos = QuickHull.PositionToLine(h0.location, h1.location,
+                        o0.location);
+                    
+                    var oBox = new Box(o0.location, o1.location);
+                    
+                    if (!oBox.Overlaps(hBox)) continue;
+                    
+                    var oLine = new Line(o0.location, o1.location);
+
+                    var intersection = hLine.Intersect(oLine);
+                    if (intersection == null) continue;
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// The intersection between the two hulls, if any.
         /// </summary>
         /// <param name="hull">The hull.</param>

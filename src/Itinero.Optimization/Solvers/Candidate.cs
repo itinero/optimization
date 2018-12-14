@@ -35,7 +35,7 @@ namespace Itinero.Optimization.Solvers
         /// <summary>
         /// Gets or sets the fitness.
         /// </summary>
-        public float Fitness { get; set; }
+        public virtual float Fitness { get; set; }
         
         /// <summary>
         /// Gets or sets the problem.
