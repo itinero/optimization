@@ -184,7 +184,7 @@ namespace Itinero.Optimization.Strategies.GA
                 {
                     Parallel.For(elitism, population.Length, (i) =>
                     {
-                        if (_settings.MutationPercentage == 0 || Random.RandomGenerator.Default.Generate(100f) > _settings.MutationPercentage) return;
+                        if (_settings.MutationPercentage <= 0 || Random.RandomGenerator.Default.Generate(100f) > _settings.MutationPercentage) return;
 
                         // ok, mutate this individual.
                         _mutation.Apply(population[i]); // by ref so should be fine.
@@ -194,7 +194,7 @@ namespace Itinero.Optimization.Strategies.GA
                 {
                     for (var i = elitism; i < population.Length; i++)
                     {
-                        if (_settings.MutationPercentage == 0 || Random.RandomGenerator.Default.Generate(100) > _settings.MutationPercentage) continue;
+                        if (_settings.MutationPercentage <= 0 || Random.RandomGenerator.Default.Generate(100) > _settings.MutationPercentage) continue;
 
                         // ok, mutate this individual.
                         _mutation.Apply(population[i]); // by ref so should be fine.
@@ -208,7 +208,7 @@ namespace Itinero.Optimization.Strategies.GA
                     var selected = -1;
                     while (selected < 0)
                     {
-                        selected = _selector.Select(population, (c) => exclude.Contains(c));
+                        selected = _selector.Select(population, (c) => exclude.Contains(c) || c <= elitism);
                     }
                     exclude.Add(selected);
                 }

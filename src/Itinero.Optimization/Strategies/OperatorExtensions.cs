@@ -154,5 +154,17 @@ namespace Itinero.Optimization.Strategies
                 return success;
             };
         }
+        
+        /// <summary>
+        /// Converts the given operators into one operator that applies any of the given operators after randomly selecting it.
+        /// </summary>
+        /// <param name="operators">The operators.</param>
+        /// <typeparam name="TCandidate">The candidate type.</typeparam>
+        /// <returns>The new operator.</returns>
+        public static Operator<TCandidate> ApplyRandom<TCandidate>(this Operator<TCandidate>[] operators)
+            where TCandidate : class
+        {
+            return new Random.RandomSelectedOperator<TCandidate>(operators);
+        }
     }
 }
