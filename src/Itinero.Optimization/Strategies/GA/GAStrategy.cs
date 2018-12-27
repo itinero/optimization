@@ -119,10 +119,11 @@ namespace Itinero.Optimization.Strategies.GA
             
             // sort population & determine the best candidate.
             Array.Sort(population);
-            var best = population[0];
+            var best = population[0].Clone();
 
             // do the mutation/crossover loop until stopping conditions are met.
             var stagnation = 0;
+            var maxStagnation = 0;
             var generation = 0;
             var elitism = (int)(_settings.PopulationSize * (_settings.ElitismPercentage / 100.0));
             if (elitism == 0 && _settings.ElitismPercentage != 0)
@@ -142,7 +143,7 @@ namespace Itinero.Optimization.Strategies.GA
                    generation < _settings.MaxGenerations)
             {
                 Logger.Log($"{nameof(GAStrategy<TProblem, TCandidate>)}.{nameof(Search)}", TraceEventType.Verbose,
-                    $"{this.Name}: Started generation {generation} @ stagnation {stagnation} with {population[0]} and {population[population.Length -1 ]}.");
+                    $"{this.Name}: Started generation {generation} @ stagnation {stagnation} ({maxStagnation}) with {population[0]} and {population[population.Length -1 ]}.");
                 // select individuals for crossover.
                 exclude.Clear();
                 for (var i = 0; i < selectionPoolSize; i++)
@@ -208,7 +209,7 @@ namespace Itinero.Optimization.Strategies.GA
                     var selected = -1;
                     while (selected < 0)
                     {
-                        selected = _selector.Select(population, (c) => exclude.Contains(c) || c <= elitism);
+                        selected = _selector.Select(population, (c) => exclude.Contains(c));
                     }
                     exclude.Add(selected);
                 }
@@ -220,9 +221,22 @@ namespace Itinero.Optimization.Strategies.GA
                     {
                         Parallel.ForEach(exclude, (i) =>
                         { // ok, mutate this individual.
-                            if (_settings.ImprovementPercentage == 0 || Random.RandomGenerator.Default.Generate(100) > _settings.ImprovementPercentage) return;
+                            if (_settings.ImprovementPercentage <= 0 || Random.RandomGenerator.Default.Generate(100) > _settings.ImprovementPercentage) return;
 
-                            _improvement.Apply(population[i]); // by ref so should be fine.
+                            var individual = population[i];
+                            if (i <= elitism)
+                            { // make sure to only accept improvement in the elite.
+                                individual = individual.Clone();
+                                _improvement.Apply(individual); // by ref so should be fine.
+                                if (CandidateComparison.Compare(population[0], individual) > 0)
+                                {
+                                    population[i] = individual;
+                                }
+                            }
+                            else
+                            { // apply improvement directly.
+                                _improvement.Apply(population[i]);
+                            }
                         });
                     }
                     else
@@ -240,10 +254,14 @@ namespace Itinero.Optimization.Strategies.GA
                 Array.Sort(population);
                 if (CandidateComparison.Compare(best, population[0]) > 0)
                 { // the new candidate is better, yay!
+                    if (stagnation > maxStagnation)
+                    {
+                        maxStagnation = stagnation;
+                    }
                     stagnation = 0;
-                    best = population[0];
+                    best = population[0].Clone();
                     Logger.Log($"{nameof(GAStrategy<TProblem, TCandidate>)}.{nameof(Search)}", TraceEventType.Verbose,
-                        $"{this.Name}: New best individual found: {best} @ generation {generation} with stagnation {stagnation}.");
+                        $"{this.Name}: New best individual found: {best} @ generation {generation} ({maxStagnation}) with stagnation {stagnation}.");
                     this.ReportIntermidiateResult(best);
                 }
                 else
