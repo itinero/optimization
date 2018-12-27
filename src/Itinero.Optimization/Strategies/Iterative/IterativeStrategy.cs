@@ -47,7 +47,7 @@ namespace Itinero.Optimization.Strategies.Iterative
 
         internal static TCandidate Iterate(Strategy<TProblem, TCandidate> strategy, TProblem p, int n, bool useParallel = false)
         {
-            if (useParallel)
+            if (useParallel && n > 1)
             {
                 var l = new object();
                 var best = default(TCandidate);
