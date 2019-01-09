@@ -100,6 +100,10 @@ namespace Itinero.Optimization.Solvers.TSP_D.HillClimbing3Opt
         }
         
         private static readonly ThreadLocal<HillClimbing3OptSolver> DefaultLazy = new ThreadLocal<HillClimbing3OptSolver>(() => new HillClimbing3OptSolver());
+        
+        /// <summary>
+        /// Gets the default operator.
+        /// </summary>
         public static HillClimbing3OptSolver Default => DefaultLazy.Value;
     }
 }

@@ -119,7 +119,9 @@ namespace Itinero.Optimization.Strategies.GA
             
             // sort population & determine the best candidate.
             Array.Sort(population);
-            var best = population[0].Clone();
+            var cloneable = population[0].CanClone();
+            var best = population[0];
+            if (cloneable) best = best.Clone();
 
             // do the mutation/crossover loop until stopping conditions are met.
             var stagnation = 0;
@@ -259,7 +261,8 @@ namespace Itinero.Optimization.Strategies.GA
                         maxStagnation = stagnation;
                     }
                     stagnation = 0;
-                    best = population[0].Clone();
+                    best = population[0];
+                    if (cloneable) best = best.Clone();
                     Logger.Log($"{nameof(GAStrategy<TProblem, TCandidate>)}.{nameof(Search)}", TraceEventType.Verbose,
                         $"{this.Name}: New best individual found: {best} @ generation {generation} ({maxStagnation}) with stagnation {stagnation}.");
                     this.ReportIntermidiateResult(best);

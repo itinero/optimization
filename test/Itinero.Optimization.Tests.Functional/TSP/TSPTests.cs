@@ -30,10 +30,11 @@ namespace Itinero.Optimization.Tests.Functional.TSP
         public static void Run()
         {
             Run1Wechelderzande();
-            Run2Hengelo();
-            Run3Problem1Spijkenisse();
-            Run4Problem2Hengelo();
-            Run5Problem3();
+//            Run2Hengelo();
+//            Run3Problem1Spijkenisse();
+//            Run4Problem2Hengelo();
+//            Run5Problem3();
+            Run6Problem4WechelderzandeWithSimplifcation();
         }
 
         public static void Run1Wechelderzande()
@@ -162,6 +163,26 @@ namespace Itinero.Optimization.Tests.Functional.TSP
             func.Run("TSP-5-problem3-closed");
             func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1));
             func.Run("TSP-5-problem3-fixed");
+        }
+
+        public static void Run6Problem4WechelderzandeWithSimplifcation()
+        {
+            // WECHELDERZANDE
+            // build routerdb and save the result.
+            var wechelderzande = Staging.RouterDbBuilder.Build("query1");
+            var router = new Router(wechelderzande);
+
+            // get test locations.
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("TSP.data.problem4-wechelderzande.geojson"));
+
+            // calculate TSP.
+            var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, 0));
+            func.Run("TSP-6-wechel-closed");
+            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1));
+            func.Run("TSP-6-wechel-fixed");
+            func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, null));
+            func.Run("TSP-6-wechel-open");
         }
     }
 }

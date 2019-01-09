@@ -32,8 +32,10 @@ namespace Itinero.Optimization.Solvers.TSP_D.Undirected
     {
         private readonly Strategy<TSProblem, Candidate<TSProblem, Tour>> _undirectedStrategy = EAXSolver.Default;
         
+        /// <inheritdoc/>
         public override string Name => "UNDIR";
 
+        /// <inheritdoc/>
         public override Candidate<TSPDProblem, Tour> Search(TSPDProblem problem)
         {
             // call the strategy for the undirected scenario.
@@ -51,6 +53,10 @@ namespace Itinero.Optimization.Solvers.TSP_D.Undirected
         }
         
         private static readonly ThreadLocal<UndirectedSolver> DefaultLazy = new ThreadLocal<UndirectedSolver>(() => new UndirectedSolver());
+        
+        /// <summary>
+        /// Gets the default undirected solver.
+        /// </summary>
         public static UndirectedSolver Default => DefaultLazy.Value;
     }
 }

@@ -27,21 +27,18 @@ namespace Itinero.Optimization.Models.Mapping
     /// <summary>
     /// The model mapper registry.
     /// </summary>
-    public static class ModelMapperRegistry
+    public class ModelMapperRegistry
     {
-        private static readonly List<ModelMapperHook> ModelMappers = new List<ModelMapperHook>(new []
+        private readonly List<(string name, TryMapDelegate tryMap)> _modelMappers = new List<(string name, TryMapDelegate tryMap)>();
+        
+        /// <summary>
+        /// Creates a new model mappers registry.
+        /// </summary>
+        /// <param name="mappers">The initial mappers.</param>
+        public ModelMapperRegistry(params (string name, TryMapDelegate tryMap)[] mappers)
         {
-            new ModelMapperHook()
-            {
-                Name = "Default",
-                TryMap = DefaultModelMapper.TryMap
-            },
-            new ModelMapperHook()
-            {
-                Name = "Directed",
-                TryMap = DirectedModelMapper.TryMap
-            }
-        });
+            _modelMappers.AddRange(mappers);
+        }
         
         /// <summary> 
         /// A delegate to define a call for mapping a model onto a road network.
@@ -58,13 +55,17 @@ namespace Itinero.Optimization.Models.Mapping
         /// </summary>
         /// <param name="name">The name of the mapper.</param>
         /// <param name="tryMap">A function to call the mapper.</param>
-        public static void Register(string name, TryMapDelegate tryMap)
+        public void Register(string name, TryMapDelegate tryMap)
         {
-            ModelMappers.Add(new ModelMapperHook()
-            {
-                Name = name,
-                TryMap = tryMap
-            });
+            _modelMappers.Add((name, tryMap));
+        }
+
+        /// <summary>
+        /// Clears all registered mappers.
+        /// </summary>
+        public void Clear()
+        {
+            _modelMappers.Clear();
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Itinero.Optimization.Models.Mapping
         /// <param name="router">The router to use.</param>
         /// <param name="model">The model to map.</param>
         /// <returns>A mapped model and the mapping details.</returns>
-        public static (MappedModel mappedModel, IModelMapping mapping) Map(RouterBase router, Model model)
+        public (MappedModel mappedModel, IModelMapping mapping) Map(RouterBase router, Model model)
         {
             if (!model.IsValid(out var failReason))
             {
@@ -81,10 +82,10 @@ namespace Itinero.Optimization.Models.Mapping
             }
 
             var reasonsWhy = new StringBuilder();
-            for (var i = ModelMappers.Count - 1; i >= 0; i--)
+            for (var i = _modelMappers.Count - 1; i >= 0; i--)
             {
                 // loop from last registered to first.
-                if (ModelMappers[i].TryMap(router, model, out var mappings, out var reasonWhy))
+                if (_modelMappers[i].tryMap(router, model, out var mappings, out var reasonWhy))
                 {
                     // mapping worked, return the result.
                     return mappings;
@@ -97,12 +98,16 @@ namespace Itinero.Optimization.Models.Mapping
             throw new Exception("The given model cannot be mapped by any of the registered mapppers: " +
                                 reasonsWhy.ToString());
         }
-
-        private class ModelMapperHook
+        
+        private static readonly Lazy<ModelMapperRegistry> DefaultLazy = new Lazy<ModelMapperRegistry>(() => new ModelMapperRegistry());
+        
+        /// <summary>
+        /// Gets the default solver registry.
+        /// </summary>
+        public static ModelMapperRegistry Default => new ModelMapperRegistry(new (string name, TryMapDelegate tryMap)[]
         {
-            public TryMapDelegate TryMap { get; set; }
-
-            public string Name { get; set; }
-        }
+            (DefaultModelMapper.Name, DefaultModelMapper.TryMap),
+            (DirectedModelMapper.Name, DirectedModelMapper.TryMap)
+        });
     }
 }

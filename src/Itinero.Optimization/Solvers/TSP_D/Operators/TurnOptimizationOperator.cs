@@ -28,8 +28,10 @@ namespace Itinero.Optimization.Solvers.TSP_D.Operators
     /// </summary>
     public class TurnOptimizationOperator: Operator<Candidate<TSPDProblem, Tour>>
     {
+        /// <inheritdoc/>
         public override string Name { get; } = "TURN";
 
+        /// <inheritdoc/>
         public override bool Apply(Candidate<TSPDProblem, Tour> candidate)
         {
             var fitness = candidate.Solution.OptimizeTurns(candidate.Problem.Weight, candidate.Problem.TurnPenalty);
@@ -43,6 +45,10 @@ namespace Itinero.Optimization.Solvers.TSP_D.Operators
         }
         
         private static readonly ThreadLocal<TurnOptimizationOperator> DefaultLazy = new ThreadLocal<TurnOptimizationOperator>(() => new TurnOptimizationOperator());
+        
+        /// <summary>
+        /// Gets the default turn optimization operator.
+        /// </summary>
         public static TurnOptimizationOperator Default => DefaultLazy.Value;
     }
 }

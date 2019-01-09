@@ -21,13 +21,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Itinero.Optimization.Strategies;
 
 namespace Itinero.Optimization.Solvers.Tours
 {
     /// <summary>
     /// a tour or a sequence of visits.
     /// </summary>
-    public sealed class Tour : IEnumerable<int>
+    public sealed class Tour : IEnumerable<int>, ICloneable<Tour>
     {
         private int[] _nextArray;
         private int _first;
@@ -371,7 +372,7 @@ namespace Itinero.Optimization.Solvers.Tours
         /// Creates an exact deep-copy of this tour.
         /// </summary>
         /// <returns></returns>
-        public object Clone()
+        public Tour Clone()
         {
             return new Tour(_first, _nextArray.Clone() as int[], _last);
         }

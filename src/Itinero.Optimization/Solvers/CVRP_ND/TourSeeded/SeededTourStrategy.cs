@@ -28,8 +28,10 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.TourSeeded
     /// </summary>
     public class SeededTourStrategy : Strategy<CVRPNDProblem, CVRPNDCandidate>
     {
+        /// <inheritdoc/>
         public override string Name { get; } = "SEED_TOUR";
         
+        /// <inheritdoc/>
         public override CVRPNDCandidate Search(CVRPNDProblem problem)
         {
             var candidate = new CVRPNDCandidate()

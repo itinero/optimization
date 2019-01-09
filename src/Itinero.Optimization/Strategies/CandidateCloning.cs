@@ -36,13 +36,32 @@ namespace Itinero.Optimization.Strategies
         {
             switch (candidate)
             {
-                case ICloneable<TCandidate> clonableTyped:
-                    return clonableTyped.Clone();
-                case ICloneable clonable:
-                    return clonable.Clone() as TCandidate;
+                case ICloneable<TCandidate> cloneableTyped:
+                    return cloneableTyped.Clone();
+                case ICloneable cloneable:
+                    return cloneable.Clone() as TCandidate;
             }
-            // TODO: we can provide perhaps other faster methods here via DI.
+            // TODO: we can provide perhaps other faster methods here.
             throw new InvalidOperationException($"Cannot clone candidates, no cloning method found for candidates of type {typeof(TCandidate)}.");
+        }
+        
+        /// <summary>
+        /// Returns true if the given candidate can be cloned.
+        /// </summary>
+        /// <param name="candidate">The candidate to clone.</param>
+        /// <typeparam name="TCandidate">The candidate type.</typeparam>
+        /// <returns>True if the candidate can be cloned.</returns>
+        public static bool CanClone<TCandidate>(this TCandidate candidate)
+            where TCandidate : class
+        {
+            switch (candidate)
+            {
+                case ICloneable<TCandidate> _:
+                case ICloneable _:
+                    return true;
+            }
+
+            return false;
         }
     }
 

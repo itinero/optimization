@@ -39,11 +39,11 @@ namespace Itinero.Optimization.Tests.Functional
                 "Performance tests are running in Debug, please run in Release mode.");
 #endif
             // quick hull functional testing.
-            QuickHullTests.Run();
+            //QuickHullTests.Run();
             
             // invoke case-specific tests.
             //TSP.TSPTests.Run();
-            //TSP_D.TSPDTests.Run();
+            TSP_D.TSPDTests.Run();
             //TSP_TW.TSPTWTests.Run();
             ////STSP.STSPTests.Run();
             //CVRP.CVRPTests.Run();
@@ -56,23 +56,23 @@ namespace Itinero.Optimization.Tests.Functional
         {
             OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
-#if RELEASE
-                if (level == "verbose")
-                {
-                    return;
-                }
-#endif
+//#if RELEASE
+//                if (level == "verbose")
+//                {
+//                    return;
+//                }
+//#endif
                 Log.Information(message);
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
             };
             Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
-#if RELEASE
-                 if (level == "verbose")
-                 {
-                     return;
-                 }
-#endif
+//#if RELEASE
+//                 if (level == "verbose")
+//                 {
+//                     return;
+//                 }
+//#endif
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
             };
         }

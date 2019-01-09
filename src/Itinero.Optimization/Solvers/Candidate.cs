@@ -17,6 +17,7 @@
  */
 
 using System;
+using Itinero.Optimization.Strategies;
 
 namespace Itinero.Optimization.Solvers
 {

@@ -1,6 +1,6 @@
 ﻿// TODO: This is broken but could be repaired.
 
-///*
+// *
 // *  Licensed to SharpSoftware under one or more contributor
 // *  license agreements. See the NOTICE file distributed with this work for 
 // *  additional information regarding copyright ownership.

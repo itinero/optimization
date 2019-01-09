@@ -27,9 +27,16 @@ namespace Itinero.Optimization.Solvers
     /// <summary>
     /// A registry for all solvers.
     /// </summary>
-    public static class SolverRegistry
+    public class SolverRegistry
     {
-        private static readonly List<SolverHook> Solvers = new List<SolverHook>(new []
+        private static readonly Lazy<SolverRegistry> DefaultLazy = new Lazy<SolverRegistry>(() => new SolverRegistry());
+        
+        /// <summary>
+        /// Gets the default solver registry.
+        /// </summary>
+        public static SolverRegistry Default => DefaultLazy.Value;
+        
+        private readonly List<SolverHook> Solvers = new List<SolverHook>(new []
         {
             CVRP_ND.CVRPNDSolverHook.Default,
             CVRP.CVRPSolverHook.Default,
@@ -54,7 +61,7 @@ namespace Itinero.Optimization.Solvers
         /// <param name="name">The name of the solver.</param>
         /// <param name="trySolve">A function to call the solver to try and solve the given model.</param>
         /// <param name="intermediateResult">A callback to report on intermediate results.</param>
-        public static void Register(string name, TrySolveDelegate trySolve, Action<IList<IEnumerable<int>>> intermediateResult = null)
+        public void Register(string name, TrySolveDelegate trySolve, Action<IList<IEnumerable<int>>> intermediateResult = null)
         {
             Solvers.Add(new SolverHook()
             {
@@ -68,7 +75,7 @@ namespace Itinero.Optimization.Solvers
         /// </summary>
         /// <param name="model">The model to solve.</param>
         /// <param name="intermediateResult">A callback for intermediate results.</param>
-        public static IEnumerable<(int vehicle, IEnumerable<int> tour)> Solve(MappedModel model, 
+        public IEnumerable<(int vehicle, IEnumerable<int> tour)> Solve(MappedModel model, 
             Action<IEnumerable<(int vehicle, IEnumerable<int> tour)>> intermediateResult)
         {
             if(!model.IsValid(out var failReason)) 

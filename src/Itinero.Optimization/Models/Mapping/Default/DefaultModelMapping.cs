@@ -117,16 +117,16 @@ namespace Itinero.Optimization.Models.Mapping.Default
             }
             catch (Exception e)
             {
-                return new Result<Route>(e.Message);
+                return new Result<Route>(e.Message + Environment.NewLine + e.StackTrace);
             }
         }
 
         private Result<Route> AppendRoute(Route route, int visit1Index, int visit1, int visit2Index, int visit2)
         {
-            var visit1RouterPoint = _weightMatrixAlgorithm.OriginalIndexOf(visit1);
             var visit2RouterPoint = _weightMatrixAlgorithm.OriginalIndexOf(visit2);
-            var routerPoint1 = _weightMatrixAlgorithm.RouterPoints[visit1RouterPoint];
-            var routerPoint2 = _weightMatrixAlgorithm.RouterPoints[visit2RouterPoint];
+            var visit1RouterPoint = _weightMatrixAlgorithm.OriginalIndexOf(visit1);
+            var routerPoint1 = _weightMatrixAlgorithm.RouterPoints[visit1];
+            var routerPoint2 = _weightMatrixAlgorithm.RouterPoints[visit2];
             var localRouteResult = _weightMatrixAlgorithm.Router.TryCalculate(_weightMatrixAlgorithm.Profile,
                 routerPoint1, routerPoint2);
             if (localRouteResult.IsError)
@@ -134,7 +134,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
                 var originalVisit1 = _weightMatrixAlgorithm.OriginalLocationIndex(visit1);
                 var originalVisit2 = _weightMatrixAlgorithm.OriginalLocationIndex(visit2);
                 return new Result<Route>(
-                    $"Route could not be calculated between visit {visit1}->{visit2} " +
+                    $"Route could not be calculated between visit {originalVisit1}->{originalVisit2} " +
                     $"between routerpoints {visit1RouterPoint}({routerPoint1})->{visit2RouterPoint}({routerPoint2})");
             }
             var localRoute = localRouteResult.Value;

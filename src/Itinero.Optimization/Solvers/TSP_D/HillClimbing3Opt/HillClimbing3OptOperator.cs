@@ -36,12 +36,18 @@ namespace Itinero.Optimization.Solvers.TSP_D.HillClimbing3Opt
         private readonly bool _nearestNeighbours = false;
         private readonly bool _dontLook = false;
 
+        /// <summary>
+        /// Creates a new operator.
+        /// </summary>
+        /// <param name="nearestNeighbours"></param>
+        /// <param name="dontLook"></param>
         public HillClimbing3OptOperator(bool nearestNeighbours = true, bool dontLook = true)
         {
             _dontLook = dontLook;
             _nearestNeighbours = nearestNeighbours;
         }
 
+        /// <inheritdoc/>
         public override string Name
         {
             get
@@ -62,6 +68,7 @@ namespace Itinero.Optimization.Solvers.TSP_D.HillClimbing3Opt
             }
         }
         
+        /// <inheritdoc/>
         public override bool Apply(Candidate<TSPDProblem, Tour> candidate)
         {
             var problem = candidate.Problem;
@@ -75,6 +82,10 @@ namespace Itinero.Optimization.Solvers.TSP_D.HillClimbing3Opt
         }
         
         private static readonly ThreadLocal<HillClimbing3OptOperator> DefaultLazy = new ThreadLocal<HillClimbing3OptOperator>(() => new HillClimbing3OptOperator());
+        
+        /// <summary>
+        /// Gets the default preconfigured operator.
+        /// </summary>
         public static HillClimbing3OptOperator Default => DefaultLazy.Value;
     }
 }

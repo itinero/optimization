@@ -449,6 +449,10 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Operators
         }
         
         private static readonly ThreadLocal<ExchangeOperator> DefaultLazy = new ThreadLocal<ExchangeOperator>(() => new ExchangeOperator());
+        
+        /// <summary>
+        /// Gets the default preconfigured exchange operator.
+        /// </summary>
         public static ExchangeOperator Default => DefaultLazy.Value;
     }
 }

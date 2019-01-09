@@ -136,6 +136,11 @@ namespace Itinero.Optimization.Solvers.Shared.NearestNeighbours
             _nn.CopyTo(nn, index, v * N, count);
         }
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns>The enumerator.</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public IEnumerator<int> GetEnumerator()
         {
             throw new NotImplementedException();

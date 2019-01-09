@@ -19,6 +19,8 @@
 using System;
 using System.Collections.Generic;
 using Itinero.LocalGeo;
+using Itinero.Optimization.Models.Mapping;
+using Itinero.Optimization.Models.Mapping.Directed.Simplified;
 
 namespace Itinero.Optimization.Tests.Functional.TSP_D
 {
@@ -33,7 +35,8 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             //Run2Hengelo();
             //Run3Problem1Spijkenisse();
             //Run4Problem2Hengelo();
-            Run5Problem3();
+            //Run5Problem3();
+            Run6Problem4WechelderzandeWithSimplifcation();
         }
 
         public static void Run1Wechelderzande()
@@ -162,6 +165,30 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             //func.Run("TSPD-5-problem3-closed");
             var func = new Func<Result<Route>>(() => router.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
             func.Run("TSPD-5-problem3-fixed");
+        }
+
+        public static void Run6Problem4WechelderzandeWithSimplifcation()
+        {
+            // WECHELDERZANDE
+            // build routerdb and save the result.
+            var wechelderzande = Staging.RouterDbBuilder.Build("query1");
+            var router = new Router(wechelderzande);
+
+            // get test locations.
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("TSP_D.data.problem4-wechelderzande.geojson"));
+            
+            // create and configure the optimizer.
+            var optimizer = router.Optimizer(new OptimizerConfiguration(modelMapperRegistry: new ModelMapperRegistry(
+                (ByEdgeDirectedModelMapper.Name, ByEdgeDirectedModelMapper.TryMap))));
+
+            // calculate TSPD.
+            var func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
+            func.Run("TSPD-6-wechel-closed");
+            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
+            func.Run("TSPD-6-wechel-fixed");
+            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
+            func.Run("TSPD-6-wechel-open");
         }
     }
 }

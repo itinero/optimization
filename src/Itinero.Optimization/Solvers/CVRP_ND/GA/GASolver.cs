@@ -51,14 +51,20 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.GA
                 generator, crossOver, mutation, settings, null, improvement);
         }
 
+        /// <inheritdoc/>
         public override string Name => _gaStrategy.Name;
 
+        /// <inheritdoc/>
         public override CVRPNDCandidate Search(CVRPNDProblem problem)
         {
             return _gaStrategy.Search(problem);
         }
         
         private static readonly ThreadLocal<GASolver> DefaultLazy = new ThreadLocal<GASolver>(() => new GASolver());
+        
+        /// <summary>
+        /// Gets the default preconfigured GA solver.
+        /// </summary>
         public static GASolver Default => DefaultLazy.Value;
     }
 }

@@ -35,6 +35,11 @@ namespace Itinero.Optimization.Models.Mapping.Default
     public static class DefaultModelMapper
     {
         /// <summary>
+        /// Gets the name of this mapper.
+        /// </summary>
+        internal const string Name = "Default";
+        
+        /// <summary>
         /// Implements the default model mapper.
         /// </summary>
         /// <param name="router">The router to use.</param>
@@ -231,17 +236,23 @@ namespace Itinero.Optimization.Models.Mapping.Default
             return true;
         }
         
-        public static Visit[] AdjustToMapping(this IWeightMatrixAlgorithm<float> algorithm, Visit[] ar)
+        /// <summary>
+        /// Adjusts the given visit array to the weight matrix by removing invalid entries.
+        /// </summary>
+        /// <param name="algorithm">The weight matrix algorithm.</param>
+        /// <param name="original">The original visits.</param>
+        /// <returns>The adjusted visits.</returns>
+        public static Visit[] AdjustToMapping(this IWeightMatrixAlgorithm<float> algorithm, Visit[] original)
         {
-            if (algorithm.Weights.Length == ar.Length)
+            if (algorithm.Weights.Length == original.Length)
             { // don't copy if no errors.
-                return ar;
+                return original;
             }
             
             var newAr = new Visit[algorithm.Weights.Length];
             for (var i = 0; i < newAr.Length; i++)
             {
-                newAr[i] = ar[algorithm.OriginalLocationIndex(i)];
+                newAr[i] = original[algorithm.OriginalLocationIndex(i)];
             }
             return newAr;
         }
