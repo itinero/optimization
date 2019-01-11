@@ -24,7 +24,7 @@ namespace Itinero.Optimization
         public Optimizer(RouterBase router, OptimizerConfiguration configuration = null)
         {
             _router = router;
-            _configuration = configuration;
+            _configuration = configuration ?? OptimizerConfiguration.Default;
         }
         
                 /// <summary>

@@ -228,6 +228,7 @@ namespace Itinero.Optimization.Strategies.GA
                             var individual = population[i];
                             if (i <= elitism)
                             { // make sure to only accept improvement in the elite.
+                                if (!cloneable) return;
                                 individual = individual.Clone();
                                 _improvement.Apply(individual); // by ref so should be fine.
                                 if (CandidateComparison.Compare(population[0], individual) > 0)
@@ -245,7 +246,7 @@ namespace Itinero.Optimization.Strategies.GA
                     {
                         foreach (var i in exclude)
                         { // ok, mutate this individual.
-                            if (_settings.ImprovementPercentage == 0 || Random.RandomGenerator.Default.Generate(100) > _settings.ImprovementPercentage) continue;
+                            if (_settings.ImprovementPercentage <= 0 || Random.RandomGenerator.Default.Generate(100) > _settings.ImprovementPercentage) continue;
 
                             _improvement.Apply(population[i]); // by ref so should be fine.
                         }

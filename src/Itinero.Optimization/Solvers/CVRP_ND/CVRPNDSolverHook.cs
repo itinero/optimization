@@ -46,7 +46,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             TrySolve = CVRPNDSolverHook.Solve
         };
 
-        private static Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>> Solve(MappedModel model, 
+        private static Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>> Solve(MappedModel model,
             Action<IEnumerable<(int vehicle, IEnumerable<int>)>> intermediateResult)
         {
             var cvrp = model.TryToCVRPND();
@@ -54,36 +54,28 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             {
                 return cvrp.ConvertError<IEnumerable<(int vehicle, IEnumerable<int> tour)>>();
             }
-            
+
             // use a default solver to solve the TSP here.
-            try
+            var solver = new GASolver(settings: new GASettings()
             {
-                var solver = new GASolver(settings: new GASettings()
-                {
-                    PopulationSize = 500,
-                    ElitismPercentage = 0.1f,
-                    CrossOverPercentage = 25,
-                    MutationPercentage = 2,
-                    StagnationCount = 20,
-                    ImprovementPercentage = 50
-                }, generator: new SeededTourStrategy(), improvement: new ExchangeOperator(maxWindowSize: 5));
+                PopulationSize = 500,
+                ElitismPercentage = 0.1f,
+                CrossOverPercentage = 25,
+                MutationPercentage = 2,
+                StagnationCount = 20,
+                ImprovementPercentage = 50
+            }, generator: new SeededTourStrategy(), improvement: new ExchangeOperator(maxWindowSize: 5));
 
-                var candidate = solver.Search(cvrp.Value);
-                var solution = candidate.Solution;
+            var candidate = solver.Search(cvrp.Value);
+            var solution = candidate.Solution;
 
-                var vehiclesAndTours = new List<(int vehicle, IEnumerable<int> tour)>();
-                for (var t = 0; t < solution.Count; t++)
-                {
-                    vehiclesAndTours.Add((0, solution.Tour(t)));
-                }
-                
-                return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>(vehiclesAndTours);
-            }
-            catch (Exception ex)
+            var vehiclesAndTours = new List<(int vehicle, IEnumerable<int> tour)>();
+            for (var t = 0; t < solution.Count; t++)
             {
-                Logger.Log($"{typeof(CVRPNDSolverHook)}.{nameof(Solve)}", TraceEventType.Critical, $"Unhandled exception: {ex.ToString()}.");
-                return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>($"Unhandled exception: {ex.ToString()}.");
+                vehiclesAndTours.Add((0, solution.Tour(t)));
             }
+
+            return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>(vehiclesAndTours);
         }
 
         /// <summary>

@@ -42,12 +42,12 @@ namespace Itinero.Optimization.Tests.Functional
             //QuickHullTests.Run();
             
             // invoke case-specific tests.
-            //TSP.TSPTests.Run();
+            TSP.TSPTests.Run();
             TSP_D.TSPDTests.Run();
-            //TSP_TW.TSPTWTests.Run();
+            TSP_TW.TSPTWTests.Run();
             ////STSP.STSPTests.Run();
-            //CVRP.CVRPTests.Run();
-            //CVRP_ND.CVRPNDTests.Run();
+            CVRP.CVRPTests.Run();
+            CVRP_ND.CVRPNDTests.Run();
         }
 
         public static bool DoIntermediates { get; set; } = false;
@@ -56,23 +56,23 @@ namespace Itinero.Optimization.Tests.Functional
         {
             OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
-//#if RELEASE
-//                if (level == "verbose")
-//                {
-//                    return;
-//                }
-//#endif
+#if RELEASE
+                if (level == "verbose")
+                {
+                    return;
+                }
+#endif
                 Log.Information(message);
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
             };
             Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
-//#if RELEASE
-//                 if (level == "verbose")
-//                 {
-//                     return;
-//                 }
-//#endif
+#if RELEASE
+                 if (level == "verbose")
+                 {
+                     return;
+                 }
+#endif
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
             };
         }

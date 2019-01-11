@@ -5,8 +5,19 @@ using Itinero.Optimization.Models.Visits;
 
 namespace Itinero.Optimization.Models.Mapping.Directed
 {
+    /// <summary>
+    /// Extensions methods for the directed model mapping.
+    /// </summary>
     public static class DirectedModelMappingExtensions
     {
+        /// <summary>
+        /// Try to map the the vehicle pool according to what's found in the weight matrix.
+        /// </summary>
+        /// <param name="algorithm">The weight matrix.</param>
+        /// <param name="vehiclePool">The vehicle pool.</param>
+        /// <param name="mappedVehiclePool">The mapped vehicle pool.</param>
+        /// <param name="message">The message, if any.</param>
+        /// <returns>True if the mapping can be done, false otherwise.</returns>
         internal static bool TryToMap(this IDirectedWeightMatrixAlgorithm<float> algorithm, VehiclePool vehiclePool, out VehiclePool mappedVehiclePool,
             out string message)
         {
@@ -26,12 +37,11 @@ namespace Itinero.Optimization.Models.Mapping.Directed
             for (var v = 0; v < mappedVehiclePool.Vehicles.Length; v++)
             {
                 var vehicle = mappedVehiclePool.Vehicles[v];
-                if (!algorithm.AdjustToMapping(vehicle, out message))
-                {
-                    message = $"Vehicle at index {v} could not be mapped: {message}";
-                    mappedVehiclePool = null;
-                    return false;
-                }
+                if (algorithm.AdjustToMapping(vehicle, out message)) continue;
+                
+                message = $"Vehicle at index {v} could not be mapped: {message}";
+                mappedVehiclePool = null;
+                return false;
             }
 
             message = string.Empty;

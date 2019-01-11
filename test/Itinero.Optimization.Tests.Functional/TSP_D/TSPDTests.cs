@@ -31,11 +31,11 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
         /// </summary>
         public static void Run()
         {
-            //Run1Wechelderzande();
-            //Run2Hengelo();
-            //Run3Problem1Spijkenisse();
-            //Run4Problem2Hengelo();
-            //Run5Problem3();
+            Run1Wechelderzande();
+            Run2Hengelo();
+            Run3Problem1Spijkenisse();
+            Run4Problem2Hengelo();
+            Run5Problem3();
             Run6Problem4WechelderzandeWithSimplifcation();
         }
 

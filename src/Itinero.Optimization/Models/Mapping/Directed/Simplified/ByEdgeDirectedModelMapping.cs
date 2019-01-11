@@ -92,42 +92,6 @@ namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
                     index += visits.Count;
                 }
                 
-//                Route route = null;
-//                var index = -1;
-//                var previous = -1;
-//                var first = -1;
-//                foreach (var v in vehicleAndTour.tour)
-//                {
-//                    index++;
-//
-//                    if (first < 0)
-//                    {
-//                        // include first here.
-//                        var visitsAtFirst = this.FindOriginalVisits(first);
-//                        if (visitsAtFirst.Count > 1)
-//                        {
-//                            route = RouteAlongOriginalVisits(visitsAtFirst, index);
-//                            index += visitsAtFirst.Count - 1;
-//                        }
-//                        
-//                        first = v;
-//                    }
-//                    if (previous < 0)
-//                    {
-//                        previous = v;
-//                        continue;
-//                    }
-//
-//                    var localResult = AppendRoute(route, index - 1, previous, index, v);
-//                    if (localResult.IsError)
-//                    {
-//                        return localResult;
-//                    }
-//
-//                    route = localResult.Value;
-//                    previous = v;
-//                }
-                
                 // 3 options:
                 // OPEN:
                 //   when:
@@ -151,7 +115,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
 //                    vehicle.Departure.HasValue &&
 //                    vehicle.Arrival == vehicle.Departure &&
 //                    previous != 0)
-//                {
+//                { // CLOSED.
 //                    if (DirectedHelper.ExtractVisit(first) != vehicle.Arrival.Value)
 //                    {
 //                        throw new Exception($"Vehicle should match a tour starting at {vehicle.Departure} but the start of the tour is at:" +
@@ -169,7 +133,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
 //                if (!vehicle.Arrival.HasValue &&
 //                    !vehicle.Departure.HasValue &&
 //                    previous != 0)
-//                {
+//                { // CLOSED.
 //                    var localResult = AppendRoute(route, index, previous, 0, first);
 //                    if (localResult.IsError)
 //                    {
