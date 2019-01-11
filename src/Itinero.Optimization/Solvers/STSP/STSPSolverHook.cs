@@ -38,7 +38,7 @@ namespace Itinero.Optimization.Solvers.STSP
             TrySolve = STSPSolverHook.Solve
         };
 
-        private static Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>> Solve(MappedModel model, 
+        private static Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>> Solve(MappedModel model,
             Action<IEnumerable<(int vehicle, IEnumerable<int>)>> intermediateResult)
         {
             var stsp = model.TryToSTSP();
@@ -46,19 +46,11 @@ namespace Itinero.Optimization.Solvers.STSP
             {
                 return stsp.ConvertError<IEnumerable<(int vehicle, IEnumerable<int> tour)>>();
             }
-            
+
             // use a default solver to solve the STSP here.
-            try
-            {
-                var solution = GASolver.Default.Search(stsp.Value);
-                return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>(
-                    (new (int vehicle, IEnumerable<int> tour) [] { (0, solution.Solution) }));
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"{typeof(STSPSolverHook)}.{nameof(Solve)}", TraceEventType.Critical, $"Unhandled exception: {ex.ToString()}.");
-                return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>($"Unhandled exception: {ex.ToString()}.");
-            }
+            var solution = GASolver.Default.Search(stsp.Value);
+            return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>(
+                (new (int vehicle, IEnumerable<int> tour)[] {(0, solution.Solution)}));
         }
 
         /// <summary>

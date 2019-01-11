@@ -38,8 +38,8 @@ namespace Itinero.Optimization.Solvers.STSP
             if (settings == null) settings = GASettings.Default;
             var crossOver = VisitExchangeOperator.Default;
             
-            _gaStrategy = new GAStrategy<STSProblem, Candidate<STSProblem, Tour>>(generator, crossOver, mutation, settings, selector);
-            
+            _gaStrategy = new GAStrategy<STSProblem, Candidate<STSProblem, Tour>>(generator, crossOver, mutation, settings, selector, null,
+                false);
             
             this.Name = $"{_gaStrategy.Name}";
         }

@@ -42,12 +42,12 @@ namespace Itinero.Optimization.Tests.Functional
             //QuickHullTests.Run();
             
             // invoke case-specific tests.
-            TSP.TSPTests.Run();
-            TSP_D.TSPDTests.Run();
-            TSP_TW.TSPTWTests.Run();
-            ////STSP.STSPTests.Run();
-            CVRP.CVRPTests.Run();
-            CVRP_ND.CVRPNDTests.Run();
+            //TSP.TSPTests.Run();
+            //TSP_D.TSPDTests.Run();
+            //TSP_TW.TSPTWTests.Run();
+            STSP.STSPTests.Run();
+            //CVRP.CVRPTests.Run();
+            //CVRP_ND.CVRPNDTests.Run();
         }
 
         public static bool DoIntermediates { get; set; } = false;

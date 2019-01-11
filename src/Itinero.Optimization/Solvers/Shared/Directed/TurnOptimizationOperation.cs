@@ -79,11 +79,11 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
             }
             if (count == 1) return 0;
             var last = previous;
-            if (tour.IsClosedDirected())
-            { // previous -> last is also an arc.
-                nextArray[previous] = first;
-                last = first; // replace last with first, stopping condition is different.
-            }
+//            if (tour.IsClosedDirected())
+//            { // previous -> last is also an arc.
+//                nextArray[previous] = first;
+//                last = first; // replace last with first, stopping condition is different.
+//            }
             
             var settled = new HashSet<int>();
             var queue = new BinaryHeap<int>();

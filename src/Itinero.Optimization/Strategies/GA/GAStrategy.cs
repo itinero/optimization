@@ -128,14 +128,14 @@ namespace Itinero.Optimization.Strategies.GA
             var maxStagnation = 0;
             var generation = 0;
             var elitism = (int)(_settings.PopulationSize * (_settings.ElitismPercentage / 100.0));
-            if (elitism == 0 && _settings.ElitismPercentage != 0)
+            if (elitism == 0 && _settings.ElitismPercentage >= 0)
             { // make sure we have at least one, elitism was requested but population was too small.
                 elitism = 1;
             }
 
             var selectionPoolSize = _settings.PopulationSize / 10; // (int)(_settings.PopulationSize * (_settings.CrossOverPercentage / 100.0));
             if (selectionPoolSize < 2 &&
-                _settings.CrossOverPercentage != 0)
+                _settings.CrossOverPercentage >= 0)
             { // make sure we have at least 2, some crossover was requested but population was too small.
                 selectionPoolSize = 2;
             }
