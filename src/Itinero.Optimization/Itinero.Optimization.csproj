@@ -11,7 +11,7 @@
     <PackageIconUrl>https://www.itinero.tech/logos/itinero_logo_notext.svg.128.png</PackageIconUrl>
     <PackageProjectUrl>https://www.itinero.tech/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/itinero/optimization</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/itinero/optimization/blob/develop/LICENSE.md</PackageLicenseUrl>    
+    <PackageLicense>https://github.com/itinero/optimization/blob/develop/LICENSE.md</PackageLicense>    
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
