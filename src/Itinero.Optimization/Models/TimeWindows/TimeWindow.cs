@@ -21,7 +21,7 @@ namespace Itinero.Optimization.Models.TimeWindows
     /// <summary>
     /// Represents a timewindow.
     /// </summary>
-    public struct TimeWindow
+    public class TimeWindow
     {
         /// <summary>
         /// The minimum time in seconds.
@@ -34,19 +34,13 @@ namespace Itinero.Optimization.Models.TimeWindows
         public float Max { get; set; }
 
         /// <summary>
-        /// Returns a default timewindow with unlimited arrival/departure times.
+        /// Returns true if this timewindows is considered empty or 'to be ignored'.
         /// </summary>
-        public static TimeWindow Default
-        {
-            get
-            {
-                return new TimeWindow()
-                {
-                    Max = float.MaxValue,
-                    Min = float.MinValue
-                };
-            }
-        }
+        public bool IsEmpty => (this.Min == 0 &&
+                                this.Max == 0) || 
+                               (this.Min == float.MaxValue &&
+                                this.Max == float.MinValue);
+
 
         /// <summary>
         /// Returns the fully qualified type name of this instance.
@@ -54,8 +48,7 @@ namespace Itinero.Optimization.Models.TimeWindows
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[{0}, {1}]",
-                this.Min, this.Max);
+            return $"[{this.Min}, {this.Max}]";
         }
     }
 }

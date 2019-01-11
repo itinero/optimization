@@ -19,442 +19,96 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Itinero.Algorithms.Matrices;
 using Itinero.LocalGeo;
-using Itinero.Optimization.Sequences.Directed;
-using Itinero.Optimization.Abstract.Solvers.STSP;
-using Itinero.Optimization.Models.TimeWindows;
-using Itinero.Optimization.Abstract.Tours;
-using Itinero.Optimization.Abstract.Solvers.TSP;
-using Itinero.Profiles;
-using Itinero.Algorithms.Search;
-using Itinero.Optimization.Models.Mapping;
 using Itinero.Optimization.Models;
+using Itinero.Optimization.Models.Mapping;
+using Itinero.Optimization.Models.Vehicles;
+using Itinero.Optimization.Models.Visits;
+using Itinero.Optimization.Solvers;
 
 namespace Itinero.Optimization
 {
     /// <summary>
-    /// Optimization convenience extension methods for the router class.
+    /// Contains extensions methods for the router.
     /// </summary>
     public static class RouterExtensions
     {
         /// <summary>
-        /// Calculates a directed sequence of the given sequence of locations.
-        /// </summary>
-        public static Route CalculateDirected(this RouterBase router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, Tour sequence)
-        {
-            return router.TryCalculateDirected(profile, locations, turnPenaltyInSeconds, sequence).Value;
-        }
-
-        /// <summary>
-        /// Calculates a directed sequence of the given sequence of locations.
-        /// </summary>
-        public static Result<Route> TryCalculateDirected(this RouterBase router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, Tour sequence)
-        {
-            var directedRouter = new SequenceDirectedRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations), turnPenaltyInSeconds, sequence);
-            directedRouter.Run();
-            if (!directedRouter.HasSucceeded)
-            {
-                return new Result<Route>(directedRouter.ErrorMessage);
-            }
-            return new Result<Route>(directedRouter.WeightMatrix.BuildRoute(directedRouter.Tour));
-        }
-
-        /// <summary>
-        /// Calculates a directed sequence of the given sequence of locations.
-        /// </summary>
-        public static Route CalculateDirected(this RouterBase router, Profile profile, Coordinate[] locations, List<RouterPoint> resolvedLocations, float turnPenaltyInSeconds, Tour sequence)
-        {
-            return router.TryCalculateDirected(profile, locations, resolvedLocations, turnPenaltyInSeconds, sequence).Value;
-        }
-
-        /// <summary>
-        /// Calculates a directed sequence of the given sequence of locations.
-        /// </summary>
-        public static Result<Route> TryCalculateDirected(this RouterBase router, Profile profile, Coordinate[] locations, List<RouterPoint> resolvedLocations, float turnPenaltyInSeconds, Tour sequence)
-        {
-            var directedRouter = new SequenceDirectedRouter(new DirectedWeightMatrixAlgorithm(router, profile, locations, resolvedLocations), turnPenaltyInSeconds, sequence);
-            directedRouter.Run();
-            if (!directedRouter.HasSucceeded)
-            {
-                return new Result<Route>(directedRouter.ErrorMessage);
-            }
-            return new Result<Route>(directedRouter.WeightMatrix.BuildRoute(directedRouter.Tour));
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Result<Route> TryCalculateTSP(this RouterBase router, Profile profile, Coordinate[] locations, int first = 0, int? last = null)
-        {
-            return router.TryCalculateTSP(profile, locations, null, first, last);
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Result<Route> TryCalculateTSP(this RouterBase router, Profile profile, Coordinate[] locations, List<RouterPoint> resolvedLocations, int first = 0, int? last = null)
-        {
-            // build model.
-            var model = new Model()
-            {
-                Visits = locations,
-                Locations = resolvedLocations,
-                VehiclePool = new Models.Vehicles.VehiclePool()
-                {
-                    Vehicles = new Models.Vehicles.Vehicle[]
-                    {
-                        new Models.Vehicles.Vehicle()
-                        {
-                            Profile = profile.FullName,
-                            Departure = first,
-                            Arrival = last
-                        }
-                    },
-                    Reusable = false
-                }
-            };
-
-            // solve model.
-            var routes = router.Solve(model);
-
-            return new Result<Route>(routes.Value[0]);
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Route CalculateTSP(this RouterBase router, Profile profile, Coordinate[] locations, int first = 0, int? last = null)
-        {
-            return router.TryCalculateTSP(profile, locations, first, last).Value;
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Route CalculateTSP(this RouterBase router, Profile profile, Coordinate[] locations, List<RouterPoint> resolvedLocations, int first = 0, int? last = null)
-        {
-            return router.TryCalculateTSP(profile, locations, resolvedLocations, first, last).Value;
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Result<Route> TryCalculateTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, int first = 0, int? last = null)
-        {
-            return router.TryCalculateTSPDirected(profile, locations, null, turnPenaltyInSeconds, first, last);
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Result<Route> TryCalculateTSPDirected(this Router router, Profile profile, Coordinate[] locations, List<RouterPoint> resolvedLocations, float turnPenaltyInSeconds, int first = 0, int? last = null)
-        {
-            // build model.
-            var model = new Model()
-            {
-                Visits = locations,
-                Locations = resolvedLocations,
-                VehiclePool = new Models.Vehicles.VehiclePool()
-                {
-                    Vehicles = new Models.Vehicles.Vehicle[] 
-                    {
-                        new Models.Vehicles.Vehicle()
-                        {
-                            Profile = profile.FullName,
-                            Departure = first,
-                            Arrival = last,
-                            TurnPentalty = turnPenaltyInSeconds
-                        }
-                    },
-                    Reusable = false
-                }
-            };
-
-            // solve model.
-            var routes = router.Solve(model);
-
-            return new Result<Route>(routes.Value[0]);
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Route CalculateTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, int first = 0, int? last = null)
-        {
-            return router.TryCalculateTSPDirected(profile, locations, turnPenaltyInSeconds, first, last).Value;
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Route CalculateTSPDirected(this Router router, Profile profile, Coordinate[] locations, List<RouterPoint> resolvedLocations, float turnPenaltyInSeconds, int first = 0, int? last = null)
-        {
-            return router.TryCalculateTSPDirected(profile, locations, resolvedLocations, turnPenaltyInSeconds, first, last).Value;
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Result<Route> TryCalculateTSPTW(this RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, int first = 0, int? last = null)
-        {
-            return router.TryCalculateTSPTW(profile, locations, null, windows, first, last);
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Result<Route> TryCalculateTSPTW(this RouterBase router, Profile profile, Coordinate[] locations, List<RouterPoint> resolvedLocations, TimeWindow[] windows, int first = 0, int? last = null)
-        {
-            // build model.
-            var model = new Model()
-            {
-                Visits = locations,
-                Locations = resolvedLocations,
-                VehiclePool = new Models.Vehicles.VehiclePool()
-                {
-                    Vehicles = new Models.Vehicles.Vehicle[] 
-                    {
-                        new Models.Vehicles.Vehicle()
-                        {
-                            Profile = profile.FullName,
-                            Departure = first,
-                            Arrival = last
-                        }
-                    },
-                    Reusable = false
-                },
-                TimeWindows = windows
-            };
-
-            // solve model.
-            var routes = router.Solve(model);
-
-            return new Result<Route>(routes.Value[0]);
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Route CalculateTSPTW(this RouterBase router, Profile profile, Coordinate[] locations, TimeWindow[] windows, int first = 0, int? last = null)
-        {
-            return router.TryCalculateTSPTW(profile, locations, windows, first, last).Value;
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Result<Route> TryCalculateTSPTWDirected(this Router router, Profile profile, Coordinate[] locations, TimeWindow[] windows, float turnPenaltyInSeconds, int first = 0, int? last = null)
-        {
-            return router.TryCalculateTSPTWDirected(profile, locations, null, windows, turnPenaltyInSeconds, first, last);
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Result<Route> TryCalculateTSPTWDirected(this Router router, Profile profile, Coordinate[] locations, List<RouterPoint> resolvedLocations, TimeWindow[] windows, float turnPenaltyInSeconds, int first = 0, int? last = null)
-        {
-            // build model.
-            var model = new Model()
-            {
-                Visits = locations,
-                Locations = resolvedLocations,
-                VehiclePool = new Models.Vehicles.VehiclePool()
-                {
-                    Vehicles = new Models.Vehicles.Vehicle[] 
-                    {
-                        new Models.Vehicles.Vehicle()
-                        {
-                            Profile = profile.FullName,
-                            Departure = first,
-                            Arrival = last,
-                            TurnPentalty = turnPenaltyInSeconds
-                        }
-                    },
-                    Reusable = false
-                },
-                TimeWindows = windows
-            };
-
-            // solve model.
-            var routes = router.Solve(model);
-
-            return new Result<Route>(routes.Value[0]);
-        }
-
-        /// <summary>
-        /// Calculates TSP.
-        /// </summary>
-        public static Route CalculateTSPTWDirected(this Router router, Profile profile, Coordinate[] locations, TimeWindow[] windows, float turnPenaltyInSeconds, int first = 0, int? last = null)
-        {
-            return router.TryCalculateTSPTWDirected(profile, locations, windows, turnPenaltyInSeconds, first, last).Value;
-        }
-
-        /// <summary>
-        /// Calculates STSP.
-        /// </summary>
-        public static Result<Route> TryCalculateSTSP(this RouterBase router, Profile profile, Coordinate[] locations, float max, int first = 0, int? last = null)
-        {
-            return router.TryCalculateSTSP(profile, locations, null, max, first, last);
-        }
-
-        /// <summary>
-        /// Calculates STSP.
-        /// </summary>
-        public static Result<Route> TryCalculateSTSP(this RouterBase router, Profile profile, Coordinate[] locations, List<RouterPoint> resolvedLocations, float max, int first = 0, int? last = null)
-        {
-            // build model.
-            var model = new Model()
-            {
-                Visits = locations,
-                Locations = resolvedLocations,
-                VehiclePool = new Models.Vehicles.VehiclePool()
-                {
-                    Vehicles = new Models.Vehicles.Vehicle[] 
-                    {
-                        new Models.Vehicles.Vehicle()
-                        {
-                            Profile = profile.FullName,
-                            Departure = first,
-                            Arrival = last,
-                            CapacityConstraints = new Models.Vehicles.Constraints.CapacityConstraint[] 
-                            {
-                                new Models.Vehicles.Constraints.CapacityConstraint()
-                                {
-                                    Name = profile.Metric.ToModelMetric(),
-                                    Capacity = max
-                                }
-                            }
-                        }
-                    },
-                    Reusable = false
-                }
-            };
-
-            // solve model.
-            var routes = router.Solve(model);
-
-            return new Result<Route>(routes.Value[0]);
-        }
-
-        /// <summary>
-        /// Calculates STSP.
-        /// </summary>
-        public static Route CalculateSTSP(this RouterBase router, Profile profile, Coordinate[] locations, float max, int first = 0, int? last = null)
-        {
-            return router.TryCalculateSTSP(profile, locations, max, first, last).Value;
-        }
-
-        /// <summary>
-        /// Calculates STSP.
-        /// </summary>
-        public static Route CalculateSTSP(this RouterBase router, Profile profile, Coordinate[] locations, List<RouterPoint> resolvedLocations, float max, int first = 0, int? last = null)
-        {
-            return router.TryCalculateSTSP(profile, locations, resolvedLocations, max, first, last).Value;
-        }
-
-        /// <summary>
-        /// Calculates STSP.
-        /// </summary>
-        public static Result<Route> TryCalculateSTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, float max, int first = 0, int? last = null)
-        {
-            return router.TryCalculateSTSPDirected(profile, locations, null, turnPenaltyInSeconds, max, first, last);
-        }
-
-        /// <summary>
-        /// Calculates STSP.
-        /// </summary>
-        public static Result<Route> TryCalculateSTSPDirected(this Router router, Profile profile, Coordinate[] locations, List<RouterPoint> resolvedLocations, float turnPenaltyInSeconds, float max, int first = 0, int? last = null)
-        {
-            // build model.
-            var model = new Model()
-            {
-                Visits = locations,
-                Locations = resolvedLocations,
-                VehiclePool = new Models.Vehicles.VehiclePool()
-                {
-                    Vehicles = new Models.Vehicles.Vehicle[] 
-                    {
-                        new Models.Vehicles.Vehicle()
-                        {
-                            Profile = profile.FullName,
-                            Departure = first,
-                            Arrival = last,
-                            CapacityConstraints = new Models.Vehicles.Constraints.CapacityConstraint[] 
-                            {
-                                new Models.Vehicles.Constraints.CapacityConstraint()
-                                {
-                                    Name = profile.Metric.ToModelMetric(),
-                                    Capacity = max
-                                }
-                            },
-                            TurnPentalty = turnPenaltyInSeconds
-                        }
-                    },
-                    Reusable = false
-                }
-            };
-
-            // solve model.
-            var routes = router.Solve(model);
-
-            return new Result<Route>(routes.Value[0]);
-        }
-
-        /// <summary>
-        /// Calculates STSP.
-        /// </summary>
-        public static Route CalculateSTSPDirected(this Router router, Profile profile, Coordinate[] locations, float turnPenaltyInSeconds, float max, int first = 0, int? last = null)
-        {
-            return router.TryCalculateSTSPDirected(profile, locations, turnPenaltyInSeconds, max, first, last).Value;
-        }
-
-        /// <summary>
-        /// Calculates STSP.
-        /// </summary>
-        public static Route CalculateSTSPDirected(this Router router, Profile profile, Coordinate[] locations, List<RouterPoint> resolvedLocations, float turnPenaltyInSeconds, float max, int first = 0, int? last = null)
-        {
-            return router.TryCalculateSTSPDirected(profile, locations, resolvedLocations, turnPenaltyInSeconds, max, first, last).Value;
-        }
-
-        /// <summary>
-        /// Solvers the routing problem represented by the given model.
+        /// Returns an optimizer for the given router.
         /// </summary>
         /// <param name="router">The router.</param>
-        /// <param name="model">The model to solve.</param>
-        /// <param name="intermediateResult">Callback for intermediate results if any.</param>
-        /// <returns></returns>
-        public static Result<Route[]> Solve(this RouterBase router, Models.Model model, Action<Route[]> intermediateResult = null)
+        /// <param name="configuration">The optimizer configuration.</param>
+        /// <returns>An optimizer, configured with default settings.</returns>
+        public static Optimizer Optimizer(this RouterBase router, OptimizerConfiguration configuration = null)
         {
-            // map the model.
-            var defaultModelMap = new MappedModel(model, router);
+            return new Optimizer(router, configuration);
+        }
+        
+        /// <summary>
+        /// Tries to find the best tour to visit all the given visits with the given vehicles and constraints.
+        /// </summary>
+        /// <param name="router">The router.</param>
+        /// <param name="profileName">The vehicle profile name.</param>
+        /// <param name="locations">The locations to visit.</param>
+        /// <param name="first">The location to start from, should point to an element in the locations index.</param>
+        /// <param name="last">The location to stop at, should point to an element in the locations index if set.</param>
+        /// <param name="max">The maximum relative to the profile defined, means maximum travel time when using 'fastest', maximum distance when using 'shortest'.</param>
+        /// <param name="turnPenalty">The turn penalty in the same metric as the profile.</param>
+        /// <param name="errors">The locations in error and associated errors message if any.</param>
+        /// <param name="intermediateResultsCallback">A callback to report on any intermediate solutions.</param>
+        /// <returns>A tours that visit the given locations using the vehicle respecting the contraints.</returns>
+        public static Result<Route> Optimize(this RouterBase router, string profileName, Coordinate[] locations,
+            out IEnumerable<(int location, string message)> errors, int first = 0, int? last = 0, float max = float.MaxValue, float turnPenalty = 0,
+                Action<Result<Route>> intermediateResultsCallback = null)
+        {
+            return router.Optimizer().Optimize(profileName, locations, out errors, first, last, max, turnPenalty,
+                intermediateResultsCallback);
+        }
 
-            // handle intermediate results if requested.
-            Action<IList<ITour>> intermediateResultRaw = null;
-            if (intermediateResult != null)
-            {
-                intermediateResultRaw = (intermediateTours) =>
-                {
-                    var intermediateRoutes = new Route[intermediateTours.Count];
-                    for (var t = 0; t < intermediateTours.Count; t++)
-                    {
-                        intermediateRoutes[t] = defaultModelMap.BuildRoute(intermediateTours[t]);
-                    }
+        /// <summary>
+        /// Tries to find the best tour(s) to visit all the given locations with the given vehicles.
+        /// </summary>
+        /// <param name="router">The router.</param>
+        /// <param name="vehicles">The vehicle pool.</param>
+        /// <param name="locations">The locations to visit.</param>
+        /// <param name="errors">The locations in error and associated errors message if any.</param>
+        /// <param name="intermediateResultsCallback">A callback to report on any intermediate solutions.</param>
+        /// <returns>A set of tours that visit the given locations using the vehicles in the pool.</returns>
+        public static IEnumerable<Result<Route>> Optimize(this RouterBase router, VehiclePool vehicles,
+            Coordinate[] locations, out IEnumerable<(int location, string message)> errors, 
+                Action<IEnumerable<Result<Route>>> intermediateResultsCallback = null)
+        {
+            return router.Optimizer().Optimize(vehicles, locations, out errors, intermediateResultsCallback);
+        }
 
-                    intermediateResult(intermediateRoutes);
-                };
-            }
+        /// <summary>
+        /// Tries to find the best tour(s) to visit all the given visits with the given vehicles.
+        /// </summary>
+        /// <param name="router">The router.</param>
+        /// <param name="vehicles">The vehicle pool.</param>
+        /// <param name="visits">The visits to make.</param>
+        /// <param name="errors">The visits in error and associated errors message if any.</param>
+        /// <param name="intermediateResultsCallback">A callback to report on any intermediate solutions.</param>
+        /// <returns>A set of tours that visit the given visits using the vehicles in the pool.</returns>
+        public static IEnumerable<Result<Route>> Optimize(this RouterBase router, VehiclePool vehicles, Visit[] visits, 
+            out IEnumerable<(int visit, string message)> errors, Action<IEnumerable<Result<Route>>> intermediateResultsCallback = null)
+        {
+            return router.Optimizer().Optimize(vehicles, visits, out errors, intermediateResultsCallback);
+        }
 
-            // solve the abstract model.
-            var tours = Abstract.Solvers.SolverRegistry.Solve(defaultModelMap, intermediateResultRaw);
-
-            // use the map to convert to real-world routes.
-            var routes = new Route[tours.Count];
-            for (var t = 0; t < tours.Count; t++)
-            {
-                routes[t] = defaultModelMap.BuildRoute(tours[t]);
-            }
-            return new Result<Route[]>(routes);
+        /// <summary>
+        /// Tries to find the best tour(s) to visit all the given visits with the given vehicles.
+        /// </summary>
+        /// <param name="router">The router.</param>
+        /// <param name="model">The model, the problem description, to optimize.</param>
+        /// <param name="errors">The visits in error and associated errors message if any.</param>
+        /// <param name="intermediateResultsCallback">A callback to report on any intermediate solutions.</param>
+        /// <returns>A set of tours that visit the given visits using the vehicles in the pool.</returns>
+        public static IEnumerable<Result<Route>> Optimize(this RouterBase router, Model model,
+            out IEnumerable<(int visit, string message)> errors,
+            Action<IEnumerable<Result<Route>>> intermediateResultsCallback = null)
+        {
+            return router.Optimizer().Optimize(model, out errors, intermediateResultsCallback);
         }
     }
 }

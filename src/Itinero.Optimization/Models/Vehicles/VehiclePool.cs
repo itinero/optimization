@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Licensed to SharpSoftware under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for 
  *  additional information regarding copyright ownership.
@@ -15,6 +15,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
+using Itinero.Optimization.Models.Vehicles.Constraints;
 
 namespace Itinero.Optimization.Models.Vehicles
 {
@@ -33,5 +35,48 @@ namespace Itinero.Optimization.Models.Vehicles
         /// Gets or sets the reusable flag.
         /// </summary>
         public bool Reusable { get; set; }
+
+        /// <summary>
+        /// Creates a vehicle pool with one vehicle.
+        /// </summary>
+        /// <param name="profile">The profile.</param>
+        /// <param name="departure">The departure visit, if any.</param>
+        /// <param name="arrival">The arrival visit, if any.</param>
+        /// <param name="max">The maximum, defined in the metric of the profile (fastest means time, shortest, distance).</param>
+        /// <param name="turnPenalty">The turnPenalty, defined in the metric of the profile (fastest means time, shortest, distance).</param>
+        /// <param name="reusable">False if there is just one vehicle avialable, true if the vehicle is reusable.</param>
+        /// <returns></returns>
+        public static VehiclePool FromProfile(Itinero.Profiles.Profile profile, int? departure = 0, int? arrival = 0, float max = float.MaxValue, 
+            float turnPenalty = 0, bool reusable = false)
+        {
+            CapacityConstraint[] constraints = null;
+            if (max < float.MaxValue)
+            {
+                constraints = new[]
+                {
+                    new CapacityConstraint()
+                    {
+                        Capacity = max,
+                        Metric = profile.Metric.ToModelMetric()
+                    }
+                };
+            }
+            return new VehiclePool()
+            {
+                Reusable = reusable,
+                Vehicles = new []
+                {
+                    new Vehicle()
+                    {
+                        Profile = profile.FullName,
+                        Metric =  profile.Metric.ToModelMetric(),
+                        Departure = departure,
+                        Arrival = arrival,
+                        CapacityConstraints = constraints,
+                        TurnPentalty = turnPenalty
+                    }
+                }
+            };
+        }
     }
 }

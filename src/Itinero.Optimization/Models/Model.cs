@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Licensed to SharpSoftware under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for 
  *  additional information regarding copyright ownership.
@@ -16,16 +16,14 @@
  *  limitations under the License.
  */
 
-using Itinero.LocalGeo;
-using Itinero.Optimization.Models.Costs;
-using Itinero.Optimization.Models.TimeWindows;
 using Itinero.Optimization.Models.Vehicles;
-using System.Collections.Generic;
+using Itinero.Optimization.Models.Visits;
+using Itinero.Optimization.Models.Visits.Costs;
 
 namespace Itinero.Optimization.Models
 {
     /// <summary>
-    /// Represents a real-world model for a vehicle routing problem.
+    /// Represents a real-world model for a generic vehicle routing problem.
     /// </summary>
     public class Model
     {
@@ -33,25 +31,7 @@ namespace Itinero.Optimization.Models
         /// Gets or sets the visits (including any depots).
         /// </summary>
         /// <returns></returns>
-        public Coordinate[] Visits { get; set; }
-
-        /// <summary>
-        /// Gets or sets the resolved locations
-        /// </summary>
-        /// <returns></returns>
-        public List<RouterPoint> Locations { get; set; }
-
-        /// <summary>
-        /// Gets or sets the time windows.
-        /// </summary>
-        /// <returns></returns>
-        public TimeWindow[] TimeWindows { get; set; }
-    
-        /// <summary>
-        /// Gets or sets the visit costs.
-        /// </summary>
-        /// <returns></returns>
-        public VisitCosts[] VisitCosts { get; set; }
+        public Visit[] Visits { get; set; }
 
         /// <summary>
         /// Gets or sets the vehicle pool.

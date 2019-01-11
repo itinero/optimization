@@ -36,10 +36,15 @@ packages/*
 
 .vs/*
 .idea/*
+*.DotSettings
 
 *.routerdb
 *.osm.pbf
 TestResult*.xml
 
-test/Itinero.Optimization.Test.Functional/result/*
-*.qgs~
+test/Itinero.Optimization.Tests.Functional/result/*
+
+Candidate*.md
+Candidate*.csv
+Candidate*.html
+

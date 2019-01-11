@@ -1,0 +1,181 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "name": "ShapeMeta",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        4.342957,
+                        51.85265
+                    ],
+                    [
+                        4.343845,
+                        51.85194
+                    ],
+                    [
+                        4.342323,
+                        51.85313
+                    ],
+                    [
+                        4.341386,
+                        51.8541
+                    ],
+                    [
+                        4.342041,
+                        51.85342
+                    ]
+                ]
+            },
+            "properties": {
+                "tour": "5"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    4.342957,
+                    51.85265
+                ]
+            },
+            "properties": {
+                "visit": 41,
+                "index": 0,
+                "tour": "5"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    4.343845,
+                    51.85194
+                ]
+            },
+            "properties": {
+                "marker-color": "#ff0000",
+                "marker-size": "medium",
+                "marker-symbol": "",
+                "visit": 42,
+                "index": 1,
+                "tour": 5
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    4.342323,
+                    51.85313
+                ]
+            },
+            "properties": {
+                "marker-color": "#0cff00",
+                "marker-size": "medium",
+                "marker-symbol": "",
+                "visit": 40,
+                "index": 2,
+                "tour": 5
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    4.341386,
+                    51.8541
+                ]
+            },
+            "properties": {
+                "marker-color": "#ff2200",
+                "marker-size": "medium",
+                "marker-symbol": "",
+                "visit": 38,
+                "index": 3,
+                "tour": 5
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    4.342041,
+                    51.85342
+                ]
+            },
+            "properties": {
+                "visit": 39,
+                "index": 4,
+                "tour": "5"
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "stroke": "#00ff00",
+                "stroke-width": 4,
+                "stroke-opacity": 0.8
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        4.34384822845459,
+                        51.851944056210336
+                    ],
+                    [
+                        4.341386,
+                        51.8541
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    4.342323,
+                    51.85313
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "name": "Shape",
+            "properties": {},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            4.341386,
+                            51.8541
+                        ],
+                        [
+                            4.343845,
+                            51.85194
+                        ],
+                        [
+                            4.342323,
+                            51.85313
+                        ],
+                        [
+                            4.341386,
+                            51.8541
+                        ]
+                    ]
+                ]
+            }
+        }
+    ]
+}

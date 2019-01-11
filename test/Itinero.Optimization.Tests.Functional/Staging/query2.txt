@@ -1,0 +1,15 @@
+﻿<osm-script>
+  <union>
+    <query type="way">
+      <has-kv k="highway"/>
+      <polygon-query bounds="52.18866763506749 6.682777404785156 52.18866763506749 6.91864013671875 52.330303979825956 6.91864013671875 52.330303979825956 6.682777404785156"/>
+    </query>
+    <query type="relation">
+      <has-kv k="type" v="restriction"/>
+      <polygon-query bounds="52.18866763506749 6.682777404785156 52.18866763506749 6.91864013671875 52.330303979825956 6.91864013671875 52.330303979825956 6.682777404785156"/>
+    </query>
+  </union>
+  <print mode="body"/>
+  <recurse type="down"/>
+  <print mode="skeleton"/>
+</osm-script>

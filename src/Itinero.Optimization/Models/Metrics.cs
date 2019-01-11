@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Licensed to SharpSoftware under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for 
  *  additional information regarding copyright ownership.
@@ -15,6 +15,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
+using System;
+using Itinero.Profiles;
 
 namespace Itinero.Optimization.Models
 {
@@ -37,5 +40,24 @@ namespace Itinero.Optimization.Models
         /// The default name used for weight.
         /// </summary>
         public const string Weight = "weight";
+        
+        /// <summary>
+        /// Converts profile metrics into the equivalent model type.
+        /// </summary>
+        public static string ToModelMetric(this ProfileMetric profileMetric)
+        {
+            switch (profileMetric)
+            {
+                case ProfileMetric.DistanceInMeters:
+                    return Models.Metrics.Distance;
+                case ProfileMetric.TimeInSeconds:
+                    return Models.Metrics.Time;
+                case ProfileMetric.Custom:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(profileMetric), profileMetric, null);
+            }
+            return "custom";
+        }
     }
 }

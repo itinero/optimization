@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Licensed to SharpSoftware under one or more contributor
  *  license agreements. See the NOTICE file distributed with this work for 
  *  additional information regarding copyright ownership.
@@ -26,9 +26,14 @@ namespace Itinero.Optimization.Models.Vehicles
     public class Vehicle
     {
         /// <summary>
-        /// Gets or sets the profile name.
+        /// Gets or sets the metric.
         /// </summary>
         /// <returns></returns>
+        public string Metric { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the vehicle profile.
+        /// </summary>
         public string Profile { get; set; }
 
         /// <summary>
