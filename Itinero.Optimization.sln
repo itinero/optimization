@@ -23,11 +23,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TODO.md = TODO.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspec", "nuspec", "{AD6E182F-A4B1-47FD-A5DC-F154727527B3}"
-	ProjectSection(SolutionItems) = preProject
-		nuspec\Itinero.Optimization.nuspec = nuspec\Itinero.Optimization.nuspec
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itinero.Optimization.Tests", "test\Itinero.Optimization.Tests\Itinero.Optimization.Tests.csproj", "{64E51751-4924-48D9-940F-A1EE9DAAA6FB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itinero.Optimization.Tests.Benchmarks", "test\Itinero.Optimization.Tests.Benchmarks\Itinero.Optimization.Tests.Benchmarks.csproj", "{1AA64FF8-F1A1-44BA-A539-41E60FA8D92B}"

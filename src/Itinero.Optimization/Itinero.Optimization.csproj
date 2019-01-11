@@ -3,6 +3,15 @@
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <AssemblyName>Itinero.Optimization</AssemblyName>
     <PackageId>Itinero.Optimization</PackageId>
+    <Description>An optimization library.</Description>
+    <Summary>An optimization library on top of the Itinero routeplanner.</Summary>
+    <Authors>Itinero B.V.B.A.</Authors>
+    <PackageId>Itinero.Optimization</PackageId>
+    <PackageTags>optimization;logistics;tsp;vrp;routing</PackageTags>
+    <PackageIconUrl>https://www.itinero.tech/logos/itinero_logo_notext.svg.128.png</PackageIconUrl>
+    <PackageProjectUrl>https://www.itinero.tech/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/itinero/optimization</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/itinero/optimization/blob/develop/LICENSE.md</PackageLicenseUrl>    
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -27,8 +36,10 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Compile Include="..\..\SharedAssemblyVersion.cs" />
   </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Itinero" Version="1.4.0-pre92" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 </Project>
