@@ -34,6 +34,7 @@ namespace Itinero.Optimization.Strategies.Tools.Selectors
         private readonly ThreadLocal<List<int>> _candidatesInTournament = 
             new ThreadLocal<List<int>>(() => new List<int>());
         private readonly Comparison<TCandidate> _comparison = null;
+        private readonly RandomGenerator _random = null;
 
         /// <summary>
         /// Creates a new tournament selector.
@@ -48,6 +49,7 @@ namespace Itinero.Optimization.Strategies.Tools.Selectors
             _sizePercentage = sizePercentage;
             _probability = probability;
             _comparison = comparison;
+            _random = random ?? RandomGenerator.Default;
         }
         
         /// <summary>
@@ -69,7 +71,7 @@ namespace Itinero.Optimization.Strategies.Tools.Selectors
 
             while (tempPop.Count < scaledSize)
             { // keep looping until enough individuals are selected or until no more are available.
-                var i = RandomGenerator.Default.Generate(population.Length);
+                var i = _random.Generate(population.Length);
                 if (exclude == null || !exclude(i))
                 { // do not tournament excluded solutions.
                     tempPop.Add(i);
@@ -81,11 +83,12 @@ namespace Itinero.Optimization.Strategies.Tools.Selectors
                 population[x], population[y], _comparison));
 
             // choose a candidate.
-            for (var i = 0; i < tempPop.Count; i++)
-            { // choose a candidate.
-                if (RandomGenerator.Default.Generate(1.0f) < _probability)
+            foreach (var t in tempPop)
+            {
+                // choose a candidate.
+                if (_random.Generate(1.0f) < _probability)
                 { // candidate chosen!
-                    return tempPop[i];
+                    return t;
                 }
             }
             return -1;

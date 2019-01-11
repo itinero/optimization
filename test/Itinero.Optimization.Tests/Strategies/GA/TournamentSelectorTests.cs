@@ -36,10 +36,10 @@ namespace Itinero.Optimization.Tests.Strategies.GA
         public void TTournamentSelector_ShouldSelectUsingATournament()
         {
             var random = new NotSoRandomGenerator(
-                new float[] {0.6f, 0.2f, 0.8f}, new int[] {0, 2, 3});
+                new [] {0.6f, 0.2f, 0.8f}, new [] {0, 2, 3});
             
             // create population and selector.
-            var population = new IntegerCandidate[]
+            var population = new []
             {
                 new IntegerCandidate(10),
                 new IntegerCandidate(1),
