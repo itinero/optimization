@@ -48,6 +48,7 @@ namespace Itinero.Optimization.Strategies
         /// <returns>The operator instance.</returns>
         public static implicit operator Operator<TCandidate>(Func<TCandidate, bool> func)
         {
+            if (func == null) return null;
             return new FuncOperator<TCandidate>(func);
         }
 
@@ -58,6 +59,7 @@ namespace Itinero.Optimization.Strategies
         /// <returns>The function.</returns>
         public static implicit operator Func<TCandidate, bool>(Operator<TCandidate> op)
         {
+            if (op == null) return null;
             return op.Apply;
         }
     }
