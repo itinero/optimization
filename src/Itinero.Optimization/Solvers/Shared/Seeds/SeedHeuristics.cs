@@ -16,9 +16,12 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
 using Itinero.Optimization.Solvers.Tours;
+using Itinero.Optimization.Strategies.Random;
 
 namespace Itinero.Optimization.Solvers.Shared.Seeds
 {
@@ -41,6 +44,76 @@ namespace Itinero.Optimization.Solvers.Shared.Seeds
 
             var pos = Strategies.Random.RandomGenerator.Default.Generate(visitPool.Count);
             return visitPool.ElementAt(pos);
+        }
+
+        /// <summary>
+        /// Selects a fixed number of seeds from the visits pool.
+        /// </summary>
+        /// <param name="visitPool">The pool to select from.</param>
+        /// <param name="vehicleCount">The # of vehicles.</param>
+        /// <param name="weightFunc">The weight function.</param>
+        /// <param name="nearestNeighbourArray">The nearest neighbour array.</param>
+        /// <returns>A set of seeds.</returns>
+        public static int[] GetSeeds(ICollection<int> visitPool, int vehicleCount, Func<int, int, float> weightFunc, NearestNeighbourArray nearestNeighbourArray)
+        {
+            var seeds = new int[vehicleCount];
+            
+            // select random seeds.
+            var i = 0;
+            var best = seeds.Clone() as int[];
+            var bestFitness = float.MaxValue; 
+            while (i < 100)
+            {
+                RandomGenerator.Default.SelectRandomFrom(visitPool, ref best);
+                
+                // calculate fitness.
+                var fitness = SeedsFitness(best, weightFunc, nearestNeighbourArray);
+                if (fitness < bestFitness)
+                {
+                    best.CopyTo(seeds, 0);
+                    bestFitness = fitness;
+                }
+
+                i++;
+            }
+
+            return seeds;
+        }
+
+        private static float SeedsFitness(int[] seeds, Func<int, int, float> weightFunc,
+            NearestNeighbourArray nearestNeighbourArray)
+        {
+
+            // calculate 'fitness' based on density and proximity to other seeds.
+            // calculate proximity, the average weight between seeds.
+            var proximity = float.MaxValue;
+            for (var i = 0; i < seeds.Length; i++)
+            {
+                for (var j = 0; j < i; j++)
+                {
+                    var local = weightFunc(seeds[i], seeds[j]);
+                    if (proximity > local)
+                    {
+                        proximity = local;
+                    }
+                }
+            }
+            //proximity = proximity / ((seeds.Length - 1) * (seeds.Length - 1) / 2f);
+            
+            // calculate density, the average weight to the nearest neighbours.
+            var density = 0f;
+            var densityCount = 0;
+            for (var i = 0; i < seeds.Length; i++)
+            {
+                foreach (var neighbour in nearestNeighbourArray[seeds[i]])
+                {
+                    density += weightFunc(seeds[i], neighbour);
+                    densityCount++;
+                }
+            }
+            density = density / densityCount;
+            
+            return 1 / proximity;
         }
     }
 }

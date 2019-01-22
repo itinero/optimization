@@ -56,6 +56,9 @@
     <EmbeddedResource Include="TSP_TW\data\problem1.geojson">
       <LogicalName>Itinero.Optimization.Tests.Functional.TSP_TW.data.problem1.geojson</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Solvers\Shared\Seeds\data\locations1.geojson">
+      <LogicalName>Itinero.Optimization.Tests.Functional.Solvers.Shared.Seeds.data.locations1.geojson</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Update="Staging\query1.txt">
