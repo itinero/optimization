@@ -1,28 +1,12 @@
-﻿/*
- *  Licensed to SharpSoftware under one or more contributor
- *  license agreements. See the NOTICE file distributed with this work for 
- *  additional information regarding copyright ownership.
- * 
- *  SharpSoftware licenses this file to you under the Apache License, 
- *  Version 2.0 (the "License"); you may not use this file except in 
- *  compliance with the License. You may obtain a copy of the License at
- * 
- *       http://www.apache.org/licenses/LICENSE-2.0
- * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Itinero.Logging;
 using Itinero.Optimization.Solvers.Shared.Seeds;
+using Itinero.Optimization.Tests.Functional.Solvers.CVRP_ND.Construction;
 using Itinero.Optimization.Tests.Functional.Solvers.Shared.Seeds;
 using Itinero.Optimization.Tests.Functional.Solvers.Tours.Hull;
 using Serilog;
+using Serilog.Events;
 
 namespace Itinero.Optimization.Tests.Functional
 {
@@ -42,7 +26,10 @@ namespace Itinero.Optimization.Tests.Functional
 #endif
 
             // shared tools fuctional testing.
-            SeedHeuristicsTest.TestLocations1();
+            //SeedHeuristicsTest.TestLocations1_GetSeedsKMeans();
+
+            // CVRP_ND tools functional testing.
+            SeededConstructionHeuristicTests.TestLocations1_SeededConstructionHeuristic();
             
             // quick hull functional testing.
             //QuickHullTests.Run();
@@ -60,6 +47,51 @@ namespace Itinero.Optimization.Tests.Functional
 
         private static void EnableLogging()
         {
+            var date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
+
+#if DEBUG
+            var loggingBlacklist = new HashSet<string>();
+#else
+            var loggingBlacklist = new HashSet<string>();
+#endif
+            Logging.Logger.LogAction = (o, level, message, parameters) =>
+            {
+                if (loggingBlacklist.Contains(o))
+                {
+                    return;
+                }
+
+                if (level == Logging.TraceEventType.Verbose.ToString().ToLower())
+                {
+                    Log.Debug($"[{o}] {level} - {message}");
+                }
+                else if (level == Logging.TraceEventType.Information.ToString().ToLower())
+                {
+                    Log.Information($"[{o}] {level} - {message}");
+                }
+                else if (level == Logging.TraceEventType.Warning.ToString().ToLower())
+                {
+                    Log.Warning($"[{o}] {level} - {message}");
+                }
+                else if (level == Logging.TraceEventType.Critical.ToString().ToLower())
+                {
+                    Log.Fatal($"[{o}] {level} - {message}");
+                }
+                else if (level == Logging.TraceEventType.Error.ToString().ToLower())
+                {
+                    Log.Error($"[{o}] {level} - {message}");
+                }
+                else
+                {
+                    Log.Debug($"[{o}] {level} - {message}");
+                }
+            };
             OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
 #if RELEASE
@@ -69,16 +101,6 @@ namespace Itinero.Optimization.Tests.Functional
                 }
 #endif
                 Log.Information(message);
-                Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
-            };
-            Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
-            {
-#if RELEASE
-                 if (level == "verbose")
-                 {
-                     return;
-                 }
-#endif
                 Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
             };
         }

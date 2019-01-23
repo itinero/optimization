@@ -3,10 +3,10 @@
   <title></title>
   <layer-tree-group expanded="1" checked="Qt::Checked" name="">
     <customproperties/>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="seeds20190122115537675" name="seeds">
+    <layer-tree-layer expanded="1" checked="Qt::Checked" id="priorities_seeds20190122150503833" name="priorities_seeds">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" checked="Qt::Checked" id="locations120190122115651527" name="locations1">
+    <layer-tree-layer expanded="1" checked="Qt::Checked" id="priorities20190122144556561" name="priorities">
       <customproperties/>
     </layer-tree-layer>
     <layer-tree-layer expanded="1" checked="Qt::Checked" id="OpenStreetMap20190122115547657" name="OpenStreetMap">
@@ -17,10 +17,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>476476.38876533799339086</xmin>
-      <ymin>6763731.56263821385800838</ymin>
-      <xmax>492619.57065154716838151</xmax>
-      <ymax>6776939.67373382113873959</ymax>
+      <xmin>478865.05691747093806043</xmin>
+      <ymin>6768157.58574192505329847</ymin>
+      <xmax>486936.64786057529272512</xmax>
+      <ymax>6774761.64128973986953497</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -43,24 +43,25 @@
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="seeds20190122144424651"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="locations120190122115651527"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="priorities20190122144556561"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="priorities_seeds20190122150503833"/>
     </layer_coordinate_transform_info>
   </mapcanvas>
   <layer-tree-canvas>
     <custom-order enabled="0">
-      <item>seeds20190122115537675</item>
       <item>OpenStreetMap20190122115547657</item>
-      <item>locations120190122115651527</item>
+      <item>priorities20190122144556561</item>
+      <item>priorities_seeds20190122150503833</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="seeds" showFeatureCount="0">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="priorities_seeds" showFeatureCount="0">
       <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="seeds20190122115537675" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="priorities_seeds20190122150503833" visible="1"/>
       </filegroup>
     </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="locations1" showFeatureCount="0">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="priorities" showFeatureCount="0">
       <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="locations120190122115651527" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="priorities20190122144556561" visible="1"/>
       </filegroup>
     </legendlayer>
     <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="OpenStreetMap" showFeatureCount="0">
@@ -143,19 +144,19 @@
       </pipe>
       <blendMode>0</blendMode>
     </maplayer>
-    <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+    <maplayer minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <extent>
-        <xmin>4.30344440000000006</xmin>
-        <ymin>51.82372219999999885</ymin>
-        <xmax>4.37249999999999961</xmax>
-        <ymax>51.85863183213719907</ymax>
+        <xmin>4.30344438552856445</xmin>
+        <ymin>51.82372283935546875</ymin>
+        <xmax>4.37249994277954102</xmax>
+        <ymax>51.85863113403320312</ymax>
       </extent>
-      <id>locations120190122115651527</id>
-      <datasource>./Solvers/Shared/Seeds/data/locations1.geojson</datasource>
+      <id>priorities20190122144556561</id>
+      <datasource>./priorities.geojson</datasource>
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>locations1</layername>
+      <layername>priorities</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
@@ -169,7 +170,7 @@
         </spatialrefsys>
       </srs>
       <provider encoding="UTF-8">ogr</provider>
-      <previewExpression></previewExpression>
+      <previewExpression>COALESCE( "priority", '&lt;NULL>' )</previewExpression>
       <vectorjoins/>
       <layerDependencies/>
       <expressionfields/>
@@ -177,18 +178,160 @@
         <map-layer-style name=""/>
       </map-layer-style-manager>
       <edittypes>
-        <edittype widgetv2type="TextEdit" name="marker-color">
+        <edittype widgetv2type="TextEdit" name="priority">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="marker-size">
+        <edittype widgetv2type="TextEdit" name="closest_weight">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="marker-symbol">
+        <edittype widgetv2type="TextEdit" name="total_weight">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="visit">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="seed">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
       </edittypes>
-      <renderer-v2 forceraster="0" symbollevels="0" type="singleSymbol" enableorderby="0">
+      <renderer-v2 attr="seed" forceraster="0" symbollevels="0" type="categorizedSymbol" enableorderby="0">
+        <categories>
+          <category render="true" symbol="0" value="31" label="31"/>
+          <category render="true" symbol="1" value="73" label="73"/>
+          <category render="true" symbol="2" value="100" label="100"/>
+          <category render="true" symbol="3" value="150" label="150"/>
+          <category render="true" symbol="4" value="267" label="267"/>
+          <category render="true" symbol="5" value="" label=""/>
+        </categories>
         <symbols>
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="0">
+            <layer pass="0" class="SimpleMarker" locked="0">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="136,216,125,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="name" v="circle"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="diameter"/>
+              <prop k="size" v="2"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MM"/>
+              <prop k="vertical_anchor_point" v="1"/>
+            </layer>
+          </symbol>
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="1">
+            <layer pass="0" class="SimpleMarker" locked="0">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="127,137,226,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="name" v="circle"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="diameter"/>
+              <prop k="size" v="2"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MM"/>
+              <prop k="vertical_anchor_point" v="1"/>
+            </layer>
+          </symbol>
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="2">
+            <layer pass="0" class="SimpleMarker" locked="0">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="206,59,225,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="name" v="circle"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="diameter"/>
+              <prop k="size" v="2"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MM"/>
+              <prop k="vertical_anchor_point" v="1"/>
+            </layer>
+          </symbol>
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="3">
+            <layer pass="0" class="SimpleMarker" locked="0">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="223,63,81,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="name" v="circle"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="diameter"/>
+              <prop k="size" v="2"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MM"/>
+              <prop k="vertical_anchor_point" v="1"/>
+            </layer>
+          </symbol>
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="4">
+            <layer pass="0" class="SimpleMarker" locked="0">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="64,208,194,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="name" v="circle"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="diameter"/>
+              <prop k="size" v="2"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MM"/>
+              <prop k="vertical_anchor_point" v="1"/>
+            </layer>
+          </symbol>
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="5">
+            <layer pass="0" class="SimpleMarker" locked="0">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="239,216,40,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="name" v="circle"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="diameter"/>
+              <prop k="size" v="2"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MM"/>
+              <prop k="vertical_anchor_point" v="1"/>
+            </layer>
+          </symbol>
+        </symbols>
+        <source-symbol>
           <symbol alpha="1" clip_to_extent="1" type="marker" name="0">
             <layer pass="0" class="SimpleMarker" locked="0">
               <prop k="angle" v="0"/>
@@ -210,7 +353,9 @@
               <prop k="vertical_anchor_point" v="1"/>
             </layer>
           </symbol>
-        </symbols>
+        </source-symbol>
+        <colorramp type="randomcolors" name="[source]"/>
+        <invertedcolorramp value="0"/>
         <rotation/>
         <sizescale scalemethod="diameter"/>
       </renderer-v2>
@@ -239,9 +384,9 @@
         <property key="labeling/dist" value="0"/>
         <property key="labeling/distInMapUnits" value="false"/>
         <property key="labeling/distMapUnitScale" value="0,0,0,0,0,0"/>
-        <property key="labeling/drawLabels" value="false"/>
-        <property key="labeling/enabled" value="false"/>
-        <property key="labeling/fieldName" value=""/>
+        <property key="labeling/drawLabels" value="true"/>
+        <property key="labeling/enabled" value="true"/>
+        <property key="labeling/fieldName" value="concat( &quot;visit&quot; , ' (',   format_number( &quot;priority&quot; , 2),')')"/>
         <property key="labeling/fitInPolygonOnly" value="false"/>
         <property key="labeling/fontCapitals" value="0"/>
         <property key="labeling/fontFamily" value="Ubuntu"/>
@@ -250,7 +395,7 @@
         <property key="labeling/fontLimitPixelSize" value="false"/>
         <property key="labeling/fontMaxPixelSize" value="10000"/>
         <property key="labeling/fontMinPixelSize" value="3"/>
-        <property key="labeling/fontSize" value="11"/>
+        <property key="labeling/fontSize" value="8"/>
         <property key="labeling/fontSizeInMapUnits" value="false"/>
         <property key="labeling/fontSizeMapUnitScale" value="0,0,0,0,0,0"/>
         <property key="labeling/fontStrikeout" value="false"/>
@@ -343,9 +488,9 @@
         <property key="labeling/shapeTransparency" value="0"/>
         <property key="labeling/shapeType" value="0"/>
         <property key="labeling/textColorA" value="255"/>
-        <property key="labeling/textColorB" value="0"/>
-        <property key="labeling/textColorG" value="0"/>
-        <property key="labeling/textColorR" value="0"/>
+        <property key="labeling/textColorB" value="255"/>
+        <property key="labeling/textColorG" value="255"/>
+        <property key="labeling/textColorR" value="255"/>
         <property key="labeling/textTransp" value="0"/>
         <property key="labeling/upsidedownLabels" value="0"/>
         <property key="labeling/wrapChar" value=""/>
@@ -358,7 +503,7 @@
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
       <layerTransparency>0</layerTransparency>
-      <displayfield>marker-color</displayfield>
+      <displayfield>priority</displayfield>
       <label>0</label>
       <labelattributes>
         <label fieldname="" text="Label"/>
@@ -381,7 +526,7 @@
         <selectedonly on=""/>
       </labelattributes>
       <SingleCategoryDiagramRenderer diagramType="Pie">
-        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
+        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
           <fontProperties description="Ubuntu,11,-1,5,50,0,0,0,0,0" style=""/>
           <attribute field="" color="#000000" label=""/>
         </DiagramCategory>
@@ -422,17 +567,17 @@ def my_form_open(dialog, layer, feature):
     </maplayer>
     <maplayer minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <extent>
-        <xmin>4.32958316802978516</xmin>
-        <ymin>51.83124923706054688</ymin>
-        <xmax>4.35519981384277344</xmax>
-        <ymax>51.85082244873046875</ymax>
+        <xmin>4.30655670166015625</xmin>
+        <ymin>51.83048629760742188</ymin>
+        <xmax>4.36810016632080078</xmax>
+        <ymax>51.85662460327148438</ymax>
       </extent>
-      <id>seeds20190122115537675</id>
-      <datasource>./seeds.geojson</datasource>
+      <id>priorities_seeds20190122150503833</id>
+      <datasource>./priorities_seeds.geojson</datasource>
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>seeds</layername>
+      <layername>priorities_seeds</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
@@ -645,8 +790,6 @@ def my_form_open(dialog, layer, feature):
         <property key="labeling/xOffset" value="0"/>
         <property key="labeling/yOffset" value="0"/>
         <property key="labeling/zIndex" value="0"/>
-        <property key="variableNames"/>
-        <property key="variableValues"/>
       </customproperties>
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
@@ -740,8 +883,8 @@ def my_form_open(dialog, layer, feature):
     <Digitizing>
       <DefaultSnapToleranceUnit type="int">2</DefaultSnapToleranceUnit>
       <LayerSnappingList type="QStringList">
-        <value>locations120190122115651527</value>
-        <value>seeds20190122115537675</value>
+        <value>priorities20190122144556561</value>
+        <value>priorities_seeds20190122150503833</value>
       </LayerSnappingList>
       <LayerSnappingEnabledList type="QStringList">
         <value>disabled</value>

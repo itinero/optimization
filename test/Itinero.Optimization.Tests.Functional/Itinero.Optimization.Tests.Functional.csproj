@@ -59,6 +59,9 @@
     <EmbeddedResource Include="Solvers\Shared\Seeds\data\locations1.geojson">
       <LogicalName>Itinero.Optimization.Tests.Functional.Solvers.Shared.Seeds.data.locations1.geojson</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Solvers\CVRP_ND\Construction\data\locations1.geojson">
+      <LogicalName>Itinero.Optimization.Tests.Functional.Solvers.CVRP_ND.Construction.data.locations1.geojson</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Update="Staging\query1.txt">
@@ -100,6 +103,6 @@
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 </Project>

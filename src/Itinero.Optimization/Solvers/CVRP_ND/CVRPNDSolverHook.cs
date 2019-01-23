@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using Itinero.LocalGeo;
 using Itinero.Logging;
 using Itinero.Optimization.Models.Mapping;
+using Itinero.Optimization.Solvers.CVRP_ND.Construction;
 using Itinero.Optimization.Solvers.CVRP_ND.GA;
 using Itinero.Optimization.Solvers.CVRP_ND.Operators;
 using Itinero.Optimization.Solvers.CVRP_ND.SCI;
@@ -55,16 +56,25 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 return cvrp.ConvertError<IEnumerable<(int vehicle, IEnumerable<int> tour)>>();
             }
 
-            // use a default solver to solve the TSP here.
+//            var solver = new GASolver(settings: new GASettings()
+//            {
+//                PopulationSize = 500,
+//                ElitismPercentage = 0.1f,
+//                CrossOverPercentage = 25,
+//                MutationPercentage = 2,
+//                StagnationCount = 20,
+//                ImprovementPercentage = 50
+//            }, generator: new SeededTourStrategy(), improvement: new ExchangeOperator(maxWindowSize: 5));
+
             var solver = new GASolver(settings: new GASettings()
             {
-                PopulationSize = 500,
+                PopulationSize = 5,
                 ElitismPercentage = 0.1f,
                 CrossOverPercentage = 25,
                 MutationPercentage = 2,
                 StagnationCount = 20,
                 ImprovementPercentage = 50
-            }, generator: new SeededTourStrategy(), improvement: new ExchangeOperator(maxWindowSize: 5));
+            }, generator: new SeededConstructionHeuristic(), improvement: new ExchangeOperator(maxWindowSize: 5));
 
             var candidate = solver.Search(cvrp.Value);
             var solution = candidate.Solution;

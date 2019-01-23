@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Itinero.Optimization.Tests.Functional.Performance;
 
 namespace Itinero.Optimization.Tests.Functional
 {

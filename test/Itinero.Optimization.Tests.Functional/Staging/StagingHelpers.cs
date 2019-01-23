@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using Itinero.Optimization.Models.TimeWindows;
 using Itinero.Optimization.Models.Visits;
+using Itinero.Optimization.Tests.Functional.Performance;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 

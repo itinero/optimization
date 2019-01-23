@@ -30,12 +30,12 @@
         </layer-tree-layer>
       </layer-tree-group>
     </layer-tree-group>
-    <layer-tree-group expanded="1" checked="Qt::Unchecked" name="TSPD">
+    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="TSPD">
       <customproperties/>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="TSPD_6_wechel_open_TSPD_6_wechel_open_Point20190107165338004" name="TSPD-6-wechel-open TSPD-6-wechel-open Point">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="TSPD_6_wechel_open_TSPD_6_wechel_open_LineString20190107165338099" name="TSPD-6-wechel-open TSPD-6-wechel-open LineString">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="TSPD_6_wechel_open_TSPD_6_wechel_open_LineString20190107165338099" name="TSPD-6-wechel-open TSPD-6-wechel-open LineString">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="TSPD_6_wechel_open_TSPD_6_wechel_open_Point20190107165338004" name="TSPD-6-wechel-open TSPD-6-wechel-open Point">
         <customproperties/>
       </layer-tree-layer>
       <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="TSPD_6_wechel_fixed_TSPD_6_wechel_fixed_Point20190107165336605" name="TSPD-6-wechel-fixed TSPD-6-wechel-fixed Point">
@@ -57,6 +57,12 @@
         </layer-tree-layer>
       </layer-tree-group>
     </layer-tree-group>
+    <layer-tree-group expanded="1" checked="Qt::Unchecked" name="CVRP_ND">
+      <customproperties/>
+      <layer-tree-group expanded="1" checked="Qt::Unchecked" name="spijkenisse">
+        <customproperties/>
+      </layer-tree-group>
+    </layer-tree-group>
     <layer-tree-layer expanded="1" checked="Qt::Checked" id="OpenStreetMap20181108155014011" name="OpenStreetMap">
       <customproperties/>
     </layer-tree-layer>
@@ -65,10 +71,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>532378.05619571963325143</xmin>
-      <ymin>6667173.06659212429076433</ymin>
-      <xmax>532698.32967607351019979</xmax>
-      <ymax>6667575.15444131474941969</ymax>
+      <xmin>476223.37129465612815693</xmin>
+      <ymin>6764728.91989637725055218</ymin>
+      <xmax>492386.76098275306867436</xmax>
+      <ymax>6778141.92774783633649349</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -86,26 +92,73 @@
     </destinationsrs>
     <rendermaptile>0</rendermaptile>
     <layer_coordinate_transform_info>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_5_problem3_fixed_TSPD_5_problem3_fixed_Point20181108161126327"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_3_CVRP_ND_spijkenisse_3_Point20190122164644524"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_7_CVRP_ND_spijkenisse_7_LineString20190122164648794"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_0_CVRP_ND_spijkenisse_0_Point20190122164641192"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_12_CVRP_ND_spijkenisse_12_LineString20190122164653681"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSP_6_wechel_fixed_TSP_6_wechel_fixed_LineString20190107164048919"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_3_CVRP_ND_spijkenisse_3_LineString20190122164644563"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_13_CVRP_ND_spijkenisse_13_LineString20190122164654617"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_4_CVRP_ND_spijkenisse_4_Point20190122155531846"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_5_CVRP_ND_spijkenisse_5_LineString20190122164646724"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_2_CVRP_ND_spijkenisse_2_Point20190122164643479"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_9_CVRP_ND_spijkenisse_9_Point20190122164650706"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_9_CVRP_ND_spijkenisse_9_LineString20190122164650753"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_1_CVRP_ND_spijkenisse_1_Point20190122164642314"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_5_problem3_fixed_TSPD_5_problem3_fixed_LineString20181108161126375"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_11_CVRP_ND_spijkenisse_11_LineString20190122164652704"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_15_CVRP_ND_spijkenisse_15_Point20190122164656543"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_12_CVRP_ND_spijkenisse_12_Point20190122164653635"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_7_CVRP_ND_spijkenisse_7_Point20190122164648750"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="problem320181107143835010"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="OpenStreetMap20181108155014011"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_8_CVRP_ND_spijkenisse_8_LineString20190122164649747"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_13_CVRP_ND_spijkenisse_13_Point20190122164654561"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_0_CVRP_ND_spijkenisse_0_Point20190122155526308"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_3_CVRP_ND_spijkenisse_3_LineString20190122155529830"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_6_wechel_fixed_TSPD_6_wechel_fixed_LineString20190107165336690"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_4_CVRP_ND_spijkenisse_4_Point20190122164645612"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_0_CVRP_ND_spijkenisse_0_LineString20190122155526391"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_2_CVRP_ND_spijkenisse_2_LineString20190122155528675"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_6_wechel_closed_TSPD_6_wechel_closed_LineString20190107165335476"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_6_CVRP_ND_spijkenisse_6_Point20190122164647829"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSP_6_wechel_closed_TSP_6_wechel_closed_Point20190107164047559"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_15_CVRP_ND_spijkenisse_15_LineString20190122164656570"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_14_CVRP_ND_spijkenisse_14_LineString20190122164655632"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_5_CVRP_ND_spijkenisse_5_Point20190122164646688"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_11_CVRP_ND_spijkenisse_11_Point20190122164652641"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_14_CVRP_ND_spijkenisse_14_Point20190122164655613"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSP_6_wechel_open_TSP_6_wechel_open_Point20190107164050350"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSP_6_wechel_fixed_TSP_6_wechel_fixed_Point20190107164048832"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_6_wechel_fixed_TSPD_6_wechel_fixed_Point20190107165336605"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_1_CVRP_ND_spijkenisse_1_Point20190122155527444"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_16_CVRP_ND_spijkenisse_16_LineString20190122164657581"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_1_CVRP_ND_spijkenisse_1_LineString20190122164642374"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="problem320181107142334448"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_17_CVRP_ND_spijkenisse_17_Point20190122164658546"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_2_CVRP_ND_spijkenisse_2_Point20190122155528598"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_5_problem3_closed_TSPD_5_problem3_closed_LineString20181109115858138"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_17_CVRP_ND_spijkenisse_17_LineString20190122164658571"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSP_6_wechel_open_TSP_6_wechel_open_LineString20190107164050468"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_4_CVRP_ND_spijkenisse_4_LineString20190122155531898"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_1_CVRP_ND_spijkenisse_1_LineString20190122155527550"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_5_problem3_closed_TSPD_5_problem3_closed_Point20181109115858086"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_6_wechel_closed_TSPD_6_wechel_closed_Point20190107165335363"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_4_CVRP_ND_spijkenisse_4_LineString20190122164645650"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_3_CVRP_ND_spijkenisse_3_Point20190122155529787"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_6_wechel_open_TSPD_6_wechel_open_Point20190107165338004"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_0_CVRP_ND_spijkenisse_0_LineString20190122164641261"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_10_CVRP_ND_spijkenisse_10_LineString20190122164651703"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_16_CVRP_ND_spijkenisse_16_Point20190122164657536"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSP_6_wechel_closed_TSP_6_wechel_closed_LineString20190107164047637"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_5_problem3_open_OGRGeoJSON_LineString20181107143144228"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSP_6_wechel_fixed_TSP_6_wechel_fixed_LineString20190107164048919"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSP_6_wechel_open_TSP_6_wechel_open_LineString20190107164050468"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_5_problem3_fixed_TSPD_5_problem3_fixed_Point20181108161126327"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_5_problem3_fixed_TSPD_5_problem3_fixed_LineString20181108161126375"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSP_6_wechel_open_TSP_6_wechel_open_Point20190107164050350"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_6_wechel_fixed_TSPD_6_wechel_fixed_Point20190107165336605"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_6_wechel_closed_TSPD_6_wechel_closed_LineString20190107165335476"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_6_wechel_open_TSPD_6_wechel_open_Point20190107165338004"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_6_wechel_open_TSPD_6_wechel_open_LineString20190107165338099"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSP_6_wechel_fixed_TSP_6_wechel_fixed_Point20190107164048832"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="problem320181107143835010"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_6_CVRP_ND_spijkenisse_6_LineString20190122164647841"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_8_CVRP_ND_spijkenisse_8_Point20190122164649703"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_2_CVRP_ND_spijkenisse_2_LineString20190122164643498"/>
       <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_5_problem3_open_OGRGeoJSON_Point20181107143144188"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_5_problem3_closed_TSPD_5_problem3_closed_Point20181109115858086"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSP_6_wechel_closed_TSP_6_wechel_closed_Point20190107164047559"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_6_wechel_fixed_TSPD_6_wechel_fixed_LineString20190107165336690"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_6_wechel_closed_TSPD_6_wechel_closed_Point20190107165335363"/>
-      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="OpenStreetMap20181108155014011"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="CVRP_ND_spijkenisse_10_CVRP_ND_spijkenisse_10_Point20190122164651670"/>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:4326" srcDatumTransform="-1" destDatumTransform="-1" layerid="TSPD_6_wechel_open_TSPD_6_wechel_open_LineString20190107165338099"/>
     </layer_coordinate_transform_info>
   </mapcanvas>
   <layer-tree-canvas>
@@ -167,15 +220,15 @@
         </legendlayer>
       </legendgroup>
     </legendgroup>
-    <legendgroup open="true" checked="Qt::Unchecked" name="TSPD">
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="TSPD-6-wechel-open TSPD-6-wechel-open Point" showFeatureCount="0">
-        <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="TSPD_6_wechel_open_TSPD_6_wechel_open_Point20190107165338004" visible="0"/>
-        </filegroup>
-      </legendlayer>
+    <legendgroup open="false" checked="Qt::Unchecked" name="TSPD">
       <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="TSPD-6-wechel-open TSPD-6-wechel-open LineString" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="TSPD_6_wechel_open_TSPD_6_wechel_open_LineString20190107165338099" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="TSPD-6-wechel-open TSPD-6-wechel-open Point" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="TSPD_6_wechel_open_TSPD_6_wechel_open_Point20190107165338004" visible="0"/>
         </filegroup>
       </legendlayer>
       <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="TSPD-6-wechel-fixed TSPD-6-wechel-fixed Point" showFeatureCount="0">
@@ -206,6 +259,9 @@
         </legendlayer>
       </legendgroup>
     </legendgroup>
+    <legendgroup open="true" checked="Qt::Unchecked" name="CVRP_ND">
+      <legendgroup open="true" checked="Qt::Unchecked" name="spijkenisse"/>
+    </legendgroup>
     <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="OpenStreetMap" showFeatureCount="0">
       <filegroup open="true" hidden="false">
         <legendlayerfile isInOverview="0" layerid="OpenStreetMap20181108155014011" visible="1"/>
@@ -213,7 +269,7 @@
     </legendlayer>
   </legend>
   <Composer title="test" visible="0">
-    <Composition resizeToContentsMarginLeft="0" snapping="0" showPages="1" guidesVisible="1" resizeToContentsMarginTop="0" alignmentSnap="1" printResolution="300" paperWidth="594" gridVisible="0" snapGridOffsetX="0" smartGuides="1" snapGridOffsetY="0" resizeToContentsMarginRight="0" snapTolerancePixels="5" printAsRaster="0" generateWorldFile="0" paperHeight="841" numPages="1" snapGridResolution="10" resizeToContentsMarginBottom="0">
+    <Composition resizeToContentsMarginLeft="0" snapping="0" showPages="1" guidesVisible="1" resizeToContentsMarginTop="0" alignmentSnap="1" printResolution="200" paperWidth="594" gridVisible="0" snapGridOffsetX="0" smartGuides="1" snapGridOffsetY="0" resizeToContentsMarginRight="0" snapTolerancePixels="5" printAsRaster="0" generateWorldFile="0" paperHeight="841" numPages="1" snapGridResolution="10" resizeToContentsMarginBottom="0">
       <symbol alpha="1" clip_to_extent="1" type="fill" name="">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -287,7 +343,13 @@
           <customproperties/>
         </ComposerItem>
       </ComposerMap>
-      <customproperties/>
+      <customproperties>
+        <property key="imageCropMarginBottom" value="0"/>
+        <property key="imageCropMarginLeft" value="0"/>
+        <property key="imageCropMarginRight" value="0"/>
+        <property key="imageCropMarginTop" value="0"/>
+        <property key="imageCropToContents" value="false"/>
+      </customproperties>
     </Composition>
   </Composer>
   <projectlayers>
@@ -414,6 +476,9 @@
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="maxspeed">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="oneway">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="index">
@@ -707,6 +772,9 @@ def my_form_open(dialog, layer, feature):
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="maxspeed">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="oneway">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="index">
@@ -1004,6 +1072,9 @@ def my_form_open(dialog, layer, feature):
         <edittype widgetv2type="TextEdit" name="maxspeed">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
+        <edittype widgetv2type="TextEdit" name="oneway">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
         <edittype widgetv2type="TextEdit" name="index">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
@@ -1133,6 +1204,9 @@ def my_form_open(dialog, layer, feature):
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="maxspeed">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="oneway">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="index">
@@ -1268,6 +1342,9 @@ def my_form_open(dialog, layer, feature):
         <edittype widgetv2type="TextEdit" name="maxspeed">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
+        <edittype widgetv2type="TextEdit" name="oneway">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
         <edittype widgetv2type="TextEdit" name="index">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
@@ -1397,6 +1474,9 @@ def my_form_open(dialog, layer, feature):
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="maxspeed">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="oneway">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
         <edittype widgetv2type="TextEdit" name="index">
@@ -2880,10 +2960,34 @@ def my_form_open(dialog, layer, feature):
     <Digitizing>
       <DefaultSnapToleranceUnit type="int">2</DefaultSnapToleranceUnit>
       <LayerSnappingList type="QStringList">
+        <value>TSPD_6_wechel_closed_TSPD_6_wechel_closed_LineString20190107165335476</value>
+        <value>TSPD_6_wechel_closed_TSPD_6_wechel_closed_Point20190107165335363</value>
+        <value>TSPD_6_wechel_fixed_TSPD_6_wechel_fixed_LineString20190107165336690</value>
+        <value>TSPD_6_wechel_fixed_TSPD_6_wechel_fixed_Point20190107165336605</value>
+        <value>TSPD_6_wechel_open_TSPD_6_wechel_open_LineString20190107165338099</value>
+        <value>TSPD_6_wechel_open_TSPD_6_wechel_open_Point20190107165338004</value>
+        <value>TSP_6_wechel_closed_TSP_6_wechel_closed_LineString20190107164047637</value>
+        <value>TSP_6_wechel_closed_TSP_6_wechel_closed_Point20190107164047559</value>
+        <value>TSP_6_wechel_fixed_TSP_6_wechel_fixed_LineString20190107164048919</value>
+        <value>TSP_6_wechel_fixed_TSP_6_wechel_fixed_Point20190107164048832</value>
+        <value>TSP_6_wechel_open_TSP_6_wechel_open_LineString20190107164050468</value>
+        <value>TSP_6_wechel_open_TSP_6_wechel_open_Point20190107164050350</value>
         <value>problem320181107142334448</value>
         <value>problem320181107143835010</value>
       </LayerSnappingList>
       <LayerSnappingEnabledList type="QStringList">
+        <value>disabled</value>
+        <value>disabled</value>
+        <value>disabled</value>
+        <value>disabled</value>
+        <value>disabled</value>
+        <value>disabled</value>
+        <value>disabled</value>
+        <value>disabled</value>
+        <value>disabled</value>
+        <value>disabled</value>
+        <value>disabled</value>
+        <value>disabled</value>
         <value>disabled</value>
         <value>disabled</value>
       </LayerSnappingEnabledList>
@@ -2892,14 +2996,50 @@ def my_form_open(dialog, layer, feature):
       <LayerSnappingToleranceUnitList type="QStringList">
         <value>2</value>
         <value>2</value>
+        <value>2</value>
+        <value>2</value>
+        <value>2</value>
+        <value>2</value>
+        <value>2</value>
+        <value>2</value>
+        <value>2</value>
+        <value>2</value>
+        <value>2</value>
+        <value>2</value>
+        <value>2</value>
+        <value>2</value>
       </LayerSnappingToleranceUnitList>
       <LayerSnapToList type="QStringList">
+        <value>to_vertex_and_segment</value>
+        <value>to_vertex_and_segment</value>
+        <value>to_vertex_and_segment</value>
+        <value>to_vertex_and_segment</value>
+        <value>to_vertex_and_segment</value>
+        <value>to_vertex_and_segment</value>
+        <value>to_vertex_and_segment</value>
+        <value>to_vertex_and_segment</value>
+        <value>to_vertex_and_segment</value>
+        <value>to_vertex_and_segment</value>
+        <value>to_vertex_and_segment</value>
+        <value>to_vertex_and_segment</value>
         <value>to_vertex_and_segment</value>
         <value>to_vertex_and_segment</value>
       </LayerSnapToList>
       <DefaultSnapType type="QString">off</DefaultSnapType>
       <DefaultSnapTolerance type="double">0</DefaultSnapTolerance>
       <LayerSnappingToleranceList type="QStringList">
+        <value>0.000000</value>
+        <value>0.000000</value>
+        <value>0.000000</value>
+        <value>0.000000</value>
+        <value>0.000000</value>
+        <value>0.000000</value>
+        <value>0.000000</value>
+        <value>0.000000</value>
+        <value>0.000000</value>
+        <value>0.000000</value>
+        <value>0.000000</value>
+        <value>0.000000</value>
         <value>0.000000</value>
         <value>0.000000</value>
       </LayerSnappingToleranceList>

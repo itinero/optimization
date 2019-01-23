@@ -11,7 +11,7 @@ namespace Itinero.Optimization.Tests.Functional.Solvers.Shared.Seeds
 {
     public static class SeedHeuristicsTest
     {
-        public static void TestLocations1()
+        public static void TestLocations1_GetSeeds()
         {
             // build problem1.
             var locations = Staging.StagingHelpers.GetLocations(
@@ -27,8 +27,22 @@ namespace Itinero.Optimization.Tests.Functional.Solvers.Shared.Seeds
             var geojson = seeds.ToGeoJson(locations);
             File.WriteAllText("seeds.geojson", geojson);
         }
+        
+        public static void TestLocations1_GetSeedsKMeans()
+        {
+            // build problem1.
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("Solvers.Shared.Seeds.data.locations1.geojson"));
 
-        private static string ToGeoJson(this int[] seeds, Coordinate[] locations)
+            var visits = new List<int>(Enumerable.Range(0, locations.Length));
+
+            var seeds = SeedHeuristicsKMeansTest.Default.RunPerformance((visits, locations, 5), 1000);
+
+            var geojson = seeds.ToGeoJson(locations);
+            File.WriteAllText("seeds.geojson", geojson);
+        }
+
+        internal static string ToGeoJson(this int[] seeds, Coordinate[] locations)
         {
             var featureCollection = new FeatureCollection();
             for (var i = 0; i < seeds.Length; i++)

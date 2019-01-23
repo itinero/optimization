@@ -33,14 +33,14 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
         /// </summary>
         public static void Run()
         {
-            Run1Wechelderzande();
-            Run1WechelderzandeCapacitated();
-            Run2Spijkenisse();
+//            Run1Wechelderzande();
+//            Run1WechelderzandeCapacitated();
+//            Run2Spijkenisse();
             Run3SpijkenisseCapacitated();
             Run4SpijkenisseCapacitatedAndVisitCosts();
-            Run5DeHague();
-            Run6Rotterdam();
-            Run7Capelle();
+//            Run5DeHague();
+//            Run6Rotterdam();
+//            Run7Capelle();
             //Run8Hogeveen();
         }
 
@@ -182,12 +182,12 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
                             new CapacityConstraint()
                             {
                                 Metric = Itinero.Optimization.Models.Metrics.Time,
-                                Capacity = 3600 * 4
+                                Capacity = 3600 * 40
                             },
                             new CapacityConstraint()
                             {
                                 Metric = Itinero.Optimization.Models.Metrics.Weight,
-                                Capacity = 6000
+                                Capacity = 25000
                             }
                         }
                     }
@@ -207,7 +207,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
                         new VisitCost()
                         {
                             Metric = Itinero.Optimization.Models.Metrics.Weight,
-                            Value = 100
+                            Value = 300
                         }
                     }
                 };
