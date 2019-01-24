@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Itinero.Attributes;
 using Itinero.LocalGeo;
+using Serilog;
 
 namespace Itinero.Optimization.Tests.Functional
 {
@@ -147,23 +149,26 @@ namespace Itinero.Optimization.Tests.Functional
         /// <param name="result"></param>
         public static void WriteStats(this Result<Route> result)
         {
-            Console.Write("route:");
+            var message = new StringBuilder("route:");
 
             if (result == null)
             {
-                Console.WriteLine("null");
+                message.AppendLine("null");
+                Log.Information(message.ToString());
                 return;
             }
 
             if (result.IsError)
             {
-                Console.WriteLine($"Error: {result.ErrorMessage}");
+                message.AppendLine($"Error: {result.ErrorMessage}");
+                Log.Information(message.ToString());
                 return;
             }
 
             if (result.Value == null)
             {
-                Console.WriteLine("null");
+                message.AppendLine("null");
+                Log.Information(message.ToString());
                 return;
             }
 
@@ -186,11 +191,12 @@ namespace Itinero.Optimization.Tests.Functional
                     }
                 }
 
-                Console.Write($"{route.TotalTime}s | " +
+                message.Append($"{route.TotalTime}s | " +
                               $"{route.TotalDistance}m | " +
                               $"{route.Stops.Length} stops with {extraTime}s and {extraWeight}kg");
             }
-            Console.WriteLine();
+            message.AppendLine(string.Empty);
+            Log.Information(message.ToString());
         }
 
         /// <summary>
@@ -201,7 +207,7 @@ namespace Itinero.Optimization.Tests.Functional
         {
             var resultsList = results.ToList();
             
-            Console.WriteLine("# routes: {0}", resultsList.Count);
+            Log.Information($"# routes: {resultsList.Count}");
 
             var totalStops = 0;
             var totalDistance = 0f;
@@ -209,23 +215,21 @@ namespace Itinero.Optimization.Tests.Functional
 
             for (var i = 0; i < resultsList.Count; i++)
             {
-                Console.Write("route_{0}:", i);
-
                 if (resultsList[i] == null)
                 {
-                    Console.WriteLine("null");
+                    Log.Information($"route_{i}:null");
                     continue;
                 }
 
                 if (resultsList[i].IsError)
                 {
-                    Console.WriteLine($"Error: {resultsList[i].ErrorMessage}");
+                    Log.Information($"route_{i}:Error:{resultsList[i].ErrorMessage}");
                     continue;
                 }
                 
                 if (resultsList[i].Value == null)
                 {
-                    Console.WriteLine("null");
+                    Log.Information($"route_{i}:null");
                     continue;
                 }
 
@@ -247,20 +251,15 @@ namespace Itinero.Optimization.Tests.Functional
                         }
                     }
                 }
-                Console.Write("{0}s | ", route.TotalTime);
-                Console.Write("{0}m | ", route.TotalDistance);
-                Console.Write("{0}stops with {1}s {2}kg", route.Stops.Length - 1, extraTime, extraWeight);
+                
+                Log.Information($"route_{i}:{route.TotalTime}s | " +
+                                $"{route.TotalDistance}m | {route.Stops.Length - 1}stops with {extraTime}s {extraWeight}kg");
                 totalStops += route.Stops.Length - 1;
                 totalDistance += route.TotalDistance;
                 totalTime += route.TotalTime;
-                Console.WriteLine();
             }
 
-            Console.Write("total:");
-            Console.Write("{0}s | ", totalTime);
-            Console.Write("{0}m | ", totalDistance);
-            Console.Write("{0}stops", totalStops);
-            Console.WriteLine();
+            Log.Information($"total: {totalTime}s | {totalDistance}m || {totalStops}stops");
         }
 
         public static void AddRouteId(this IEnumerable<Route> routes)

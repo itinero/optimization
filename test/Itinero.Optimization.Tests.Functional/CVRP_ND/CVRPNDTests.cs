@@ -33,14 +33,14 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
         /// </summary>
         public static void Run()
         {
-//            Run1Wechelderzande();
-//            Run1WechelderzandeCapacitated();
-//            Run2Spijkenisse();
+            Run1Wechelderzande();
+            Run1WechelderzandeCapacitated();
+            Run2Spijkenisse();
             Run3SpijkenisseCapacitated();
             Run4SpijkenisseCapacitatedAndVisitCosts();
-//            Run5DeHague();
-//            Run6Rotterdam();
-//            Run7Capelle();
+            Run5DeHague();
+            Run6Rotterdam();
+            Run7Capelle();
             //Run8Hogeveen();
         }
 

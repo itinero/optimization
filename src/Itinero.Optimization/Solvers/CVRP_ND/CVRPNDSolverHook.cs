@@ -55,26 +55,16 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
             {
                 return cvrp.ConvertError<IEnumerable<(int vehicle, IEnumerable<int> tour)>>();
             }
-
-//            var solver = new GASolver(settings: new GASettings()
-//            {
-//                PopulationSize = 500,
-//                ElitismPercentage = 0.1f,
-//                CrossOverPercentage = 25,
-//                MutationPercentage = 2,
-//                StagnationCount = 20,
-//                ImprovementPercentage = 50
-//            }, generator: new SeededTourStrategy(), improvement: new ExchangeOperator(maxWindowSize: 5));
-
+            
             var solver = new GASolver(settings: new GASettings()
             {
-                PopulationSize = 5,
+                PopulationSize = 100,
                 ElitismPercentage = 0.1f,
                 CrossOverPercentage = 25,
                 MutationPercentage = 2,
                 StagnationCount = 20,
                 ImprovementPercentage = 50
-            }, generator: new SeededConstructionHeuristic(), improvement: new ExchangeOperator(maxWindowSize: 5));
+            }, generator: SeededConstructionHeuristic.Default, improvement: new ExchangeOperator(maxWindowSize: 5));
 
             var candidate = solver.Search(cvrp.Value);
             var solution = candidate.Solution;

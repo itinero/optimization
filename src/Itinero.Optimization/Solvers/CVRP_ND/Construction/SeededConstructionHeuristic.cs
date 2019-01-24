@@ -21,96 +21,80 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Construction
 
         public override CVRPNDCandidate Search(CVRPNDProblem problem)
         {
-            Func<int, int, float> weightFunc = (x, y) =>
-            {
-                var xL = problem.VisitLocation(x).Value;
-                var yL = problem.VisitLocation(y).Value;
-
-                return Coordinate.DistanceEstimateInMeter(xL, yL);
-            };
-
+            var visits = new List<int>(problem.Visits);
+            var clusters = new (int visit, int seed)[visits.Count];
             CVRPNDCandidate best = null;
+
             while (best == null)
             {
-                var tours = 10;
-                while (true) //tours > 5)
+                var toursMax = 10;
+                var toursMin = 1;
+                var tours = (toursMax + toursMin) / 2;
+                while (true)
                 {
-                    var visits = new List<int>(problem.Visits);
-//                var seeds = SeedHeuristics.GetSeeds(visits, tours, weightFunc, new NearestNeighbourArray(weightFunc,
-//                    problem.Count, 20));
-                    var seeds = SeedHeuristics.GetSeedsKMeans(visits, tours, (v) => problem.VisitLocation(v).Value);
-                    foreach (var seed in seeds)
-                    {
-                        visits.Remove(seed);
-                    }
+                    // calculate clusters.
+                    var seeds = SeedHeuristics.GetSeedsKMeans(visits, tours, (v) => problem.VisitLocation(v).Value, 
+                        ref clusters);
 
+                    // build tours out of the clusters.
                     var candidate = new CVRPNDCandidate()
                     {
                         Solution = new CVRPNDSolution(),
                         Problem = problem,
                         Fitness = 0
                     };
-                    for (var i = 0; i < seeds.Length; i++)
-                    {
-                        candidate.AddNew(seeds[i]);
-                    }
 
                     var candidateOk = true;
-                    foreach (var visit in visits)
+                    var t = -1;
+                    var tSeed = -1;
+                    for (var i = 0; i < clusters.Length; i++)
                     {
-                        var priority = Priority(seeds, visit, weightFunc);
-                        var t = priority.seedIndex;
-                        var cheapest = candidate.Tour(priority.seedIndex).CalculateCheapest(weightFunc, visit,
+                        // start new tour if needed.
+                        var (visit, seed) = clusters[i];
+                        if (seed != tSeed)
+                        { // start new tour.
+                            t = candidate.AddNew(seed);
+                            tSeed = seed;
+                        }
+                        
+                        // skip the seed, it's already there.
+                        if (visit == seed) continue;
+                        
+                        // add visit in cheapest position.
+                        var cheapest = candidate.Tour(t).CalculateCheapest(problem.TravelWeight, visit,
                             null, (travelCost, v) => candidate.CanInsert(t, v, travelCost));
-                        //var cheapest = candidate.Tour(priority.seedIndex).CalculateCheapest(weightFunc, visit);
                         if (cheapest.cost >= float.MaxValue)
                         {
                             // this is not feasible anymore.
                             candidateOk = false;
                             break;
                         }
-
-                        candidate.InsertAfter(priority.seedIndex, cheapest.location.From, visit);
+                        candidate.InsertAfter(t, cheapest.location.From, visit);
                     }
 
-                    if (!candidateOk) break;
-
-                    tours--;
-                    best = candidate;
+                    // do binary search to get the best tour count.
+                    if (!candidateOk)
+                    { // tour count too low.
+                        toursMin = tours;
+                    }
+                    else
+                    { // tour count too high.
+                        toursMax = tours;
+                        if (best == null || best.Count > tours)
+                        {
+                            best = candidate;
+                        }
+                    }
+                    var newTours = (toursMax + toursMin) / 2;
+                    if (newTours == tours)
+                    {
+                        break;
+                    }
+                    tours = newTours;
                 }
             }
 
             return best;
-        }
-
-        internal static (float priority, int seed, int seedIndex) Priority(int[] seeds, int visit, Func<int, int, float> weightFunc)
-        {
-            var closest = -1;
-            var closestIndex = -1;
-            var closestWeight = float.MaxValue;
-            var secondClosestWeight = float.MaxValue;
-            
-            for (var s = 0; s < seeds.Length; s++)
-            {
-                var weight = weightFunc(seeds[s], visit);
-                if (weight < closestWeight)
-                {
-                    secondClosestWeight = closestWeight;
-                    closestIndex = s;
-                    closest = seeds[s];
-                    closestWeight = weight;
-                    continue;
-                }
-
-                if (weight < secondClosestWeight)
-                {
-                    secondClosestWeight = weight;
-                }
-            }
-
-            var priority = closestWeight / secondClosestWeight;
-
-            return (priority, closest, closestIndex);
         }
         
         private static readonly ThreadLocal<SeededConstructionHeuristic> DefaultLazy = new ThreadLocal<SeededConstructionHeuristic>(() => new SeededConstructionHeuristic());

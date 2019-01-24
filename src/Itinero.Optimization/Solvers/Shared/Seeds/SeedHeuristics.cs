@@ -123,16 +123,37 @@ namespace Itinero.Optimization.Solvers.Shared.Seeds
         /// <param name="vehicleCount">The # of vehicles.</param>
         /// <param name="locationFunc">The locations function.</param>
         /// <param name="maxIterations">The maximum iterations to go through.</param>
+        /// <param name="clusters">The cluster output.</param>
         /// <returns>A set of seeds.</returns>
-        public static int[] GetSeedsKMeans(ICollection<int> visitPool, int vehicleCount, Func<int, Coordinate> locationFunc,
+        public static int[] GetSeedsKMeans(ICollection<int> visitPool, int vehicleCount,
+            Func<int, Coordinate> locationFunc,
             int maxIterations = 1000)
         {
+            var clusters = new (int visit, int seed)[visitPool.Count];
+            return GetSeedsKMeans(visitPool, vehicleCount, locationFunc,
+                ref clusters, maxIterations);
+        }
+
+        /// <summary>
+        /// Selects a fixed number of seeds from the visits pool.
+        /// </summary>
+        /// <param name="visitPool">The pool to select from.</param>
+        /// <param name="vehicleCount">The # of vehicles.</param>
+        /// <param name="locationFunc">The locations function.</param>
+        /// <param name="maxIterations">The maximum iterations to go through.</param>
+        /// <param name="clusters">The cluster output.</param>
+        /// <returns>A set of seeds.</returns>
+        public static int[] GetSeedsKMeans(ICollection<int> visitPool, int vehicleCount, Func<int, Coordinate> locationFunc, ref (int visit, int seed)[] clusters,
+            int maxIterations = 1000)
+        {
+            if (clusters == null) throw new ArgumentNullException(nameof(clusters));
+            if (clusters.Length != visitPool.Count) throw new ArgumentException($"Clusters array length needs to match visit count.");    
+            
             // generate initial means randomly.
             var means = new int[vehicleCount];
             RandomGenerator.Default.SelectRandomFrom(visitPool, ref means);
 
             // generate and assign clusters.
-            var clusters = new (int visit, int seed)[visitPool.Count];
             var i = 0;
             foreach (var visit in visitPool)
             {
@@ -146,7 +167,7 @@ namespace Itinero.Optimization.Solvers.Shared.Seeds
                     var bestWeight = float.MaxValue;
                     for (var s = 0; s < means.Length; s++)
                     {
-                        var weight = Coordinate.DistanceEstimateInMeter(
+                        var weight = DistanceFast(
                             locationFunc(means[s]), locationFunc(visit));
                         if (!(weight < bestWeight)) continue;
                         best = means[s];
@@ -192,7 +213,7 @@ namespace Itinero.Optimization.Solvers.Shared.Seeds
                     {
                         if (clusters[c].seed != cluster) continue;
                         var coordinate = locationFunc(clusters[c].visit);
-                        var weight = Coordinate.DistanceEstimateInMeter(center, coordinate);
+                        var weight = DistanceFast(center, coordinate);
                         if (!(weight < meansWeight)) continue;
                         mean = clusters[c].visit;
                         meansWeight = weight;
@@ -220,7 +241,7 @@ namespace Itinero.Optimization.Solvers.Shared.Seeds
                     var meanWeight = float.MaxValue;
                     for (var s = 0; s < means.Length; s++)
                     {
-                        var weight = Coordinate.DistanceEstimateInMeter(
+                        var weight = DistanceFast(
                             locationFunc(means[s]), locationFunc(v));
                         if (!(weight < meanWeight)) continue;
                         mean = means[s];
@@ -234,6 +255,14 @@ namespace Itinero.Optimization.Solvers.Shared.Seeds
             }
 
             return means;
+            
+            // local fast distance function
+            float DistanceFast(Coordinate c1, Coordinate c2)
+            {
+                var diffLat = c2.Latitude - c1.Latitude;
+                var diffLon = c2.Longitude - c1.Longitude;
+                return (diffLat * diffLat) + (diffLon * diffLon);
+            }
         }
     }
 }

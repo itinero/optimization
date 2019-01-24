@@ -26,21 +26,21 @@ namespace Itinero.Optimization.Tests.Functional
 #endif
 
             // shared tools fuctional testing.
-            //SeedHeuristicsTest.TestLocations1_GetSeedsKMeans();
+            SeedHeuristicsTest.TestLocations1_GetSeedsKMeans();
 
             // CVRP_ND tools functional testing.
             SeededConstructionHeuristicTests.TestLocations1_SeededConstructionHeuristic();
             
             // quick hull functional testing.
-            //QuickHullTests.Run();
+            QuickHullTests.Run();
             
             // invoke case-specific tests.
-            //TSP.TSPTests.Run();
-            //TSP_D.TSPDTests.Run();
-            //TSP_TW.TSPTWTests.Run();
-            //STSP.STSPTests.Run();
-            //CVRP.CVRPTests.Run();
-            //CVRP_ND.CVRPNDTests.Run();
+            TSP.TSPTests.Run();
+            TSP_D.TSPDTests.Run();
+            TSP_TW.TSPTWTests.Run();
+            STSP.STSPTests.Run();
+            CVRP.CVRPTests.Run();
+            CVRP_ND.CVRPNDTests.Run();
         }
 
         public static bool DoIntermediates { get; set; } = false;
@@ -62,6 +62,12 @@ namespace Itinero.Optimization.Tests.Functional
 #endif
             Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
+#if RELEASE
+                if (level == "verbose")
+                {
+                    return;
+                }
+#endif
                 if (loggingBlacklist.Contains(o))
                 {
                     return;
@@ -100,8 +106,35 @@ namespace Itinero.Optimization.Tests.Functional
                     return;
                 }
 #endif
-                Log.Information(message);
-                Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
+                if (loggingBlacklist.Contains(o))
+                {
+                    return;
+                }
+
+                if (level == Logging.TraceEventType.Verbose.ToString().ToLower())
+                {
+                    Log.Debug($"[{o}] {level} - {message}");
+                }
+                else if (level == Logging.TraceEventType.Information.ToString().ToLower())
+                {
+                    Log.Information($"[{o}] {level} - {message}");
+                }
+                else if (level == Logging.TraceEventType.Warning.ToString().ToLower())
+                {
+                    Log.Warning($"[{o}] {level} - {message}");
+                }
+                else if (level == Logging.TraceEventType.Critical.ToString().ToLower())
+                {
+                    Log.Fatal($"[{o}] {level} - {message}");
+                }
+                else if (level == Logging.TraceEventType.Error.ToString().ToLower())
+                {
+                    Log.Error($"[{o}] {level} - {message}");
+                }
+                else
+                {
+                    Log.Debug($"[{o}] {level} - {message}");
+                }
             };
         }
     }
