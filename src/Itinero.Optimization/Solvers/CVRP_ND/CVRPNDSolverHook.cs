@@ -64,7 +64,7 @@ namespace Itinero.Optimization.Solvers.CVRP_ND
                 MutationPercentage = 2,
                 StagnationCount = 20,
                 ImprovementPercentage = 50
-            }, generator: SeededConstructionHeuristic.Default, improvement: new ExchangeOperator(maxWindowSize: 5));
+            }, generator: SeededConstructionHeuristic.Default, improvement: new ExchangeOperator(maxWindowSize: 5), useParallel: true);
 
             var candidate = solver.Search(cvrp.Value);
             var solution = candidate.Solution;
