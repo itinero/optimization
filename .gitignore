@@ -40,6 +40,7 @@ packages/*
 
 *.routerdb
 *.osm.pbf
+!test/Itinero.Optimization.Tests.Functional/Staging/**/*
 TestResult*.xml
 
 test/Itinero.Optimization.Tests.Functional/result/*
