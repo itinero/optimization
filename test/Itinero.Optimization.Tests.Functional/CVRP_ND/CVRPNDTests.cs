@@ -41,7 +41,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             Run5DeHague();
             Run6Rotterdam();
             Run7Capelle();
-            //Run8Hogeveen();
+            Run8Hogeveen();
         }
 
         public static void Run1Wechelderzande()

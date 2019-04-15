@@ -33,6 +33,10 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Construction
             {
                 var toursMax = 10;
                 var toursMin = 1;
+                if (toursMax > visits.Count)
+                {
+                    toursMax = visits.Count;
+                }
                 var tours = (toursMax + toursMin) / 2;
                 while (true)
                 {

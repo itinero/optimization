@@ -40,9 +40,12 @@ packages/*
 
 *.routerdb
 *.osm.pbf
+!test/Itinero.Optimization.Tests.Functional/Staging/**/*
 TestResult*.xml
 
 test/Itinero.Optimization.Tests.Functional/result/*
+test/Itinero.Optimization.Tests.Functional/*.geojson
+test/Itinero.Optimization.Tests.Functional/*.qgs~
 
 Candidate*.md
 Candidate*.csv

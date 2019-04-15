@@ -123,7 +123,6 @@ namespace Itinero.Optimization.Solvers.Shared.Seeds
         /// <param name="vehicleCount">The # of vehicles.</param>
         /// <param name="locationFunc">The locations function.</param>
         /// <param name="maxIterations">The maximum iterations to go through.</param>
-        /// <param name="clusters">The cluster output.</param>
         /// <returns>A set of seeds.</returns>
         public static int[] GetSeedsKMeans(ICollection<int> visitPool, int vehicleCount,
             Func<int, Coordinate> locationFunc,
@@ -148,6 +147,7 @@ namespace Itinero.Optimization.Solvers.Shared.Seeds
         {
             if (clusters == null) throw new ArgumentNullException(nameof(clusters));
             if (clusters.Length != visitPool.Count) throw new ArgumentException($"Clusters array length needs to match visit count.");    
+            if (visitPool.Count < vehicleCount) throw new ArgumentException($"Cannot select {vehicleCount} seeds from a collection with only {visitPool.Count} visits.");    
             
             // generate initial means randomly.
             var means = new int[vehicleCount];

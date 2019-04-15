@@ -101,6 +101,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Itinero.Optimization\Itinero.Optimization.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="OsmSharp, Version=6.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\osmsharp\core\src\OsmSharp\bin\Debug\netstandard2.0\OsmSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>

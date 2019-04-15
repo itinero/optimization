@@ -411,6 +411,7 @@ namespace Itinero.Optimization.Solvers.Tours
             private readonly int _first;
             private readonly int _start;
             private int[] _nextArray;
+            private int _count = -1;
 
             public Enumerator(int first, int[] nextArray)
             {
@@ -455,11 +456,19 @@ namespace Itinero.Optimization.Solvers.Tours
                         return false;
                     }
                 }
+
+                // TODO: should we leave this in? it prevents infinite enumerations and detects invalid tours.
+                _count++;
+                if (_count > this._nextArray.Length + 1)
+                {
+                    throw new Exception($"Found at least {_count} element when there is only room for {this._nextArray.Length + 1}.");
+                }
                 return _current >= 0;
             }
 
             public void Reset()
             {
+                _count = -1;
                 _current = -1;
             }
         }
