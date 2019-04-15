@@ -1,22 +1,5 @@
-﻿/*
- *  Licensed to SharpSoftware under one or more contributor
- *  license agreements. See the NOTICE file distributed with this work for 
- *  additional information regarding copyright ownership.
- * 
- *  SharpSoftware licenses this file to you under the Apache License, 
- *  Version 2.0 (the "License"); you may not use this file except in 
- *  compliance with the License. You may obtain a copy of the License at
- * 
- *       http://www.apache.org/licenses/LICENSE-2.0
- * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.Threading;
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.LocalGeo;
@@ -31,22 +14,24 @@ namespace Itinero.Optimization.Models.Mapping.Directed
     /// <summary>
     /// A default directed model mapper.
     /// </summary>
-    internal static class DirectedModelMapper
+    internal class DirectedModelMapper : ModelMapper
     {
-        /// <summary>
-        /// Gets the name of this mapper.
-        /// </summary>
-        internal const string Name = "Directed";
+        private readonly float _maxSearchDistance;
         
         /// <summary>
-        /// Implements the default directed model mapper.
+        /// Creates a new model mapper.
         /// </summary>
-        /// <param name="router">The router to use.</param>
-        /// <param name="model">The model to map.</param>
-        /// <param name="mappings">The mappings.</param>
-        /// <param name="message">The reason why if the mapping fails.</param>
-        /// <returns>True if mapping succeeds.</returns>
-        internal static bool TryMap(RouterBase router, Model model, out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
+        /// <param name="maxSearchDistance">The max search distance.</param>
+        public DirectedModelMapper(float maxSearchDistance = 250)
+        {
+            _maxSearchDistance = maxSearchDistance;
+        }
+        
+        /// <inhertitdoc/>
+        public override string Name { get; } = "Directed";
+
+        /// <inhertitdoc/>
+        public override bool TryMap(RouterBase router, Model model, out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
             out string message)
         {
             // Verify if this mapper can handle this model:
@@ -57,7 +42,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
             // - check if metrics match.
             var metric = model.VehiclePool.Vehicles[0].Metric; // this exists because the model was validated.
             var profileName = model.VehiclePool.Vehicles[0].Profile;
-            var oneVehicleWithTurnPenaly = model.VehiclePool.Vehicles[0].TurnPentalty > 0;
+            var oneVehicleWithTurnPenalty = model.VehiclePool.Vehicles[0].TurnPentalty > 0;
             for (var v = 1; v < model.VehiclePool.Vehicles.Length; v++)
             {
                 var vehicle = model.VehiclePool.Vehicles[v];
@@ -78,11 +63,11 @@ namespace Itinero.Optimization.Models.Mapping.Directed
 
                 if (vehicle.TurnPentalty > 0)
                 {
-                    oneVehicleWithTurnPenaly = true;
+                    oneVehicleWithTurnPenalty = true;
                 }
             }
 
-            if (!oneVehicleWithTurnPenaly)
+            if (!oneVehicleWithTurnPenalty)
             {
                 message =
                     $"No vehicle found with a turn penalty..";
@@ -118,7 +103,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
             
             // do mass resolving.
             var massResolvingAlgorithm =
-                new MassResolvingAlgorithm(router, new IProfileInstance[] { profile }, locations, null, maxSearchDistance: 250f);
+                new MassResolvingAlgorithm(router, new IProfileInstance[] { profile }, locations, null, maxSearchDistance: _maxSearchDistance);
             massResolvingAlgorithm.Run();
             if (!massResolvingAlgorithm.HasSucceeded)
             {
@@ -168,5 +153,12 @@ namespace Itinero.Optimization.Models.Mapping.Directed
             message = string.Empty;
             return true;
         }
+        
+        private static readonly ThreadLocal<DirectedModelMapper> DefaultLazy = new ThreadLocal<DirectedModelMapper>(() => new DirectedModelMapper());
+        
+        /// <summary>
+        /// Gets the default default model mapper.
+        /// </summary>
+        public static DirectedModelMapper Default => DefaultLazy.Value;
     }
 }

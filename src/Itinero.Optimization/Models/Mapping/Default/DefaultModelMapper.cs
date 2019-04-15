@@ -1,57 +1,24 @@
-﻿/*
- *  Licensed to SharpSoftware under one or more contributor
- *  license agreements. See the NOTICE file distributed with this work for 
- *  additional information regarding copyright ownership.
- * 
- *  SharpSoftware licenses this file to you under the Apache License, 
- *  Version 2.0 (the "License"); you may not use this file except in 
- *  compliance with the License. You may obtain a copy of the License at
- * 
- *       http://www.apache.org/licenses/LICENSE-2.0
- * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Threading;
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.LocalGeo;
-using Itinero.Optimization.Models.Vehicles;
-using Itinero.Optimization.Models.Visits;
 using Itinero.Optimization.Models.Visits.Costs;
 using Itinero.Profiles;
-using Vehicle = Itinero.Optimization.Models.Vehicles.Vehicle;
 
 namespace Itinero.Optimization.Models.Mapping.Default
 {
     /// <summary>
     /// A default model mapper.
     /// </summary>
-    public static class DefaultModelMapper
+    public class DefaultModelMapper : ModelMapper
     {
-        /// <summary>
-        /// Gets the name of this mapper.
-        /// </summary>
-        internal const string Name = "Default";
-        
-        /// <summary>
-        /// Implements the default model mapper.
-        /// </summary>
-        /// <param name="router">The router to use.</param>
-        /// <param name="model">The model to map.</param>
-        /// <param name="mappings">The mappings.</param>
-        /// <param name="message">The reason why if the mapping fails.</param>
-        /// <returns>True if mapping succeeds.</returns>
-        internal static bool TryMap(RouterBase router, Model model, out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
+        /// <inhertitdoc/>
+        public override string Name { get; } = "Default";
+
+        /// <inhertitdoc/>
+        public override bool TryMap(RouterBase router, Model model, out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
             out string message)
         {
-            //Debug.Assert(model.IsValid(out var _)); // model is asumed to be valid.
-            
             // Verify if this mapper can handle this model:
             // - check if there are any vehicles with a turn-cost.
             // - check if there is only one metric defined.
@@ -147,7 +114,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
             {
                 Visits = weightMatrixAlgorithm.AdjustToMapping(model.Visits),
                 VehiclePool = mappedVehiclePool,
-                TravelCosts = new TravelCostMatrix[]
+                TravelCosts = new []
                 {
                     new TravelCostMatrix()
                     {
@@ -166,95 +133,11 @@ namespace Itinero.Optimization.Models.Mapping.Default
             return true;
         }
         
-        private static bool TryToMap(this IWeightMatrixAlgorithm<float> algorithm, VehiclePool vehiclePool, out VehiclePool mappedVehiclePool,
-            out string message)
-        {
-            if (algorithm.Errors.Count == 0 &&
-                algorithm.MassResolver.Errors.Count == 0)
-            { // don't copy if no errors.
-                mappedVehiclePool = vehiclePool;
-                message = string.Empty;
-                return true;
-            }
-
-            mappedVehiclePool = new VehiclePool()
-            {
-                Reusable = vehiclePool.Reusable,
-                Vehicles = vehiclePool.Vehicles
-            };
-            for (var v = 0; v < mappedVehiclePool.Vehicles.Length; v++)
-            {
-                var vehicle = mappedVehiclePool.Vehicles[v];
-                if (!algorithm.AdjustToMapping(vehicle, out message))
-                {
-                    message = $"Vehicle at index {v} could not be mapped: {message}";
-                    mappedVehiclePool = null;
-                    return false;
-                }
-            }
-
-            message = string.Empty;
-            return true;
-        }
-
-        private static bool AdjustToMapping(this IWeightMatrixAlgorithm<float> algorithm, Vehicle vehicle,
-            out string message)
-        {
-            if (vehicle.Arrival.HasValue)
-            {
-                if (algorithm.MassResolver.Errors.TryGetValue(vehicle.Arrival.Value, out var locationError))
-                {
-                    message = $"Arrival location is in error: {locationError.Code} - {locationError.Message}.";
-                    return false;
-                }
-                var resolvedIdx = algorithm.MassResolver.ResolvedIndexOf(vehicle.Arrival.Value);
-                if (algorithm.Errors.TryGetValue(resolvedIdx, out var error))
-                {
-                    message = $"Arrival location is in error: {error.Code} - {error.Message}.";
-                    return false;
-                }
-                vehicle.Arrival = algorithm.WeightIndex(vehicle.Arrival.Value);
-            }
-
-            if (vehicle.Departure.HasValue)
-            {
-                if (algorithm.MassResolver.Errors.TryGetValue(vehicle.Departure.Value, out var locationError))
-                {
-                    message = $"Departure location is in error: {locationError.Code} - {locationError.Message}.";
-                    return false;
-                }
-                var resolvedIdx = algorithm.MassResolver.ResolvedIndexOf(vehicle.Departure.Value);
-                if (algorithm.Errors.TryGetValue(resolvedIdx, out var error))
-                {
-                    message = $"Departure location is in error: {error.Code} - {error.Message}.";
-                    return false;
-                }
-                vehicle.Departure = algorithm.WeightIndex(vehicle.Departure.Value);
-            }
-
-            message = string.Empty;
-            return true;
-        }
+        private static readonly ThreadLocal<DefaultModelMapper> DefaultLazy = new ThreadLocal<DefaultModelMapper>(() => new DefaultModelMapper());
         
         /// <summary>
-        /// Adjusts the given visit array to the weight matrix by removing invalid entries.
+        /// Gets the default default model mapper.
         /// </summary>
-        /// <param name="algorithm">The weight matrix algorithm.</param>
-        /// <param name="original">The original visits.</param>
-        /// <returns>The adjusted visits.</returns>
-        public static Visit[] AdjustToMapping(this IWeightMatrixAlgorithm<float> algorithm, Visit[] original)
-        {
-            if (algorithm.Weights.Length == original.Length)
-            { // don't copy if no errors.
-                return original;
-            }
-            
-            var newAr = new Visit[algorithm.Weights.Length];
-            for (var i = 0; i < newAr.Length; i++)
-            {
-                newAr[i] = original[algorithm.OriginalLocationIndex(i)];
-            }
-            return newAr;
-        }
+        public static DefaultModelMapper Default => DefaultLazy.Value;
     }
 }

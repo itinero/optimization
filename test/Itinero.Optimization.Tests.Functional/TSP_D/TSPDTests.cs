@@ -180,7 +180,7 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             
             // create and configure the optimizer.
             var optimizer = router.Optimizer(new OptimizerConfiguration(modelMapperRegistry: new ModelMapperRegistry(
-                (ByEdgeDirectedModelMapper.Name, ByEdgeDirectedModelMapper.TryMap))));
+                ByEdgeDirectedModelMapper.Default)));
 
             // calculate TSPD.
             var func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
