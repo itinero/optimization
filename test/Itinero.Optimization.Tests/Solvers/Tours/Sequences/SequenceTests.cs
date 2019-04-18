@@ -14,7 +14,6 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Sequences
 
             var s = tour.Sequence(1, 2);
 
-            Assert.NotNull(s);
             Assert.Equal(2, s.Length);
             Assert.Equal(1, s[0]);
             Assert.Equal(2, s[1]);
@@ -27,7 +26,6 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Sequences
 
             var s = tour.Sequence(4, 3);
 
-            Assert.NotNull(s);
             Assert.Equal(3, s.Length);
             Assert.Equal(4, s[0]);
             Assert.Equal(0, s[1]);

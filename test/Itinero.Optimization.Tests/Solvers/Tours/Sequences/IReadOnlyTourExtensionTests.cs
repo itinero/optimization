@@ -18,7 +18,6 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Sequences
                 var size = RandomGenerator.Default.Generate(tour.Count - 1) + 1;
                 var s = tour.RandomSequence(size);
 
-                Assert.NotNull(s);
                 Assert.Equal(size, s.Length);
 
                 var index = tour.GetIndexOf(s[0]);
@@ -47,7 +46,6 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Sequences
                 
                 var s = tour.RandomSequence(minSize, maxSize);
 
-                Assert.NotNull(s);
                 Assert.True(s.Length >= minSize && s.Length <= maxSize);
 
                 if (s.Length <= 0) continue;
