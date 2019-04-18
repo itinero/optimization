@@ -27,6 +27,22 @@ namespace Itinero.Optimization.Solvers.Tours.Sequences
     public static class SequenceExtensions
     {
         /// <summary>
+        /// Returns the index of a the given visit.
+        /// </summary>
+        /// <param name="seq">The sequence.</param>
+        /// <param name="visit">The visit.</param>
+        /// <returns>The index or -1 if the visit wasn't found.</returns>
+        public static int IndexOf(this Sequence seq, int visit)
+        {
+            for (var i = 0; i < seq.Length; i++)
+            {
+                if (seq[i] == visit) return i;
+            }
+
+            return -1;
+        }
+        
+        /// <summary>
         /// Calculates the cost of a sequence.
         /// </summary>
         /// <param name="s">The sequence.</param>

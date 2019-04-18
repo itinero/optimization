@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Itinero.Optimization.Solvers.Tours
 {
     /// <summary>
@@ -12,6 +14,16 @@ namespace Itinero.Optimization.Solvers.Tours
         {
             return tour.Last.HasValue &&
                    tour.Last.Value == tour.First;
+        }
+        
+        /// <summary>
+        /// Gets an enumerable enumerating pairs in the tour enumerable.
+        /// </summary>
+        /// <param name="tourEnumerable">A tour enumerable.</param>
+        /// <returns>An enumerable enumerating pairs.</returns>
+        public static IEnumerable<Pair> Pairs(this IReadOnlyTour tourEnumerable)
+        {
+            return new PairEnumerable<IReadOnlyTour>(tourEnumerable, tourEnumerable.IsClosed());
         }
     }
 }

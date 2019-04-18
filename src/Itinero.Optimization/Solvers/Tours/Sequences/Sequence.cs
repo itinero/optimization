@@ -16,6 +16,7 @@
  *  limitations under the License.
  */
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -24,7 +25,7 @@ namespace Itinero.Optimization.Solvers.Tours.Sequences
     /// <summary>
     /// Represents a sequence.
     /// </summary>
-    public struct Sequence
+    public struct Sequence : IEnumerable<int>
     {
         private readonly int[] _visits;
         private readonly int _start;
@@ -143,6 +144,54 @@ namespace Itinero.Optimization.Solvers.Tours.Sequences
         }
 
         /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<int> GetEnumerator()
+        {
+            return new SequenceEnumerator(this);
+        }
+
+        private class SequenceEnumerator : IEnumerator<int>
+        {
+            private readonly Sequence _s;
+
+            public SequenceEnumerator(Sequence s)
+            {
+                _s = s;
+                this.Current = int.MaxValue;
+            }
+            
+            private int _pos = -1;
+
+            public bool MoveNext()
+            {
+                _pos++;
+                if (_pos < _s.Length)
+                {
+                    this.Current = _s[_pos];
+                    return true;
+                };
+                this.Current = int.MaxValue;
+                return false;
+            }
+
+            public void Reset()
+            {
+                _pos = -1;
+            }
+
+            public int Current { get; private set; }
+
+            object IEnumerator.Current => Current;
+
+            public void Dispose()
+            {
+                
+            }
+        }
+
+        /// <summary>
         /// Returns a proper description of this sequence.
         /// </summary>
         /// <returns></returns>
@@ -158,6 +207,11 @@ namespace Itinero.Optimization.Solvers.Tours.Sequences
                 res.Append(this [i]);
             }
             return res.ToString();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
