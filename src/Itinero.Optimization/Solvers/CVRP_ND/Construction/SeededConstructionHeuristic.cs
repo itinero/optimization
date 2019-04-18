@@ -14,11 +14,15 @@ using Itinero.Optimization.Solvers.Shared.CheapestInsertion;
 [assembly: InternalsVisibleTo("Itinero.Optimization.Tests.Benchmarks")]
 namespace Itinero.Optimization.Solvers.CVRP_ND.Construction
 {
+    /// <summary>
+    /// A seeded construction heuristic.
+    /// </summary>
     public class SeededConstructionHeuristic : Strategy<CVRPNDProblem, CVRPNDCandidate>
     {
         /// <inheritdoc/>
         public override string Name { get; } = "SEED_CON_HEUR";
 
+        /// <inheritdoc/>
         public override CVRPNDCandidate Search(CVRPNDProblem problem)
         {
             var visits = new List<int>(problem.Visits);
@@ -102,6 +106,10 @@ namespace Itinero.Optimization.Solvers.CVRP_ND.Construction
         }
         
         private static readonly ThreadLocal<SeededConstructionHeuristic> DefaultLazy = new ThreadLocal<SeededConstructionHeuristic>(() => new SeededConstructionHeuristic());
+        
+        /// <summary>
+        /// The default instance.
+        /// </summary>
         public static SeededConstructionHeuristic Default => DefaultLazy.Value;
     }
 }

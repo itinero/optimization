@@ -29,35 +29,24 @@ namespace Itinero.Optimization.Models.Mapping
     /// </summary>
     public class ModelMapperRegistry
     {
-        private readonly List<(string name, TryMapDelegate tryMap)> _modelMappers = new List<(string name, TryMapDelegate tryMap)>();
+        private readonly List<ModelMapper> _modelMappers = new List<ModelMapper>();
         
         /// <summary>
         /// Creates a new model mappers registry.
         /// </summary>
         /// <param name="mappers">The initial mappers.</param>
-        public ModelMapperRegistry(params (string name, TryMapDelegate tryMap)[] mappers)
+        public ModelMapperRegistry(params ModelMapper[] mappers)
         {
             _modelMappers.AddRange(mappers);
         }
-        
-        /// <summary> 
-        /// A delegate to define a call for mapping a model onto a road network.
-        /// </summary>
-        /// <param name="router">The router to use.</param>
-        /// <param name="model">The model to map.</param>
-        /// <param name="mappings">The mappings.</param>
-        /// <param name="reasonWhy">The reason why if the mapping fails.</param>
-        public delegate bool TryMapDelegate(RouterBase router, Model model, out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
-            out string reasonWhy);
 
         /// <summary>
-        /// Registers a new solver.
+        /// Registers a new model mapper.
         /// </summary>
-        /// <param name="name">The name of the mapper.</param>
-        /// <param name="tryMap">A function to call the mapper.</param>
-        public void Register(string name, TryMapDelegate tryMap)
+        /// <param name="mapper">The model mapper.</param>
+        public void Register(ModelMapper mapper)
         {
-            _modelMappers.Add((name, tryMap));
+            _modelMappers.Add(mapper);
         }
 
         /// <summary>
@@ -85,7 +74,7 @@ namespace Itinero.Optimization.Models.Mapping
             for (var i = _modelMappers.Count - 1; i >= 0; i--)
             {
                 // loop from last registered to first.
-                if (_modelMappers[i].tryMap(router, model, out var mappings, out var reasonWhy))
+                if (_modelMappers[i].TryMap(router, model, out var mappings, out var reasonWhy))
                 {
                     // mapping worked, return the result.
                     return mappings;
@@ -104,10 +93,10 @@ namespace Itinero.Optimization.Models.Mapping
         /// <summary>
         /// Gets the default solver registry.
         /// </summary>
-        public static ModelMapperRegistry Default => new ModelMapperRegistry(new (string name, TryMapDelegate tryMap)[]
+        public static ModelMapperRegistry Default => new ModelMapperRegistry(new ModelMapper[]
         {
-            (DefaultModelMapper.Name, DefaultModelMapper.TryMap),
-            (DirectedModelMapper.Name, DirectedModelMapper.TryMap)
+            DefaultModelMapper.Default,
+            DirectedModelMapper.Default
         });
     }
 }

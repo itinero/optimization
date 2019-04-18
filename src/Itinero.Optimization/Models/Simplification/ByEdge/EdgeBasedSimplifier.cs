@@ -92,7 +92,7 @@ namespace Itinero.Optimization.Models.Simplification.ByEdge
             
             // do mass resolving.
             var massResolvingAlgorithm =
-                new MassResolvingAlgorithm(router, new IProfileInstance[] { profile }, locations, null, maxSearchDistance: 250f);
+                new MassResolvingAlgorithm(router, new IProfileInstance[] { profile }, locations, null, maxSearchDistance: 1000f);
             massResolvingAlgorithm.Run();
             if (!massResolvingAlgorithm.HasSucceeded)
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Itinero.Algorithms.Matrices;
 using Itinero.LocalGeo;
 using Itinero.Logging;
@@ -10,28 +11,29 @@ namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
     /// <summary>
     /// A model mapper that uses by edge simplification.
     /// </summary>
-    public static class ByEdgeDirectedModelMapper
+    public class ByEdgeDirectedModelMapper : ModelMapper
     {
-        /// <summary>
-        /// Gets the name of this mapper.
-        /// </summary>
-        public const string Name = "DirectedSimplifiedByEdge";
+        private readonly DirectedModelMapper _modelMapper;
         
         /// <summary>
-        /// Implements a directed model mapper that does a simplification by grouping by edge.
+        /// Creates a new model mapper.
         /// </summary>
-        /// <param name="router">The router to use.</param>
-        /// <param name="model">The model to map.</param>
-        /// <param name="mappings">The mappings.</param>
-        /// <param name="message">The reason why if the mapping fails.</param>
-        /// <returns>True if mapping succeeds.</returns>
-        public static bool TryMap(RouterBase router, Model model,
-            out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
+        /// <param name="maxSearchDistance">The max search distance.</param>
+        public ByEdgeDirectedModelMapper(float maxSearchDistance = 250)
+        {
+            _modelMapper = new DirectedModelMapper(maxSearchDistance);
+        }
+        
+        /// <inhertitdoc/>
+        public override string Name { get; } = "DirectedSimplifiedByEdge";
+
+        /// <inhertitdoc/>
+        public override bool TryMap(RouterBase router, Model model, out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
             out string message)
         {
             if (!EdgeBasedSimplifier.TrySimplify(router, model, out var simplified, out message))
             {
-                return DirectedModelMapper.TryMap(router, model, out mappings, out message);
+                return _modelMapper.TryMap(router, model, out mappings, out message);
             }
 
             // use simplified model from now on.
@@ -143,5 +145,12 @@ namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
             mappings = (mappedModel, new ByEdgeDirectedModelMapping(mappedModel, weightMatrixAlgorithm, simplified.details));
             return true;
         }
+        
+        private static readonly ThreadLocal<ByEdgeDirectedModelMapper> DefaultLazy = new ThreadLocal<ByEdgeDirectedModelMapper>(() => new ByEdgeDirectedModelMapper());
+        
+        /// <summary>
+        /// Gets the default default model mapper.
+        /// </summary>
+        public static ByEdgeDirectedModelMapper Default => DefaultLazy.Value;
     }
 }
