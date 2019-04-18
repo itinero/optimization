@@ -17,10 +17,8 @@
  */
 
 using Itinero.IO.Osm;
-using System.Linq;
 using System.IO;
 using Itinero.Profiles;
-using OsmSharp.Streams;
 
 namespace Itinero.Optimization.Tests.Functional.Staging
 {

@@ -37,6 +37,54 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
         /// <param name="tour">The tour.</param>
         /// <param name="locationFunc">A function that returns the location per visit.</param>
         /// <returns>A hull with meta-data.</returns>
+        public static TourHull ConvexHull(this IEnumerable<int> tour, Func<int, Coordinate> locationFunc)
+        {
+            var hull = new TourHull();
+
+            // calculate most left and most right locations and build locations list.
+            var locations = new List<(Coordinate location, int visit)>();
+            float minLon = float.MaxValue, maxLon = float.MinValue;
+            var left = -1;
+            var right = -1;
+            var count = 0;
+            foreach (var visit in tour)
+            {
+                count++;
+                
+                var location = locationFunc(visit);
+                locations.Add((location, visit));
+
+                if (minLon > location.Longitude)
+                {
+                    minLon = location.Longitude;
+                    left = locations.Count - 1;
+                }
+
+                if (maxLon < location.Longitude)
+                {
+                    maxLon = location.Longitude;
+                    right = locations.Count - 1;
+                }
+            }
+
+            if (count == 0) return hull;
+            if (count == 1)
+            {
+                hull.Add(locations[0]);
+                return hull;
+            } 
+
+            ConvexHull(hull, locations, left, right);
+
+            return hull;
+        }
+        
+        /// <summary>
+        /// Calculates a convex hull.
+        /// </summary>
+        /// <param name="tour">The tour.</param>
+        /// <param name="locationFunc">A function that returns the location per visit.</param>
+        /// <returns>A hull with meta-data.</returns>
         public static TourHull ConvexHull(this Tour tour, Func<int, Coordinate> locationFunc)
         {
             var hull = new TourHull();

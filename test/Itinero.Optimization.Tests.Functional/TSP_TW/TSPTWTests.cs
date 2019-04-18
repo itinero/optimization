@@ -18,12 +18,8 @@
 
 using System;
 using System.Collections.Generic;
-using Itinero.LocalGeo;
 using Itinero.Optimization.Models;
-using Itinero.Optimization.Models.TimeWindows;
 using Itinero.Optimization.Models.Vehicles;
-using Itinero.Optimization.Models.Visits;
-using OsmSharp.IO.Xml;
 
 namespace Itinero.Optimization.Tests.Functional.TSP_TW
 {
