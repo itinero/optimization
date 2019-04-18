@@ -28,7 +28,7 @@ namespace Itinero.Optimization.Solvers.Tours
     /// <summary>
     /// a tour or a sequence of visits.
     /// </summary>
-    public sealed class Tour : IEnumerable<int>, ICloneable<Tour>
+    public sealed class Tour : ICloneable<Tour>, IReadOnlyTour
     {
         private int[] _nextArray;
         private int _first;

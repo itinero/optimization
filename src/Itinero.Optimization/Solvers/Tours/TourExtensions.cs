@@ -46,15 +46,6 @@ namespace Itinero.Optimization.Solvers.Tours
         }
 
         /// <summary>
-        /// Returns true if the given route is closed.
-        /// </summary>
-        public static bool IsClosed(this Tour tour)
-        {
-            return tour.Last.HasValue &&
-                   tour.Last.Value == tour.First;
-        }
-
-        /// <summary>
         /// Calculates the total weight.
         /// </summary>
         /// <param name="tour">The tour.</param>
