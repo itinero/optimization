@@ -1244,6 +1244,78 @@ namespace Itinero.Optimization.Tests.Solvers.Tours.Hull
         }
 
         [Fact]
+        public void QuickHull_ShouldIntersect3()
+        {
+            // based on quickhull-intersection-test2 data.
+            var rawLocations = new[,]
+            {
+                {
+                    4.777464866638183,
+                    51.26263992590452
+                },
+                {
+                    4.805145263671875,
+                    51.26263992590452
+                },
+                {
+                    4.805145263671875,
+                    51.2658086284499
+                },
+                {
+                    4.777464866638183,
+                    51.2658086284499
+                },
+                {
+                    4.777464866638183,
+                    51.26263992590452
+                }
+            };
+            var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
+            var hull = new TourHull();
+            foreach (var visit in tour)
+            {
+                hull.Add((new Coordinate((float) rawLocations[visit, 1], (float) rawLocations[visit, 0]), visit));
+            }
+            
+            rawLocations = new[,]
+            {
+                {
+                    4.785876274108887,
+                    51.255872134775956
+                },
+                {
+                    4.7920989990234375,
+                    51.255872134775956
+                },
+                {
+                    4.7920989990234375,
+                    51.271125113089084
+                },
+                {
+                    4.785876274108887,
+                    51.271125113089084
+                },
+                {
+                    4.785876274108887,
+                    51.255872134775956
+                }
+            };
+            tour = new Tour(Enumerable.Range(hull.Count, rawLocations.GetLength(0)));
+            var other = new TourHull();
+            foreach (var visit in tour)
+            {
+                other.Add((new Coordinate((float) rawLocations[visit - hull.Count, 1], (float) rawLocations[visit - hull.Count, 0]), visit));
+            }
+
+            var intersection = hull.Intersection(other);
+            Assert.Equal(4, intersection.Count);
+            Assert.Equal(-1, intersection[0].visit);
+            Assert.Equal(-1, intersection[1].visit);
+            Assert.Equal(-1, intersection[2].visit);
+            Assert.Equal(-1, intersection[3].visit);
+        }
+
+        [Fact]
         public void QuickHull_ShouldDetectNonConvexHull1()
         {
             var rawLocations = new[,]

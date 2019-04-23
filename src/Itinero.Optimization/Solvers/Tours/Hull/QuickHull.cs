@@ -444,7 +444,8 @@ namespace Itinero.Optimization.Solvers.Tours.Hull
                 }
             }
 
-            if (oOutside.Count == other.Count && hOutside.Count == hull.Count) return null;
+            if (oOutside.Count == other.Count && hOutside.Count == hull.Count &&
+                intersections.Count == 0) return null;
 
             var intersectionHull = new TourHull();
             
