@@ -30,13 +30,14 @@ namespace Itinero.Optimization.Strategies
         /// </summary>
         /// <param name="strategy">The strategy.</param>
         /// <param name="n">The number of time to repeat.</param>
+        /// <param name="stop">The function to determine the stopping condition, if any.</param>
         /// <typeparam name="TProblem">The problem.</typeparam>
         /// <typeparam name="TCandidate">The candidate.</typeparam>
         /// <param name="useParallel">Flag to control parallelism.</param>
         /// <returns></returns>
-        public static Func<TProblem, TCandidate> Iterate<TProblem, TCandidate>(this Func<TProblem, TCandidate> strategy, int n, bool useParallel = false)
+        public static Func<TProblem, TCandidate> Iterate<TProblem, TCandidate>(this Func<TProblem, TCandidate> strategy, int n, bool useParallel = false, Func<TCandidate, bool> stop = null)
         {
-            return (p) => Iterative.IterativeStrategy<TProblem, TCandidate>.Iterate(strategy, p, n, useParallel);
+            return (p) => Iterative.IterativeStrategy<TProblem, TCandidate>.Iterate(strategy, p, n, stop, useParallel);
         }
 
         /// <summary>
@@ -44,13 +45,14 @@ namespace Itinero.Optimization.Strategies
         /// </summary>
         /// <param name="strategy">The strategy.</param>
         /// <param name="n">The number of time to repeat.</param>
+        /// <param name="stop">The function to determine the stopping condition, if any.</param>
         /// <typeparam name="TProblem">The problem.</typeparam>
         /// <typeparam name="TCandidate">The candidate.</typeparam>
         /// <param name="useParallel">Flag to control parallelism.</param>
         /// <returns></returns>
-        public static Strategy<TProblem, TCandidate> Iterate<TProblem, TCandidate>(this Strategy<TProblem, TCandidate> strategy, int n, bool useParallel = false)
+        public static Strategy<TProblem, TCandidate> Iterate<TProblem, TCandidate>(this Strategy<TProblem, TCandidate> strategy, int n, bool useParallel = false, Func<TCandidate, bool> stop = null)
         {
-            return new Iterative.IterativeStrategy<TProblem, TCandidate>(strategy, n, useParallel);
+            return new Iterative.IterativeStrategy<TProblem, TCandidate>(strategy, n, stop, useParallel);
         }
 
         /// <summary>
