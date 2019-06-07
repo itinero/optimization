@@ -33,5 +33,14 @@ namespace Itinero.Optimization.Models.Visits.Costs
         /// Gets or sets the value.
         /// </summary>
         public float Value { get; set; }
+        
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return $"{this.Value}({this.Metric})";
+        }
     }
 }
