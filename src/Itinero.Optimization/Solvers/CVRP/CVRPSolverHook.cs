@@ -18,8 +18,10 @@
 
 using System;
 using System.Collections.Generic;
+using Itinero.LocalGeo;
 using Itinero.Logging;
 using Itinero.Optimization.Models.Mapping;
+using Itinero.Optimization.Solvers.CVRP.Construction;
 using Itinero.Optimization.Solvers.CVRP.GA;
 using Itinero.Optimization.Solvers.CVRP.Operators;
 using Itinero.Optimization.Solvers.CVRP.SCI;
@@ -55,6 +57,7 @@ namespace Itinero.Optimization.Solvers.CVRP
             try
             {
                 var solver = GASolver.Default;
+                // var solver = KMeansConstructionStrategy.Default;
                 var candidate = solver.Search(cvrp.Value);
                 var solution = candidate.Solution;
 
@@ -120,9 +123,15 @@ namespace Itinero.Optimization.Solvers.CVRP
             
             // visit weights if any.
             float[] visitWeights = null;
+            var visitLocations = new Coordinate[model.Visits.Length];
             for (var v = 0; v < model.Visits.Length; v++)
             {
                 var visit = model.Visits[v];
+                visitLocations[v] = new Coordinate()
+                {
+                    Latitude = visit.Latitude,
+                    Longitude = visit.Longitude
+                };
                 if (!visit.TryGetVisitCostForMetric(metric, out var visitCost)) continue;
                 if (visitWeights == null) visitWeights = new float[model.Visits.Length];
                 visitWeights[v] = visitCost;
@@ -141,7 +150,7 @@ namespace Itinero.Optimization.Solvers.CVRP
                 }
             }
             
-            return new Result<CVRProblem>(new CVRProblem(first, last, weights.Costs, visitWeights, maxWeight, visitCostConstraints));
+            return new Result<CVRProblem>(new CVRProblem(first, last, weights.Costs, visitLocations, visitWeights, maxWeight, visitCostConstraints));
         }
 
         private static bool IsCVRP(this MappedModel model, out string reasonIfNot)

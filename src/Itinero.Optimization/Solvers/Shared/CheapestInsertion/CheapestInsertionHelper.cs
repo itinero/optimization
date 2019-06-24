@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
+using Itinero.Optimization.Solvers.Shared.Sequences;
 using Itinero.Optimization.Solvers.Tours;
 
 [assembly: InternalsVisibleTo("Itinero.Optimization.Tests")]
@@ -303,13 +304,18 @@ namespace Itinero.Optimization.Solvers.Shared.CheapestInsertion
         /// <param name="weightFunc">The function to get the travel weights.</param>
         /// <param name="visit">The visit insert.</param>
         /// <param name="insertionCostHeuristic">The cost function, if any, to influence insertion cost for visits.</param>
-        /// <param name="canPlace">A function to determine if a visit can be place given it's cost (use this to check constraints).</param>
+        /// <param name="canPlace">A function to determine if a visit can be placed given it's cost (use this to check constraints).</param>
         /// <returns>The increase/decrease in weight and the location.</returns>
-        public static (float cost, Pair location) CalculateCheapest(this Tour tour, Func<int, int, float> weightFunc, int visit,
-            Func<int, float> insertionCostHeuristic = null, Func<float, int, bool> canPlace = null)
+        public static (float cost, Pair location) CalculateCheapest(this Tour tour, Func<int, int, float> weightFunc,
+            int visit, Func<int, float> insertionCostHeuristic = null, Func<float, int, bool> canPlace = null)
         {
             (float cost, Pair location) best = (float.MaxValue, new Pair(int.MaxValue, int.MaxValue));
 
+            if (!(canPlace?.Invoke(0, visit) ?? true))
+            { // if impossible to place with a zero cost then don't bother.
+                return best;
+            }
+            
             if (tour.Count == 1)
             {
                 var first = tour.First;
@@ -317,8 +323,8 @@ namespace Itinero.Optimization.Solvers.Shared.CheapestInsertion
                 {
                     var cost = (weightFunc(first, visit) +
                                 weightFunc(visit, first));
-                    if ((!(canPlace?.Invoke(cost, visit) ?? true))) return best;
-                    
+                    if (!(canPlace?.Invoke(cost, visit) ?? true)) return best;
+
                     cost += (insertionCostHeuristic?.Invoke(visit) ?? 0);
                     var location = new Pair(first, first);
                     best = (cost, location);
@@ -327,7 +333,7 @@ namespace Itinero.Optimization.Solvers.Shared.CheapestInsertion
                 {
                     var cost = weightFunc(first, visit);
                     if ((!(canPlace?.Invoke(cost, visit) ?? true))) return best;
-                    
+
                     cost += (insertionCostHeuristic?.Invoke(visit) ?? 0);
                     var location = new Pair(first, first);
                     best = (cost, location);
@@ -341,8 +347,59 @@ namespace Itinero.Optimization.Solvers.Shared.CheapestInsertion
                                weightFunc(visit, pair.To) -
                                weightFunc(pair.From, pair.To);
                     if ((!(canPlace?.Invoke(cost, visit) ?? true))) continue;
-                    
+
                     cost += (insertionCostHeuristic?.Invoke(visit) ?? 0);
+                    if (cost < best.cost)
+                    {
+                        best = (cost, pair);
+                    }
+                }
+            }
+
+            return best;
+        }
+
+        /// <summary>
+        /// Calculates the best position to insert a given sequence. Only the part between (not including) the first and last visit.
+        /// </summary>
+        /// <param name="tour">The tour to insert into.</param>
+        /// <param name="weightFunc">The function to get the travel weights.</param>
+        /// <param name="visit1">The first visit.</param>
+        /// <param name="visit2">The last visit.</param>
+        /// <returns>The increase/decrease in weight between the current weight (location.From -> location.To) and (location.From -> visit1 ... visit2 -> location.To).</returns>
+        public static (float cost, Pair location) CalculateCheapest(this Tour tour, Func<int, int, float> weightFunc, int visit1, int visit2)
+        {
+            (float cost, Pair location) best = (float.MaxValue, new Pair(int.MaxValue, int.MaxValue));
+
+            if (visit1 == visit2)
+            { // use the regular way of doing this.
+                return tour.CalculateCheapest(weightFunc, visit1, null, null);
+            }
+            
+            if (tour.Count == 1)
+            {
+                var first = tour.First;
+                if (tour.IsClosed())
+                {
+                    var cost = weightFunc(first, visit1) +
+                               weightFunc(visit2, first);
+                    var location = new Pair(first, first);
+                    best = (cost, location);
+                }
+                else
+                {
+                    var cost = weightFunc(first, visit1);
+                    var location = new Pair(first, first);
+                    best = (cost, location);
+                }
+            }
+            else
+            {
+                foreach (var pair in tour.Pairs())
+                {
+                    var cost = weightFunc(pair.From, visit1) +
+                               weightFunc(visit2, pair.To) -
+                               weightFunc(pair.From, pair.To);
                     if (cost < best.cost)
                     {
                         best = (cost, pair);

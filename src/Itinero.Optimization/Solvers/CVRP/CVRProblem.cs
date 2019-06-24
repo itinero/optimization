@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Itinero.LocalGeo;
 using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
 
 namespace Itinero.Optimization.Solvers.CVRP
@@ -29,6 +30,7 @@ namespace Itinero.Optimization.Solvers.CVRP
     internal class CVRProblem
     {
         private readonly float[][] _travelWeights;
+        private readonly Coordinate[] _visitLocations;
         private readonly float[] _visitWeights;
         private readonly HashSet<int> _visits;
         private readonly float _maxWeight;
@@ -40,16 +42,18 @@ namespace Itinero.Optimization.Solvers.CVRP
         /// <param name="departure">The departure location.</param>
         /// <param name="arrival">The arrival location, if any.</param>
         /// <param name="travelWeights">The weights between the visits.</param>
+        /// <param name="visitLocations">The location of each visits.</param>
         /// <param name="visitWeights">The weights at each visit, if any.</param>
         /// <param name="maxWeight">The maximum weight per vehicle, if any.</param>
         /// <param name="capacityConstraints">The visit costs per metric for each visit and a max per vehicle.</param>
         /// <param name="visits">The required visits, all visits required if null.</param>
-        public CVRProblem(int departure, int? arrival, float[][] travelWeights, float[] visitWeights = null, float maxWeight = float.MaxValue, 
+        public CVRProblem(int departure, int? arrival, float[][] travelWeights, Coordinate[] visitLocations, float[] visitWeights = null, float maxWeight = float.MaxValue, 
             IEnumerable<(string metric, float max, float[] costs)> capacityConstraints = null, IEnumerable<int> visits = null)
         {
             Departure = departure;
             Arrival = arrival;
             _travelWeights = travelWeights;
+            _visitLocations = visitLocations;
             _visitWeights = visitWeights;
             _maxWeight = maxWeight;
             CapacityConstraints = capacityConstraints?.ToArray() ?? new (string metric, float max, float[] costs)[0];
@@ -107,6 +111,16 @@ namespace Itinero.Optimization.Solvers.CVRP
             if (_visitWeights == null) return 0;
             
             return _visitWeights[visit];
+        }
+
+        /// <summary>
+        /// Gets the location of the given visit.
+        /// </summary>
+        /// <param name="visit">The visit.</param>
+        /// <returns></returns>
+        public Coordinate VisitLocation(int visit)
+        {
+            return _visitLocations[visit];
         }
 
         /// <summary>

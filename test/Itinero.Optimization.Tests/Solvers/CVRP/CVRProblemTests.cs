@@ -26,12 +26,12 @@ namespace Itinero.Optimization.Tests.Solvers.CVRP
         [Fact]
         public void CVRProblem_DepartureAndArrivalShouldBeProperlySet()
         {
-            var problem = new CVRProblem(1, null, new float[0][]);
+            var problem = new CVRProblem(1, null, new float[0][], null);
             
             Assert.Equal(1, problem.Departure);
             Assert.Null(problem.Arrival);
             
-            problem = new CVRProblem(1, 2, new float[0][]);
+            problem = new CVRProblem(1, 2, new float[0][], null);
             
             Assert.Equal(1, problem.Departure);
             Assert.Equal(2, problem.Arrival);
@@ -45,7 +45,7 @@ namespace Itinero.Optimization.Tests.Solvers.CVRP
                 new [] { 0f, 1f, 2f }, 
                 new [] { 3f, 4f, 5f }, 
                 new [] { 6f, 7f, 8f }
-            });
+            }, null);
             
             Assert.Equal(0, problem.TravelWeight(0, 0));
             Assert.Equal(1, problem.TravelWeight(0, 1));

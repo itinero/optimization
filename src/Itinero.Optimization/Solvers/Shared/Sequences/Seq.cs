@@ -42,6 +42,30 @@ namespace Itinero.Optimization.Solvers.Shared.Sequences
         }
 
         /// <summary>
+        /// Gets the first visit.
+        /// </summary>
+        /// <returns></returns>
+        public int First => this [0];
+
+        /// <summary>
+        /// Gets the second visit.
+        /// </summary>
+        /// <returns></returns>
+        public int Second => this [1];
+
+        /// <summary>
+        /// Gets the last visit.
+        /// </summary>
+        /// <returns></returns>
+        public int Last => this [this.Length - 1];
+
+        /// <summary>
+        /// Gets the second last visit.
+        /// </summary>
+        /// <returns></returns>
+        public int SecondLast => this [this.Length - 2];
+
+        /// <summary>
         /// Gets or sets the visits.
         /// </summary>
         /// <returns></returns>

@@ -35,7 +35,7 @@ namespace Itinero.Optimization.Tests.Solvers.CVRP
                     new [] { 0f, 1f, 2f }, 
                     new [] { 3f, 4f, 5f }, 
                     new [] { 6f, 7f, 8f }
-                })
+                }, null)
             };
 
             var t = candidate.AddNew();
@@ -58,7 +58,7 @@ namespace Itinero.Optimization.Tests.Solvers.CVRP
                     new [] { 0f, 1f, 2f }, 
                     new [] { 3f, 4f, 5f }, 
                     new [] { 6f, 7f, 8f }
-                })
+                }, null)
             };
             var tourData = candidate.TourData(candidate.AddNew());
             Assert.Equal(0, tourData.weight);
@@ -74,7 +74,7 @@ namespace Itinero.Optimization.Tests.Solvers.CVRP
                     new [] { 0f, 1f, 2f }, 
                     new [] { 3f, 4f, 5f }, 
                     new [] { 6f, 7f, 8f }
-                }, new []{ 0f, 0f, 0f }, 100, new (string metric, float max, float[] costs)[]
+                }, null, new []{ 0f, 0f, 0f }, 100, new (string metric, float max, float[] costs)[]
                 {
                     ("weight", 100, new [] { 10f, 10f, 10f })
                 })
@@ -99,7 +99,7 @@ namespace Itinero.Optimization.Tests.Solvers.CVRP
                     new [] { 0f, 1f, 2f }, 
                     new [] { 3f, 4f, 5f }, 
                     new [] { 6f, 7f, 8f }
-                })
+                }, null)
             };
             var tourData = candidate.TourData(candidate.AddNew());
             Assert.Equal(1, tourData.weight);
@@ -115,7 +115,7 @@ namespace Itinero.Optimization.Tests.Solvers.CVRP
                     new [] { 0f, 1f, 2f }, 
                     new [] { 3f, 4f, 5f }, 
                     new [] { 6f, 7f, 8f }
-                }, new []{ 0f, 0f, 0f }, 100, new (string metric, float max, float[] costs)[]
+                }, null, new []{ 0f, 0f, 0f }, 100, new (string metric, float max, float[] costs)[]
                 {
                     ("weight", 100, new [] { 10f, 10f, 10f })
                 })
@@ -140,7 +140,7 @@ namespace Itinero.Optimization.Tests.Solvers.CVRP
                     new [] { 0f, 1f, 2f }, 
                     new [] { 3f, 4f, 5f }, 
                     new [] { 6f, 7f, 8f }
-                })
+                }, null)
             };
             
             var tour = candidate.Tour(candidate.AddNew());

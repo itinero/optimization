@@ -17,6 +17,7 @@
  */
 
 using System.Threading;
+using Itinero.Optimization.Solvers.CVRP.Construction;
 using Itinero.Optimization.Solvers.CVRP.Operators;
 using Itinero.Optimization.Solvers.CVRP.SCI;
 using Itinero.Optimization.Strategies;
@@ -41,7 +42,7 @@ namespace Itinero.Optimization.Solvers.CVRP.GA
         public GASolver(Strategy<CVRProblem, CVRPCandidate> generator = null, Operator<CVRPCandidate> mutation = null,
             CrossOverOperator<CVRPCandidate> crossOver = null, GASettings settings = null)
         {
-            generator = generator ?? new SeededCheapestInsertionStrategy();
+            generator = generator ?? new KMeansConstructionStrategy();
             mutation = mutation ?? new RedoPlacementOperator();
             crossOver = crossOver ?? new TourExchangeCrossOverOperator();
             settings = settings ?? GASettings.Default;

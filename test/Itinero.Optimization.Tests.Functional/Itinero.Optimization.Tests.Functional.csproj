@@ -63,6 +63,8 @@
     <EmbeddedResource Include="Solvers\CVRP_ND\Construction\data\locations1.geojson">
       <LogicalName>Itinero.Optimization.Tests.Functional.Solvers.CVRP_ND.Construction.data.locations1.geojson</LogicalName>
     </EmbeddedResource>
+    <None Remove="CVRP\data\problem3-de-hague.geojson" />
+    <EmbeddedResource Include="CVRP\data\problem3-de-hague.geojson" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Staging\query1.txt">
