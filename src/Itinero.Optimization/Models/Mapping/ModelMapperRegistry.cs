@@ -62,8 +62,10 @@ namespace Itinero.Optimization.Models.Mapping
         /// </summary>
         /// <param name="router">The router to use.</param>
         /// <param name="model">The model to map.</param>
+        /// <param name="settings">The routing settings.</param>
         /// <returns>A mapped model and the mapping details.</returns>
-        public (MappedModel mappedModel, IModelMapping mapping) Map(RouterBase router, Model model)
+        public (MappedModel mappedModel, IModelMapping mapping) Map(RouterBase router, Model model,
+            RoutingSettings<float> settings = null)
         {
             if (!model.IsValid(out var failReason))
             {
@@ -74,7 +76,7 @@ namespace Itinero.Optimization.Models.Mapping
             for (var i = _modelMappers.Count - 1; i >= 0; i--)
             {
                 // loop from last registered to first.
-                if (_modelMappers[i].TryMap(router, model, out var mappings, out var reasonWhy))
+                if (_modelMappers[i].TryMap(router, model, out var mappings, out var reasonWhy, settings))
                 {
                     // mapping worked, return the result.
                     return mappings;

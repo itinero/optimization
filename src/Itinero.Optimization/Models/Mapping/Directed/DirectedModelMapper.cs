@@ -32,7 +32,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
 
         /// <inhertitdoc/>
         public override bool TryMap(RouterBase router, Model model, out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
-            out string message)
+            out string message, RoutingSettings<float> settings = null)
         {
             // Verify if this mapper can handle this model:
             // - check if there is at least one vehicle with a turn-cost.

@@ -14,11 +14,19 @@ namespace Itinero.Optimization
         /// </summary>
         /// <param name="solverRegistry">The solver registry.</param>
         /// <param name="modelMapperRegistry">The model mapper registry.</param>
+        /// <param name="settings">The routing settings.</param>
         public OptimizerConfiguration(SolverRegistry solverRegistry = null,
-            ModelMapperRegistry modelMapperRegistry = null)
+            ModelMapperRegistry modelMapperRegistry = null,
+            RoutingSettings<float> settings = null)
         {
             this.SolverRegistry = solverRegistry ?? SolverRegistry.Default;
             this.ModelMapperRegistry = modelMapperRegistry ?? ModelMapperRegistry.Default;
+            if (settings == null)
+            {
+                settings = new RoutingSettings<float>();
+                settings.SetMaxSearch(string.Empty, 5400);
+            }
+            this.RoutingSettings = settings;
         }
 
         /// <summary>
@@ -30,6 +38,11 @@ namespace Itinero.Optimization
         /// Gets the model mapper registry.
         /// </summary>
         internal ModelMapperRegistry ModelMapperRegistry { get; }
+        
+        /// <summary>
+        /// Gets the routing settings.
+        /// </summary>
+        internal RoutingSettings<float> RoutingSettings { get; }
         
         private static readonly Lazy<OptimizerConfiguration> DefaultLazy = new Lazy<OptimizerConfiguration>(() => new OptimizerConfiguration());
         

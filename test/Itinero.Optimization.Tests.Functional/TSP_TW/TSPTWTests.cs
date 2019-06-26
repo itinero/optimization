@@ -48,7 +48,7 @@ namespace Itinero.Optimization.Tests.Functional.TSP_TW
             };
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(model, out _, intermediateRoutesFunc);
-            func.RunWithIntermedidates("TSP-TW-" + "wechel-closed");
+            func.RunWithIntermediates("TSP-TW-" + "wechel-closed");
             // closed fixed 0 -> ... -> last.
             model = new Model()
             {
@@ -57,7 +57,7 @@ namespace Itinero.Optimization.Tests.Functional.TSP_TW
             };
             func = (intermediateRoutesFunc) =>
                 router.Optimize(model, out _, intermediateRoutesFunc);
-            func.RunWithIntermedidates("TSP-TW-" + "wechel-fixed");
+            func.RunWithIntermediates("TSP-TW-" + "wechel-fixed");
             // open 0 -> ...
             model = new Model()
             {
@@ -66,7 +66,7 @@ namespace Itinero.Optimization.Tests.Functional.TSP_TW
             };
             func = (intermediateRoutesFunc) =>
                 router.Optimize(model, out _, intermediateRoutesFunc);
-            func.RunWithIntermedidates("TSP-TW-" + "wechel-open");    
+            func.RunWithIntermediates("TSP-TW-" + "wechel-open");    
         }
     }
 }

@@ -62,7 +62,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, locations, out _, intermediateRoutesFunc);
-            func.RunWithIntermedidates("CVRP-ND-wechelderzande");
+            func.RunWithIntermediates("CVRP-ND-wechelderzande");
         }
 
         public static void Run1WechelderzandeCapacitated()
@@ -128,7 +128,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, visits, out _, intermediateRoutesFunc);
-            func.RunWithIntermedidates("CVRP-ND-wechelderzande-capacitated");
+            func.RunWithIntermediates("CVRP-ND-wechelderzande-capacitated");
         }
         
         public static void Run2Spijkenisse()
@@ -150,7 +150,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, locations, out _, intermediateRoutesFunc);
-            func.RunWithIntermedidates("CVRP-ND-spijkenisse");
+            func.RunWithIntermediates("CVRP-ND-spijkenisse");
         }
 
         public static void Run3SpijkenisseCapacitated()
@@ -216,7 +216,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, visits, out _, intermediateRoutesFunc);
-            func.RunWithIntermedidates("CVRP-ND-spijkenisse-capacitated");
+            func.RunWithIntermediates("CVRP-ND-spijkenisse-capacitated");
         }
 
         public static void Run4SpijkenisseCapacitatedAndVisitCosts()
@@ -287,7 +287,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, visits, out _, intermediateRoutesFunc);
-            func.RunWithIntermedidates("CVRP-ND-spijkenisse-visit-costs");
+            func.RunWithIntermediates("CVRP-ND-spijkenisse-visit-costs");
         }
 
         public static void Run5DeHague()
@@ -309,7 +309,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, locations, out _, intermediateRoutesFunc);
-            func.RunWithIntermedidates("CVRP-ND-de-hague");
+            func.RunWithIntermediates("CVRP-ND-de-hague");
         }
 
         public static void Run6Rotterdam()
@@ -331,7 +331,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, locations, out _, intermediateRoutesFunc);
-            func.RunWithIntermedidates("CVRP-ND-rotterdam");
+            func.RunWithIntermediates("CVRP-ND-rotterdam");
         }
 
         public static void Run7Capelle()
@@ -353,7 +353,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, locations, out _, intermediateRoutesFunc);
-            func.RunWithIntermedidates("CVRP-ND-capelle");
+            func.RunWithIntermediates("CVRP-ND-capelle");
         }
 
         public static void Run8Hogeveen()
@@ -374,7 +374,7 @@ namespace Itinero.Optimization.Tests.Functional.CVRP_ND
             // run
             Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
                 router.Optimize(vehicles, locations, out _, intermediateRoutesFunc);
-            func.RunWithIntermedidates("CVRP-ND-hogeveen");
+            func.RunWithIntermediates("CVRP-ND-hogeveen");
         }
     }
 }

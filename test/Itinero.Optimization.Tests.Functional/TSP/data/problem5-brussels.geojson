@@ -1,0 +1,6459 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-ide",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2019-06-24T18:13:02Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/312461297",
+        "amenity": "bar",
+        "name": "Sky Blue"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4545691,
+          50.8651224
+        ]
+      },
+      "id": "node/312461297"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/350815522",
+        "addr:housenumber": "25",
+        "addr:street": "Place Fernand Cocq - Fernand Cocqplein",
+        "amenity": "pub",
+        "name": "Tulipant",
+        "old_name": "Chez Miki",
+        "ref:UrbIS": "5094584"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3667419,
+          50.8334995
+        ]
+      },
+      "id": "node/350815522"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/409745023",
+        "amenity": "bar",
+        "name": "The Club"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.5073373,
+          50.8204228
+        ]
+      },
+      "id": "node/409745023"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/430862564",
+        "amenity": "pub",
+        "contact:email": "info@tAmusement.be",
+        "contact:phone": "+32 2 7203098",
+        "contact:website": "http://www.tamusementdiegem.be/",
+        "name": "'t Amusement",
+        "outdoor_seating": "yes",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4338512,
+          50.8945197
+        ]
+      },
+      "id": "node/430862564"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/610830559",
+        "addr:housenumber": "103",
+        "addr:street": "Stationsstraat",
+        "amenity": "pub",
+        "name": "Hof ter Meren",
+        "outdoor_seating": "yes",
+        "smoking": "outside"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4717114,
+          50.8828809
+        ]
+      },
+      "id": "node/610830559"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/649228962",
+        "amenity": "pub",
+        "name": "'t Bierhuys"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4716764,
+          50.8902655
+        ]
+      },
+      "id": "node/649228962"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/649235154",
+        "addr:city": "Zaventem",
+        "addr:housenumber": "14",
+        "addr:postcode": "1930",
+        "addr:street": "Heldenplein",
+        "amenity": "pub",
+        "name": "The Bru House",
+        "opening_hours": "Elke dag vanaf 15:30",
+        "outdoor_seating": "yes",
+        "smoking": "outside",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.471122,
+          50.8849116
+        ]
+      },
+      "id": "node/649235154"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1078589922",
+        "amenity": "pub",
+        "name": "The Old'Time"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4180446,
+          50.8917352
+        ]
+      },
+      "id": "node/1078589922"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1078600844",
+        "amenity": "pub",
+        "name": "De Schieve"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4351499,
+          50.8936863
+        ]
+      },
+      "id": "node/1078600844"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1078600856",
+        "amenity": "pub",
+        "name": "De Groote Markt"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.43324,
+          50.8947283
+        ]
+      },
+      "id": "node/1078600856"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1092484985",
+        "amenity": "bar",
+        "level": "-1",
+        "name": "Stella Artois Cafe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4837282,
+          50.8976214
+        ]
+      },
+      "id": "node/1092484985"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1099540273",
+        "addr:city": "Etterbeek",
+        "addr:country": "BE",
+        "addr:housenumber": "25",
+        "addr:postcode": "1040",
+        "addr:street": "Rue Bâtonnier Braffort - Stafhouder Braffortstraat",
+        "amenity": "pub",
+        "name": "Café Le Batonnier",
+        "outdoor_seating": "sidewalk"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.401788,
+          50.8403586
+        ]
+      },
+      "id": "node/1099540273"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1150966464",
+        "amenity": "pub",
+        "name": "De Toekomst"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2739115,
+          50.8847965
+        ]
+      },
+      "id": "node/1150966464"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1189927187",
+        "amenity": "pub",
+        "name": "General"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3678019,
+          50.8171005
+        ]
+      },
+      "id": "node/1189927187"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1200300801",
+        "amenity": "pub",
+        "name": "De Wijngaard"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2616744,
+          50.8710532
+        ]
+      },
+      "id": "node/1200300801"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1210450231",
+        "amenity": "pub",
+        "name": "Panorama"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3489022,
+          50.8771773
+        ]
+      },
+      "id": "node/1210450231"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1258237714",
+        "amenity": "pub",
+        "name": "4 you"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.381182,
+          50.8944255
+        ]
+      },
+      "id": "node/1258237714"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1268936788",
+        "amenity": "pub",
+        "name": "Wie Anders ?"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2626451,
+          50.8682638
+        ]
+      },
+      "id": "node/1268936788"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1276872271",
+        "amenity": "pub",
+        "name": "In De Zavelput"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.295808,
+          50.8601331
+        ]
+      },
+      "id": "node/1276872271"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1321719501",
+        "amenity": "pub",
+        "name": "Bienvenue"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2571578,
+          50.8367552
+        ]
+      },
+      "id": "node/1321719501"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1321741836",
+        "amenity": "pub",
+        "name": "Modern"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2502982,
+          50.8381614
+        ]
+      },
+      "id": "node/1321741836"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1338905442",
+        "amenity": "pub",
+        "name": "Brasserie Bavaria"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.5072672,
+          50.8772098
+        ]
+      },
+      "id": "node/1338905442"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1422893934",
+        "addr:housenumber": "28",
+        "amenity": "pub",
+        "name": "James II"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4384537,
+          50.8932938
+        ]
+      },
+      "id": "node/1422893934"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1429986185",
+        "amenity": "pub",
+        "name": "Lokaal Diegem Sport"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4379966,
+          50.893505
+        ]
+      },
+      "id": "node/1429986185"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1610222875",
+        "amenity": "pub",
+        "name": "In de klok"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2888885,
+          50.8022599
+        ]
+      },
+      "id": "node/1610222875"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1610349780",
+        "amenity": "pub",
+        "name": "De Weerstand - La Resistance"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2851455,
+          50.8048625
+        ]
+      },
+      "id": "node/1610349780"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1610886872",
+        "amenity": "pub",
+        "name": "De Zuunbeek"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2854976,
+          50.8038838
+        ]
+      },
+      "id": "node/1610886872"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1612023849",
+        "addr:housenumber": "114",
+        "amenity": "pub",
+        "name": "De Vijfhoek"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2833956,
+          50.8055315
+        ]
+      },
+      "id": "node/1612023849"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1613281831",
+        "amenity": "pub",
+        "name": "'T Bergsken Op"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2837053,
+          50.8051406
+        ]
+      },
+      "id": "node/1613281831"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1631975584",
+        "addr:housenumber": "87",
+        "addr:street": "Rue Joseph Stallaert - Joseph Stallaertstraat",
+        "amenity": "pub",
+        "name": "Edith",
+        "opening_hours": "Tu-Sa 12:00-23:00",
+        "phone": "+32 2 770 28 01",
+        "website": "https://edithcafe.be"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.356031,
+          50.8142769
+        ]
+      },
+      "id": "node/1631975584"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1642121970",
+        "amenity": "pub",
+        "name": "De Uiver",
+        "outdoor_seating": "yes",
+        "smoking": "isolated",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.472898,
+          50.8812611
+        ]
+      },
+      "id": "node/1642121970"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1676021592",
+        "amenity": "pub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3878764,
+          50.8953164
+        ]
+      },
+      "id": "node/1676021592"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1708405914",
+        "amenity": "pub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.507329,
+          50.8236885
+        ]
+      },
+      "id": "node/1708405914"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1708688923",
+        "addr:city": "Schaerbeek - Schaarbeek",
+        "addr:housename": "100 Papiers",
+        "addr:housenumber": "23",
+        "addr:postcode": "1030",
+        "addr:street": "Avenue Louis Bertrand - Louis Bertrandlaan",
+        "amenity": "bar",
+        "name": "Le Barboteur",
+        "ref:UrbIS": "6080418"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3745168,
+          50.8636589
+        ]
+      },
+      "id": "node/1708688923"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1756692076",
+        "amenity": "pub",
+        "name": "Le coach",
+        "opening_hours:kitchen": "Su-We 11:00-22:30; Th-Sa 11:00-23:30",
+        "outdoor_seating": "terrace",
+        "website": "http://www.le-coach.be"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4073892,
+          50.8360255
+        ]
+      },
+      "id": "node/1756692076"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2082696528",
+        "amenity": "pub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3184218,
+          50.8904578
+        ]
+      },
+      "id": "node/2082696528"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2082795501",
+        "amenity": "pub",
+        "name": "Le Belvédère"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3388981,
+          50.8880474
+        ]
+      },
+      "id": "node/2082795501"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2258186865",
+        "amenity": "pub",
+        "name": "den tad",
+        "wifi": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2602986,
+          50.842978
+        ]
+      },
+      "id": "node/2258186865"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2326322373",
+        "addr:housenumber": "191",
+        "addr:street": "Rue Léon Theodor - Léon Theodorstraat",
+        "amenity": "pub",
+        "name": "Le Prophète",
+        "ref:UrbIS": "6035586"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3292582,
+          50.8786618
+        ]
+      },
+      "id": "node/2326322373"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2334377826",
+        "addr:housenumber": "373",
+        "addr:street": "Avenue Georges Henri - Georges Henrilaan",
+        "amenity": "bar",
+        "name": "Le Lion Belge",
+        "ref:UrbIS": "5036490"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4089082,
+          50.8428548
+        ]
+      },
+      "id": "node/2334377826"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2334478402",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:city:fr": "Bruxelles",
+        "addr:city:nl": "Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "39",
+        "addr:postcode": "1000",
+        "addr:street": "Place de la Vieille Halle aux Blés - Oud Korenhuis",
+        "addr:street:fr": "Place de la Vieille Halle aux Blés",
+        "addr:street:nl": "Oud Korenhuis",
+        "amenity": "pub",
+        "name": "La brasserie de Bruxelles",
+        "name:fr": "La brasserie de Bruxelles",
+        "ref:UrbIS": "8187513"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3523457,
+          50.8440978
+        ]
+      },
+      "id": "node/2334478402"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2338580694",
+        "addr:housenumber": "111",
+        "addr:street": "Rue de l'Aqueduc - Waterleidingsstraat",
+        "amenity": "pub",
+        "name": "Pam Pam",
+        "outdoor_seating": "yes",
+        "ref:UrbIS": "5064706"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3597106,
+          50.8240179
+        ]
+      },
+      "id": "node/2338580694"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2340327827",
+        "addr:housenumber": "37",
+        "addr:street": "Place de Saint-Job - Sint-Jobsplein",
+        "amenity": "bar",
+        "name": "Le Bistroquet",
+        "ref:UrbIS": "7579052"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3653637,
+          50.7945105
+        ]
+      },
+      "id": "node/2340327827"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2340802796",
+        "addr:city": "Schaerbeek - Schaarbeek",
+        "addr:housenumber": "100",
+        "addr:postcode": "1030",
+        "addr:street": "Avenue Jan Stobbaerts - Jan Stobbaertslaan",
+        "amenity": "bar",
+        "name": "1030 Café",
+        "ref:UrbIS": "6079501"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3892222,
+          50.8590953
+        ]
+      },
+      "id": "node/2340802796"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2344179033",
+        "addr:housenumber": "9",
+        "addr:street": "Place Jean-Baptiste Carnoy - Jean-Baptiste Carnoyplein",
+        "amenity": "bar",
+        "name": "The Manhattan café",
+        "ref:UrbIS": "8522870"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4508155,
+          50.850953
+        ]
+      },
+      "id": "node/2344179033"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2352444992",
+        "amenity": "bar",
+        "name": "Il Fatto"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4201066,
+          50.7982251
+        ]
+      },
+      "id": "node/2352444992"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2354814539",
+        "addr:city": "Schaerbeek - Schaarbeek",
+        "addr:housenumber": "8",
+        "addr:postcode": "1030",
+        "addr:street": "Avenue des Azalées - Azalealaan",
+        "amenity": "bar",
+        "name": "Gelateria Cocozza",
+        "ref:UrbIS": "8086784"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3821299,
+          50.8623679
+        ]
+      },
+      "id": "node/2354814539"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2369757672",
+        "addr:city": "Schaerbeek - Schaarbeek",
+        "addr:housenumber": "28",
+        "addr:postcode": "1030",
+        "addr:street": "Rue François-Joseph Navez - François-Joseph Navezstraat",
+        "amenity": "pub",
+        "name": "Navez",
+        "ref:UrbIS": "6088272"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3719517,
+          50.8706656
+        ]
+      },
+      "id": "node/2369757672"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2375856393",
+        "addr:city": "Etterbeek",
+        "addr:housenumber": "35",
+        "addr:postcode": "1040",
+        "addr:street": "Avenue des Celtes - Keltenlaan",
+        "amenity": "pub",
+        "name": "L'Alternative",
+        "outdoor_seating": "yes",
+        "ref:UrbIS": "8480872"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3971557,
+          50.8382501
+        ]
+      },
+      "id": "node/2375856393"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2381510019",
+        "addr:city": "Woluwe-Saint-Pierre - Sint-Pieters-Woluwe",
+        "addr:housenumber": "52",
+        "addr:postcode": "1150",
+        "addr:street": "Rue du Collège Saint-Michel - Sint-Michielskollegestraat",
+        "alt_name": "Schievelavabo Woluwe",
+        "amenity": "pub",
+        "brand": "Schievelavabo",
+        "internet_access": "wlan",
+        "name": "Schievelavabo",
+        "opening_hours": "Mo-Th 12:00-14:30,19:00-23:00; Fr 12:00-14:30,18:30-00:00; Sa 18:30-00:00; Su 18:30-23:00",
+        "outdoor_seating": "sidewalk",
+        "phone": "+32 2 779 87 07",
+        "ref:UrbIS": "5037153",
+        "takeaway": "yes",
+        "website": "http://www.schievelavabowoluwe.be"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4109146,
+          50.8351099
+        ]
+      },
+      "id": "node/2381510019"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2394706142",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "7",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Archimède - Archimedesstraat",
+        "amenity": "bar",
+        "contact:email": "info@tiagos.be",
+        "contact:phone": "+32 2 230 00 07",
+        "contact:website": "https://www.tiagos.be/",
+        "name": "Tiago's",
+        "opening_hours": "Mo-We 12:00-24:00; Th,Fr 12:00-02:00; Sa 17:00-02:00; Su off",
+        "ref:UrbIS": "8629505"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3841448,
+          50.8432338
+        ]
+      },
+      "id": "node/2394706142"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2401506427",
+        "addr:housenumber": "80",
+        "addr:street": "Rue de Pervyse - Pervijzestraat",
+        "amenity": "bar",
+        "name": "French Riviera",
+        "phone": "+32 2 275 23 61",
+        "ref:UrbIS": "8655806"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.39946,
+          50.8305681
+        ]
+      },
+      "id": "node/2401506427"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2402389388",
+        "addr:city": "Etterbeek",
+        "addr:housenumber": "107",
+        "addr:postcode": "1040",
+        "addr:street": "Avenue de Tervueren - Tervurenlaan",
+        "amenity": "pub",
+        "name": "Leopold",
+        "outdoor_seating": "sidewalk",
+        "ref:UrbIS": "8774302",
+        "website": "http://www.leopold-cafe-presse.be"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4048038,
+          50.8376221
+        ]
+      },
+      "id": "node/2402389388"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2415955886",
+        "addr:housenumber": "6",
+        "addr:street": "Avenue de l'Armée - Legerlaan",
+        "amenity": "bar",
+        "description": "Bar à vin, spiritueux et tapas",
+        "name": "Vin sur Wijn",
+        "phone": "+32 2 732 13 88",
+        "ref:UrbIS": "8774302",
+        "website": "http://www.vinsurwijn.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4047929,
+          50.8374848
+        ]
+      },
+      "id": "node/2415955886"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2441937662",
+        "addr:housenumber": "167A",
+        "addr:street": "Chaussée de Wavre - Waverse Steenweg",
+        "amenity": "bar",
+        "contact:email": "tituluspictus@gmail.com",
+        "contact:phone": "+32 2 512 98 30",
+        "contact:website": "http://www.titulus.be/",
+        "description": "Delicatessen, wine bar, sells wine bottles",
+        "description:fr": "Épicerie fine, bar à vins",
+        "name": "Titulus",
+        "opening_hours": "Mo 17:00-20:30; Tu-Sa 12:00-22:00",
+        "ref:UrbIS": "8429947"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3706637,
+          50.8355966
+        ]
+      },
+      "id": "node/2441937662"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2460607967",
+        "addr:housenumber": "2",
+        "addr:street": "Avenue de la Toison d'Or - Gulden-Vlieslaan",
+        "alt_name": "Boston Steak House Toison d'Or",
+        "amenity": "pub",
+        "description": "Pub & Grill",
+        "name": "Boston Cafe",
+        "opening_hours": "Mo-Th 12:00-15:00,18:00-22:30; Fr-Su 12:00-23:00",
+        "operator": "Boston Steak House",
+        "phone": "+32 2 512 73 53",
+        "ref:UrbIS": "5096192",
+        "website": "https://www.bostonsteakhouse.be"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3615908,
+          50.838011
+        ]
+      },
+      "id": "node/2460607967"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2460607974",
+        "addr:housenumber": "3",
+        "addr:street": "Avenue de la Toison d'Or - Gulden-Vlieslaan",
+        "amenity": "pub",
+        "contact:phone": "+32 2 5117927",
+        "contact:website": "https://letrappiste.be/dev/index.php",
+        "description": "Restaurant Brasserie",
+        "name": "Le Trappiste",
+        "ref:UrbIS": "7917761"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3615047,
+          50.8379765
+        ]
+      },
+      "id": "node/2460607974"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2463358771",
+        "addr:housenumber": "8",
+        "addr:street": "Chaussée de Boondael - Boondaalse Steenweg",
+        "amenity": "bar",
+        "name:en": "The Black Sheep",
+        "ref:UrbIS": "8554460"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3744088,
+          50.8273101
+        ]
+      },
+      "id": "node/2463358771"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2466682771",
+        "addr:housenumber": "277",
+        "addr:street": "Avenue Louise - Louizalaan",
+        "amenity": "bar",
+        "name": "Ethnic",
+        "opening_hours": "Mo-Fr 18:00-23:59, Tu-Sa 00:00-02:00; Sa 21:00-23:59; Su 00:00-02:00+",
+        "ref:UrbIS": "7683041"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3668112,
+          50.8238691
+        ]
+      },
+      "id": "node/2466682771"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2468798128",
+        "addr:housenumber": "92A",
+        "addr:street": "Avenue des Saisons - Jaargetijdenlaan",
+        "amenity": "bar",
+        "name": "Lucky club",
+        "ref:UrbIS": "8507070",
+        "sport": "billiards"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3879662,
+          50.8184357
+        ]
+      },
+      "id": "node/2468798128"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2469314631",
+        "addr:housenumber": "520",
+        "addr:street": "Avenue Louise - Louizalaan",
+        "amenity": "bar",
+        "name": "Green Lab",
+        "opening_hours": "Fr-Sa 16:00-04:00; Su-Th 16:00-02:00",
+        "phone": "+32 2 644 26 63",
+        "ref:UrbIS": "8463324",
+        "website": "http://greenlab.bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3725965,
+          50.8158424
+        ]
+      },
+      "id": "node/2469314631"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2501834384",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:city:fr": "Bruxelles",
+        "addr:city:nl": "Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "33",
+        "addr:postcode": "1000",
+        "addr:street": "Boulevard d'Ypres - Ieperlaan",
+        "addr:street:fr": "Boulevard d'Ypres",
+        "addr:street:nl": "Ieperlaan",
+        "amenity": "pub",
+        "cuisine": "italian",
+        "name": "Damejeanne",
+        "outdoor_seating": "yes",
+        "ref:UrbIS": "8315149"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3469641,
+          50.8568936
+        ]
+      },
+      "id": "node/2501834384"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2506689125",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:city:fr": "Bruxelles",
+        "addr:city:nl": "Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "189",
+        "addr:postcode": "1000",
+        "addr:street": "Rue de Flandre - Vlaamsesteenweg",
+        "addr:street:fr": "Rue de Flandre",
+        "addr:street:nl": "Vlaamsesteenweg",
+        "amenity": "bar",
+        "name": "Midpoint",
+        "ref:UrbIS": "8315385"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3422009,
+          50.853244
+        ]
+      },
+      "id": "node/2506689125"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2522239126",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:city:fr": "Bruxelles",
+        "addr:city:nl": "Brussel",
+        "addr:housenumber": "27",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Jules Van Praet - Jules van Praetstraat",
+        "addr:street:fr": "Rue Jules Van Praet",
+        "addr:street:nl": "Jules Van Praetstraat",
+        "amenity": "bar",
+        "name": "Darwin Café",
+        "ref:UrbIS": "8184725"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3480759,
+          50.8483592
+        ]
+      },
+      "id": "node/2522239126"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2522239625",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:city:fr": "Bruxelles",
+        "addr:city:nl": "Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "5",
+        "addr:postcode": "1000",
+        "addr:street": "Rue des Riches Claires - Rijkeklarenstraat",
+        "addr:street:fr": "Rue des Riches Claires",
+        "addr:street:nl": "Rijkeklarenstraat",
+        "amenity": "bar",
+        "name": "Moka",
+        "name:de": "Moka",
+        "name:en": "Moka",
+        "name:fr": "Moka",
+        "opening_hours": "Tu-Fr 08:30-18:00; Sa 11:00-18:00",
+        "ref:UrbIS": "8187617"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3475858,
+          50.8468637
+        ]
+      },
+      "id": "node/2522239625"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2522741179",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:city:fr": "Bruxelles",
+        "addr:city:nl": "Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "188",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Antoine Dansaert - Antoine Dansaertstraat",
+        "addr:street:fr": "Rue Antoine Dansaert",
+        "addr:street:nl": "Antoine Dansaertstraat",
+        "amenity": "pub",
+        "craft": "brewery",
+        "name": "Brussels Beer Project",
+        "opening_hours": "Th-Sa 14:00-22:00",
+        "operator": "Brussels Beer Project",
+        "ref:UrbIS": "8318415",
+        "website": "https://www.beerproject.be/en"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3419096,
+          50.8527567
+        ]
+      },
+      "id": "node/2522741179"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2529040989",
+        "addr:housenumber": "25",
+        "addr:street": "Boulevard Louis Mettewie - Louis Mettewielaan",
+        "amenity": "pub",
+        "name": "Le Mettewie",
+        "ref:UrbIS": "7754759"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.311026,
+          50.858766
+        ]
+      },
+      "id": "node/2529040989"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2589704950",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "99",
+        "addr:postcode": "1020",
+        "addr:street": "Rue De Wand - De Wandstraat",
+        "amenity": "pub",
+        "name": "Taverne De Wand",
+        "ref:UrbIS": "8039919"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3591338,
+          50.8977462
+        ]
+      },
+      "id": "node/2589704950"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2665165971",
+        "addr:housenumber": "2",
+        "addr:street": "Rue des Minimes - Minimenstraat",
+        "amenity": "pub",
+        "internet_access": "wlan",
+        "name": "Chez Richard",
+        "phone": "+32 479 61 12 56",
+        "ref:UrbIS": "8183607",
+        "website": "https://www.chezrichard.be/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3539343,
+          50.8412696
+        ]
+      },
+      "id": "node/2665165971"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2665166184",
+        "addr:housenumber": "36",
+        "addr:street": "Boulevard de l'Empereur - Keizerslaan",
+        "amenity": "bar",
+        "name": "Play Label rooftop",
+        "ref:UrbIS": "6051329"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3525843,
+          50.8423535
+        ]
+      },
+      "id": "node/2665166184"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2665166422",
+        "addr:housenumber": "60",
+        "addr:street": "Rue Haute - Hoogstraat",
+        "amenity": "bar",
+        "name": "Kombi Bar",
+        "ref:UrbIS": "6048188"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3516126,
+          50.8405968
+        ]
+      },
+      "id": "node/2665166422"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3088628844",
+        "amenity": "pub",
+        "name": "De Grove"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2766747,
+          50.792883
+        ]
+      },
+      "id": "node/3088628844"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3100734054",
+        "addr:housenumber": "26a",
+        "addr:postcode": "1060",
+        "addr:street": "Parvis Saint-Gilles - Sint-Gillisvoorplein",
+        "amenity": "pub",
+        "cuisine": "pasta;chicken;burger",
+        "name": "Rocky Pompadour",
+        "name:en": "Rocky Pompadour",
+        "name:fr": "Rocky Pompadour",
+        "ref:UrbIS": "5065988"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3458851,
+          50.8308537
+        ]
+      },
+      "id": "node/3100734054"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3118693326",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:city:fr": "Bruxelles",
+        "addr:city:nl": "Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "4",
+        "addr:postcode": "1000",
+        "addr:street": "Rue de la Montagne - Bergstraat",
+        "addr:street:fr": "Rue de la Montagne",
+        "addr:street:nl": "Bergstraat",
+        "amenity": "pub",
+        "name": "Magic Rubens",
+        "phone": "+32 2 503 38 65",
+        "ref:UrbIS": "8189247",
+        "website": "http://www.magic-rubens.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3545492,
+          50.8468894
+        ]
+      },
+      "id": "node/3118693326"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3553817854",
+        "amenity": "pub",
+        "name": "In de Kiek"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2506398,
+          50.8084405
+        ]
+      },
+      "id": "node/3553817854"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3670710056",
+        "addr:city": "Uccle",
+        "addr:housenumber": "293",
+        "addr:postcode": "1180",
+        "addr:street": "Rue Vanderkindere - Vanderkinderestraat",
+        "amenity": "bar",
+        "contact:phone": "+32 23461805",
+        "contact:website": "http://www.lharmonium.be/",
+        "description:fr": "L’Harmonium is een nieuwe bar, un lieu de rencontre autour d’un verre ou d’un encas, dedicated to artistic creation and its diffusion. Au programme : art materialen beschikbaar voor klanten, cuisine créative, artistic workshops, en culturele evenementen.",
+        "name": "L'Harmonium",
+        "opening_hours": "Tu-Su 11:30-22:00",
+        "smoking": "no",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3552571,
+          50.8140912
+        ]
+      },
+      "id": "node/3670710056"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3819826180",
+        "amenity": "pub",
+        "name": "'t Kasteeltje"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2635151,
+          50.8455356
+        ]
+      },
+      "id": "node/3819826180"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3819826188",
+        "amenity": "pub",
+        "name": "Panorama"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.262269,
+          50.8459438
+        ]
+      },
+      "id": "node/3819826188"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3857578257",
+        "addr:housenumber": "253",
+        "addr:street": "Boulevard Général Jacques - Generaal Jacqueslaan",
+        "amenity": "pub",
+        "name": "Luigi's Café",
+        "outdoor_seating": "yes",
+        "smoking": "separated"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3883408,
+          50.8216871
+        ]
+      },
+      "id": "node/3857578257"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3863696756",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "137",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Royale - Koningsstraat",
+        "amenity": "pub",
+        "name": "La Petite Cascade"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3653418,
+          50.8521751
+        ]
+      },
+      "id": "node/3863696756"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3863699469",
+        "amenity": "pub",
+        "name": "Treurenberg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3635362,
+          50.8480709
+        ]
+      },
+      "id": "node/3863699469"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3863906382",
+        "amenity": "pub",
+        "name": "Le petit Liberty"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3671143,
+          50.8498702
+        ]
+      },
+      "id": "node/3863906382"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3868669450",
+        "addr:city": "Ixelles - Elsene",
+        "addr:housenumber": "12",
+        "addr:street": "Place du Luxembourg - Luxemburgplein",
+        "amenity": "bar",
+        "name": "Le Pullmann"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3727154,
+          50.8396312
+        ]
+      },
+      "id": "node/3868669450"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3868678156",
+        "addr:city": "Forest - Vorst",
+        "addr:housenumber": "128",
+        "addr:street": "Avenue Wielemans Ceuppens - Wielemans Ceuppenslaan",
+        "amenity": "bar",
+        "name": "Le Bar à Nelson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3316727,
+          50.8244017
+        ]
+      },
+      "id": "node/3868678156"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3871367603",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "124",
+        "addr:postcode": "1000",
+        "addr:street": "Rue de l'Enseignement - Onderrichtsstraat",
+        "amenity": "bar",
+        "description": "Wine bar",
+        "food": "yes",
+        "name": "Wine Shack"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3657326,
+          50.8493529
+        ]
+      },
+      "id": "node/3871367603"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3873642941",
+        "amenity": "pub",
+        "name": "Le Simon's"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3656964,
+          50.8521055
+        ]
+      },
+      "id": "node/3873642941"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3880362589",
+        "amenity": "pub",
+        "food": "yes",
+        "name": "Bistro Dikkenek"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3332353,
+          50.7916096
+        ]
+      },
+      "id": "node/3880362589"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3887369222",
+        "amenity": "bar",
+        "name": "Le Cirque",
+        "opening_hours": "24/7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3517124,
+          50.853408
+        ]
+      },
+      "id": "node/3887369222"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3918196702",
+        "addr:housenumber": "20",
+        "addr:postcode": "1000",
+        "addr:street": "Putterie - Putterij",
+        "amenity": "pub",
+        "brewery": "BrewDog",
+        "contact:email": "brusselsbar@brewdog.com",
+        "contact:phone": "+32 2 5136355",
+        "internet_access": "wlan",
+        "name": "BrewDog Brussels",
+        "opening_hours": "Mo-Th 11:00-00:00; Fr 11:00-00:00; Sa 00:00-01:00, 12:00-00:00; Su 12:00-00:00",
+        "outdoor_seating": "yes",
+        "payment:cash": "yes",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes",
+        "website": "https://www.brewdog.com/bars/worldwide/brussels"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3569657,
+          50.8459929
+        ]
+      },
+      "id": "node/3918196702"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3951599267",
+        "addr:city": "Schaerbeek - Schaarbeek",
+        "addr:housenumber": "142",
+        "addr:postcode": "1030",
+        "addr:street": "Avenue Félix Marchal - Félix Marchallaan",
+        "amenity": "bar",
+        "contact:website": "http://www.felixbar.be/",
+        "name": "Chez Felix",
+        "opening_hours": "Tu-Th,Sa 16:00-23:00; Fr 16:00-00:00; Su,Mo off",
+        "outdoor_seating": "yes",
+        "phone": "+32 2 736 82 04"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3934159,
+          50.8502871
+        ]
+      },
+      "id": "node/3951599267"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3991415855",
+        "amenity": "bar",
+        "name": "Library Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3677527,
+          50.8394604
+        ]
+      },
+      "id": "node/3991415855"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3991712697",
+        "amenity": "bar",
+        "description": "Cocktails & Event Bar",
+        "name": "café Florèo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.347109,
+          50.8469337
+        ]
+      },
+      "id": "node/3991712697"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3993320917",
+        "amenity": "pub",
+        "name": "Delirium Hoppy Loft",
+        "phone": "+32 2 514 44 34",
+        "smoking": "outside",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3539286,
+          50.8484793
+        ]
+      },
+      "id": "node/3993320917"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4006928840",
+        "addr:city": "Saint-Gilles - Sint-Gillis",
+        "addr:housenumber": "2",
+        "addr:postcode": "1060",
+        "addr:street": "Rue de Roumanie - Roemeniëstraat",
+        "alt_name": "Taverne Herman d",
+        "amenity": "pub",
+        "name": "Chez mon ex",
+        "opening_hours": "Mo-Sa 09:00-23:00",
+        "ref:UrbIS": "7654126"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3518549,
+          50.8285078
+        ]
+      },
+      "id": "node/4006928840"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4008338465",
+        "amenity": "pub",
+        "name": "Six Coins"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3510624,
+          50.830516
+        ]
+      },
+      "id": "node/4008338465"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4026992218",
+        "amenity": "bar",
+        "name": "Choco Bar",
+        "smoking": "isolated"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3658373,
+          50.8336797
+        ]
+      },
+      "id": "node/4026992218"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4030010489",
+        "amenity": "bar",
+        "entrance": "yes",
+        "name": "Buja Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3668004,
+          50.8319918
+        ]
+      },
+      "id": "node/4030010489"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4030010493",
+        "amenity": "bar",
+        "contact:phone": "+32 2 503 09 30",
+        "contact:website": "https://noirwinebar.be/",
+        "cuisine": "pizza",
+        "description": "This place operates both as a bar and as a pizza restaurant",
+        "name": "Noir Wine & Pizza Bar",
+        "opening_hours": "Tu-Th 18:00-00:00; Fr,Sa 17:00-01:00",
+        "opening_hours:kitchen": "Tu-Th 18:00-22:30; Fr,Sa 18:00-23:00",
+        "payment:cash": "yes",
+        "payment:maestro": "yes",
+        "payment:mastercard": "yes",
+        "payment:visa": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3666361,
+          50.8326072
+        ]
+      },
+      "id": "node/4030010493"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4119705189",
+        "amenity": "pub",
+        "contact:phone": "+32 474 765757",
+        "name": "Cafe Bebo",
+        "opening_hours": "Mo 08:00-24:00; Tu-Fr 00:00-01:00,08:00-24:00; Sa 00:00-01:00,10:00-24:00; Su 10:00-24:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3457345,
+          50.8424277
+        ]
+      },
+      "id": "node/4119705189"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4120117089",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "1",
+        "addr:postcode": "1000",
+        "addr:street": "Impasse des Cadeaux - Geschenkengang",
+        "amenity": "pub",
+        "contact:email": "info@imaige.be",
+        "contact:phone": "+32 2 2184800",
+        "contact:website": "http://imaige.be/",
+        "name": "À l'Imaige Nostre-Dame",
+        "note": "Yes, this is \"Imaige\", not \"Image\": this is not a typo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3522647,
+          50.8483892
+        ]
+      },
+      "id": "node/4120117089"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4120134090",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "4",
+        "addr:postcode": "1000",
+        "addr:street": "Impasse Saint-Nicolas - Sint-Nikolaasgang",
+        "amenity": "pub",
+        "name": "Au Bon Vieux Temps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3523824,
+          50.8483341
+        ]
+      },
+      "id": "node/4120134090"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4156959812",
+        "amenity": "bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3781846,
+          50.8146952
+        ]
+      },
+      "id": "node/4156959812"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4202993303",
+        "amenity": "bar",
+        "operator": "Meininger"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3379226,
+          50.8511032
+        ]
+      },
+      "id": "node/4202993303"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4217832699",
+        "amenity": "pub",
+        "name": "The New Inn"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4658202,
+          50.8619568
+        ]
+      },
+      "id": "node/4217832699"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4218266737",
+        "amenity": "pub",
+        "name": "Ronne Hoeck"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4643245,
+          50.8622975
+        ]
+      },
+      "id": "node/4218266737"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4245869256",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "36",
+        "addr:postcode": "1000",
+        "addr:street": "Avenue de Cortenbergh - Kortenberglaan",
+        "amenity": "pub",
+        "contact:phone": "+32 2 2806521",
+        "name": "Fat Boy's Sports Bar & Grill",
+        "opening_hours": "Mo-We, Su 11:00-01:00; Th-Sa 11:00-02:00",
+        "ref:UrbIS": "8630329"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3860897,
+          50.8435437
+        ]
+      },
+      "id": "node/4245869256"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4249014894",
+        "amenity": "bar",
+        "name": "La Fabrique"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3603802,
+          50.8229607
+        ]
+      },
+      "id": "node/4249014894"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4262247201",
+        "amenity": "bar",
+        "name": "Cafe Luxembourg",
+        "opening_hours": "Mo-Tu 08:00-01:00; We 08:00-03:00; Th-Fr 08:00-04:30; Sa 10:00-04:30;Su 11:00-00:00",
+        "outdoor_seating": "yes",
+        "phone": "+32 2 721 57 15",
+        "source": "Bing",
+        "website": "https://www.cafeluxembourg.be/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3729217,
+          50.8395429
+        ]
+      },
+      "id": "node/4262247201"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4262247208",
+        "amenity": "pub",
+        "name": "The Grapevine",
+        "opening_hours": "Mo-Su 09:00-01:00",
+        "outdoor_seating": "yes",
+        "phone": "+32 2 280 00 17",
+        "source": "Bing",
+        "website": "https://the-grapevine.be/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3728169,
+          50.8395719
+        ]
+      },
+      "id": "node/4262247208"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4268177835",
+        "amenity": "pub",
+        "description": "Bar - Cocktails Burger Tapas",
+        "name": "Clover Bar",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3731496,
+          50.8410323
+        ]
+      },
+      "id": "node/4268177835"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4268177836",
+        "amenity": "bar",
+        "name": "Leopold Taverne",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3707274,
+          50.8392132
+        ]
+      },
+      "id": "node/4268177836"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4268177845",
+        "amenity": "pub",
+        "name": "Zywiec",
+        "source": "Bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.373428,
+          50.839703
+        ]
+      },
+      "id": "node/4268177845"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4299290513",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "21-23",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Saint-Michel - Sint-Michielsstraat",
+        "amenity": "bar",
+        "cuisine": "bistro",
+        "name": "Brasserie St-Michel",
+        "opening_hours": "Mo-Sa 10:00-23:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.35479,
+          50.8522107
+        ]
+      },
+      "id": "node/4299290513"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4299290521",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "18",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Saint-Michel - Sint-Michielsstraat",
+        "amenity": "pub",
+        "name": "Le Corbeau",
+        "name:en": "The Raven",
+        "name:fr": "Le Corbeau",
+        "opening_hours": "Mo-Th 10:00-01:00, Fr-Sa 10:00+",
+        "website": "http://www.lecorbeau.be"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3546994,
+          50.8524195
+        ]
+      },
+      "id": "node/4299290521"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4318137518",
+        "amenity": "pub",
+        "name": "Christo Bar",
+        "opening_hours": "We,Th 23:00-03:00, Fr,Sa 23:00-10:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3527567,
+          50.8481654
+        ]
+      },
+      "id": "node/4318137518"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4318137521",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "18",
+        "addr:postcode": "1000",
+        "addr:street": "Rue de la Fourche - Greepstraat",
+        "amenity": "pub",
+        "name": "Gusto Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3529486,
+          50.8481976
+        ]
+      },
+      "id": "node/4318137521"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4318137525",
+        "amenity": "pub",
+        "name": "Cherry Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3531596,
+          50.8481608
+        ]
+      },
+      "id": "node/4318137525"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4318137532",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "79",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Grétry - Grétrystraat",
+        "amenity": "pub",
+        "name": "Rooster’s"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3533125,
+          50.8484296
+        ]
+      },
+      "id": "node/4318137532"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4319696120",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:postcode": "1000",
+        "amenity": "pub",
+        "name": "Wings Tavern"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.358073,
+          50.8460805
+        ]
+      },
+      "id": "node/4319696120"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4319705596",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "55",
+        "addr:postcode": "1000",
+        "addr:street": "Cantersteen - Kantersteen",
+        "amenity": "pub",
+        "contact:phone": "+32 2 5025225",
+        "contact:website": "http://www.biberium.be",
+        "name": "Biberium",
+        "opening_hours": "Mo-Fr 12:00-04:00; Sa-Su 22:30-04:00",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3586205,
+          50.8458543
+        ]
+      },
+      "id": "node/4319705596"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4323046259",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "55",
+        "addr:postcode": "1000",
+        "addr:street": "Rue du Marché aux Poulets - Kiekenmarkt",
+        "amenity": "pub",
+        "name": "Celtica"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.351238,
+          50.8484242
+        ]
+      },
+      "id": "node/4323046259"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4329723943",
+        "addr:housenumber": "9",
+        "addr:street": "Quai au Bois à Brûler - Brandhoutkaai",
+        "amenity": "bar",
+        "name": "Skylab",
+        "opening_hours": "We,Th 15:00-21:00; Fr,Sa 15:00-24:00; Su 14:00-20:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.348751,
+          50.851543
+        ]
+      },
+      "id": "node/4329723943"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4329730610",
+        "amenity": "pub",
+        "food": "yes",
+        "name": "Mannekin Pils",
+        "opening_hours": "Mo-We 07:00-22:00; Th-Su 07:00-06:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3469486,
+          50.8528528
+        ]
+      },
+      "id": "node/4329730610"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4348631525",
+        "amenity": "pub",
+        "name": "Danish Tavern"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3512406,
+          50.8480626
+        ]
+      },
+      "id": "node/4348631525"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4348888592",
+        "amenity": "bar",
+        "name": "Golden Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3527729,
+          50.8459781
+        ]
+      },
+      "id": "node/4348888592"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4350103089",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "70",
+        "addr:postcode": "1000",
+        "addr:street": "Rue du Marché au Charbon - Kolenmarkt",
+        "amenity": "bar",
+        "name": "Cartagena Salsa Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3485534,
+          50.8459685
+        ]
+      },
+      "id": "node/4350103089"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4352415602",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "10",
+        "addr:postcode": "1000",
+        "addr:street": "Petite rue au Beurre - Korte Boterstraat",
+        "amenity": "bar",
+        "name": "The Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3518607,
+          50.8477903
+        ]
+      },
+      "id": "node/4352415602"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4361635911",
+        "amenity": "bar",
+        "name": "Rock Classic"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3485948,
+          50.8462161
+        ]
+      },
+      "id": "node/4361635911"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4367588390",
+        "amenity": "bar",
+        "name": "Parkfarm",
+        "name:de": "Parkfarm",
+        "name:fr": "Parkfarm",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3422391,
+          50.8699773
+        ]
+      },
+      "id": "node/4367588390"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4376631389",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "10-12",
+        "addr:postcode": "1000",
+        "addr:street": "Rue des Harengs - Haringstraat",
+        "amenity": "bar",
+        "contact:phone": "+32 2 5123077",
+        "name": "Le Cercueil",
+        "opening_hours": "Mo-Th 16:00-02:00+; Fr-Su 13:00-02:00+"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3532077,
+          50.8469745
+        ]
+      },
+      "id": "node/4376631389"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4382262618",
+        "amenity": "bar",
+        "amenity_2": "office",
+        "name": "Event Brewery Brussels",
+        "website": "http://eventbrewery.eu/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.330077,
+          50.8531473
+        ]
+      },
+      "id": "node/4382262618"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4393710487",
+        "addr:city": "Etterbeek",
+        "addr:country": "BE",
+        "addr:housenumber": "2",
+        "addr:postcode": "1040",
+        "addr:street": "Rue Charles Degroux - Charles Degrouxstraat",
+        "amenity": "pub",
+        "name": "Le Petit Paris"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.400872,
+          50.8407613
+        ]
+      },
+      "id": "node/4393710487"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4394004430",
+        "addr:city": "Woluwe-Saint-Lambert - Sint-Lambrechts-Woluwe",
+        "addr:country": "BE",
+        "addr:housenumber": "137",
+        "addr:postcode": "1200",
+        "addr:street": "Rue de Linthout - Linthoutstraat",
+        "amenity": "pub",
+        "name": "Taverne L'Aristo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4013387,
+          50.8419578
+        ]
+      },
+      "id": "node/4394004430"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4394134167",
+        "addr:city": "Etterbeek",
+        "addr:housenumber": "42/44",
+        "addr:postcode": "1040",
+        "addr:street": "Avenue des Celtes - Keltenlaan",
+        "amenity": "pub",
+        "name": "The Shaker",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3973341,
+          50.8380011
+        ]
+      },
+      "id": "node/4394134167"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4394827132",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "5-7",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Henri Maus - Henri Mausstraat",
+        "amenity": "pub",
+        "name": "The Big Game Brussels"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3496651,
+          50.8478062
+        ]
+      },
+      "id": "node/4394827132"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4411996394",
+        "amenity": "bar",
+        "name": "Cafe des Halles",
+        "opening_hours": "Mo-Th, Su 10:00-01:00+; Fr, Sa 10:00-03:00+"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.347467,
+          50.848019
+        ]
+      },
+      "id": "node/4411996394"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413284012",
+        "amenity": "pub",
+        "name": "Taverne du Passage"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3547021,
+          50.8477707
+        ]
+      },
+      "id": "node/4413284012"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413385349",
+        "amenity": "bar",
+        "name": "Gusto Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3529029,
+          50.8483198
+        ]
+      },
+      "id": "node/4413385349"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413484782",
+        "amenity": "bar",
+        "level": "0",
+        "name": "Taverne la Colonne"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3631817,
+          50.8496878
+        ]
+      },
+      "id": "node/4413484782"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413615489",
+        "amenity": "pub",
+        "name": "Wallace"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3634413,
+          50.8477159
+        ]
+      },
+      "id": "node/4413615489"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413616895",
+        "amenity": "pub",
+        "name": "Coming soon",
+        "name:fr": "Coming soon",
+        "note": "That's the actual name of the pub. Not that a pub is coming soon",
+        "website": "https://www.lecomingsoon.be/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3522995,
+          50.843897
+        ]
+      },
+      "id": "node/4413616895"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413616897",
+        "amenity": "pub",
+        "name": "La petite taverne",
+        "name:fr": "La petite taverne"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3270733,
+          50.8569754
+        ]
+      },
+      "id": "node/4413616897"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413702089",
+        "amenity": "bar",
+        "name": "Chemistry & Botanics"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3526962,
+          50.8444402
+        ]
+      },
+      "id": "node/4413702089"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413721996",
+        "amenity": "pub",
+        "name": "Phenix"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.353355,
+          50.8457368
+        ]
+      },
+      "id": "node/4413721996"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413722008",
+        "amenity": "bar",
+        "name": "The Blue Restaurant"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3532912,
+          50.8457703
+        ]
+      },
+      "id": "node/4413722008"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413802972",
+        "amenity": "pub",
+        "name": "De Gulden Boot",
+        "wikidata": "Q3279686"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3531286,
+          50.8467163
+        ]
+      },
+      "id": "node/4413802972"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413802973",
+        "amenity": "bar",
+        "name": "Le Petit Paon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3525866,
+          50.8471464
+        ]
+      },
+      "id": "node/4413802973"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413802981",
+        "amenity": "bar",
+        "name": "Che Habana Café"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3531066,
+          50.8469113
+        ]
+      },
+      "id": "node/4413802981"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413802987",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "34",
+        "addr:postcode": "1000",
+        "addr:street": "Grand-Place - Grote Markt",
+        "amenity": "bar",
+        "name": "Brussels Brasserie"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3525195,
+          50.84711
+        ]
+      },
+      "id": "node/4413802987"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413803716",
+        "amenity": "pub",
+        "name": "Maxim's"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3529888,
+          50.8468217
+        ]
+      },
+      "id": "node/4413803716"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413853515",
+        "amenity": "pub",
+        "name": "The Smalle Steen"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3501995,
+          50.847265
+        ]
+      },
+      "id": "node/4413853515"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413876033",
+        "amenity": "pub",
+        "name": "Les Gens Que J'Aime"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3504314,
+          50.8470581
+        ]
+      },
+      "id": "node/4413876033"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413876048",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "27",
+        "addr:postcode": "1000",
+        "addr:street": "Rue du Marché au Charbon - Kolenmarkt",
+        "amenity": "bar",
+        "facebook": "https://www.facebook.com/StationBxl",
+        "lgbtq": "primary",
+        "lgbtq:men": "primary",
+        "name": "Station BXL",
+        "opening_hours": "Mo-Th 17:00-01:00; Fr-Sa 17:00-03:00; Su 17:00-01:00",
+        "website": "https://r100760.wixsite.com/station-bxl"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3496371,
+          50.8465505
+        ]
+      },
+      "id": "node/4413876048"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413908644",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "5",
+        "addr:postcode": "1000",
+        "addr:street": "Rue du Marché au Charbon - Kolenmarkt",
+        "amenity": "bar",
+        "contact:facebook": "https://www.facebook.com/pages/Homoerectus/297097853642834",
+        "gay": "yes",
+        "lgbtq": "primary",
+        "name": "L'Homo Erectus",
+        "opening_hours": "Mo-Su 16:00-08:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3507743,
+          50.8466242
+        ]
+      },
+      "id": "node/4413908644"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413908646",
+        "amenity": "bar",
+        "name": "Amalgame Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.350792,
+          50.846876
+        ]
+      },
+      "id": "node/4413908646"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413933705",
+        "amenity": "bar",
+        "name": "The Music Village"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3509812,
+          50.8469331
+        ]
+      },
+      "id": "node/4413933705"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413933714",
+        "amenity": "bar",
+        "name": "Fetre Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3509079,
+          50.8469857
+        ]
+      },
+      "id": "node/4413933714"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413952472",
+        "amenity": "bar",
+        "name": "Goupil le Fol"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3523853,
+          50.8453466
+        ]
+      },
+      "id": "node/4413952472"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413952484",
+        "amenity": "bar",
+        "name": "Hyperion",
+        "website": "http://hyperionesportbar.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3525789,
+          50.8451496
+        ]
+      },
+      "id": "node/4413952484"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4413963185",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "7;8;9",
+        "addr:postcode": "1000",
+        "addr:street": "Rue du Marché aux Fromages - Kaasmarkt",
+        "amenity": "pub",
+        "brewery": "various",
+        "contact:facebook": "https://www.facebook.com/LittleDeliriumOfficial/",
+        "level": "1",
+        "name": "Little Delirium",
+        "phone": "+32 2511 9550",
+        "smoking": "outside"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3528959,
+          50.8457953
+        ]
+      },
+      "id": "node/4413963185"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4414908997",
+        "amenity": "bar",
+        "name": "Moussaillon",
+        "name:fr": "Moussaillon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.348562,
+          50.8517802
+        ]
+      },
+      "id": "node/4414908997"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4414976489",
+        "addr:housenumber": "30",
+        "addr:street": "Rue Sainte-Catherine - Sint-Katelijnestraat",
+        "amenity": "bar",
+        "name": "Bar des Amis",
+        "name:fr": "Bar des Amis"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3477782,
+          50.8499575
+        ]
+      },
+      "id": "node/4414976489"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4415994691",
+        "amenity": "bar",
+        "name": "Pessoa",
+        "name:fr": "Pessoa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3741556,
+          50.8273969
+        ]
+      },
+      "id": "node/4415994691"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4416447597",
+        "amenity": "bar",
+        "food": "yes",
+        "internet_access": "wlan",
+        "name": "Pop up Sablon",
+        "outdoor_seating": "yes",
+        "phone": "+32 2 503 65 70",
+        "smoking": "outside",
+        "website": "https://www.popupsablon.be"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3552395,
+          50.8410985
+        ]
+      },
+      "id": "node/4416447597"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4416861456",
+        "amenity": "pub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.332826,
+          50.854207
+        ]
+      },
+      "id": "node/4416861456"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4416861464",
+        "amenity": "pub"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.332039,
+          50.8561446
+        ]
+      },
+      "id": "node/4416861464"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4417386289",
+        "addr:city": "Etterbeek - Etterbeek",
+        "addr:housenumber": "181",
+        "addr:postcode": "1040",
+        "addr:street": "Rue Philippe Baucq - Philippe Baucqstraat",
+        "amenity": "pub",
+        "name": "Le viking",
+        "smoking": "outside"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3806107,
+          50.8303428
+        ]
+      },
+      "id": "node/4417386289"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4417449889",
+        "amenity": "bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3746956,
+          50.8270975
+        ]
+      },
+      "id": "node/4417449889"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4417795652",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "6",
+        "addr:postcode": "1000",
+        "addr:street": "Galerie Ravenstein - Ravensteingalerij",
+        "amenity": "pub",
+        "name": "New Check Post"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.357947,
+          50.845178
+        ]
+      },
+      "id": "node/4417795652"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4417795680",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:postcode": "1000",
+        "addr:street": "Galerie Ravenstein - Ravensteingalerij",
+        "amenity": "bar",
+        "name": "Chop'inn"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3580927,
+          50.8450929
+        ]
+      },
+      "id": "node/4417795680"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4417866142",
+        "amenity": "bar",
+        "cuisine": "smoothie",
+        "level": "0",
+        "name": "Smoothiebar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3376704,
+          50.836142
+        ]
+      },
+      "id": "node/4417866142"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418284343",
+        "amenity": "bar",
+        "description": "Acts as a cafe/bar where people can play or purchase board games",
+        "name": "Kings & Queens",
+        "official_name": "Kings & Queens Entertainment",
+        "opening_hours": "Tu-Th 15:00-00:00; Fr 15:00-02:00; Sa 12:00-02:00; Su 12:00-00:00",
+        "shop": "games",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3549571,
+          50.850052
+        ]
+      },
+      "id": "node/4418284343"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418284348",
+        "amenity": "pub",
+        "name": "Le Cap"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3543685,
+          50.8480969
+        ]
+      },
+      "id": "node/4418284348"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418285535",
+        "amenity": "pub",
+        "name": "Cambridge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3568033,
+          50.8540917
+        ]
+      },
+      "id": "node/4418285535"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418285542",
+        "amenity": "bar",
+        "name": "Champagne",
+        "opening_hours": "Mo-Sa 11:00-24:00+"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3547462,
+          50.8482971
+        ]
+      },
+      "id": "node/4418285542"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418285543",
+        "amenity": "bar",
+        "name": "Chez Maman"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3482276,
+          50.8455123
+        ]
+      },
+      "id": "node/4418285543"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418285552",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "6",
+        "addr:postcode": "1000",
+        "addr:street": "Galerie du Roi - Koningsgalerij",
+        "amenity": "bar",
+        "contact:email": "info@comptoirdesgaleries.be",
+        "contact:phone": "+32 2 2137474",
+        "contact:website": "http://www.comptoirdesgaleries.be/",
+        "name": "Comptoir des Galeries",
+        "opening_hours": "Mo-Sa 12:00-22:00; Su 12:00-19:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3547663,
+          50.8478681
+        ]
+      },
+      "id": "node/4418285552"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418285578",
+        "amenity": "pub",
+        "name": "Esperance"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3552064,
+          50.8528214
+        ]
+      },
+      "id": "node/4418285578"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418285611",
+        "amenity": "bar",
+        "contact:email": "info@theroyal-eventclub.be",
+        "contact:phone": "+32 2 420 77 57",
+        "contact:website": "https://www.theroyal-eventclub.be",
+        "name": "The Royal",
+        "official_name": "The Royal-Event Club"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3554036,
+          50.8486333
+        ]
+      },
+      "id": "node/4418285611"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418285615",
+        "amenity": "bar",
+        "name": "Smous"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3472583,
+          50.8452711
+        ]
+      },
+      "id": "node/4418285615"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418285621",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "114",
+        "addr:postcode": "1000",
+        "addr:street": "Rue du Marché au Charbon - Kolenmarkt",
+        "amenity": "bar",
+        "facebook": "https://www.facebook.com/stammbarbxl/",
+        "lgbtq": "primary",
+        "lgbtq:men": "only",
+        "name": "Stamm-Bar",
+        "phone": "+32 471 80 14 39",
+        "twitter": "StammBarBxl",
+        "website": "http://www.stammbar.be/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3471443,
+          50.8452413
+        ]
+      },
+      "id": "node/4418285621"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418285625",
+        "amenity": "pub",
+        "name": "Taverna Brosella"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.355862,
+          50.8519669
+        ]
+      },
+      "id": "node/4418285625"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418632895",
+        "amenity": "pub",
+        "name": "Le Loch Ness"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3525419,
+          50.8566684
+        ]
+      },
+      "id": "node/4418632895"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4418632897",
+        "amenity": "pub",
+        "name": "The Black Beard"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3524043,
+          50.8564586
+        ]
+      },
+      "id": "node/4418632897"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4421182889",
+        "amenity": "bar",
+        "name": "Copacabana",
+        "outdoor_seating": "yes",
+        "smoking": "outside"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3549081,
+          50.8413089
+        ]
+      },
+      "id": "node/4421182889"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4422193252",
+        "addr:city": "Saint-Gilles - Sint-Gillis",
+        "addr:housenumber": "34",
+        "addr:postcode": "1060",
+        "addr:street": "Avenue Adolphe Demeur - Adolphe Demeurlaan",
+        "amenity": "bar",
+        "name": "Rubis Wine Bar",
+        "opening_hours": "Mo-Su 00:00-00:30,11:00-24:00",
+        "smoking": "no",
+        "website": "http://www.rubiswinebar.be/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3443529,
+          50.8250775
+        ]
+      },
+      "id": "node/4422193252"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4423871734",
+        "amenity": "bar",
+        "name": "Iosono Wine Bar",
+        "phone": "+32 465 39 47 82",
+        "website": "http://iosonowinebar.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3695069,
+          50.8379912
+        ]
+      },
+      "id": "node/4423871734"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4424621389",
+        "addr:city": "Ixelles - Elsene",
+        "addr:housenumber": "1",
+        "addr:postcode": "1050",
+        "addr:street": "Rue Bouré - Bouréstraat",
+        "amenity": "bar",
+        "food": "regional",
+        "name": "Stam",
+        "smoking": "outside",
+        "source": "bing"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3661212,
+          50.8358017
+        ]
+      },
+      "id": "node/4424621389"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4426224334",
+        "amenity": "pub",
+        "name": "Taverne Magnolia"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3800934,
+          50.8300116
+        ]
+      },
+      "id": "node/4426224334"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4461505040",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "12",
+        "addr:postcode": "1000",
+        "addr:street": "Rue du Marché aux Poulets - Kiekenmarkt",
+        "amenity": "bar",
+        "name": "Archipel",
+        "smoking": "outside"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3500409,
+          50.849252
+        ]
+      },
+      "id": "node/4461505040"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4478892606",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "190",
+        "addr:postcode": "1040",
+        "addr:street": "Avenue Belliard",
+        "amenity": "pub",
+        "name": "Grand Central",
+        "website": "https://www.legrandcentral.com",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3807028,
+          50.8402853
+        ]
+      },
+      "id": "node/4478892606"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4480414658",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "7",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Montagne aux Herbes Potagères - Warmoesberg",
+        "amenity": "pub",
+        "brewery": "Guinness;Chouffe;kriek;faro;judas;bush;Grimbergen;chimay;orval;Rochefort",
+        "contact:phone": "+32 2 5131318",
+        "contact:website": "https://www.alamortsubite.com/en",
+        "name": "À la Mort Subite",
+        "name:language": "fr",
+        "opening_hours": "Mo-Sa 11:00-01:00; Su 12:00-24:00",
+        "payment:cash": "yes",
+        "payment:mastercard": "yes",
+        "payment:visa": "yes",
+        "wikidata": "Q27643042",
+        "wikipedia": "nl:À la Mort Subite"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3562521,
+          50.848629
+        ]
+      },
+      "id": "node/4480414658"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4516030789",
+        "amenity": "bar",
+        "name": "La Machine",
+        "name:en": "La Machine",
+        "website": "https://lamachine.be/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3474316,
+          50.8482824
+        ]
+      },
+      "id": "node/4516030789"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4527427260",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "51",
+        "addr:postcode": "1000",
+        "addr:street": "Rue de Namur - Naamsestraat",
+        "amenity": "pub",
+        "contact:phone": "+32 2 5115211",
+        "contact:website": "http://www.loftbrussels.be/",
+        "description": "Resto & Bar",
+        "happy_hours": "Mo-Su 18:00-20:00",
+        "name": "Loft",
+        "opening_hours": "Mo-Su 12:00-01:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3601078,
+          50.8398386
+        ]
+      },
+      "id": "node/4527427260"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4539385781",
+        "addr:city": "Jette",
+        "addr:housenumber": "27",
+        "addr:postcode": "1090",
+        "addr:street": "rue Jules Lahaye",
+        "amenity": "pub",
+        "name": "De Gele Poraa",
+        "wifi": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3302726,
+          50.8796568
+        ]
+      },
+      "id": "node/4539385781"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4546572310",
+        "addr:housenumber": "77",
+        "addr:postcode": "1050",
+        "amenity": "pub",
+        "brewery": "various",
+        "name": "L'Atelier",
+        "name:fr": "L'Atelier",
+        "opening_hours": "Mo-Sa 18:00-03:00",
+        "phone": "+32 2 649 19 53",
+        "smoking": "isolated"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3835201,
+          50.8180123
+        ]
+      },
+      "id": "node/4546572310"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4549790740",
+        "amenity": "pub",
+        "name": "Dolle Mol",
+        "wikidata": "Q18214567"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3532324,
+          50.8450592
+        ]
+      },
+      "id": "node/4549790740"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4558328190",
+        "amenity": "bar",
+        "name": "Le Châlet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4407555,
+          50.8119112
+        ]
+      },
+      "id": "node/4558328190"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4568950209",
+        "amenity": "bar",
+        "name": "Le Dixseptième"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3547253,
+          50.8456296
+        ]
+      },
+      "id": "node/4568950209"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4574819092",
+        "amenity": "bar",
+        "internet_access": "wlan",
+        "name": "Cctm cafe ter maele",
+        "name:fr": "Cctm cafe ter maele"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.2737835,
+          50.8845052
+        ]
+      },
+      "id": "node/4574819092"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4582561453",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "53",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Léon Lepage - Léon Lepagestraat",
+        "amenity": "bar",
+        "contact:phone": "+32 2 5133349",
+        "contact:website": "http://pepeteetronron.be/",
+        "cuisine": "tapas",
+        "description": "Wine bar, tapas and delicatessen",
+        "name": "Pepete & Ronron"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3454694,
+          50.8524269
+        ]
+      },
+      "id": "node/4582561453"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4588765293",
+        "addr:city": "Bruxelles - Brussels",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Blaes - Blaesstraat",
+        "amenity": "bar",
+        "name": "Le Marseillais",
+        "opening_hours": "10:00 - 00:00",
+        "outdoor_seating": "yes",
+        "smoking": "outside"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3467495,
+          50.8374343
+        ]
+      },
+      "id": "node/4588765293"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4597892992",
+        "addr:postcode": "1050",
+        "amenity": "bar",
+        "name:en": "Havana Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.389313,
+          50.8156017
+        ]
+      },
+      "id": "node/4597892992"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4602262251",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "40",
+        "addr:postcode": "1000",
+        "addr:street": "Rue de la Loi - Wetstraat",
+        "amenity": "bar",
+        "contact:email": "info@garnets.be",
+        "contact:phone": "+32 488321003",
+        "contact:website": "http://www.garnets.be/",
+        "name": "Garnet's Club",
+        "opening_hours": "Mo,Tu 12:00-02:00; We,Th 12:00-05:00; Fr 12:00-06:00; Sa 20:00-06:00; Su,PH 20:00-05:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.370568,
+          50.8452805
+        ]
+      },
+      "id": "node/4602262251"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4604596231",
+        "amenity": "pub",
+        "name": "L. Théodor"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.328755,
+          50.8781798
+        ]
+      },
+      "id": "node/4604596231"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4604596232",
+        "amenity": "pub",
+        "name": "Café du Parc"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3291089,
+          50.8784478
+        ]
+      },
+      "id": "node/4604596232"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4607599761",
+        "addr:housenumber": "258",
+        "addr:street": "Rue Léon Theodor - Léon Theodorstraat",
+        "amenity": "pub",
+        "ref:UrbIS": "7839468"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3293911,
+          50.8801248
+        ]
+      },
+      "id": "node/4607599761"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4607600369",
+        "addr:housenumber": "132",
+        "addr:street": "Rue Léon Theodor - Léon Theodorstraat",
+        "amenity": "bar",
+        "name": "Aux 4 Coins du Monde",
+        "ref:UrbIS": "6033754"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3280599,
+          50.876793
+        ]
+      },
+      "id": "node/4607600369"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4607614932",
+        "addr:housenumber": "126",
+        "addr:street": "Rue Léon Theodor - Léon Theodorstraat",
+        "amenity": "pub",
+        "name": "La Poste",
+        "ref:UrbIS": "7840378"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3279133,
+          50.8765519
+        ]
+      },
+      "id": "node/4607614932"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4607673982",
+        "addr:housenumber": "63",
+        "addr:street": "Rue Léon Theodor - Léon Theodorstraat",
+        "amenity": "pub",
+        "name": "Fana's Café",
+        "ref:UrbIS": "8346023"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3268706,
+          50.8747182
+        ]
+      },
+      "id": "node/4607673982"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4621974792",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "58",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Ravenstein - Ravensteinstraat",
+        "amenity": "bar",
+        "contact:facebook": "https://www.facebook.com/LeCercleBelgique/",
+        "contact:phone": "+32 484 364912",
+        "name": "Le Cercle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3591604,
+          50.8455122
+        ]
+      },
+      "id": "node/4621974792"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4621974795",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "70",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Ravenstein - Ravensteinstraat",
+        "amenity": "pub",
+        "name": "L'Équinoxe",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3587737,
+          50.8457986
+        ]
+      },
+      "id": "node/4621974795"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4640330014",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "53",
+        "addr:postcode": "1020",
+        "addr:street": "Rue De Wand - De Wandstraat",
+        "amenity": "pub",
+        "name": "Le Vermont"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3584869,
+          50.8969543
+        ]
+      },
+      "id": "node/4640330014"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4642467837",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "59",
+        "addr:postcode": "1000",
+        "addr:street": "Rue de l'Enseignement - Onderrichtsstraat",
+        "amenity": "pub",
+        "contact:phone": "+32 2 218 00 34",
+        "contact:website": "http://www.bier-circus.be/",
+        "cuisine": "regional",
+        "food": "yes",
+        "name": "Bier Circus",
+        "opening_hours": "Mo off; Tu-Fr 11:30-14:30,18:00-24:00; Sa,Su,PH off"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.364917,
+          50.8486623
+        ]
+      },
+      "id": "node/4642467837"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4659999496",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "8",
+        "addr:postcode": "1000",
+        "addr:street": "Place Fontainas - Fontainasplein",
+        "amenity": "bar",
+        "brewery": "Taras Boulba;Gueuze Cantillon;Band of Brothers;L'Amer des Moeder's;Valeir Extra;IV Saison;VI Wheat;Valeir Blond;Caulier Blonde;Witkap Stimulo;La Moederation;Jambe de Bois;Guldenberg;Troubadour Magma;Val-Dieu Triple;Caulier 28 Triple;Bière de Miel",
+        "name": "Moeder Lambic Fontainas",
+        "opening_hours": "11:00-01:00; Fr,Sa 11:00-02:00",
+        "phone": "+32 2 503 60 68",
+        "website": "https://moederlambic.com/bars"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3469216,
+          50.8451155
+        ]
+      },
+      "id": "node/4659999496"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4665074589",
+        "amenity": "bar",
+        "name": "La Trinquette",
+        "name:de": "La Trinquette",
+        "name:en": "La Trinquette",
+        "name:fr": "La Trinquette"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3549967,
+          50.8254348
+        ]
+      },
+      "id": "node/4665074589"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4684005989",
+        "addr:postcode": "1050",
+        "addr:street": "Rue du Belvédère - Belvédèrestraat",
+        "amenity": "bar",
+        "name": "L'amère à boire",
+        "name:de": "L'amère à boire",
+        "name:en": "L'amère à boire",
+        "name:fr": "L'amère à boire"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3744107,
+          50.8268268
+        ]
+      },
+      "id": "node/4684005989"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4706357837",
+        "amenity": "pub",
+        "email": "info@lapharmacieanglaise.com",
+        "name": "Pharmacie Anglaise",
+        "name:fr": "Pharmacie Anglaise",
+        "opening_hours": "Tu-Th 17:30-01:00; Fr, Sa 17:30-02:00",
+        "phone": "+32 489 56 07 36",
+        "website": "http://www.lapharmacieanglaise.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3585508,
+          50.8432562
+        ]
+      },
+      "id": "node/4706357837"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4773035622",
+        "amenity": "bar",
+        "description": "Serves mostly fresh juices",
+        "layer": "-1",
+        "level": "-1",
+        "location": "underground",
+        "name": "Guapa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3693009,
+          50.8495011
+        ]
+      },
+      "id": "node/4773035622"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4798981446",
+        "addr:city": "Zaventem",
+        "addr:housenumber": "1",
+        "addr:postcode": "1930",
+        "addr:street": "Rustoorddreef",
+        "amenity": "pub",
+        "description": "In het jeugdhuis kan je elke woensdag, vrijdag en zaterdag terecht om iets te drinken aan zeer democratische prijzen, gratis te kickeren of rustig te poolen.\nBij goed weer is er ook een terras aanwezig met eventuele barbecue.",
+        "email": "jeugdhuis.basement@gmail.com",
+        "name": "Jeugdhuis Basement",
+        "opening_hours": "Woensdag, Vrijdag en Zaterdag van 20:00-3:00",
+        "outdoor_seating": "yes",
+        "smoking": "outside",
+        "website": "http://www.jhbasement.be",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4710808,
+          50.8824779
+        ]
+      },
+      "id": "node/4798981446"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4801804094",
+        "amenity": "pub",
+        "cuisine": "portuguese",
+        "name": "Taverne Avenida",
+        "website": "http://www.taverneavenida.be"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3929017,
+          50.8328584
+        ]
+      },
+      "id": "node/4801804094"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4811189660",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "5",
+        "addr:postcode": "1000",
+        "addr:street": "Rue du Marais - Broekstraat",
+        "amenity": "pub",
+        "name": "Claire's Café",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3579074,
+          50.8505564
+        ]
+      },
+      "id": "node/4811189660"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4821089728",
+        "amenity": "bar",
+        "name:en": "Wape Shop",
+        "website": "http://mygeeko.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3477582,
+          50.8468432
+        ]
+      },
+      "id": "node/4821089728"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4845316939",
+        "amenity": "bar",
+        "description": "Serves mostly fresh juices",
+        "layer": "-1",
+        "level": "-1",
+        "location": "underground",
+        "name": "Guapa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3551205,
+          50.8355449
+        ]
+      },
+      "id": "node/4845316939"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4864726693",
+        "amenity": "bar",
+        "name": "Stoemelings",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3684184,
+          50.8378045
+        ]
+      },
+      "id": "node/4864726693"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4864741401",
+        "amenity": "bar",
+        "contact:email": "info@winetales.eu",
+        "contact:phone": "+32 2 502 21 37",
+        "contact:website": "https://winetales.eu/",
+        "cuisine": "mediterranean",
+        "name": "Wine Tales",
+        "opening_hours": "Mo-Th 12:00-15:00,17:30-00:00; Fr 12:00-15:00,17:30-1:00; Sa 15:00-01:00; Su off"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.368126,
+          50.838009
+        ]
+      },
+      "id": "node/4864741401"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4864746108",
+        "amenity": "pub",
+        "description": "Sport Bar",
+        "name": "Public House 12",
+        "opening_hours": "Mo 14:00-02:00+; Tu-Fr 10:00-02:00+; Sa,Su 10:30-02:00+"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3682031,
+          50.838042
+        ]
+      },
+      "id": "node/4864746108"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4874745650",
+        "amenity": "pub",
+        "cuisine": "tapas",
+        "description": "Wine Bar & Tapas",
+        "name": "Wine-Zag"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3728077,
+          50.8386014
+        ]
+      },
+      "id": "node/4874745650"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4932426723",
+        "amenity": "bar",
+        "name:en": "bossons"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3530139,
+          50.8422319
+        ]
+      },
+      "id": "node/4932426723"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4933087865",
+        "addr:housenumber": "11",
+        "addr:street": "Avenue de la Toison d'Or - Gulden-Vlieslaan",
+        "amenity": "bar",
+        "contact:email": "info@victoria-bar.com",
+        "contact:phone": "+32 483 07 07 37",
+        "contact:website": "https://www.victoria-bar.com/",
+        "name": "Victoria",
+        "opening_hours": "Mo-Th 15:00-01:00; Fr 15:00-04:00; Sa 12:00-04:00; Su 15:00-01:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3608448,
+          50.8377121
+        ]
+      },
+      "id": "node/4933087865"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4972028804",
+        "addr:city": "Etterbeek",
+        "addr:country": "BE",
+        "addr:housenumber": "894",
+        "addr:postcode": "1040",
+        "addr:street": "Chaussée de Wavre - Steenweg op Waver",
+        "amenity": "bar",
+        "name": "Alexia",
+        "opening_hours": "20:00-05:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3948925,
+          50.8276632
+        ]
+      },
+      "id": "node/4972028804"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4996804603",
+        "amenity": "bar",
+        "name": "Forest-National"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3257324,
+          50.8096347
+        ]
+      },
+      "id": "node/4996804603"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5000478117",
+        "amenity": "bar",
+        "description": "Bar à cocktails",
+        "level": "1",
+        "name": "WXYZ Bar",
+        "website": "http://www.aloftbruxelles.com/wxyz-bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.380816,
+          50.8403005
+        ]
+      },
+      "id": "node/5000478117"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5001980701",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "3",
+        "addr:postcode": "1000",
+        "addr:street": "Boulevard de l'Impératrice - Keizerinlaan",
+        "alt_name": "28 by Caulier",
+        "amenity": "bar",
+        "contact:email": "info@caulier.be",
+        "contact:phone": "+32 2 5110531",
+        "contact:website": "http://www.caulier.be/new/b28/",
+        "name": "Brasserie 28 Caulier"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3566748,
+          50.8452057
+        ]
+      },
+      "id": "node/5001980701"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5051859510",
+        "addr:housenumber": "22",
+        "addr:street": "Rue de l'Amazone - Amazonestraat",
+        "amenity": "bar",
+        "contact:email": "contact@snapbar.com",
+        "contact:phone": "+32 476 732853",
+        "contact:website": "http://www.snapbar.com/",
+        "description": "Karaoke Bar",
+        "name": "Snap",
+        "opening_hours": "Su,Mo off"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3581346,
+          50.8253671
+        ]
+      },
+      "id": "node/5051859510"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5094225734",
+        "addr:city": "Ixelles",
+        "addr:housenumber": "584",
+        "addr:street": "Chaussée de Waterloo",
+        "amenity": "bar",
+        "name": "Le Damier"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.363582,
+          50.8184632
+        ]
+      },
+      "id": "node/5094225734"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5100092431",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "21",
+        "addr:postcode": "1000",
+        "addr:street": "Rue des Poissonniers - Visverkopersstraat",
+        "addr:street:fr": "Rue des Poissonniers",
+        "addr:street:nl": "Visverkopersstraat",
+        "alt_name": "Café Kafka",
+        "amenity": "pub",
+        "internet_access": "wlan",
+        "name": "Kafka",
+        "opening_hours": "Mo-Su 16:00-03:00",
+        "toilets:wheelchair": "no",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3480762,
+          50.8491319
+        ]
+      },
+      "id": "node/5100092431"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111005844",
+        "addr:housenumber": "6",
+        "addr:street": "Rue Auguste Orts - Auguste Ortsstraat",
+        "amenity": "bar",
+        "contact:phone": "+32 2 5118232",
+        "description": "Serves mostly fresh juices, milk shakes and some food",
+        "name": "Bubble Tea Food"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3488261,
+          50.8484832
+        ]
+      },
+      "id": "node/5111005844"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111380867",
+        "amenity": "bar",
+        "contact:phone": "+32 2 231 10 06",
+        "contact:website": "https://13degres.be",
+        "description": "Wine Bar",
+        "internet_access": "wlan",
+        "name": "13°",
+        "opening_hours": "Mo-Fr 17:00-01:00; Sa 18:00-01:00",
+        "outdoor_seating": "yes",
+        "payment:cash": "only"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3809998,
+          50.8369965
+        ]
+      },
+      "id": "node/5111380867"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111454169",
+        "amenity": "bar",
+        "name": "La Malcour"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3553503,
+          50.8410319
+        ]
+      },
+      "id": "node/5111454169"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111672805",
+        "amenity": "pub",
+        "name": "La Clef d'Or"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.346704,
+          50.8374657
+        ]
+      },
+      "id": "node/5111672805"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111678383",
+        "amenity": "pub",
+        "name": "Le Chineur"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3465478,
+          50.83753
+        ]
+      },
+      "id": "node/5111678383"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111693903",
+        "amenity": "pub",
+        "name": "Au Vieux Marché"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3453938,
+          50.8364125
+        ]
+      },
+      "id": "node/5111693903"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111693904",
+        "amenity": "pub",
+        "name": "Au Mouton Bleu - In Den Blauwen Lemmen",
+        "name:fr": "Au Mouton Bleu",
+        "name:nl": "In Den Blauwen Lemmen"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3454944,
+          50.8363714
+        ]
+      },
+      "id": "node/5111693904"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111694586",
+        "amenity": "pub",
+        "description": "Taverne",
+        "name": "Le Stoefer"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3448587,
+          50.8367762
+        ]
+      },
+      "id": "node/5111694586"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111696130",
+        "amenity": "bar",
+        "name": "La Plume - De Pluim",
+        "name:fr": "La Plume",
+        "name:nl": "De Pluim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3449687,
+          50.8368626
+        ]
+      },
+      "id": "node/5111696130"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111696137",
+        "amenity": "pub",
+        "name": "Les Puces des Marolles"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3450203,
+          50.8369029
+        ]
+      },
+      "id": "node/5111696137"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111697010",
+        "amenity": "bar",
+        "name": "Le Pavé"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3449023,
+          50.836811
+        ]
+      },
+      "id": "node/5111697010"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111702994",
+        "amenity": "bar",
+        "name": "Café Aline"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3451336,
+          50.837013
+        ]
+      },
+      "id": "node/5111702994"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5111702995",
+        "amenity": "bar",
+        "name": "Volle Brol"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3452228,
+          50.8370854
+        ]
+      },
+      "id": "node/5111702995"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5128638458",
+        "amenity": "bar",
+        "name": "Le Valency"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.392267,
+          50.8564155
+        ]
+      },
+      "id": "node/5128638458"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5128638461",
+        "amenity": "bar",
+        "name": "Duc de Brabant"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3902499,
+          50.8568422
+        ]
+      },
+      "id": "node/5128638461"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5130986542",
+        "amenity": "pub",
+        "name": "Red Monkey",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3594555,
+          50.8241192
+        ]
+      },
+      "id": "node/5130986542"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5191005321",
+        "amenity": "bar",
+        "name:en": "Afterworks"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.351961,
+          50.8645188
+        ]
+      },
+      "id": "node/5191005321"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5211692524",
+        "addr:housenumber": "1",
+        "addr:postcode": "1040",
+        "addr:street": "Rue Froissart - Froissartstraat",
+        "amenity": "bar",
+        "contact:website": "http://pepeteetronron.be/",
+        "cuisine": "tapas",
+        "description": "Wine bar, tapas and delicatessen",
+        "name": "Pepete & Ronron"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3818835,
+          50.8377169
+        ]
+      },
+      "id": "node/5211692524"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5224051124",
+        "amenity": "bar",
+        "name": "L'Epicerie Moderne"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.352508,
+          50.845564
+        ]
+      },
+      "id": "node/5224051124"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5375750421",
+        "addr:housenumber": "1",
+        "addr:postcode": "1000",
+        "addr:street": "Place Saint-Josse - Sint-Joostplein",
+        "amenity": "bar",
+        "name": "Le Vieux Saint Josse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3737775,
+          50.8496034
+        ]
+      },
+      "id": "node/5375750421"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5379360921",
+        "addr:housenumber": "65",
+        "addr:postcode": "1000",
+        "addr:street": "Rue Archimède - Archimedesstraat",
+        "amenity": "bar",
+        "name": "The Funky Monkey",
+        "website": "https://www.thefunkymonkey.be/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3839985,
+          50.8450276
+        ]
+      },
+      "id": "node/5379360921"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5404003166",
+        "amenity": "bar",
+        "name": "Santana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.345618,
+          50.842356
+        ]
+      },
+      "id": "node/5404003166"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5414465523",
+        "amenity": "pub",
+        "internet_access": "wlan",
+        "name": "The Meeting Point",
+        "opening_hours": "Mo-Sa 11:00-00:00+"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3793259,
+          50.8452705
+        ]
+      },
+      "id": "node/5414465523"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5439928905",
+        "addr:city": "Schaerbeek - Schaarbeek",
+        "addr:housenumber": "95",
+        "addr:postcode": "1030",
+        "addr:street": "Avenue Dailly - Daillylaan",
+        "amenity": "bar",
+        "name": "The Secret"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3828266,
+          50.8564916
+        ]
+      },
+      "id": "node/5439928905"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5453709025",
+        "amenity": "bar",
+        "name": "Mademoiselle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3486179,
+          50.8462458
+        ]
+      },
+      "id": "node/5453709025"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5506428221",
+        "amenity": "bar",
+        "name": "Copain"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3885862,
+          50.8572251
+        ]
+      },
+      "id": "node/5506428221"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5508686175",
+        "alt_name": "Café Lisbonne",
+        "amenity": "bar",
+        "name": "Lisbonne"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4009796,
+          50.8239938
+        ]
+      },
+      "id": "node/5508686175"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5514117224",
+        "addr:city": "Saint-Gilles - Sint-Gillis",
+        "addr:housenumber": "22",
+        "addr:postcode": "1060",
+        "addr:street": "Rue du Fort - Fortstraat",
+        "amenity": "bar",
+        "name": "L'étoile de villa Pouca"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3434159,
+          50.8294398
+        ]
+      },
+      "id": "node/5514117224"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5580230178",
+        "addr:city": "Ixelles - Elsene",
+        "addr:housenumber": "393",
+        "addr:postcode": "1050",
+        "addr:street": "Chaussée de Waterloo - Waterloose Steenweg",
+        "amenity": "bar",
+        "name": "Jane's",
+        "opening_hours": "Tu-We 15:30-23:45; Th-Sa 15:30-02:00; Su 11:00-17:00",
+        "outdoor_seating": "yes",
+        "phone": "+32 2 851 10 39",
+        "smoking": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3553549,
+          50.8218957
+        ]
+      },
+      "id": "node/5580230178"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5593328021",
+        "amenity": "pub",
+        "name:en": "The James Joyce"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.383625,
+          50.8449936
+        ]
+      },
+      "id": "node/5593328021"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5628359721",
+        "amenity": "bar",
+        "contact:facebook": "https://www.facebook.com/woodpeckerbxl",
+        "name": "Woodpecker"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3636312,
+          50.8433241
+        ]
+      },
+      "id": "node/5628359721"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5650399701",
+        "amenity": "pub",
+        "name": "Le Cheval Blanc"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3296104,
+          50.8503361
+        ]
+      },
+      "id": "node/5650399701"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5691531519",
+        "amenity": "bar",
+        "name": "Straton Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3454356,
+          50.8324138
+        ]
+      },
+      "id": "node/5691531519"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5703277193",
+        "amenity": "pub",
+        "name": "Hollywood"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3358968,
+          50.828368
+        ]
+      },
+      "id": "node/5703277193"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5739957700",
+        "amenity": "bar",
+        "name": "Kiosk Radio Bar",
+        "note": "Opening hours are irregular",
+        "takeaway": "only"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3626501,
+          50.8434755
+        ]
+      },
+      "id": "node/5739957700"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5751776145",
+        "amenity": "pub",
+        "name": "The Experience"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4793144,
+          50.8520773
+        ]
+      },
+      "id": "node/5751776145"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5800912585",
+        "amenity": "pub",
+        "name": "Le Diamant"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.401878,
+          50.8489151
+        ]
+      },
+      "id": "node/5800912585"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5804512059",
+        "amenity": "pub",
+        "name": "Tempus",
+        "smoking": "outside"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.305789,
+          50.8859271
+        ]
+      },
+      "id": "node/5804512059"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5838486485",
+        "amenity": "pub",
+        "name": "Rixos"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3892013,
+          50.8220682
+        ]
+      },
+      "id": "node/5838486485"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5874411191",
+        "addr:postcode": "1090",
+        "amenity": "pub",
+        "name": "De Boerkes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3182086,
+          50.884834
+        ]
+      },
+      "id": "node/5874411191"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5910187133",
+        "amenity": "bar",
+        "name": "Le Savoye"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3667693,
+          50.8171587
+        ]
+      },
+      "id": "node/5910187133"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5910187135",
+        "amenity": "pub",
+        "name": "Steven's Coffee"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.366843,
+          50.8169858
+        ]
+      },
+      "id": "node/5910187135"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5910222878",
+        "amenity": "bar",
+        "name": "Le Carrefour"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3674432,
+          50.8149959
+        ]
+      },
+      "id": "node/5910222878"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5910303544",
+        "amenity": "bar",
+        "name": "Le Champlain"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3593073,
+          50.8143938
+        ]
+      },
+      "id": "node/5910303544"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5910308954",
+        "amenity": "bar",
+        "name": "Le Longchamps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3563214,
+          50.8142811
+        ]
+      },
+      "id": "node/5910308954"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5923692612",
+        "addr:city": "Schaerbeek - Schaarbeek",
+        "addr:housenumber": "55",
+        "addr:postcode": "1030",
+        "addr:street": "Avenue Emile Max - Emile Maxlaan",
+        "amenity": "bar",
+        "brewery": "various",
+        "contact:facebook": "https://www.facebook.com/PythonCraftBeer/",
+        "name": "Python - Beer Cellar",
+        "opening_hours": "Mo-Th 16:00-00:00; Fr-Sa 16:00-01:00; Su off",
+        "outdoor_seating": "yes",
+        "phone": "+32 479 58 12 19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.392157,
+          50.8496866
+        ]
+      },
+      "id": "node/5923692612"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5929767671",
+        "amenity": "bar",
+        "name": "Brasserie Hankar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4060073,
+          50.8215544
+        ]
+      },
+      "id": "node/5929767671"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5929894604",
+        "amenity": "pub",
+        "name": "l'Avant-Première",
+        "phone": "+32 2 675 15 83",
+        "website": "http://lavantpremiere.be"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4085889,
+          50.8206139
+        ]
+      },
+      "id": "node/5929894604"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5934700268",
+        "addr:housenumber": "36-38",
+        "addr:street": "Rue Saint-Laurent - Sint-Laurensstraat",
+        "amenity": "bar",
+        "contact:email": "info@humphreyrestaurant.com",
+        "contact:website": "https://www.humphreyrestaurant.com/",
+        "name": "Humphrey",
+        "opening_hours": "Mo-Fr 12:00-15:00,18:00-22:30"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3600878,
+          50.850665
+        ]
+      },
+      "id": "node/5934700268"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5937460884",
+        "amenity": "bar",
+        "name": "Le Break"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4121513,
+          50.8197883
+        ]
+      },
+      "id": "node/5937460884"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5951418285",
+        "addr:housenumber": "1",
+        "addr:postcode": "1050",
+        "addr:street": "Avenue de l'Université - Hogeschoollaan",
+        "amenity": "pub",
+        "email": "jerome@knokkeout.com",
+        "internet_access": "wlan",
+        "name": "Korner",
+        "opening_hours": "Su-Tu 11:00-01:00; We 11:00-02:00; Th 11:00-03:00; Fr-Sa 11:00-04:00",
+        "phone": "+32 2 851 42 09",
+        "website": "https://www.knokkeout.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3894576,
+          50.8156642
+        ]
+      },
+      "id": "node/5951418285"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5969774021",
+        "amenity": "bar",
+        "name": "Chez Henri"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3958102,
+          50.836789
+        ]
+      },
+      "id": "node/5969774021"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6057563725",
+        "amenity": "pub",
+        "description": "Asian & French Brasserie",
+        "name": "The Open",
+        "opening_hours": "11:00-01:00",
+        "opening_hours:kitchen": "12:00-00:00",
+        "outdoor_seating": "terrace",
+        "phone": "+32 2 735 49 89",
+        "website": "http://theopen.be"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4063875,
+          50.8360535
+        ]
+      },
+      "id": "node/6057563725"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6061423785",
+        "addr:housenumber": "62",
+        "addr:postcode": "1000",
+        "addr:street": "Place du Jeu de Balle",
+        "amenity": "pub",
+        "name": "Pin Pon",
+        "opening_hours": "Mo-Su 08:00-23:30",
+        "phone": "+32 2 540 89 99"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3463348,
+          50.8368374
+        ]
+      },
+      "id": "node/6061423785"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6111000357",
+        "amenity": "pub",
+        "name": "Planet"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3757725,
+          50.8649974
+        ]
+      },
+      "id": "node/6111000357"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6121329455",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:housenumber": "1",
+        "addr:postcode": "1000",
+        "addr:street": "Petite Rue des Brigitinnes - Korte Brigittinenstraat",
+        "amenity": "bar",
+        "name": "Recyclart - Bar",
+        "opening_hours": "Mo-Fr 10:00-16:00",
+        "phone": "+32 2 289 00 59"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3490603,
+          50.8407163
+        ]
+      },
+      "id": "node/6121329455"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6153592800",
+        "addr:housenumber": "41",
+        "addr:street": "Avenue des saisons",
+        "amenity": "pub",
+        "name": "Le Saint-Tropez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3864954,
+          50.8193844
+        ]
+      },
+      "id": "node/6153592800"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6153592801",
+        "amenity": "pub",
+        "name": "Sens interdit"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3873858,
+          50.8200623
+        ]
+      },
+      "id": "node/6153592801"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6194695639",
+        "addr:housenumber": "123",
+        "addr:street": "Avenue du Cimetière de Bruxelles - Kerkhof van Brussellaan",
+        "amenity": "pub",
+        "name": "Ma Crotte"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4162357,
+          50.8626356
+        ]
+      },
+      "id": "node/6194695639"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6216163161",
+        "amenity": "bar",
+        "name": "Chambon",
+        "note": "Opening hours unknown (it only says \"from Tuesday to Saturday\" without hours",
+        "official_name": "Chambon Gourmet Bar",
+        "opening_hours": "Mo,Su off"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3558471,
+          50.8506487
+        ]
+      },
+      "id": "node/6216163161"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6219092718",
+        "addr:housenumber": "31",
+        "addr:street": "rue Eugène Cattoir",
+        "amenity": "pub",
+        "name": "Sens interdit",
+        "phone": "+32494584706"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.387385,
+          50.8200606
+        ]
+      },
+      "id": "node/6219092718"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6223333929",
+        "addr:housenumber": "1",
+        "addr:postcode": "1170",
+        "addr:street": "Rue des Trois Tilleuls - Drie Lindenstraat",
+        "amenity": "bar",
+        "name": "Winery",
+        "opening_hours": "Tu-Su 11:00-22:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4181721,
+          50.7992247
+        ]
+      },
+      "id": "node/6223333929"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6224322048",
+        "amenity": "bar",
+        "name": "Diamant Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3533683,
+          50.8564478
+        ]
+      },
+      "id": "node/6224322048"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6226079835",
+        "amenity": "bar",
+        "name": "Pacific"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3760483,
+          50.8495634
+        ]
+      },
+      "id": "node/6226079835"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6228044685",
+        "amenity": "bar",
+        "name": "Le Gutenberg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3779355,
+          50.8487394
+        ]
+      },
+      "id": "node/6228044685"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6228102218",
+        "amenity": "bar",
+        "name": "Sans Chicis"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3758821,
+          50.8496166
+        ]
+      },
+      "id": "node/6228102218"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6228231686",
+        "amenity": "bar",
+        "name": "Les Saints"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3735058,
+          50.8497151
+        ]
+      },
+      "id": "node/6228231686"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6230122280",
+        "amenity": "bar",
+        "contact:facebook": "https://www.facebook.com/leseventyfive/",
+        "name": "Le Seventy-Five"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3512593,
+          50.8425927
+        ]
+      },
+      "id": "node/6230122280"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6230122281",
+        "addr:city": "Bruxelles - Brussel",
+        "addr:city:fr": "Bruxelles",
+        "addr:city:nl": "Brussel",
+        "addr:country": "BE",
+        "addr:housenumber": "67",
+        "addr:postcode": "1000",
+        "addr:street": "Rue des Alexiens - Cellebroersstraat",
+        "addr:street:fr": "Rue des Alexiens",
+        "addr:street:nl": "Cellebroersstraat",
+        "amenity": "bar",
+        "brewery": "various",
+        "contact:facebook": "https://www.facebook.com/la.porte.noire.bruxelles/",
+        "name": "La Porte Noire",
+        "opening_hours": "Mo-Sa 17:00-03:00",
+        "outdoor_seating": "no",
+        "ref:UrbIS": "8185379",
+        "website": "http://www.laportenoire.be/",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3510759,
+          50.8426905
+        ]
+      },
+      "id": "node/6230122281"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6247930888",
+        "amenity": "bar",
+        "name": "Taverne vip"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3738763,
+          50.8499353
+        ]
+      },
+      "id": "node/6247930888"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6247953029",
+        "amenity": "bar",
+        "name": "Le petit Madou"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3701834,
+          50.8490947
+        ]
+      },
+      "id": "node/6247953029"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6247954939",
+        "amenity": "bar",
+        "name": "The Butterfly"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3685487,
+          50.8487742
+        ]
+      },
+      "id": "node/6247954939"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6254467924",
+        "amenity": "bar",
+        "name": "Monte Cristo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3499593,
+          50.847694
+        ]
+      },
+      "id": "node/6254467924"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6262113716",
+        "amenity": "bar",
+        "brewery": "leffe;tripel_karmeliet;Stella Artois;Jupiler;Palm;Hoegaarden;Kriek Lindemans;Carolus Classic;Kwak;Delirium Tremens;Waterloo;Brugge_Tripel;Kasteel rouge;Blanche de Namur;La Trappe;La Corne",
+        "name": "Au Brasseur"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3525566,
+          50.8460197
+        ]
+      },
+      "id": "node/6262113716"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6266236214",
+        "addr:housenumber": "75",
+        "addr:street": "Chaussée d'Alsemberg - Alsembergse Steenweg",
+        "amenity": "pub",
+        "food": "no",
+        "internet_access": "wlan",
+        "microbrewery": "yes",
+        "name": "Beerstorming",
+        "opening_hours": "Fr 14:00-18:00; Sa 14:00-20:00",
+        "phone": "+32 04 72897401",
+        "website": "http://www.beerstorming.net/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3431704,
+          50.8243316
+        ]
+      },
+      "id": "node/6266236214"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6266237277",
+        "addr:housenumber": "26",
+        "addr:street": "Rue Lambert Crickx - Lambert Crickxstraat",
+        "amenity": "pub",
+        "food": "no",
+        "internet_access": "wlan",
+        "microbrewery": "yes",
+        "name": "Nanobrasserie de l'Ermitage",
+        "opening_hours": "Fr,Sa 14:00-22:00",
+        "website": "https://ermitagenanobrasserie.be/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.337076,
+          50.8406404
+        ]
+      },
+      "id": "node/6266237277"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6314058083",
+        "amenity": "bar",
+        "name": "Plein publiek"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3566366,
+          50.844453
+        ]
+      },
+      "id": "node/6314058083"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6355348286",
+        "amenity": "pub",
+        "name": "L'hermitage"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3371902,
+          50.8407634
+        ]
+      },
+      "id": "node/6355348286"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6367748302",
+        "amenity": "pub",
+        "name": "Le Baron"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.4653893,
+          50.8396125
+        ]
+      },
+      "id": "node/6367748302"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6394781034",
+        "amenity": "bar",
+        "brewery": "yes",
+        "name": "Le B@cchus",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3874029,
+          50.8189843
+        ]
+      },
+      "id": "node/6394781034"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6409534291",
+        "alt_name": "l'etoile de nuit",
+        "amenity": "bar",
+        "name": "L'Étoile de nuit"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3674097,
+          50.82305
+        ]
+      },
+      "id": "node/6409534291"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6417776784",
+        "amenity": "pub",
+        "name": "L'Avenue"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3225326,
+          50.8743373
+        ]
+      },
+      "id": "node/6417776784"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6418483666",
+        "amenity": "bar",
+        "brewery": "yes",
+        "name": "Bar 77",
+        "opening_hours": "18:00-02:00",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.391421,
+          50.8164127
+        ]
+      },
+      "id": "node/6418483666"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6418483683",
+        "addr:housenumber": "11",
+        "addr:street": "Rue Eugène Cattoir - Eugène Cattoirstraat",
+        "amenity": "bar",
+        "name": "Wine bar Mouchart",
+        "opening_hours": "Tu-Sa 17:00-00:00",
+        "shop": "wine",
+        "website": "https://winebar-mouchart.be/fr"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3868328,
+          50.8206303
+        ]
+      },
+      "id": "node/6418483683"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6419091534",
+        "amenity": "pub",
+        "name": "Bodouin Cafe",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3235707,
+          50.8728108
+        ]
+      },
+      "id": "node/6419091534"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6419091538",
+        "amenity": "bar",
+        "name": "El Mojito"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3241039,
+          50.8733917
+        ]
+      },
+      "id": "node/6419091538"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6419337928",
+        "amenity": "bar",
+        "name": "Miroir",
+        "toilets:wheelchair": "no",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3243513,
+          50.8723964
+        ]
+      },
+      "id": "node/6419337928"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6419337930",
+        "amenity": "pub",
+        "name": "Aux Hippocampes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3242338,
+          50.8717939
+        ]
+      },
+      "id": "node/6419337930"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6419337931",
+        "amenity": "pub",
+        "name": "The Ascot"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3257581,
+          50.8720894
+        ]
+      },
+      "id": "node/6419337931"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6419337932",
+        "amenity": "pub",
+        "name": "La Ferme à Baba"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3256911,
+          50.8722886
+        ]
+      },
+      "id": "node/6419337932"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6419337933",
+        "amenity": "pub",
+        "name": "Le Jette 7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3255935,
+          50.8726075
+        ]
+      },
+      "id": "node/6419337933"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6424745050",
+        "amenity": "bar",
+        "name": "Au panier d'Ixelles"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3688746,
+          50.8326974
+        ]
+      },
+      "id": "node/6424745050"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6448526515",
+        "amenity": "pub",
+        "name": "Copenhagen Tavern"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3611158,
+          50.8387011
+        ]
+      },
+      "id": "node/6448526515"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6483739848",
+        "amenity": "bar",
+        "name": "Cafe Rio Mondego"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3743012,
+          50.8277007
+        ]
+      },
+      "id": "node/6483739848"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6483744830",
+        "amenity": "pub",
+        "name": "Caramulo",
+        "opening_hours": "Mo-Sa 06:00-00:00; Su 09:00-00:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3750047,
+          50.827869
+        ]
+      },
+      "id": "node/6483744830"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6483766641",
+        "addr:housenumber": "98A",
+        "amenity": "pub",
+        "email": "o.artista.bar@gmail.com",
+        "name": "O Artista",
+        "opening_hours": "Mo, Tu, Th, Su 10:00-01:00; Fr 11:00-02:00; Sa 10:00-02:00",
+        "phone": "+32 2 360 35 92"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3762359,
+          50.8282323
+        ]
+      },
+      "id": "node/6483766641"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6491914208",
+        "addr:housenumber": "2-4",
+        "addr:street": "Avenue Livingstone - Livingstonelaan",
+        "amenity": "pub",
+        "bar": "yes",
+        "brewery": "yes",
+        "contact:facebook": "https://www.facebook.com/thewildgeesebrussels",
+        "email": "info@thewildgeese.eu",
+        "food": "yes",
+        "name": "The Wild Geese",
+        "opening_hours": "Su-Fr 11:00-24:00; Sa 13:20-01:30",
+        "outdoor_seating": "yes",
+        "phone": "+32 2 588 68 03",
+        "website": "https://thewildgeese.eu"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3773912,
+          50.8448136
+        ]
+      },
+      "id": "node/6491914208"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6491914209",
+        "addr:housenumber": "100",
+        "addr:street": "Rue Joseph II - Jozef II-straat",
+        "amenity": "pub",
+        "bar": "yes",
+        "contact:facebook": "https://facebook.com/olesmokei.be/",
+        "email": "info@brasserie-tennessee-bruxelles.be",
+        "food": "yes",
+        "name": "Brasserie Tennessee",
+        "opening_hours": "Mo-Fr 08:00-23:00",
+        "outdoor_seating": "yes",
+        "phone": "+31 02 588 22 44",
+        "smoking": "outside",
+        "website": "https://brasserie-tennessee-bruxelles.be",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3771669,
+          50.8448972
+        ]
+      },
+      "id": "node/6491914209"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6509366585",
+        "amenity": "bar",
+        "name": "Jalousy Club"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3524197,
+          50.842018
+        ]
+      },
+      "id": "node/6509366585"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6525493580",
+        "amenity": "bar",
+        "name": "Wiel's Renard Noir"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.348194,
+          50.8367552
+        ]
+      },
+      "id": "node/6525493580"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6528013885",
+        "amenity": "bar",
+        "name:en": "Bar Bizi-2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.334871,
+          50.8389346
+        ]
+      },
+      "id": "node/6528013885"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6528014086",
+        "amenity": "bar",
+        "name:en": "The Twin‘s Bar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3331519,
+          50.8391557
+        ]
+      },
+      "id": "node/6528014086"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6533614145",
+        "addr:housenumber": "48",
+        "amenity": "pub",
+        "name": "Felix Bar Cafe",
+        "opening_hours": "Mo-Su 08:00-02:00",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3767667,
+          50.8273903
+        ]
+      },
+      "id": "node/6533614145"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6533760286",
+        "addr:postcode": "1190",
+        "amenity": "bar",
+        "cuisine": "french",
+        "internet_access": "wlan",
+        "name": "DEKKAR",
+        "name:de": "Dekkera",
+        "name:en": "Dekkera",
+        "name:fr": "Dekkera",
+        "opening_hours": "Mo-Su 14:00-00:00",
+        "phone": "0474109160"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3292753,
+          50.8225554
+        ]
+      },
+      "id": "node/6533760286"
+    }
+  ]
+}

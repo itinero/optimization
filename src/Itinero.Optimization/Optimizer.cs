@@ -27,7 +27,7 @@ namespace Itinero.Optimization
             _configuration = configuration ?? OptimizerConfiguration.Default;
         }
         
-                /// <summary>
+        /// <summary>
         /// Tries to find the best tour to visit all the given visits with the given vehicles and constraints.
         /// </summary>
         /// <param name="profileName">The vehicle profile name.</param>
@@ -125,7 +125,7 @@ namespace Itinero.Optimization
             Action<IEnumerable<Result<Route>>> intermediateResultsCallback = null)
         {
             // do the mapping, maps the model to the road network.
-            var mappings = _configuration.ModelMapperRegistry.Map(_router, model);
+            var mappings = _configuration.ModelMapperRegistry.Map(_router, model, _configuration.RoutingSettings);
             errors = mappings.mapping.Errors?.Select(x => (x.visit, x.message));
             
             // report on intermediates if requested.

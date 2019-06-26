@@ -29,7 +29,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
 
         /// <inhertitdoc/>
         public override bool TryMap(RouterBase router, Model model, out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
-            out string message)
+            out string message, RoutingSettings<float> settings = null)
         {
             if (!EdgeBasedSimplifier.TrySimplify(router, model, out var simplified, out message))
             {

@@ -15,7 +15,7 @@ namespace Itinero.Optimization.Tests.Functional
             return result;
         }
         
-        public static Result<Route> RunWithIntermedidates(this Func<Action<Result<Route>>, Result<Route>> func, string name)
+        public static Result<Route> RunWithIntermediates(this Func<Action<Result<Route>>, Result<Route>> func, string name)
         {
             if (Program.DoIntermediates)
             {
@@ -52,15 +52,15 @@ namespace Itinero.Optimization.Tests.Functional
             }
         }
 
-        public static IEnumerable<Result<Route>> RunWithIntermedidates(this Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func, string name)
+        public static IEnumerable<Result<Route>> RunWithIntermediates(this Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func, string name, int count = 1)
         {
             if (Program.DoIntermediates)
             {
-                var allIintermediateRoutes = new List<Route>();
-                var localFunc = new Func<IEnumerable<Result<Route>>>(() => func((intermedidateResults) =>
+                var allIntermediateRoutes = new List<Route>();
+                var localFunc = new Func<IEnumerable<Result<Route>>>(() => func((intermediateResults) =>
                 {
                     var routes = new List<Route>();
-                    foreach (var result in intermedidateResults)
+                    foreach (var result in intermediateResults)
                     {
                         if (result.IsError)
                         {
@@ -72,8 +72,8 @@ namespace Itinero.Optimization.Tests.Functional
                     routes.Sort();
                     routes.AddTimeStamp();
                     routes.AddRouteId();
-                    allIintermediateRoutes.AddRange(routes);
-                    allIintermediateRoutes.WriteGeoJsonOneFile(name + "-all.geojson");
+                    allIntermediateRoutes.AddRange(routes);
+                    allIntermediateRoutes.WriteGeoJsonOneFile(name + "-all.geojson");
                 }));
 
                 RouteExtensions.ResetTimeStamp();
@@ -86,7 +86,7 @@ namespace Itinero.Optimization.Tests.Functional
             {
                 var allIintermediateRoutes = new List<Route>();
                 var localFunc = new Func<IEnumerable<Result<Route>>>(() => func(null));
-                var results = localFunc.TestPerf(name).ToList();
+                var results = localFunc.TestPerf(name, count).ToList();
                 results.WriteStats();
                 results.WriteGeoJson(name + "-{0}.geojson");
                 return results;

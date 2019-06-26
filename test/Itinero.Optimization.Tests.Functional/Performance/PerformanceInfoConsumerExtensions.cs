@@ -141,7 +141,7 @@ namespace Itinero.Optimization.Tests.Functional.Performance
         public static T TestPerf<T>(this Func<T> func, string name, int count)
         {
             var res = default(T);
-            var info = new PerformanceInfoConsumer(name + " x " + count.ToInvariantString(), 10000);
+            var info = new PerformanceInfoConsumer(name + " x " + count.ToInvariantString(), count);
             info.Start();
             while (count > 0)
             {

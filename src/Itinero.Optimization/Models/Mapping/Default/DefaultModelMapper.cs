@@ -17,7 +17,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
 
         /// <inhertitdoc/>
         public override bool TryMap(RouterBase router, Model model, out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
-            out string message)
+            out string message, RoutingSettings<float> settings = null)
         {
             // Verify if this mapper can handle this model:
             // - check if there are any vehicles with a turn-cost.
@@ -92,7 +92,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
                 return false;
             }
 
-            var weightMatrixAlgorithm = new WeightMatrixAlgorithm(router, profile, massResolvingAlgorithm);
+            var weightMatrixAlgorithm = new WeightMatrixAlgorithm(router, profile, massResolvingAlgorithm, settings);
             weightMatrixAlgorithm.Run();
             if (!weightMatrixAlgorithm.HasSucceeded)
             {

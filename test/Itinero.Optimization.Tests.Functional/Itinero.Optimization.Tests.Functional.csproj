@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="Itinero.IO.Osm" Version="1.4.0-pre92" />
-    <PackageReference Include="OsmSharp" Version="6.1.0" />
+    <PackageReference Include="Itinero.IO.Osm" Version="1.6.0-pre002" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.15.0-pre032" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
   </ItemGroup>
@@ -12,6 +11,7 @@
     <EmbeddedResource Include="CVRP\data\problem2-spijkenisse.geojson">
       <LogicalName>Itinero.Optimization.Tests.Functional.CVRP.data.problem2-spijkenisse.geojson</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="CVRP\data\problem6-brussels.geojson" />
     <EmbeddedResource Include="CVRP_ND\data\problem1.geojson">
       <LogicalName>Itinero.Optimization.Tests.Functional.CVRP_ND.data.problem1.geojson</LogicalName>
     </EmbeddedResource>
@@ -65,6 +65,8 @@
     </EmbeddedResource>
     <None Remove="CVRP\data\problem3-de-hague.geojson" />
     <EmbeddedResource Include="CVRP\data\problem3-de-hague.geojson" />
+    <None Remove="TSP\data\problem5-brussels.geojson" />
+    <EmbeddedResource Include="TSP\data\problem5-brussels.geojson" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Staging\query1.txt">
