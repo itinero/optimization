@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="Itinero.IO.Osm" Version="1.6.0-pre002" />
-    <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.15.0-pre032" />
+    <PackageReference Include="Itinero.IO.Osm" Version="1.6.0-pre003" />
+    <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.15.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
