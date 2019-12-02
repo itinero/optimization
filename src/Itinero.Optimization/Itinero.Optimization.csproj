@@ -40,6 +40,6 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Itinero" Version="1.6.0-pre002" />
+    <PackageReference Include="Itinero" Version="1.6.0-pre013" />
   </ItemGroup>
 </Project>
