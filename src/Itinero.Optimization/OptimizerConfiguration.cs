@@ -24,7 +24,7 @@ namespace Itinero.Optimization
             if (settings == null)
             {
                 settings = new RoutingSettings<float>();
-                settings.SetMaxSearch(string.Empty, 5400);
+                settings.SetMaxSearch(string.Empty, 7200);
             }
             this.RoutingSettings = settings;
         }
@@ -42,7 +42,7 @@ namespace Itinero.Optimization
         /// <summary>
         /// Gets the routing settings.
         /// </summary>
-        internal RoutingSettings<float> RoutingSettings { get; }
+        public RoutingSettings<float> RoutingSettings { get; }
         
         private static readonly Lazy<OptimizerConfiguration> DefaultLazy = new Lazy<OptimizerConfiguration>(() => new OptimizerConfiguration());
         
