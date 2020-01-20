@@ -4,7 +4,7 @@ using Itinero.Optimization.Strategies.Random;
 namespace Itinero.Optimization.Solvers.Tours.Sequences
 {
     /// <summary>
-    /// Extension methods related to tours & sequences.
+    /// Extension methods related to tours and sequences.
     /// </summary>
     public static class IReadOnlyTourExtensions
     {
