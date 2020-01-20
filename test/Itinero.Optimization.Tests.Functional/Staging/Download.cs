@@ -36,7 +36,7 @@ namespace Itinero.Optimization.Tests.Functional.Staging
 
             if (!File.Exists(queryFileName))
             {
-                throw new System.Exception($"Cannot stage data for query {queryName}, query not found!");
+                throw new System.Exception($"Cannot stage data for query {queryName}, query not found at {new FileInfo(queryName).FullName}");
             }
 
             var query = File.ReadAllText(queryFileName);

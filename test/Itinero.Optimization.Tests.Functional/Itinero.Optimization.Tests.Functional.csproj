@@ -84,6 +84,9 @@
     <None Update="Staging\*.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Staging\*.osm.pbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Itinero.Optimization\Itinero.Optimization.csproj" />
