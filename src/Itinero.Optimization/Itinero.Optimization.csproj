@@ -5,7 +5,7 @@
     <PackageId>Itinero.Optimization</PackageId>
     <Description>An optimization library.</Description>
     <Summary>An optimization library on top of the Itinero routeplanner.</Summary>
-    <Authors>Itinero B.V.B.A.</Authors>
+    <Authors>Itinero BV</Authors>
     <PackageId>Itinero.Optimization</PackageId>
     <PackageTags>optimization;logistics;tsp;vrp;routing</PackageTags>
     <PackageIconUrl>https://www.itinero.tech/logos/itinero_logo_notext.svg.128.png</PackageIconUrl>
@@ -19,6 +19,8 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <LangVersion>default</LangVersion>
+    <PackageVersion />
+    <Title>Itinero.Optimization</Title>
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);NETSTANDARD20;NETFX_CORE;DOTNET_CORE</DefineConstants>
