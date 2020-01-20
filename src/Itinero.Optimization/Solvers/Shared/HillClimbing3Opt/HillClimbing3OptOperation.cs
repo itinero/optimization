@@ -227,8 +227,6 @@ namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
                             tour.ReplaceEdgeFrom(v1, v4);
                             tour.ReplaceEdgeFrom(v3, v6);
                             tour.ReplaceEdgeFrom(v5, v2);
-                            
-                            Console.WriteLine($"{weightNew}-{weight}={delta}: {v1}->{v4}/{v3}->{v6}/{v5}->{v2}");
 
                             // set bits.
                             Set(dontLookBits, v3, false);
