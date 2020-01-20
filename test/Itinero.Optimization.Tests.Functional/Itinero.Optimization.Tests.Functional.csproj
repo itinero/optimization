@@ -67,6 +67,9 @@
     <EmbeddedResource Include="CVRP\data\problem3-de-hague.geojson" />
     <None Remove="TSP\data\problem5-brussels.geojson" />
     <EmbeddedResource Include="TSP\data\problem5-brussels.geojson" />
+    <None Update="Staging\query9.osm.pbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Update="Staging\query1.txt">
