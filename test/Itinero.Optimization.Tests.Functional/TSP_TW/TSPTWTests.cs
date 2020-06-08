@@ -30,7 +30,7 @@ namespace Itinero.Optimization.Tests.Functional.TSP_TW
         /// </summary>
         public static void Run()
         {
-            // RunProblem1();
+            RunProblem1();
             RunProblem2();
         }
 
@@ -76,16 +76,16 @@ namespace Itinero.Optimization.Tests.Functional.TSP_TW
                     router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, 0),
                         visits, out _, intermediateRoutesFunc));
             func.RunWithIntermediates("TSP-TW-" + "problem2-closed");
-            // func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
-            //     (intermediateRoutesFunc) =>
-            //         router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, visits.Length - 1),
-            //             visits, out _, intermediateRoutesFunc));
-            // func.RunWithIntermediates("TSP-TW-" + "problem2-fixed");
-            // func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
-            //     (intermediateRoutesFunc) =>
-            //         router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, null),
-            //             visits, out _, intermediateRoutesFunc));
-            // func.RunWithIntermediates("TSP-TW-" + "problem2-open");
+            func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+                (intermediateRoutesFunc) =>
+                    router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, visits.Length - 1),
+                        visits, out _, intermediateRoutesFunc));
+            func.RunWithIntermediates("TSP-TW-" + "problem2-fixed");
+            func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+                (intermediateRoutesFunc) =>
+                    router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, null),
+                        visits, out _, intermediateRoutesFunc));
+            func.RunWithIntermediates("TSP-TW-" + "problem2-open");
         }
     }
 }

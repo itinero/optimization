@@ -164,6 +164,8 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
                 fitness = best.Weight(originalProblem.Weight);
             }
 
+            fitness = best.Fitness(problem);
+            
             return new Candidate<TSPTWProblem, Tour>()
             {
                 Solution = best,

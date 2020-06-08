@@ -38,12 +38,16 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
         public EAXSolver(Strategy<TSPTWProblem, Candidate<TSPTWProblem, Tour>> generator = null, 
             Operator<Candidate<TSPTWProblem, Tour>> mutation = null, GASettings settings = null, ISelector<Candidate<TSPTWProblem, Tour>> selector = null)
         {
-            if (generator == null) generator = RandomSolver.Default;
-            if (mutation == null) mutation = EmptyOperator<Candidate<TSPTWProblem, Tour>>.Default;
-            if (settings == null) settings = GASettings.Default;
+            generator ??= RandomSolver.Default;
+            mutation ??= EmptyOperator<Candidate<TSPTWProblem, Tour>>.Default;
+            settings ??= new GASettings()
+            {
+                PopulationSize = 200
+            };
             var crossOver = EAXOperator.Default;
             
-            _gaStrategy = new GAStrategy<TSPTWProblem, Candidate<TSPTWProblem, Tour>>(generator, crossOver, mutation, settings, selector);
+            _gaStrategy = new GAStrategy<TSPTWProblem, Candidate<TSPTWProblem, Tour>>(generator, crossOver, mutation, settings, selector,
+                useParallel: false);
             
             this.Name = $"EAX_{_gaStrategy.Name}";
         }
@@ -59,7 +63,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
             if (problem.Last == null)
             { // the problem is 'open', we need to convert the problem and then solution.
                 Logger.Log($"{typeof(EAXSolver)}.{nameof(Search)}", TraceEventType.Warning,
-                    "Performance warning: EAX solver cannot be applied to 'open' TSP's, converting problem to a closed equivalent.");
+                    "Performance warning: EAX solver cannot be applied to 'open' TSPs, converting problem to a closed equivalent.");
 
                 var convertedProblem = problem.ClosedEquivalent;
                 var convertedCandidate = _gaStrategy.Search(convertedProblem);
@@ -77,7 +81,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
             else if (problem.First != problem.Last)
             { // the problem is 'closed' but has a fixed end point.
                 Logger.Log($"{typeof(EAXSolver)}.{nameof(Search)}", TraceEventType.Warning,
-                    "Performance warning: EAX solver cannot be applied to'closed' TSP's with a fixed endpoint: converting problem to a closed equivalent.");
+                    "Performance warning: EAX solver cannot be applied to 'closed' TSPs with a fixed endpoint: converting problem to a closed equivalent.");
 
                 var convertedProblem = problem.ClosedEquivalent;
                 var convertedCandidate = _gaStrategy.Search(convertedProblem);

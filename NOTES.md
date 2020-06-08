@@ -89,3 +89,10 @@ General ideas:
  route_2:2974.917s | 14349.19m | 59stops with 0s 0kg
  route_3:4342.102s | 33175.39m | 134stops with 0s 0kg
  total:12794.37s | 85080.77m | 333stops
+ 
+ ## Notes on TSP-TW
+ 
+ - The timewindow concept is too simple, we need a new concept to describe:
+   - Positive or negative windows.
+   - Multiple windows or 'periods' per visit.
+ - The TSP-TW solver fails while solutions are clearly possible.

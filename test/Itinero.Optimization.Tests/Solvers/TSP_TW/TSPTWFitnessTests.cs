@@ -72,9 +72,27 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW
             // create a route with one shift.
             var tour = new Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
 
-            // apply the 1-shift local search, it should find the customer to replocate.
             var fitness = tour.Fitness(problem, timeWindowViolationPenaltyFactor: 1000000);
             Assert.Equal(1000010, fitness);
+        }
+
+        [Fact]
+        public void TSPTWFitness_LastViolated_ShouldApplyPenalty()
+        {
+            var weights = WeightMatrixHelpers.Build(5, 2);
+            var windows = new TimeWindow[5];
+            windows[4] = new TimeWindow()
+            {
+                Min = 1,
+                Max = 3
+            };
+            var problem = new TSPTWProblem(0, 0, weights, windows);
+
+            // create a route with one shift.
+            var tour = new Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
+
+            var fitness = tour.Fitness(problem, timeWindowViolationPenaltyFactor: 1000000);
+            Assert.Equal(5000010, fitness);
         }
     }
 }

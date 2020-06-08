@@ -41,7 +41,7 @@ namespace Itinero.Optimization.Strategies.GA
         private readonly CrossOverOperator<TCandidate> _crossOver;
         private readonly ISelector<TCandidate> _selector;
         private readonly GASettings _settings;
-        private readonly bool _useParallel = true;
+        private readonly bool _useParallel;
 
         /// <summary>
         /// Creates a new genetic algorithm.

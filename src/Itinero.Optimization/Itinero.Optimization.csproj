@@ -18,9 +18,10 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <LangVersion>default</LangVersion>
+    <LangVersion>latest</LangVersion>
     <PackageVersion />
     <Title>Itinero.Optimization</Title>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);NETSTANDARD20;NETFX_CORE;DOTNET_CORE</DefineConstants>
