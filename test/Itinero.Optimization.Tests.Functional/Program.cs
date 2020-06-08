@@ -27,7 +27,7 @@ namespace Itinero.Optimization.Tests.Functional
 
             // shared tools functional testing.
             SeedHeuristicsTest.TestLocations1_GetSeedsKMeans();
-
+            
             // CVRP_ND tools functional testing.
             SeededConstructionHeuristicTests.TestLocations1_SeededConstructionHeuristic();
             

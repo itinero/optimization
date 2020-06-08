@@ -1,0 +1,155 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#40ff00",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "name": "depot"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.8082780838012695,
+          51.25391143772858
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7845458984375,
+          51.27015852526688
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.78029727935791,
+          51.26849379857752
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.789695739746094,
+          51.270561272663755
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.792356491088867,
+          51.267956777103194
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#ff0900",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "time-window-start": 10000,
+        "time-window-end": 11000
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.800853729248046,
+          51.26838639478469
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.801454544067383,
+          51.26347240281517
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#ff0000",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "time-window-start": 0,
+        "time-window-end": 300,
+        "name": "time-window-test"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.794030189514159,
+          51.2578327482091
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.786992073059082,
+          51.258047604871585
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.778881072998046,
+          51.25855788542041
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7800397872924805,
+          51.26336498728683
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7780656814575195,
+          51.26607715252276
+        ]
+      }
+    }
+  ]
+}

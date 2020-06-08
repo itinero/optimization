@@ -172,6 +172,12 @@ namespace Itinero.Optimization.Models.Mapping.Default
                         }
                     }
                 }
+                var visit1TimeWindow = _mappedModel.Visits[visit1].TimeWindow;
+                if (visit1TimeWindow != null)
+                {
+                    visit1Stop.Attributes.AddOrReplace("time_window_min", visit1TimeWindow.Min.ToInvariantString());
+                    visit1Stop.Attributes.AddOrReplace("time_window_max", visit1TimeWindow.Max.ToInvariantString());
+                }
 
                 // add visit2 costs & order to the stop meta data.
                 visit2Stop.Attributes.AddOrReplace("order", visit2Index.ToInvariantString());
@@ -194,6 +200,12 @@ namespace Itinero.Optimization.Models.Mapping.Default
                         }
                         localRoute.TotalTime += visit2Cost.Value;
                     }
+                }
+                var visit2TimeWindow = _mappedModel.Visits[visit2].TimeWindow;
+                if (visit2TimeWindow != null)
+                {
+                    visit2Stop.Attributes.AddOrReplace("time_window_min", visit2TimeWindow.Min.ToInvariantString());
+                    visit2Stop.Attributes.AddOrReplace("time_window_max", visit2TimeWindow.Max.ToInvariantString());
                 }
             }
 

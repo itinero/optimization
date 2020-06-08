@@ -1,105 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="Itinero.IO.Osm" Version="1.6.0-pre003" />
+    <PackageReference Include="Itinero.IO.Osm" Version="1.6.0-pre030" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.15.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CVRP\data\problem1.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.CVRP.data.problem1.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CVRP\data\problem2-spijkenisse.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.CVRP.data.problem2-spijkenisse.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CVRP\data\problem6-brussels.geojson" />
-    <EmbeddedResource Include="CVRP_ND\data\problem1.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.CVRP_ND.data.problem1.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CVRP_ND\data\problem2-spijkenisse.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.CVRP_ND.data.problem2-spijkenisse.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CVRP_ND\data\problem3-de-hague.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.CVRP_ND.data.problem3-de-hague.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CVRP_ND\data\problem4-rotterdam.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.CVRP_ND.data.problem4-rotterdam.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CVRP_ND\data\problem5-capelle.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.CVRP_ND.data.problem5-capelle.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CVRP_ND\data\problem6-hogeveen.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.CVRP_ND.data.problem6-hogeveen.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TSP\data\problem1-spijkenisse.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.TSP.data.problem1-spijkenisse.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TSP\data\problem2-hengelo.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.TSP.data.problem2-hengelo.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TSP\data\problem3.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.TSP.data.problem3.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TSP\data\problem4-wechelderzande.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.TSP.data.problem4-wechelderzande.geojson</LogicalName>
-    </EmbeddedResource>
-      <EmbeddedResource Include="TSP_D\data\problem1-spijkenisse.geojson">
-          <LogicalName>Itinero.Optimization.Tests.Functional.TSP_D.data.problem1-spijkenisse.geojson</LogicalName>
-      </EmbeddedResource>
-    <EmbeddedResource Include="TSP_D\data\problem2-hengelo.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.TSP_D.data.problem2-hengelo.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TSP_D\data\problem3.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.TSP_D.data.problem3.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TSP_D\data\problem4-wechelderzande.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.TSP_D.data.problem4-wechelderzande.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TSP_TW\data\problem1.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.TSP_TW.data.problem1.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Solvers\Shared\Seeds\data\locations1.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.Solvers.Shared.Seeds.data.locations1.geojson</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Solvers\CVRP_ND\Construction\data\locations1.geojson">
-      <LogicalName>Itinero.Optimization.Tests.Functional.Solvers.CVRP_ND.Construction.data.locations1.geojson</LogicalName>
-    </EmbeddedResource>
-    <None Remove="CVRP\data\problem3-de-hague.geojson" />
-    <EmbeddedResource Include="CVRP\data\problem3-de-hague.geojson" />
-    <None Remove="TSP\data\problem5-brussels.geojson" />
-    <EmbeddedResource Include="TSP\data\problem5-brussels.geojson" />
+    <EmbeddedResource Include="**\data\*.geojson" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Staging\query1.txt">
+    <None Update="Staging\*.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Staging\query2.txt">
+    <None Update="Staging\*.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Staging\query3.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Staging\query4.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Staging\query5.osm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Staging\query5.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Staging\query6.osm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Staging\query6.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Staging\query7.osm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Staging\query7.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Staging\query8.osm.pbf">
+    <None Update="Staging\*.osm.pbf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -108,6 +23,6 @@
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 </Project>

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Itinero.Optimization</AssemblyName>
     <PackageId>Itinero.Optimization</PackageId>
     <Description>An optimization library.</Description>
@@ -40,6 +40,6 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Itinero" Version="1.6.0-pre013" />
+    <PackageReference Include="Itinero" Version="1.6.0-pre030" />
   </ItemGroup>
 </Project>

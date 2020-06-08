@@ -30,6 +30,12 @@ namespace Itinero.Optimization.Tests.Functional.TSP_TW
         /// </summary>
         public static void Run()
         {
+            // RunProblem1();
+            RunProblem2();
+        }
+
+        private static void RunProblem1()
+        {
             // WECHELDERZANDE
             // build routerdb and save the result.
             var wechelderzande = Staging.RouterDbBuilder.Build("query1");
@@ -38,35 +44,48 @@ namespace Itinero.Optimization.Tests.Functional.TSP_TW
             // get test visits from geojson.
             var visits = Staging.StagingHelpers.GetVisits(
                 Staging.StagingHelpers.GetFeatureCollection("TSP_TW.data.problem1.geojson"));
-            
-            // build model & run.
-            // closed 0-> ... -> 0
-            var model = new Model()
-            {
-                VehiclePool = VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, 0),
-                Visits = visits
-            };
-            Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>> func = (intermediateRoutesFunc) =>
-                router.Optimize(model, out _, intermediateRoutesFunc);
-            func.RunWithIntermediates("TSP-TW-" + "wechel-closed");
-            // closed fixed 0 -> ... -> last.
-            model = new Model()
-            {
-                VehiclePool = VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, visits.Length - 1),
-                Visits = visits
-            };
-            func = (intermediateRoutesFunc) =>
-                router.Optimize(model, out _, intermediateRoutesFunc);
-            func.RunWithIntermediates("TSP-TW-" + "wechel-fixed");
-            // open 0 -> ...
-            model = new Model()
-            {
-                VehiclePool = VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, null),
-                Visits = visits
-            };
-            func = (intermediateRoutesFunc) =>
-                router.Optimize(model, out _, intermediateRoutesFunc);
-            func.RunWithIntermediates("TSP-TW-" + "wechel-open");    
+
+            var func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+                (intermediateRoutesFunc) =>
+                    router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, 0),
+                        visits, out _, intermediateRoutesFunc));
+            func.RunWithIntermediates("TSP-TW-" + "problem1-closed");
+            func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+                (intermediateRoutesFunc) =>
+                    router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, visits.Length - 1),
+                        visits, out _, intermediateRoutesFunc));
+            func.RunWithIntermediates("TSP-TW-" + "problem1-fixed");
+            func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+                (intermediateRoutesFunc) =>
+                    router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, null),
+                        visits, out _, intermediateRoutesFunc));
+            func.RunWithIntermediates("TSP-TW-" + "problem1-open");
+        }
+
+        private static void RunProblem2()
+        {
+            var wechelderzande = Staging.RouterDbBuilder.Build("query1");
+            var router = new Router(wechelderzande);
+
+            // get test visits from geojson.
+            var visits = Staging.StagingHelpers.GetVisits(
+                Staging.StagingHelpers.GetFeatureCollection("TSP_TW.data.problem2.geojson"));
+
+            var func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+                (intermediateRoutesFunc) =>
+                    router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, 0),
+                        visits, out _, intermediateRoutesFunc));
+            func.RunWithIntermediates("TSP-TW-" + "problem2-closed");
+            // func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+            //     (intermediateRoutesFunc) =>
+            //         router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, visits.Length - 1),
+            //             visits, out _, intermediateRoutesFunc));
+            // func.RunWithIntermediates("TSP-TW-" + "problem2-fixed");
+            // func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+            //     (intermediateRoutesFunc) =>
+            //         router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, null),
+            //             visits, out _, intermediateRoutesFunc));
+            // func.RunWithIntermediates("TSP-TW-" + "problem2-open");
         }
     }
 }
