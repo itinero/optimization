@@ -5,7 +5,7 @@
     <PackageId>Itinero.Optimization</PackageId>
     <Description>An optimization library.</Description>
     <Summary>An optimization library on top of the Itinero routeplanner.</Summary>
-    <Authors>Itinero B.V.B.A.</Authors>
+    <Authors>Itinero BV</Authors>
     <PackageId>Itinero.Optimization</PackageId>
     <PackageTags>optimization;logistics;tsp;vrp;routing</PackageTags>
     <PackageIconUrl>https://www.itinero.tech/logos/itinero_logo_notext.svg.128.png</PackageIconUrl>
@@ -18,26 +18,15 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>default</LangVersion>
+    <PackageVersion />
+    <Title>Itinero.Optimization</Title>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+  <PropertyGroup>
     <DefineConstants>$(DefineConstants);NETSTANDARD20;NETFX_CORE;DOTNET_CORE</DefineConstants>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+  <ItemGroup>
     <Compile Include="..\..\SharedAssemblyVersion.cs" Link="Properties\SharedAssemblyVersion.cs" />
-  </ItemGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>$(DefineConstants);NET45</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Compile Include="..\..\SharedAssemblyVersion.cs" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Itinero" Version="1.6.0-pre030" />

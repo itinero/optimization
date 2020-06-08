@@ -1,7 +1,7 @@
 namespace Itinero.Optimization.Solvers.Tours.Sequences
 {
     /// <summary>
-    /// Contains extension methods related to tours & sequences.
+    /// Contains extension methods related to tours and sequences.
     /// </summary>
     public static class TourExtensions
     {

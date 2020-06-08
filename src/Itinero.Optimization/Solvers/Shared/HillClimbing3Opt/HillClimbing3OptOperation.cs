@@ -32,7 +32,7 @@ namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
     /// </summary>
     public static class HillClimbing3OptOperation
     {
-        private const float E = 0.001f;
+        private const float E = 0.1f;
         
         /// <summary>
         /// Returns true if there was an improvement, false otherwise.
@@ -223,7 +223,7 @@ namespace Itinero.Optimization.Solvers.Shared.HillClimbing3Opt
                             // actually do replace the vertices.
                             var countBefore = tour.Count;
                             delta = weightNew - weight;
-
+                            
                             tour.ReplaceEdgeFrom(v1, v4);
                             tour.ReplaceEdgeFrom(v3, v6);
                             tour.ReplaceEdgeFrom(v5, v2);

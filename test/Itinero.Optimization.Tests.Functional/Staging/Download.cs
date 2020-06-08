@@ -31,12 +31,12 @@ namespace Itinero.Optimization.Tests.Functional.Staging
         /// </summary>
         public static void ToFile(string queryName)
         {
-            var filename = Path.Combine("Staging", queryName + ".osm");
-            var queryFileName = Path.Combine("Staging", queryName + ".txt");
+            var filename = Path.Combine(".", "Staging", queryName + ".osm");
+            var queryFileName = Path.Combine(".", "Staging", queryName + ".txt");
 
             if (!File.Exists(queryFileName))
             {
-                throw new System.Exception("Cannot stage data for query, query not found!");
+                throw new System.Exception($"Cannot stage data for query {queryName}, query not found at {new FileInfo(queryFileName).FullName}");
             }
 
             var query = File.ReadAllText(queryFileName);

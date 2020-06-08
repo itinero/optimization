@@ -68,8 +68,8 @@ namespace Itinero.Optimization.Tests.Solvers.Tours
             var tour = new Tour(Enumerable.Range(0, rawLocations.GetLength(0)));
 
             var tourGeoJson = tour.ToGeoJson((i) => new Coordinate((float) rawLocations[i, 1], (float) rawLocations[i, 0]));
-            Assert.Equal("{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"name\":\"ShapeMeta\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[4.769268,51.2646],[4.792957,51.26766],[4.795103,51.26234]]},\"properties\":{}},{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[4.769268,51.2646]},\"properties\":{\"visit\":0,\"index\":0}},{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[4.792957,51.26766]},\"properties\":{\"visit\":1,\"index\":1}},{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[4.795103,51.26234]},\"properties\":{\"visit\":2,\"index\":2}}]}",
-                tourGeoJson);
+            Assert.Equal("{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"name\":\"ShapeMeta\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[4.769268,51.2646],[4.7929573,51.267662],[4.795103,51.262344]]},\"properties\":{}},{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[4.769268,51.2646]},\"properties\":{\"visit\":0,\"index\":0}},{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[4.7929573,51.267662]},\"properties\":{\"visit\":1,\"index\":1}},{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[4.795103,51.262344]},\"properties\":{\"visit\":2,\"index\":2}}]}"
+                ,tourGeoJson);
         }
     }
 }
