@@ -44,8 +44,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW
             var windows = new TimeWindow[5];
             windows[2] = new TimeWindow()
             {
-                Min = 1,
-                Max = 3
+                Times = new[] {1f, 3f}
             };
             var problem = new TSPTWProblem(0, 0, weights, windows);
             
@@ -64,8 +63,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW
             var windows = new TimeWindow[5];
             windows[2] = new TimeWindow()
             {
-                Min = 1,
-                Max = 3
+                Times = new[] {1f, 3f}
             };
             var problem = new TSPTWProblem(0, 0, weights, windows);
 
@@ -83,8 +81,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW
             var windows = new TimeWindow[5];
             windows[4] = new TimeWindow()
             {
-                Min = 1,
-                Max = 3
+                Times = new[] {1f, 3f}
             };
             var problem = new TSPTWProblem(0, 0, weights, windows);
 

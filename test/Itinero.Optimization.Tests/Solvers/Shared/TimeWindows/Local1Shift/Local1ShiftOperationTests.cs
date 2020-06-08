@@ -35,8 +35,7 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.TimeWindows.Local1Shift
             var windows = new TimeWindow[5];
             windows[2] = new TimeWindow()
             {
-                Min = 1,
-                Max = 3
+                Times = new[] {1f, 3f}
             };
 
             // create a route with one shift.
@@ -67,8 +66,7 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.TimeWindows.Local1Shift
             var windows = new TimeWindow[5];
             windows[2] = new TimeWindow()
             {
-                Min = 1,
-                Max = 3
+                Times = new[] {1f, 3f}
             };
             
             // create a feasible route.
@@ -89,8 +87,7 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.TimeWindows.Local1Shift
             var windows = new TimeWindow[5];
             windows[2] = new TimeWindow()
             {
-                Min = 1,
-                Max = 3
+                Times = new[] {1f, 3f}
             };
 
             // create a route with one shift.
@@ -116,8 +113,7 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.TimeWindows.Local1Shift
             var windows = new TimeWindow[5];
             windows[2] = new TimeWindow()
             {
-                Min = 1,
-                Max = 3
+                Times = new[] {1f, 3f}
             };
 
             // create a route with one shift.
@@ -144,13 +140,11 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.TimeWindows.Local1Shift
             var windows = new TimeWindow[5];
             windows[1] = new TimeWindow()
             {
-                Min = 1,
-                Max = 3
+                Times = new[] {1f, 3f}
             };
             windows[3] = new TimeWindow()
             {
-                Min = 0,
-                Max = 2
+                Times = new[] {0f, 2f}
             };
 
             // create a route with one shift.
@@ -180,8 +174,7 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.TimeWindows.Local1Shift
             var windows = new TimeWindow[5];
             windows[4] = new TimeWindow()
             {
-                Min = 7,
-                Max = 9
+                Times = new[] {7f, 9f}
             };
 
             // create a route with one shift.
@@ -206,8 +199,7 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.TimeWindows.Local1Shift
             var windows = new TimeWindow[5];
             windows[4] = new TimeWindow()
             {
-                Min = 7,
-                Max = 9
+                Times = new[] {7f, 9f}
             };
 
             // create a route with one shift.

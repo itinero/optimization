@@ -188,23 +188,19 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW
             {
                 new TimeWindow()
                 {
-                    Min = 0,
-                    Max = 1
+                    Times = new[] {0f, 1f}
                 },
                 new TimeWindow()
                 {
-                    Min = 2,
-                    Max = 3
+                    Times = new[] {2f, 3f}
                 },
                 new TimeWindow()
                 {
-                    Min = 4,
-                    Max = 5
+                    Times = new[] {4f, 5f}
                 },
                 new TimeWindow()
                 {
-                    Min = 6,
-                    Max = 7
+                    Times = new[] {6f, 7f}
                 }
             });
             
@@ -304,23 +300,19 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW
             {
                 new TimeWindow()
                 {
-                    Min = 0,
-                    Max = 1
+                    Times = new[] {0f, 1f}
                 },
                 new TimeWindow()
                 {
-                    Min = 2,
-                    Max = 3
+                    Times = new[] {2f, 3f}
                 },
                 new TimeWindow()
                 {
-                    Min = 4,
-                    Max = 5
+                    Times = new[] {4f, 5f}
                 },
                 new TimeWindow()
                 {
-                    Min = 6,
-                    Max = 7
+                    Times = new[] {6f, 7f}
                 }
             });
             

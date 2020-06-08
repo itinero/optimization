@@ -71,13 +71,11 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW.Operators
             var windows = new TimeWindow[5];
             windows[3] = new TimeWindow()
             {
-                Min = 1,
-                Max = 2
+                Times = new[] {1f, 2f}
             };
             windows[2] = new TimeWindow()
             {
-                Min = 11,
-                Max = 12
+                Times = new[] {11f, 12f}
             };
             var problem = new TSPTWProblem(0, 0, weights, windows);
 

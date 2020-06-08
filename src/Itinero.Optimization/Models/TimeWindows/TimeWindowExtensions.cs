@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 
 namespace Itinero.Optimization.Models.TimeWindows
@@ -46,6 +47,30 @@ namespace Itinero.Optimization.Models.TimeWindows
                 builder.Append(']');
             }
             return builder.ToInvariantString();
+        }
+
+        internal static IEnumerable<(float start, float end)> ToRanges(this IReadOnlyList<float> times)
+        {
+            if (times == null) yield break;
+            
+            var previous = -1f;
+            foreach (var current in times)
+            {
+                if (previous >= 0)
+                {
+                    yield return (previous, current);
+                    previous = -1;
+                }
+                else
+                {
+                    previous = current;
+                }
+            }
+
+            if (previous >= 0)
+            {
+                yield return (previous, float.MaxValue);
+            }
         }
     }
 }

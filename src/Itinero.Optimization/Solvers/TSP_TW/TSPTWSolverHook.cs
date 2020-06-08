@@ -78,19 +78,11 @@ namespace Itinero.Optimization.Solvers.TSP_TW
                 
                 windows[v] = new TimeWindow();
                 if (visit.TimeWindow != null &&
-                    !visit.TimeWindow.IsEmpty &&
-                    visit.TimeWindow.Times.Count <= 2)
+                    !visit.TimeWindow.IsEmpty)
                 {
-                    var min = visit.TimeWindow.Times[0];
-                    var max = float.MaxValue;
-                    if (visit.TimeWindow.Times.Count > 1)
-                    {
-                        max = visit.TimeWindow.Times[1];
-                    }
                     windows[v] = new TimeWindow()
                     {
-                        Min = min,
-                        Max = max
+                        Times = visit.TimeWindow.Times
                     };
                 }
             }

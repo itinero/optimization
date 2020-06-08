@@ -1,4 +1,8 @@
-﻿namespace Itinero.Optimization.Solvers.Shared
+﻿using System.Collections.Generic;
+using System.Text;
+using Itinero.Optimization.Models.TimeWindows;
+
+namespace Itinero.Optimization.Solvers.Shared
 {
     /// <summary>
     /// Represents a time window.
@@ -6,14 +10,37 @@
     internal struct TimeWindow
     {
         /// <summary>
-        /// The minimum time in seconds.
+        /// Gets or sets the times of the windows.
         /// </summary>
-        public float Min { get; set; }
+        public IReadOnlyList<float>? Times { get; set; }
 
         /// <summary>
-        /// The maximum time in seconds.
+        /// Gets the earliest time where this window is valid.
         /// </summary>
-        public float Max { get; set; }
+        public float Min
+        {
+            get
+            {
+                if (this.Times == null || this.Times.Count == 0) return 0;
+
+                return this.Times[0];
+            }
+        }
+
+        /// <summary>
+        /// Gets the latest time where this window is valid.
+        /// </summary>
+        public float Max
+        {
+            get
+            {
+                if (this.Times == null || this.Times.Count == 0) return float.MaxValue;
+
+                if (this.Times.Count % 2 == 0) return this.Times[this.Times.Count - 1];
+
+                return float.MaxValue;
+            }
+        }
 
         /// <summary>
         /// Returns true if this window is valid at the given seconds.
@@ -22,7 +49,17 @@
         /// <returns></returns>
         public bool IsValidAt(float seconds)
         {
-            return this.Min <= seconds && this.Max >= seconds;
+            if (this.Times == null || this.Times.Count == 0) return true;
+            
+            foreach (var range in this.Times.ToRanges())
+            {
+                if (range.start <= seconds && range.end >= seconds)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -32,28 +69,34 @@
         /// <returns></returns>
         public float MinDiff(float seconds)
         {
-            if (this.Min <= seconds && this.Max >= seconds)
+            var minDiff = float.MaxValue;
+            if (this.Times == null || this.Times.Count == 0) return minDiff;
+            
+            foreach (var range in this.Times.ToRanges())
             {
-                // the time is within the window, no difference.
-                return 0;
+                if (range.start > seconds)
+                {
+                    var localDiff =  range.start  - seconds;
+                    if (minDiff > localDiff) minDiff = localDiff;
+                }
+                else if (range.end < seconds)
+                {
+                    var localDiff = seconds - range.end;
+                    if (minDiff > localDiff) minDiff = localDiff;
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
-            if (seconds < this.Min)
-            {
-                // time window too late.
-                return this.Min - seconds;
-            }
-
-            return seconds - this.Max;
+            return minDiff;
         }
 
         /// <summary>
         /// Returns true if this time windows is considered empty or 'to be ignored'.
         /// </summary>
-        public bool IsEmpty => (this.Min == 0 &&
-                               this.Max == 0) || 
-                                (this.Min == float.MaxValue &&
-                                this.Max == float.MinValue);
+        public bool IsEmpty => this.Times == null ||  this.Times.Count == 0;
 
         /// <summary>
         /// Returns the fully qualified type name of this instance.
@@ -61,7 +104,37 @@
         /// <returns></returns>
         public override string ToString()
         {
-            return $"[{this.Min}, {this.Max}]";
+            if (this.Times == null) return "[0, ∞[";
+            
+            var builder = new StringBuilder();
+            for (var t = 0; t < this.Times.Count; t++)
+            {
+                if (t % 2 == 0)
+                {
+                    if (builder.Length > 0)
+                    {
+                        builder.Append(',');
+                    }
+                    builder.Append('[');
+                    builder.Append(this.Times[t].ToInvariantString());
+                }
+                else
+                {
+                    builder.Append(',');
+                    builder.Append(' ');
+                    builder.Append(this.Times[t].ToInvariantString());
+                    builder.Append(']');
+                }
+            }
+
+            if (this.Times.Count % 2 != 0)
+            {
+                builder.Append(',');
+                builder.Append(' ');
+                builder.Append('∞');
+                builder.Append('[');
+            }
+            return builder.ToInvariantString();
         }
     }
 }
