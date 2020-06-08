@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
+using Itinero.Optimization.Models.TimeWindows;
 
 namespace Itinero.Optimization.Models.Mapping.Default
 {
@@ -173,10 +174,9 @@ namespace Itinero.Optimization.Models.Mapping.Default
                     }
                 }
                 var visit1TimeWindow = _mappedModel.Visits[visit1].TimeWindow;
-                if (visit1TimeWindow != null)
+                if (visit1TimeWindow != null && !visit1TimeWindow.IsEmpty)
                 {
-                    visit1Stop.Attributes.AddOrReplace("time_window_min", visit1TimeWindow.Min.ToInvariantString());
-                    visit1Stop.Attributes.AddOrReplace("time_window_max", visit1TimeWindow.Max.ToInvariantString());
+                    visit1Stop.Attributes.AddOrReplace("time_window", visit1TimeWindow.ToJsonArray());
                 }
 
                 // add visit2 costs & order to the stop meta data.
@@ -202,10 +202,9 @@ namespace Itinero.Optimization.Models.Mapping.Default
                     }
                 }
                 var visit2TimeWindow = _mappedModel.Visits[visit2].TimeWindow;
-                if (visit2TimeWindow != null)
+                if (visit2TimeWindow != null && !visit2TimeWindow.IsEmpty)
                 {
-                    visit2Stop.Attributes.AddOrReplace("time_window_min", visit2TimeWindow.Min.ToInvariantString());
-                    visit2Stop.Attributes.AddOrReplace("time_window_max", visit2TimeWindow.Max.ToInvariantString());
+                    visit2Stop.Attributes.AddOrReplace("time_window", visit2TimeWindow.ToJsonArray());
                 }
             }
 

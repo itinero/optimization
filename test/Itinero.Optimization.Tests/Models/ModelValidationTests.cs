@@ -153,11 +153,11 @@ namespace Itinero.Optimization.Tests.Models
                     {
                         Latitude = 1,
                         Longitude = 2,
-                        TimeWindow = new TimeWindow()
-                        {
-                            Min = 100,
-                            Max = 10
-                        }
+                        // TimeWindow = new TimeWindow()
+                        // {
+                        //     Min = 100,
+                        //     Max = 10
+                        // }
                     }
                 }
             };
@@ -192,11 +192,11 @@ namespace Itinero.Optimization.Tests.Models
                     {
                         Latitude = 1,
                         Longitude = 2,
-                        TimeWindow = new TimeWindow()
-                        {
-                            Min = 10,
-                            Max = 100
-                        },
+                        // TimeWindow = new TimeWindow()
+                        // {
+                        //     Min = 10,
+                        //     Max = 100
+                        // },
                         VisitCosts = new VisitCost[]
                         {
                             null
@@ -235,11 +235,11 @@ namespace Itinero.Optimization.Tests.Models
                     {
                         Latitude = 1,
                         Longitude = 2,
-                        TimeWindow = new TimeWindow()
-                        {
-                            Min = 10,
-                            Max = 100
-                        },
+                        // TimeWindow = new TimeWindow()
+                        // {
+                        //     Min = 10,
+                        //     Max = 100
+                        // },
                         VisitCosts = new VisitCost[]
                         {
                             new VisitCost()
@@ -282,11 +282,11 @@ namespace Itinero.Optimization.Tests.Models
                     {
                         Latitude = 1,
                         Longitude = 2,
-                        TimeWindow = new TimeWindow()
-                        {
-                            Min = 10,
-                            Max = 100
-                        },
+                        // TimeWindow = new TimeWindow()
+                        // {
+                        //     Min = 10,
+                        //     Max = 100
+                        // },
                         VisitCosts = new VisitCost[]
                         {
                             new VisitCost()
@@ -323,11 +323,11 @@ namespace Itinero.Optimization.Tests.Models
                     {
                         Latitude = 1,
                         Longitude = 2,
-                        TimeWindow = new TimeWindow()
-                        {
-                            Min = 10,
-                            Max = 100
-                        },
+                        // TimeWindow = new TimeWindow()
+                        // {
+                        //     Min = 10,
+                        //     Max = 100
+                        // },
                         VisitCosts = new VisitCost[]
                         {
                             new VisitCost()
@@ -369,11 +369,11 @@ namespace Itinero.Optimization.Tests.Models
                     {
                         Latitude = 1,
                         Longitude = 2,
-                        TimeWindow = new TimeWindow()
-                        {
-                            Min = 10,
-                            Max = 100
-                        },
+                        // TimeWindow = new TimeWindow()
+                        // {
+                        //     Min = 10,
+                        //     Max = 100
+                        // },
                         VisitCosts = new VisitCost[]
                         {
                             new VisitCost()

@@ -47,7 +47,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
             }.ApplyRandom();
             settings ??= new GASettings()
             {
-                PopulationSize = 20
+                PopulationSize = 100
             };
             var crossOver = EAXOperator.Default;
             

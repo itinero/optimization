@@ -221,9 +221,9 @@ namespace Itinero.Optimization.Models
                 return true;
             }
 
-            if (tw.Min >= tw.Max)
+            if (!tw.IsValid())
             {
-                message = $"Max has to be >= min: {tw}";
+                message = $"Time window not valid: {tw}";
                 return false;
             }
             message = string.Empty;

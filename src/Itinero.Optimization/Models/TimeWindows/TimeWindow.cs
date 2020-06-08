@@ -1,54 +1,59 @@
-﻿/*
- *  Licensed to SharpSoftware under one or more contributor
- *  license agreements. See the NOTICE file distributed with this work for 
- *  additional information regarding copyright ownership.
- * 
- *  SharpSoftware licenses this file to you under the Apache License, 
- *  Version 2.0 (the "License"); you may not use this file except in 
- *  compliance with the License. You may obtain a copy of the License at
- * 
- *       http://www.apache.org/licenses/LICENSE-2.0
- * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace Itinero.Optimization.Models.TimeWindows
 {
     /// <summary>
-    /// Represents a timewindow.
+    /// Represents a time window.
     /// </summary>
     public class TimeWindow
     {
         /// <summary>
-        /// The minimum time in seconds.
+        /// Gets or sets the times of the windows.
         /// </summary>
-        public float Min { get; set; }
+        public IReadOnlyList<float> Times { get; set; }
 
         /// <summary>
-        /// The maximum time in seconds.
+        /// Returns true if this time windows is considered empty or 'to be ignored'.
         /// </summary>
-        public float Max { get; set; }
-
-        /// <summary>
-        /// Returns true if this timewindows is considered empty or 'to be ignored'.
-        /// </summary>
-        public bool IsEmpty => (this.Min == 0 &&
-                                this.Max == 0) || 
-                               (this.Min == float.MaxValue &&
-                                this.Max == float.MinValue);
-
-
+        public bool IsEmpty => this.Times == null || this.Times.Count == 0;
+        
         /// <summary>
         /// Returns the fully qualified type name of this instance.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return $"[{this.Min}, {this.Max}]";
+            if (this.Times == null) return "[0, ∞[";
+            var builder = new StringBuilder();
+            for (var t = 0; t < this.Times.Count; t++)
+            {
+                if (t % 2 == 0)
+                {
+                    if (builder.Length > 0)
+                    {
+                        builder.Append(',');
+                    }
+                    builder.Append('[');
+                    builder.Append(this.Times[t].ToInvariantString());
+                }
+                else
+                {
+                    builder.Append(',');
+                    builder.Append(' ');
+                    builder.Append(this.Times[t].ToInvariantString());
+                    builder.Append(']');
+                }
+            }
+
+            if (this.Times.Count % 2 != 0)
+            {
+                builder.Append(',');
+                builder.Append(' ');
+                builder.Append('∞');
+                builder.Append('[');
+            }
+            return builder.ToInvariantString();
         }
     }
 }

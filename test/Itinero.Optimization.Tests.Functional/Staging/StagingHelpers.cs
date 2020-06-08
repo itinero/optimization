@@ -38,12 +38,10 @@ namespace Itinero.Optimization.Tests.Functional.Staging
         /// </summary>
         public static FeatureCollection GetFeatureCollection(this string embeddedResourcePath)
         {
-            using (var stream = typeof(PerformanceInfoConsumer).Assembly.GetManifestResourceStream(EmbeddedResourceRoot + embeddedResourcePath))
-            using (var streamReader = new StreamReader(stream))
-            {
-                var json = streamReader.ReadToEnd();
-                return json.ToFeatures();
-            }
+            using var stream = typeof(PerformanceInfoConsumer).Assembly.GetManifestResourceStream(EmbeddedResourceRoot + embeddedResourcePath);
+            using var streamReader = new StreamReader(stream);
+            var json = streamReader.ReadToEnd();
+            return json.ToFeatures();
         }
         
         /// <summary>
@@ -73,26 +71,24 @@ namespace Itinero.Optimization.Tests.Functional.Staging
 
             foreach (var feature in features.Features)
             {
-                if (feature.Geometry is Point)
+                if (!(feature.Geometry is Point)) continue;
+                
+                var visit = new Visit()
                 {
-                    var visit = new Visit()
+                    Longitude = (float)feature.Geometry.Coordinate.X,
+                    Latitude = (float)feature.Geometry.Coordinate.Y
+                };
+
+                if (feature.Attributes.TryGetValueInt32("time-window-start", out var timeWindowStart) &&
+                    feature.Attributes.TryGetValueInt32("time-window-end", out var timeWindowEnd))
+                {
+                    visit.TimeWindow = new TimeWindow()
                     {
-                        Longitude = (float)feature.Geometry.Coordinate.X,
-                        Latitude = (float)feature.Geometry.Coordinate.Y
+                        Times = new []{ (float)timeWindowStart, timeWindowEnd}
                     };
-
-                    if (feature.Attributes.TryGetValueInt32("time-window-start", out var timeWindowStart) &&
-                        feature.Attributes.TryGetValueInt32("time-window-end", out var timeWindowEnd))
-                    {
-                        visit.TimeWindow = new TimeWindow()
-                        {
-                            Min = timeWindowStart,
-                            Max = timeWindowEnd
-                        };
-                    }
-
-                    visits.Add(visit);
                 }
+
+                visits.Add(visit);
             }
             return visits.ToArray();
         }

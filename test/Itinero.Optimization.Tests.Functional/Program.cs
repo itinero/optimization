@@ -25,7 +25,7 @@ namespace Itinero.Optimization.Tests.Functional
                 "Performance tests are running in Debug, please run in Release mode.");
 #endif
 
-            // // shared tools functional testing.
+            // shared tools functional testing.
             // SeedHeuristicsTest.TestLocations1_GetSeedsKMeans();
             //
             // // CVRP_ND tools functional testing.

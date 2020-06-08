@@ -183,7 +183,7 @@ namespace Itinero.Optimization.Solvers.CVRP
             foreach (var visit in model.Visits)
             {
                 if (visit.TimeWindow == null || visit.TimeWindow.IsEmpty) continue;
-                reasonIfNot = "Timewindows detected.";
+                reasonIfNot = "Time windows detected.";
                 return false;
             }
 
