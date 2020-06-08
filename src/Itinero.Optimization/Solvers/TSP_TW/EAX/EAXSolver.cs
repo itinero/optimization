@@ -19,6 +19,7 @@
 using System.Threading;
 using Itinero.Logging;
 using Itinero.Optimization.Solvers.Tours;
+using Itinero.Optimization.Solvers.TSP_TW.Operators;
 using Itinero.Optimization.Strategies;
 using Itinero.Optimization.Strategies.GA;
 using Itinero.Optimization.Strategies.Tools.Selectors;
@@ -39,10 +40,14 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
             Operator<Candidate<TSPTWProblem, Tour>> mutation = null, GASettings settings = null, ISelector<Candidate<TSPTWProblem, Tour>> selector = null)
         {
             generator ??= RandomSolver.Default;
-            mutation ??= EmptyOperator<Candidate<TSPTWProblem, Tour>>.Default;
+            mutation ??= new Operator<Candidate<TSPTWProblem, Tour>>[]
+            {
+                Random1ShiftPerturber.Default,
+                Local2OptOperator.Default, 
+            }.ApplyRandom();
             settings ??= new GASettings()
             {
-                PopulationSize = 200
+                PopulationSize = 20
             };
             var crossOver = EAXOperator.Default;
             
