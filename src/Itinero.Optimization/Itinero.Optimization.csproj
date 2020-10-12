@@ -19,7 +19,7 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <LangVersion>latest</LangVersion>
-    <PackageVersion />
+    <PackageVersion>1.0.0-pre018</PackageVersion>
     <Title>Itinero.Optimization</Title>
     <Nullable>enable</Nullable>
   </PropertyGroup>
