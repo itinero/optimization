@@ -25,3 +25,6 @@ jobs:
     - name: Functional Tests
       run: dotnet run -c release
       working-directory: ./test/Itinero.Optimization.Tests.Functional/
+    - name: Nuget Pack
+      run: dotnet pack
+      working-directory: ./src/Itinero.Optimization/
