@@ -20,5 +20,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    - name: Test
+    - name: Tests
       run: dotnet test --no-restore --verbosity normal
+    - name: Functional Tests
+      run: dotnet run -c release
+      working-directory: ./test/Itinero.Optimization.Tests.Functional/
