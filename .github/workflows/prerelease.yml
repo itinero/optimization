@@ -1,0 +1,32 @@
+name: CI
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Tests
+      run: dotnet test --no-restore --verbosity normal
+    - name: Functional Tests
+      run: dotnet run -c release
+      working-directory: ./test/Itinero.Optimization.Tests.Functional/
+    - name: Nuget Pack
+      run: dotnet pack
+      working-directory: ./src/Itinero.Optimization/
+    - name: Nuget push
+      run: dotnet nuget push **/*.nupkg -k ${{ secrets.PACKAGES_SECRET }}
+      working-directory: ./src/BikeDataProject.DB/
+    

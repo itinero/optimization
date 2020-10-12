@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [ develop ]
+    branches: [ feature/*, fatures/* ]
   pull_request:
     branches: [ develop ]
 
