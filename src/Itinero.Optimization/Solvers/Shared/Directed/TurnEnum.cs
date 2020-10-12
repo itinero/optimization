@@ -24,21 +24,21 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
     public enum TurnEnum : byte
     {
         /// <summary>
-        /// Arrival forward, departure forward.
+        /// Arrival backward, departure backward.
         /// </summary>
-        ForwardForward = 0,
-        /// <summary>
-        /// Arrival forward, departure backward, this is a turn.
-        /// </summary>
-        ForwardBackward = 1,
+        BackwardBackward = 0,
         /// <summary>
         /// Arrival backward, departure forward, this is a turn.
         /// </summary>
-        BackwardForward = 2,
+        BackwardForward = 1,
         /// <summary>
-        /// Arrival backward, departure backward.
+        /// Arrival forward, departure backward, this is a turn.
         /// </summary>
-        BackwardBackward = 3
+        ForwardBackward = 2,
+        /// <summary>
+        /// Arrival forward, departure forward.
+        /// </summary>
+        ForwardForward = 3,
     }
 
     /// <summary>

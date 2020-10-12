@@ -24,13 +24,13 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
     public enum DirectionEnum : byte
     {
         /// <summary>
-        /// Forward arrival or departure.
-        /// </summary>
-        Forward = 0,
-        /// <summary>
         /// Backward arrival or departure.
         /// </summary>
-        Backward = 1,
+        Backward = 0,
+        /// <summary>
+        /// Forward arrival or departure.
+        /// </summary>
+        Forward = 1,
     }
 
     /// <summary>
