@@ -11,7 +11,7 @@ using Itinero.Optimization.Solvers.Shared.Directed;
 
 namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
 {
-    internal class ByEdgeDirectedModelMapping: IModelMapping
+    internal class ByEdgeDirectedModelMapping : IModelMapping
     {
         private readonly MappedModel _mappedModel;
         private readonly DirectedWeightMatrixAlgorithm _weightMatrixAlgorithm;
@@ -33,6 +33,15 @@ namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
                 yield return this.BuildRoute(vehicleAndTour);
             }
         }
+
+        public bool IsDirected { get; } = true;
+        
+        RouterPoint IModelMapping.GetVisitSnapping(int visit)
+        {
+            throw new NotImplementedException();
+        }
+
+        RouterDb IModelMapping.RouterDb => _weightMatrixAlgorithm.Router.Db;
 
         private Result<Route> BuildRoute((int vehicle, IEnumerable<int> tour) vehicleAndTour)
         {

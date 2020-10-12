@@ -12,12 +12,12 @@ namespace Itinero.Optimization.Models.Mapping.Default
     /// </summary>
     public class DefaultModelMapper : ModelMapper
     {
-        /// <inhertitdoc/>
+        /// <inheritdoc/>
         public override string Name { get; } = "Default";
 
-        /// <inhertitdoc/>
+        /// <inheritdoc/>
         public override bool TryMap(RouterBase router, Model model, out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
-            out string message, RoutingSettings<float> settings = null)
+            out string message, RoutingSettings<float>? settings = null)
         {
             // Verify if this mapper can handle this model:
             // - check if there are any vehicles with a turn-cost.

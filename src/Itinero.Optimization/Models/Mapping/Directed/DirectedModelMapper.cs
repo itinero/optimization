@@ -140,7 +140,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
                     new TravelCostMatrix()
                     {
                         Costs = weightMatrixAlgorithm.Weights,
-                        Directed = false,
+                        Directed = true,
                         Metric = metric
                     }
                 }

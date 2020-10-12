@@ -32,6 +32,10 @@ namespace Itinero.Optimization.Models.Mapping
         /// <returns>The routes that are represented by the solution.</returns>
         IEnumerable<Result<Route>> BuildRoutes(IEnumerable<(int vehicle, IEnumerable<int> tour)> solution);
 
+        internal RouterPoint GetVisitSnapping(int visit);
+
+        internal RouterDb RouterDb { get; }
+        
         /// <summary>
         /// Gets errors in the mapping if any.
         /// </summary>

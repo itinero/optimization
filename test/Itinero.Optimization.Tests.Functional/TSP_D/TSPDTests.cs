@@ -20,7 +20,10 @@ using System;
 using System.Collections.Generic;
 using Itinero.LocalGeo;
 using Itinero.Optimization.Models.Mapping;
+using Itinero.Optimization.Models.Mapping.Directed;
 using Itinero.Optimization.Models.Mapping.Directed.Simplified;
+using Itinero.Optimization.Models.Mapping.Rewriters;
+using Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition;
 
 namespace Itinero.Optimization.Tests.Functional.TSP_D
 {
@@ -31,12 +34,13 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
         /// </summary>
         public static void Run()
         {
-            Run1Wechelderzande();
-            Run2Hengelo();
-            Run3Problem1Spijkenisse();
-            Run4Problem2Hengelo();
-            Run5Problem3();
-            Run6Problem4WechelderzandeWithSimplifcation();
+            // Run1Wechelderzande();
+            // Run2Hengelo();
+            // Run3Problem1Spijkenisse();
+            // Run4Problem2Hengelo();
+            // Run5Problem3();
+            // Run6Problem4WechelderzandeWithSimplifcation();
+            Run7WechelderzandeNoLeftVisits();
         }
 
         public static void Run1Wechelderzande()
@@ -47,7 +51,7 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             var router = new Router(wechelderzande);
 
             // define test locations.
-            var locations = new Coordinate[]
+            var locations = new []
             {
                 new Coordinate(51.270453873703080f, 4.8008108139038080f),
                 new Coordinate(51.264197451065370f, 4.8017120361328125f),
@@ -189,6 +193,32 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             func.Run("TSPD-6-wechel-fixed");
             func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
             func.Run("TSPD-6-wechel-open");
+        }
+        
+        
+
+        public static void Run7WechelderzandeNoLeftVisits()
+        {
+            // WECHELDERZANDE
+            // build routerdb and save the result.
+            var wechelderzande = Staging.RouterDbBuilder.Build("query1");
+            var router = new Router(wechelderzande);
+
+            // define test locations.
+            var locations = new []
+            {
+                new Coordinate(51.26783594640662f, 4.793686866760254f),
+                new Coordinate(51.26631210979951f, 4.789481163024902f),
+            };
+
+            // add a new model mapper
+            var optimizerConfiguration = new OptimizerConfiguration(modelMapperRegistry: 
+                new ModelMapperRegistry(new ModelMapperWithRewriter(DirectedModelMapper.Default, new VisitPositionRewriter())));
+            var optimizer = router.Optimizer(configuration: optimizerConfiguration);
+            
+            // calculate TSPD.
+            var func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
+            func.Run("TSPD-7-wechel-no-left-closed");
         }
     }
 }

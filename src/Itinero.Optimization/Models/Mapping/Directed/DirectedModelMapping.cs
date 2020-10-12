@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Itinero.Algorithms;
 using Itinero.Algorithms.Matrices;
-using Itinero.Algorithms.Search;
 using Itinero.Algorithms.Weights;
 using Itinero.Data.Network;
 using Itinero.Optimization.Solvers.Shared.Directed;
@@ -32,6 +31,15 @@ namespace Itinero.Optimization.Models.Mapping.Directed
                 yield return this.BuildRoute(vehicleAndTour);
             }
         }
+
+        public bool IsDirected { get; } = true;
+        
+        RouterPoint IModelMapping.GetVisitSnapping(int visit)
+        {
+            return _weightMatrixAlgorithm.RouterPoints[visit];
+        }
+
+        RouterDb IModelMapping.RouterDb => _weightMatrixAlgorithm.Router.Db;
 
         private Result<Route> BuildRoute((int vehicle, IEnumerable<int> tour) vehicleAndTour)
         {

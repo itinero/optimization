@@ -29,7 +29,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
     /// </summary>
     /// <remarks>
     /// 
-    /// - id            = The customer id, indepedent of turns or directions.
+    /// - id            = The customer id, independent of turns or directions.
     /// - directedId    = What happens at a customer, do we u-turn at the customer, go straight forward, backward or u-turn in the other direction.
     /// - departureId   = How we depart from a customer, do we depart 'left' or 'right'.
     /// - arrivalId     = How we arrive at a customer, do we arrive from 'left' or 'right'.

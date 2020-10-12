@@ -47,6 +47,15 @@ namespace Itinero.Optimization.Models.Mapping.Default
             }
         }
 
+        public bool IsDirected { get; } = false;
+        
+        RouterPoint IModelMapping.GetVisitSnapping(int visit)
+        {
+            throw new NotImplementedException();
+        }
+
+        RouterDb IModelMapping.RouterDb => _weightMatrixAlgorithm.Router.Db;
+
         private Result<Route> BuildRoute((int vehicle, IEnumerable<int> tour) vehicleAndTour)
         {
             try
@@ -212,6 +221,11 @@ namespace Itinero.Optimization.Models.Mapping.Default
             route = route == null ? localRoute : route.Concatenate(localRoute);
             
             return new Result<Route>(route);
+        }
+
+        public RouterPoint GetVisitSnapping(int visit)
+        {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />

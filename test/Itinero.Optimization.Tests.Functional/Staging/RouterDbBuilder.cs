@@ -122,6 +122,8 @@ namespace Itinero.Optimization.Tests.Functional.Staging
                     Itinero.Logging.Logger.Log($"{typeof(RouterDbBuilder)}.{nameof(Build)}", Itinero.Logging.TraceEventType.Information, "No contracted graph found for the 'car' profile, building now...");
                     routerDb.AddContracted(vehicle.Fastest(), true);
                 }
+                
+                File.WriteAllText(routerDbFileName + ".geojson", routerDb.GetGeoJson());
 
                 using (var stream = File.Open(routerDbFileName, FileMode.Create))
                 {

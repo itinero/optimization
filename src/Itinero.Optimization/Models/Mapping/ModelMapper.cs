@@ -20,6 +20,6 @@ namespace Itinero.Optimization.Models.Mapping
         /// <param name="settings">The routing settings.</param>
         public abstract bool TryMap(RouterBase router, Model model,
             out (MappedModel mappedModel, IModelMapping modelMapping) mappings,
-            out string reasonWhy, RoutingSettings<float> settings = null);
+            out string reasonWhy, RoutingSettings<float>? settings = null);
     }
 }

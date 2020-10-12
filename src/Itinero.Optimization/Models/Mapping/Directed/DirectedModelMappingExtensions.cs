@@ -47,6 +47,8 @@ namespace Itinero.Optimization.Models.Mapping.Directed
             message = string.Empty;
             return true;
         }
+        
+        
 
         internal static bool AdjustToMapping(this IDirectedWeightMatrixAlgorithm<float> algorithm, Vehicle vehicle,
             out string message)

@@ -1,5 +1,6 @@
 using System;
 using Itinero.Optimization.Models.Mapping;
+using Itinero.Optimization.Models.Mapping.Rewriters;
 using Itinero.Optimization.Solvers;
 
 namespace Itinero.Optimization
@@ -15,9 +16,9 @@ namespace Itinero.Optimization
         /// <param name="solverRegistry">The solver registry.</param>
         /// <param name="modelMapperRegistry">The model mapper registry.</param>
         /// <param name="settings">The routing settings.</param>
-        public OptimizerConfiguration(SolverRegistry solverRegistry = null,
-            ModelMapperRegistry modelMapperRegistry = null,
-            RoutingSettings<float> settings = null)
+        public OptimizerConfiguration(SolverRegistry? solverRegistry = null,
+            ModelMapperRegistry? modelMapperRegistry = null,
+            RoutingSettings<float>? settings = null)
         {
             this.SolverRegistry = solverRegistry ?? SolverRegistry.Default;
             this.ModelMapperRegistry = modelMapperRegistry ?? ModelMapperRegistry.Default;
