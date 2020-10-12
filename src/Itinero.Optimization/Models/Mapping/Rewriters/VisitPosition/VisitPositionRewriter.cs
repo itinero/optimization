@@ -60,17 +60,17 @@ namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
                 {
                     // visit is on the left.
                     // prevent forward if left is to be prevented.
-                    prevent[v * 2 + 0] = _settings.Left;
+                    prevent[v * 2 + 0] = !_settings.Left;
                     // prevent backward if right is to be prevented.
-                    prevent[v * 2 + 1] = !_settings.Left;
+                    prevent[v * 2 + 1] = _settings.Left;
                 }
                 else 
                 {
                     // visit is on the right.
                     // prevent forward if right is to be prevented.
-                    prevent[v * 2 + 0] = !_settings.Left;
+                    prevent[v * 2 + 0] = _settings.Left;
                     // prevent backward if left is to be prevented.
-                    prevent[v * 2 + 1] = _settings.Left;
+                    prevent[v * 2 + 1] = !_settings.Left;
                 }
             }
 
@@ -94,19 +94,19 @@ namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
             // rewrite costs.
             for (var v1 = 0; v1 < model.Visits.Length; v1++)
             {
-                var v1f = prevent[v1 * 2 + 0];
-                var v1b = prevent[v1 * 2 + 1];
+                var v1b = prevent[v1 * 2 + 0];
+                var v1f = prevent[v1 * 2 + 1];
                 for (var v2 = 0; v2 < model.Visits.Length; v2++)
                 {
                     if (v1 == v2) continue;
                     
-                    var v2f = prevent[v2 * 2 + 0];
-                    var v2b = prevent[v2 * 2 + 1];
+                    var v2b = prevent[v2 * 2 + 0];
+                    var v2f = prevent[v2 * 2 + 1];
 
-                    var ff = travelCosts.Costs[v1 * 2 + 0][v2 * 2 + 0];
-                    var fb = travelCosts.Costs[v1 * 2 + 0][v2 * 2 + 1];
-                    var bf = travelCosts.Costs[v1 * 2 + 1][v2 * 2 + 0];
-                    var bb = travelCosts.Costs[v1 * 2 + 1][v2 * 2 + 1];
+                    var bb = travelCosts.Costs[v1 * 2 + 0][v2 * 2 + 0];
+                    var bf = travelCosts.Costs[v1 * 2 + 0][v2 * 2 + 1];
+                    var fb = travelCosts.Costs[v1 * 2 + 1][v2 * 2 + 0];
+                    var ff = travelCosts.Costs[v1 * 2 + 1][v2 * 2 + 1];
 
                     if (v1f)
                     {
@@ -137,10 +137,10 @@ namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
                         continue;
                     }
                     
-                    travelCosts.Costs[v1 * 2 + 0][v2 * 2 + 0] = ff;
-                    travelCosts.Costs[v1 * 2 + 0][v2 * 2 + 1] = fb;
-                    travelCosts.Costs[v1 * 2 + 1][v2 * 2 + 0] = bf;
-                    travelCosts.Costs[v1 * 2 + 1][v2 * 2 + 1] = bb;
+                    travelCosts.Costs[v1 * 2 + 0][v2 * 2 + 0] = bb;
+                    travelCosts.Costs[v1 * 2 + 0][v2 * 2 + 1] = bf;
+                    travelCosts.Costs[v1 * 2 + 1][v2 * 2 + 0] = fb;
+                    travelCosts.Costs[v1 * 2 + 1][v2 * 2 + 1] = ff;
                 }
             }
 

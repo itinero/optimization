@@ -79,11 +79,6 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
             }
             if (count == 1) return 0;
             var last = previous;
-//            if (tour.IsClosedDirected())
-//            { // previous -> last is also an arc.
-//                nextArray[previous] = first;
-//                last = first; // replace last with first, stopping condition is different.
-//            }
             
             var settled = new HashSet<int>();
             var queue = new BinaryHeap<int>();
@@ -96,6 +91,8 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
             // enqueue first visits and their paths.
             queue.Push(TurnEnum.ForwardForward.DirectedVisit(first), 0);
             queue.Push(TurnEnum.ForwardBackward.DirectedVisit(first), 0);
+            queue.Push(TurnEnum.BackwardForward.DirectedVisit(first), 0);
+            queue.Push(TurnEnum.BackwardBackward.DirectedVisit(first), 0);
             var bestLast = -1;
             while (queue.Count > 0)
             {
