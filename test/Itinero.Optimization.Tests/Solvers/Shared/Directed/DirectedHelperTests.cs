@@ -27,8 +27,8 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.Directed
         [Fact]
         public void DirectedHelper_WeightIdShouldBeVisitAndDirectionCombined()
         {
-            Assert.Equal(20, DirectedHelper.WeightId(10, DirectionEnum.Forward));
-            Assert.Equal(21, DirectedHelper.WeightId(10, DirectionEnum.Backward));
+            Assert.Equal(21, DirectedHelper.WeightId(10, DirectionEnum.Forward));
+            Assert.Equal(20, DirectedHelper.WeightId(10, DirectionEnum.Backward));
         }
 
         [Fact]
@@ -36,16 +36,16 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.Directed
         {
             var extracted = DirectedHelper.Extract(40);
             Assert.Equal(10, extracted.visit);
-            Assert.Equal(TurnEnum.ForwardForward, extracted.turn);
+            Assert.Equal(TurnEnum.BackwardBackward, extracted.turn);
             extracted = DirectedHelper.Extract(41);
             Assert.Equal(10, extracted.visit);
-            Assert.Equal(TurnEnum.ForwardBackward, extracted.turn);
+            Assert.Equal(TurnEnum.BackwardForward, extracted.turn);
             extracted = DirectedHelper.Extract(42);
             Assert.Equal(10, extracted.visit);
-            Assert.Equal(TurnEnum.BackwardForward, extracted.turn);
+            Assert.Equal(TurnEnum.ForwardBackward, extracted.turn);
             extracted = DirectedHelper.Extract(43);
             Assert.Equal(10, extracted.visit);
-            Assert.Equal(TurnEnum.BackwardBackward, extracted.turn);
+            Assert.Equal(TurnEnum.ForwardForward, extracted.turn);
         }
 
         [Fact]
