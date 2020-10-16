@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itinero.Optimization", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{45FC4AD5-C7E1-488D-992A-635C87E69C24}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{651460C3-89AF-4614-8020-2D0B770417F2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{651460C3-89AF-4614-8020-2D0B770417F2}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		build.bat = build.bat
@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 		SharedAssemblyVersion.cs = SharedAssemblyVersion.cs
 		NOTES.md = NOTES.md
+		logo.png = logo.png
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itinero.Optimization.Tests", "test\Itinero.Optimization.Tests\Itinero.Optimization.Tests.csproj", "{64E51751-4924-48D9-940F-A1EE9DAAA6FB}"
