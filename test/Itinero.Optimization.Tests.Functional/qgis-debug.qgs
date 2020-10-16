@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis saveDateTime="2020-10-12T11:53:54" version="3.14.1-Pi" projectname="" saveUser="xivk" saveUserFull="xivk">
+<qgis saveDateTime="2020-10-12T15:10:01" version="3.14.1-Pi" projectname="" saveUser="xivk" saveUserFull="xivk">
   <homePath path=""/>
   <title></title>
   <autotransaction active="0"/>
@@ -31,7 +31,7 @@
     </layer-tree-group>
     <layer-tree-group name="TSPD" checked="Qt::Checked" expanded="1">
       <customproperties/>
-      <layer-tree-group name="TSPD-3" checked="Qt::Checked" expanded="1">
+      <layer-tree-group name="TSPD-3" checked="Qt::Unchecked" expanded="1">
         <customproperties/>
         <layer-tree-layer id="TSPD_3_spijkenisse_closed_6d092182_c2fd_41a3_b4ce_40935a27c855" name="TSPD-3-spijkenisse-closed" legend_split_behavior="0" checked="Qt::Checked" providerKey="ogr" legend_exp="" expanded="1" source="./result/TSPD-3-spijkenisse-closed.geojson|layername=TSPD-3-spijkenisse-closed|geometrytype=Point" patch_size="-1,-1">
           <customproperties/>
@@ -58,7 +58,7 @@
           <customproperties/>
         </layer-tree-layer>
       </layer-tree-group>
-      <layer-tree-group name="TSPD-9" checked="Qt::Unchecked" expanded="1">
+      <layer-tree-group name="TSPD-9" checked="Qt::Checked" expanded="1">
         <customproperties/>
         <layer-tree-layer id="TSPD_9_spijkenisse_no_lef_open_75925ed6_e96a_4b4e_9b76_5dd4463e14b1" name="TSPD-9-spijkenisse-no-lef-open" legend_split_behavior="0" checked="Qt::Unchecked" providerKey="ogr" legend_exp="" expanded="1" source="./result/TSPD-9-spijkenisse-no-lef-open.geojson|layername=TSPD-9-spijkenisse-no-lef-open|geometrytype=Point" patch_size="-1,-1">
           <customproperties/>
@@ -196,10 +196,10 @@
   <mapcanvas name="theMapCanvas" annotationsVisible="1">
     <units>meters</units>
     <extent>
-      <xmin>482660.51197144231991842</xmin>
-      <ymin>6771929.28118758928030729</ymin>
-      <xmax>484695.45870152144925669</xmax>
-      <ymax>6773606.28557043801993132</ymax>
+      <xmin>483962.62816649093292654</xmin>
+      <ymin>6772028.26058349199593067</ymin>
+      <xmax>484089.81233712087851018</xmax>
+      <ymax>6772133.07335742004215717</ymax>
     </extent>
     <rotation>0</rotation>
     <destinationsrs>
@@ -230,15 +230,15 @@
       </legendgroup>
     </legendgroup>
     <legendgroup name="TSPD" checked="Qt::Checked" open="true">
-      <legendgroup name="TSPD-3" checked="Qt::Checked" open="true">
+      <legendgroup name="TSPD-3" checked="Qt::Unchecked" open="true">
         <legendlayer showFeatureCount="0" name="TSPD-3-spijkenisse-closed" checked="Qt::Checked" drawingOrder="-1" open="true">
           <filegroup hidden="false" open="true">
-            <legendlayerfile visible="1" layerid="TSPD_3_spijkenisse_closed_6d092182_c2fd_41a3_b4ce_40935a27c855" isInOverview="0"/>
+            <legendlayerfile visible="0" layerid="TSPD_3_spijkenisse_closed_6d092182_c2fd_41a3_b4ce_40935a27c855" isInOverview="0"/>
           </filegroup>
         </legendlayer>
         <legendlayer showFeatureCount="0" name="TSPD-3-spijkenisse-closed" checked="Qt::Checked" drawingOrder="-1" open="true">
           <filegroup hidden="false" open="true">
-            <legendlayerfile visible="1" layerid="TSPD_3_spijkenisse_closed_5b25dde2_b0d3_49ad_9668_eb2a678a5d61" isInOverview="0"/>
+            <legendlayerfile visible="0" layerid="TSPD_3_spijkenisse_closed_5b25dde2_b0d3_49ad_9668_eb2a678a5d61" isInOverview="0"/>
           </filegroup>
         </legendlayer>
         <legendlayer showFeatureCount="0" name="TSPD-3-spijkenisse-open" checked="Qt::Unchecked" drawingOrder="-1" open="true">
@@ -269,7 +269,7 @@
           </filegroup>
         </legendlayer>
       </legendgroup>
-      <legendgroup name="TSPD-9" checked="Qt::Unchecked" open="true">
+      <legendgroup name="TSPD-9" checked="Qt::Checked" open="true">
         <legendlayer showFeatureCount="0" name="TSPD-9-spijkenisse-no-lef-open" checked="Qt::Unchecked" drawingOrder="-1" open="true">
           <filegroup hidden="false" open="true">
             <legendlayerfile visible="0" layerid="TSPD_9_spijkenisse_no_lef_open_75925ed6_e96a_4b4e_9b76_5dd4463e14b1" isInOverview="0"/>
@@ -292,12 +292,12 @@
         </legendlayer>
         <legendlayer showFeatureCount="0" name="TSPD-9-spijkenisse-no-lef-closed" checked="Qt::Checked" drawingOrder="-1" open="true">
           <filegroup hidden="false" open="true">
-            <legendlayerfile visible="0" layerid="TSPD_9_spijkenisse_no_lef_closed_3a26e6fe_fa06_408e_ad18_981af1dd2497" isInOverview="0"/>
+            <legendlayerfile visible="1" layerid="TSPD_9_spijkenisse_no_lef_closed_3a26e6fe_fa06_408e_ad18_981af1dd2497" isInOverview="0"/>
           </filegroup>
         </legendlayer>
         <legendlayer showFeatureCount="0" name="TSPD-9-spijkenisse-no-lef-closed" checked="Qt::Checked" drawingOrder="-1" open="true">
           <filegroup hidden="false" open="true">
-            <legendlayerfile visible="0" layerid="TSPD_9_spijkenisse_no_lef_closed_d23ccd2a_66aa_44ff_885c_0ff744a5f336" isInOverview="0"/>
+            <legendlayerfile visible="1" layerid="TSPD_9_spijkenisse_no_lef_closed_d23ccd2a_66aa_44ff_885c_0ff744a5f336" isInOverview="0"/>
           </filegroup>
         </legendlayer>
       </legendgroup>

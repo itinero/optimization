@@ -1,4 +1,4 @@
-name: CI
+name: Prerelease
 on:
   push:
     branches: [ develop ]
