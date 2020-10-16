@@ -42,7 +42,7 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.Directed.CheapestInsertion
                 return 0;
             });
             
-            Assert.Equal(TurnEnum.ForwardForward, insertion.turn);
+            Assert.Equal(TurnEnum.BackwardBackward, insertion.turn);
             Assert.Equal(DirectionEnum.Forward, insertion.fromDepartureDirection);
             Assert.Equal(DirectionEnum.Forward, insertion.toArrivalDirection);
             Assert.Equal(0, insertion.cost);
@@ -151,28 +151,28 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.Directed.CheapestInsertion
             Assert.Equal(10, insertion.cost);
             Assert.Equal(tour.First, insertion.location.From);
             Assert.Equal(1, insertion.visit);
-            Assert.Equal(DirectionEnum.Forward, insertion.fromDepartureDirection);
+            Assert.Equal(DirectionEnum.Backward, insertion.fromDepartureDirection);
             
             tour = new Tour(new int[] { TurnEnum.ForwardBackward.DirectedVisit(0) }, null);
             insertion = tour.CalculateCheapestDirected(new [] { 1, 2, 3, 4 }, weightsFunc, turnPenaltyFunc);
             Assert.Equal(10, insertion.cost);
             Assert.Equal(tour.First, insertion.location.From);
             Assert.Equal(1, insertion.visit);
-            Assert.Equal(DirectionEnum.Forward, insertion.fromDepartureDirection);
+            Assert.Equal(DirectionEnum.Backward, insertion.fromDepartureDirection);
 
             tour = new Tour(new int[] { TurnEnum.BackwardForward.DirectedVisit(0) }, null);
             insertion = tour.CalculateCheapestDirected(new [] { 1, 2, 3, 4 }, weightsFunc, turnPenaltyFunc);
             Assert.Equal(10, insertion.cost);
             Assert.Equal(tour.First, insertion.location.From);
             Assert.Equal(1, insertion.visit);
-            Assert.Equal(DirectionEnum.Forward, insertion.fromDepartureDirection);
+            Assert.Equal(DirectionEnum.Backward, insertion.fromDepartureDirection);
             
             tour = new Tour(new int[] { TurnEnum.BackwardBackward.DirectedVisit(0) }, null);
             insertion = tour.CalculateCheapestDirected(new [] { 1, 2, 3, 4 }, weightsFunc, turnPenaltyFunc);
             Assert.Equal(10, insertion.cost);
             Assert.Equal(tour.First, insertion.location.From);
             Assert.Equal(1, insertion.visit);
-            Assert.Equal(DirectionEnum.Forward, insertion.fromDepartureDirection);
+            Assert.Equal(DirectionEnum.Backward, insertion.fromDepartureDirection);
         }
         
         [Fact]
@@ -196,8 +196,8 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.Directed.CheapestInsertion
             Assert.Equal(tour.First, insertion.location.From);
             Assert.Equal(tour.Last, insertion.location.To);
             Assert.Equal(1, insertion.visit);
-            Assert.Equal(DirectionEnum.Forward, insertion.fromDepartureDirection);
-            Assert.Equal(DirectionEnum.Forward, insertion.toArrivalDirection);
+            Assert.Equal(DirectionEnum.Backward, insertion.fromDepartureDirection);
+            Assert.Equal(DirectionEnum.Backward, insertion.toArrivalDirection);
 
             tour = new Tour(new int[] { TurnEnum.BackwardBackward.DirectedVisit(0), TurnEnum.ForwardForward.DirectedVisit(0) }, TurnEnum.ForwardForward.DirectedVisit(0));
             insertion = tour.CalculateCheapestDirected(new [] { 1, 2, 3, 4 }, weightsFunc, turnPenaltyFunc);
@@ -205,8 +205,8 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.Directed.CheapestInsertion
             Assert.Equal(tour.First, insertion.location.From);
             Assert.Equal(tour.Last, insertion.location.To);
             Assert.Equal(1, insertion.visit);
-            Assert.Equal(DirectionEnum.Forward, insertion.fromDepartureDirection);
-            Assert.Equal(DirectionEnum.Forward, insertion.toArrivalDirection);
+            Assert.Equal(DirectionEnum.Backward, insertion.fromDepartureDirection);
+            Assert.Equal(DirectionEnum.Backward, insertion.toArrivalDirection);
             
             tour = new Tour(new int[] { TurnEnum.BackwardBackward.DirectedVisit(0), TurnEnum.BackwardBackward.DirectedVisit(0) }, TurnEnum.BackwardBackward.DirectedVisit(0));
             insertion = tour.CalculateCheapestDirected(new [] { 1, 2, 3, 4 }, weightsFunc, turnPenaltyFunc);
