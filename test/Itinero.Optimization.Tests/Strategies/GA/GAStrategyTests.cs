@@ -34,11 +34,14 @@ namespace Itinero.Optimization.Tests.Strategies.GA
         [Fact]
         public void GAStrategy_ShouldDoMutationLocalSearch()
         {
+            var settings = GASettings.Default;
+            settings.StagnationCount = 100;
+            settings.PopulationSize = 100;
             var gaStrategy = new GAStrategy<int, IntegerCandidate>(
                 (p) => new IntegerCandidate(p),
                 (c1, c2) => c1,
                 TestProblems.MinimizeInteger.Operators.SubtractRandom,
-                GASettings.Default);
+                settings);
             var result = gaStrategy.Search(100);
             Assert.NotNull(result);
             Assert.Equal(0, result.Value);
@@ -50,6 +53,9 @@ namespace Itinero.Optimization.Tests.Strategies.GA
         [Fact]
         public void GAStrategy_ShouldDoCrossOverLocalSearch()
         {
+            var settings = GASettings.Default;
+            settings.StagnationCount = 100;
+            settings.PopulationSize = 100;
             var gaStrategy = new GAStrategy<int, IntegerCandidate>(
                 (p) => new IntegerCandidate(p),
                 (c1, c2) =>
@@ -59,7 +65,7 @@ namespace Itinero.Optimization.Tests.Strategies.GA
                     return c;
                 },
                 Operators.Empty,
-                GASettings.Default);
+                settings);
             var result = gaStrategy.Search(100);
             Assert.NotNull(result);
             Assert.Equal(0, result.Value);
@@ -71,11 +77,14 @@ namespace Itinero.Optimization.Tests.Strategies.GA
         [Fact]
         public void GAStrategy_ShouldDoCrossOverAndMutationLocalSearch()
         {
+            var settings = GASettings.Default;
+            settings.StagnationCount = 100;
+            settings.PopulationSize = 100;
             var gaStrategy = new GAStrategy<int, IntegerCandidate>(
                 (p) => new IntegerCandidate(p),
                 (c1, c2) => new IntegerCandidate((c1.Value + c2.Value) / 2),
                 Operators.MutateRandom,
-                GASettings.Default);
+                settings);
             var result = gaStrategy.Search(100);
             Assert.NotNull(result);
             Assert.Equal(0, result.Value);
