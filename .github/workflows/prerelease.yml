@@ -27,6 +27,6 @@ jobs:
       run: dotnet pack -c release
       working-directory: ./src/Itinero.Optimization/
     - name: Nuget push
-      run: dotnet nuget push **/*.nupkg -k ${{ secrets.PACKAGES_SECRET }}
+      run: dotnet nuget push **/*.nupkg --skip-duplicate --api-key -k ${{ secrets.NUGET_TOKEN }}
       working-directory: ./src/Itinero.Optimization/
     

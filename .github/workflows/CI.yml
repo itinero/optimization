@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [ feature/*, fatures/* ]
+    branches: [ develop, feature/*, fatures/* ]
   pull_request:
     branches: [ develop ]
 
@@ -26,5 +26,5 @@ jobs:
       run: dotnet run -c release
       working-directory: ./test/Itinero.Optimization.Tests.Functional/
     - name: Nuget Pack
-      run: dotnet pack
+      run: dotnet pack -c release
       working-directory: ./src/Itinero.Optimization/
