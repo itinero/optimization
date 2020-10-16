@@ -8,7 +8,7 @@
     <Authors>Itinero BV</Authors>
     <PackageId>Itinero.Optimization</PackageId>
     <PackageTags>optimization;logistics;tsp;vrp;routing</PackageTags>
-    <PackageIcon>../../logo.png</PackageIcon>
+    <PackageIcon>logo.png</PackageIcon>
     <PackageProjectUrl>https://www.itinero.tech/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/itinero/optimization</RepositoryUrl>
     <PackageLicense>https://github.com/itinero/optimization/blob/develop/LICENSE.md</PackageLicense>    
@@ -23,6 +23,9 @@
     <Title>Itinero.Optimization</Title>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\logo.png" Pack="true" PackagePath=""/>
+  </ItemGroup>
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);NETSTANDARD20;NETFX_CORE;DOTNET_CORE</DefineConstants>
   </PropertyGroup>
