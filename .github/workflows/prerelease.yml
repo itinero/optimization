@@ -24,9 +24,9 @@ jobs:
       run: dotnet run -c release
       working-directory: ./test/Itinero.Optimization.Tests.Functional/
     - name: Nuget Pack
-      run: dotnet pack
+      run: dotnet pack -c release
       working-directory: ./src/Itinero.Optimization/
     - name: Nuget push
       run: dotnet nuget push **/*.nupkg -k ${{ secrets.PACKAGES_SECRET }}
-      working-directory: ./src/BikeDataProject.DB/
+      working-directory: ./src/Itinero.Optimization/
     
