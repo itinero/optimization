@@ -57,7 +57,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_D
                 Assert.Null(tour.Last);
 
                 var solutionList = new List<int>(tour);
-                Assert.Equal(0, solutionList[0]);
+                Assert.Equal(3, solutionList[0]);
                 Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 0)));
                 Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 1)));
                 Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 2)));
@@ -90,7 +90,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_D
                 Assert.Equal(problem.Last, DirectedHelper.Extract(tour.Last.Value).visit);
 
                 var solutionList = new List<int>(tour);
-                Assert.Equal(0, solutionList[0]);
+                Assert.Equal(3, solutionList[0]);
                 Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 0)));
                 Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 1)));
                 Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 2)));
@@ -123,7 +123,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_D
                 Assert.Equal(problem.Last, DirectedHelper.Extract(tour.Last.Value).visit);
 
                 var solutionList = new List<int>(tour);
-                Assert.Equal(0, solutionList[0]);
+                Assert.Equal(3, solutionList[0]);
                 Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 0)));
                 Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 1)));
                 Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 2)));
@@ -157,7 +157,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_D
                 Assert.Equal(problem.Last, DirectedHelper.Extract(tour.Last.Value).visit);
 
                 var solutionList = new List<int>(tour);
-                Assert.Equal(0, solutionList[0]);
+                Assert.Equal(3, solutionList[0]);
                 Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 0)));
                 Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 1)));
 //              Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 2)));
