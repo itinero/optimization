@@ -57,7 +57,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
         internal static float OptimizeTurns(this Tour tour, Func<int, int, float> weightFunc,
             Func<TurnEnum, float> turnPenaltyFunc)
         {
-            // TODO: this now uses a form of dykstra but we think there is a better algorithm.
+            // TODO: this now uses a form of dijkstra but we think there is a better algorithm.
             // TODO: this can be way more efficient, we haven't done any performance work on this.
             // TODO: check if we can reuse arrays.
             
@@ -98,20 +98,22 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
             {
                 var currentWeight = queue.PeekWeight();
                 var current = queue.Pop();
+                
+                // check for last before settling.
+                var currentVisit = DirectedHelper.ExtractVisit(current);
+                if (currentVisit == last && currentWeight > 0)
+                { // make sure there is weight and not to stop at the first occurence
+                    // of the first visit in a closed tour.
+                    bestLast = current;
+                    break;
+                }
+
+                // check if already settled and settle visit.
                 if (settled.Contains(current))
                 { // was already settled.
                     continue;
                 }
-                
                 settled.Add(current);
-
-                var currentVisit = DirectedHelper.ExtractVisit(current);
-                if (currentVisit == last && currentWeight > 0)
-                { // make sure there is weight and not to stop at the first occurence
-                  // of the first visit in a closed tour.
-                    bestLast = current;
-                    break;
-                }
 
                 var next = nextArray[currentVisit];
                 var departureWeightId = DirectedHelper.ExtractDepartureWeightId(current);
@@ -119,7 +121,7 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
                 {
                     var turn = (TurnEnum) t;
                     var nextDirected = turn.DirectedVisit(next);
-                    if (settled.Contains(nextDirected))
+                    if (next != last && settled.Contains(nextDirected))
                     {
                         continue;
                     }
