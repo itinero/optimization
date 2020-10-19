@@ -76,7 +76,7 @@ namespace Itinero.Optimization.Solvers
         /// <param name="model">The model to solve.</param>
         /// <param name="intermediateResult">A callback for intermediate results.</param>
         public IEnumerable<(int vehicle, IEnumerable<int> tour)> Solve(MappedModel model, 
-            Action<IEnumerable<(int vehicle, IEnumerable<int> tour)>> intermediateResult)
+            Action<IEnumerable<(int vehicle, IEnumerable<int> tour)>>? intermediateResult)
         {
             if(!model.IsValid(out var failReason)) 
             {
@@ -114,7 +114,7 @@ namespace Itinero.Optimization.Solvers
             /// Gets or sets the try solve function.
             /// </summary>
             /// <returns></returns>
-            public SolverRegistry.TrySolveDelegate TrySolve { get; set; }
+            public SolverRegistry.TrySolveDelegate? TrySolve { get; set; }
 
             /// <summary>
             /// Returns a description.

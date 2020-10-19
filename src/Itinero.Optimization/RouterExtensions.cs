@@ -59,10 +59,10 @@ namespace Itinero.Optimization
         /// <returns>A tours that visit the given locations using the vehicle respecting the contraints.</returns>
         public static Result<Route> Optimize(this RouterBase router, string profileName, Coordinate[] locations,
             out IEnumerable<(int location, string message)> errors, int first = 0, int? last = 0, float max = float.MaxValue, float turnPenalty = 0,
-                Action<Result<Route>> intermediateResultsCallback = null)
+                Action<Result<Route>>? intermediateResultsCallback = null)
         {
             return router.Optimizer().Optimize(profileName, locations, out errors, first, last, max, turnPenalty,
-                intermediateResultsCallback);
+                intermediateResultsCallback).GetRoutes().First();
         }
 
         /// <summary>
@@ -76,9 +76,9 @@ namespace Itinero.Optimization
         /// <returns>A set of tours that visit the given locations using the vehicles in the pool.</returns>
         public static IEnumerable<Result<Route>> Optimize(this RouterBase router, VehiclePool vehicles,
             Coordinate[] locations, out IEnumerable<(int location, string message)> errors, 
-                Action<IEnumerable<Result<Route>>> intermediateResultsCallback = null)
+                Action<IEnumerable<Result<Route>>>? intermediateResultsCallback = null)
         {
-            return router.Optimizer().Optimize(vehicles, locations, out errors, intermediateResultsCallback);
+            return router.Optimizer().Optimize(vehicles, locations, out errors, intermediateResultsCallback).GetRoutes();
         }
 
         /// <summary>
@@ -91,9 +91,9 @@ namespace Itinero.Optimization
         /// <param name="intermediateResultsCallback">A callback to report on any intermediate solutions.</param>
         /// <returns>A set of tours that visit the given visits using the vehicles in the pool.</returns>
         public static IEnumerable<Result<Route>> Optimize(this RouterBase router, VehiclePool vehicles, Visit[] visits, 
-            out IEnumerable<(int visit, string message)> errors, Action<IEnumerable<Result<Route>>> intermediateResultsCallback = null)
+            out IEnumerable<(int visit, string message)> errors, Action<IEnumerable<Result<Route>>>? intermediateResultsCallback = null)
         {
-            return router.Optimizer().Optimize(vehicles, visits, out errors, intermediateResultsCallback);
+            return router.Optimizer().Optimize(vehicles, visits, out errors, intermediateResultsCallback).GetRoutes();
         }
 
         /// <summary>
@@ -106,9 +106,9 @@ namespace Itinero.Optimization
         /// <returns>A set of tours that visit the given visits using the vehicles in the pool.</returns>
         public static IEnumerable<Result<Route>> Optimize(this RouterBase router, Model model,
             out IEnumerable<(int visit, string message)> errors,
-            Action<IEnumerable<Result<Route>>> intermediateResultsCallback = null)
+            Action<IEnumerable<Result<Route>>>? intermediateResultsCallback = null)
         {
-            return router.Optimizer().Optimize(model, out errors, intermediateResultsCallback);
+            return router.Optimizer().Optimize(model, out errors, intermediateResultsCallback).GetRoutes();
         }
     }
 }
