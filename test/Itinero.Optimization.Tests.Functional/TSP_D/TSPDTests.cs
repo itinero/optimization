@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Itinero.LocalGeo;
 using Itinero.Optimization.Models.Mapping;
 using Itinero.Optimization.Models.Mapping.Directed;
@@ -170,11 +171,11 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
                 ByEdgeDirectedModelMapper.Default)));
 
             // calculate TSPD.
-            var func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
+            var func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, 0, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-6-wechel-closed");
-            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
+            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-6-wechel-fixed");
-            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
+            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, null, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-6-wechel-open");
         }
         
@@ -200,11 +201,11 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             var optimizer = router.Optimizer(configuration: optimizerConfiguration);
             
             // calculate TSPD.
-            var func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
+            var func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, 0, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-7-wechel-no-left-closed");
-            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
+            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-7-wechel-no-left-fixed");
-            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
+            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, null, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-7-wechel-no-left-open");
         }
         
@@ -244,11 +245,11 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             var optimizer = router.Optimizer(configuration: optimizerConfiguration);
             
             // calculate TSPD.
-            var func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
+            var func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, 0, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-8-wechel-no-left-closed");
-            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
+            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-8-wechel-no-left-fixed");
-            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
+            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, null, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-8-wechel-no-left-open");
         }
 
@@ -268,11 +269,11 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             var optimizer = router.Optimizer(configuration: optimizerConfiguration);
 
             // calculate TSPD.
-            var func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, null, turnPenalty: 60));
+            var func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, null, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-9-spijkenisse-no-lef-open");  
-            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, 0, turnPenalty: 60));
+            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, 0, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-9-spijkenisse-no-lef-closed");
-            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60));
+            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-9-spijkenisse-no-lef-fixed");
         }
     }

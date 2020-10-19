@@ -35,10 +35,22 @@ namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
         }
 
         public bool IsDirected { get; } = true;
+
+        public int GetOriginalVisit(int mappedVisit)
+        {
+            return _weightMatrixAlgorithm.OriginalLocationIndex(mappedVisit);
+        }
+
+        public int? GetMappedIndex(int originalVisit)
+        {
+            var mv = _weightMatrixAlgorithm.CorrectedIndexOf(originalVisit);
+            if (mv < 0) return null;
+            return mv;
+        }
         
         RouterPoint IModelMapping.GetVisitSnapping(int visit)
         {
-            throw new NotImplementedException();
+            return _weightMatrixAlgorithm.RouterPoints[visit];
         }
 
         RouterDb IModelMapping.RouterDb => _weightMatrixAlgorithm.Router.Db;
