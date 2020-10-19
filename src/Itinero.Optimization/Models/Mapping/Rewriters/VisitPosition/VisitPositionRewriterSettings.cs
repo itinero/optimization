@@ -13,13 +13,18 @@ namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
         public bool Left { get; set; } = true;
 
         /// <summary>
-        /// The tolerance value of the angle. When 90 degrees any pickup will be prevented on left/right.
-        /// </summary>
-        public double Tolerance { get; set; } = 90;
-
-        /// <summary>
         /// Calculates the angle relative to the direction of the edge the router point is on.
         /// </summary>
         public Func<RouterPoint, double?>? AngleFunc { get; set; } = null;
+
+        /// <summary>
+        /// Allows to override the settings per visit.
+        /// </summary>
+        /// <remarks>
+        /// When this function is not null the behaviour for each visit is as follows:
+        /// - returns null, the visit is ignore and no action is taken.
+        /// - return settings, the settings are used to process the visit.
+        /// </remarks>
+        public Func<int, VisitPositionRewriterSettings?>? SettingsPerVisit { get; set; } = null;
     }
 }

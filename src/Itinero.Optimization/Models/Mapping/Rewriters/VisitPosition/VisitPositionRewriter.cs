@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Itinero.Optimization.Models.Visits.Costs;
-using Itinero.Profiles;
 
 namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
 {
@@ -28,6 +27,7 @@ namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
         public MappedModel Rewrite(MappedModel model, IModelMapping mapping)
         {
             var angleFunc = _settings.AngleFunc ?? (p => p.RelativeAngle(mapping.RouterDb));
+            var perVisitSettings = _settings.SettingsPerVisit;
 
             // get travel costs.
             var travelCosts = model.TravelCosts.FirstOrDefault(x =>
@@ -41,13 +41,24 @@ namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
             var prevent = new bool[model.Visits.Length * 2];
             for (var v = 0; v < model.Visits.Length; v++)
             {
+                // get settings and any per-visit settings.
+                var visitAngleFunc = angleFunc;
+                var visitLeft = _settings.Left;
+                if (perVisitSettings != null)
+                {
+                    var visitSettings = perVisitSettings(v);
+                    if (visitSettings == null) continue;
+
+                    visitAngleFunc = visitSettings.AngleFunc ?? angleFunc;
+                }
+                
                 // don't prevent by default.
                 prevent[v * 2 + 0] = false;
                 prevent[v * 2 + 1] = false;
                 
                 // calculate angle for visit relative to edge direction.
                 var vSnap = mapping.GetVisitSnapping(v);
-                var angle = angleFunc(vSnap);
+                var angle = visitAngleFunc(vSnap);
                 if (angle == null)
                 {
                     // unclear on angle, cannot be prevented.
@@ -60,17 +71,17 @@ namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
                 {
                     // visit is on the left.
                     // prevent forward if left is to be prevented.
-                    prevent[v * 2 + 0] = !_settings.Left;
+                    prevent[v * 2 + 0] = !visitLeft;
                     // prevent backward if right is to be prevented.
-                    prevent[v * 2 + 1] = _settings.Left;
+                    prevent[v * 2 + 1] = visitLeft;
                 }
                 else 
                 {
                     // visit is on the right.
                     // prevent forward if right is to be prevented.
-                    prevent[v * 2 + 0] = _settings.Left;
+                    prevent[v * 2 + 0] = visitLeft;
                     // prevent backward if left is to be prevented.
-                    prevent[v * 2 + 1] = !_settings.Left;
+                    prevent[v * 2 + 1] = !visitLeft;
                 }
             }
 
