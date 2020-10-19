@@ -14,7 +14,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
     /// <summary>
     /// A default directed model mapper.
     /// </summary>
-    internal class DirectedModelMapper : ModelMapper
+    public class DirectedModelMapper : ModelMapper
     {
         private readonly float _maxSearchDistance;
         
