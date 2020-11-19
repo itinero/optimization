@@ -8,11 +8,11 @@ namespace Itinero.Optimization.Models.Mapping
     public interface IModelMapping
     {
         /// <summary>
-        /// Converts a solution to the mapped model into routes.
+        /// Gets the routes between the visits in the given tour.
         /// </summary>
-        /// <param name="solution">The solution.</param>
-        /// <returns>The routes that are represented by the solution.</returns>
-        IEnumerable<Result<Route>> BuildRoutes(IEnumerable<(int vehicle, IEnumerable<int> tour)> solution);
+        /// <param name="tourAndVehicle">The tour and the vehicle.</param>
+        /// <returns>The routes between all visit pairs.</returns>
+        IEnumerable<Result<Route>> BuildRoutesBetweenVisits((int vehicle, IEnumerable<int> tour) tourAndVehicle);
 
         /// <summary>
         /// Gets the router point for the given mapped visit.

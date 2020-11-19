@@ -24,11 +24,76 @@ namespace Itinero.Optimization.Models.Mapping.Directed
         }
 
         /// <inheritdoc />
-        public IEnumerable<Result<Route>> BuildRoutes(IEnumerable<(int vehicle, IEnumerable<int> tour)> solution)
+        public IEnumerable<Result<Route>> BuildRoutesBetweenVisits((int vehicle, IEnumerable<int> tour) tourAndVehicle)
         {
-            foreach (var vehicleAndTour in solution)
+            // TODO: we need a better more generic way of handling this. Current rules are:
+            // - use vehicle departure and arrival to close a tour or not.
+            // - close a tour by default when both departure and arrival are null.
+            // PROBLEM: this doesn't support the case where we have a vehicle with arrival and departure null and we generate open-tours.
+            // SUGGESTED FIX: look at the enumerable differently include all visits, even if that means closing the tour in the enumerable.
+            var vehicle = _mappedModel.VehiclePool.Vehicles[tourAndVehicle.vehicle];
+
+            var index = -1;
+            var previous = -1;
+            var first = -1;
+            foreach (var v in tourAndVehicle.tour)
             {
-                yield return this.BuildRoute(vehicleAndTour);
+                index++;
+
+                if (first < 0)
+                {
+                    first = v;
+                }
+
+                if (previous < 0)
+                {
+                    previous = v;
+                    continue;
+                }
+
+                yield return BuildRoute(index - 1, previous, index, v);
+                previous = v;
+            }
+
+            // 3 options:
+            // OPEN:
+            //   when:
+            //     -> vehicle.arrival is not set and vehicle.departure is set.
+            //   action: 
+            //     -> none.
+            // FIXED:
+            //   when:
+            //     -> vehicle.arrival is set and vehicle.departure is set but to different visits.
+            //   action:
+            //     -> none, all visits should be there.
+            // CLOSED:
+            //   when:
+            //     ->  vehicle.arrival and vehicle.departure is not set is treated as closed.
+            //     ->  vehicle.arrival and vehicle.departure are set but both to the same visit and 
+            //            it matches the first directed visit.
+            //   action:
+            //     ->  add connection between the last directed visit and the first directed visit and close the tour.
+
+            if (vehicle.Arrival.HasValue &&
+                vehicle.Departure.HasValue &&
+                vehicle.Arrival == vehicle.Departure &&
+                previous != 0)
+            {
+                if (DirectedHelper.ExtractVisit(first) != vehicle.Arrival.Value)
+                {
+                    throw new Exception(
+                        $"Vehicle should match a tour starting at {vehicle.Departure} but the start of the tour is at:" +
+                        $"{DirectedHelper.ExtractVisit(first)}");
+                }
+
+                yield return BuildRoute(index, previous, 0, first);
+            }
+
+            if (!vehicle.Arrival.HasValue &&
+                !vehicle.Departure.HasValue &&
+                previous != 0)
+            {
+                yield return BuildRoute(index, previous, 0, first);
             }
         }
 
@@ -53,105 +118,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
 
         RouterDb IModelMapping.RouterDb => _weightMatrixAlgorithm.Router.Db;
 
-        private Result<Route> BuildRoute((int vehicle, IEnumerable<int> tour) vehicleAndTour)
-        {
-            try
-            {
-                // TODO: we need a better more generic way of handling this. Current rules are:
-                // - use vehicle departure and arrival to close a tour or not.
-                // - close a tour by default when both departure and arrival are null.
-                // PROBLEM: this doesn't support the case where we have a vehicle with arrival and departure null and we generate open-tours.
-                // SUGGESTED FIX: look at the enumerable differently include all visits, even if that means closing the tour in the enumerable.
-                var vehicle = _mappedModel.VehiclePool.Vehicles[vehicleAndTour.vehicle];
-                
-                Route route = null;
-                var index = -1;
-                var previous = -1;
-                var first = -1;
-                foreach (var v in vehicleAndTour.tour)
-                {
-                    index++;
-
-                    if (first < 0)
-                    {
-                        first = v;
-                    }
-                    if (previous < 0)
-                    {
-                        previous = v;
-                        continue;
-                    }
-
-                    var localResult = AppendRoute(route, index - 1, previous, index, v);
-                    if (localResult.IsError)
-                    {
-                        return localResult;
-                    }
-
-                    route = localResult.Value;
-                    previous = v;
-                }
-                
-                // 3 options:
-                // OPEN:
-                //   when:
-                //     -> vehicle.arrival is not set and vehicle.departure is set.
-                //   action: 
-                //     -> none.
-                // FIXED:
-                //   when:
-                //     -> vehicle.arrival is set and vehicle.departure is set but to different visits.
-                //   action:
-                //     -> none, all visits should be there.
-                // CLOSED:
-                //   when:
-                //     ->  vehicle.arrival and vehicle.departure is not set is treated as closed.
-                //     ->  vehicle.arrival and vehicle.departure are set but both to the same visit and 
-                //            it matches the first directed visit.
-                //   action:
-                //     ->  add connection between the last directed visit and the first directed visit and close the tour.
-                
-                if (vehicle.Arrival.HasValue &&
-                    vehicle.Departure.HasValue &&
-                    vehicle.Arrival == vehicle.Departure &&
-                    previous != 0)
-                {
-                    if (DirectedHelper.ExtractVisit(first) != vehicle.Arrival.Value)
-                    {
-                        throw new Exception($"Vehicle should match a tour starting at {vehicle.Departure} but the start of the tour is at:" +
-                                            $"{DirectedHelper.ExtractVisit(first)}");
-                    }
-                    var localResult = AppendRoute(route, index, previous,  0, first);
-                    if (localResult.IsError)
-                    {
-                        return localResult;
-                    }
-                    
-                    route = localResult.Value;
-                }
-
-                if (!vehicle.Arrival.HasValue &&
-                    !vehicle.Departure.HasValue &&
-                    previous != 0)
-                {
-                    var localResult = AppendRoute(route, index, previous, 0, first);
-                    if (localResult.IsError)
-                    {
-                        return localResult;
-                    }
-                    
-                    route = localResult.Value;
-                }
-                
-                return new Result<Route>(route);
-            }
-            catch (Exception e)
-            {
-                return new Result<Route>(e.Message);
-            }
-        }
-
-        private Result<Route> AppendRoute(Route route, int directedVisit1Index, int directedVisit1, int directedVisit2Index, int directedVisit2)
+        private Result<Route> BuildRoute(int directedVisit1Index, int directedVisit1, int directedVisit2Index, int directedVisit2)
         {
             var weightHandler = _weightMatrixAlgorithm.Profile.DefaultWeightHandler(_weightMatrixAlgorithm.Router);
             var pairFromDepartureId = _weightMatrixAlgorithm.SourcePaths[DirectedHelper.WeightIdDeparture(directedVisit1)];
@@ -188,10 +155,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
             localRouteRaw.StripSource();
             localRouteRaw.StripTarget();
 
-            var localRoute = _weightMatrixAlgorithm.Router.BuildRoute(_weightMatrixAlgorithm.Profile, weightHandler, fromRouterPoint, toRouterPoint, localRouteRaw);
-            
-            route = route == null ? localRoute.Value : route.Concatenate(localRoute.Value);
-            return new Result<Route>(route);
+            return _weightMatrixAlgorithm.Router.BuildRoute(_weightMatrixAlgorithm.Profile, weightHandler, fromRouterPoint, toRouterPoint, localRouteRaw);
         }
 
         /// <inheritdoc />

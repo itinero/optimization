@@ -37,13 +37,52 @@ namespace Itinero.Optimization.Models.Mapping.Default
             _mappedModel = mappedModel;
             _weightMatrixAlgorithm = weightMatrixAlgorithm;
         }
-        
+
         /// <inheritdoc />
-        public IEnumerable<Result<Route>> BuildRoutes(IEnumerable<(int vehicle, IEnumerable<int> tour)> solution)
+        public IEnumerable<Result<Route>> BuildRoutesBetweenVisits((int vehicle, IEnumerable<int> tour) tourAndVehicle)
         {
-            foreach (var vehicleAndTour in solution)
+            // TODO: we need a better more generic way of handling this. Current rules are:
+            // - use vehicle departure and arrival to close a tour or not.
+            // - close a tour by default when both departure and arrival are null.
+            // PROBLEM: this doesn't support the case where we have a vehicle with arrival and departure null and we generate open-tours.
+            // SUGGESTED FIX: look at the enumerable differently include all visits, even if that means closing the tour in the enumerable.
+            var vehicle = _mappedModel.VehiclePool.Vehicles[tourAndVehicle.vehicle];
+
+            var index = -1;
+            var previous = -1;
+            var first = -1;
+            foreach (var v in tourAndVehicle.tour)
             {
-                yield return this.BuildRoute(vehicleAndTour);
+                index++;
+
+                if (first < 0)
+                {
+                    first = v;
+                }
+
+                if (previous < 0)
+                {
+                    previous = v;
+                    continue;
+                }
+
+                yield return RouteBetween(index - 1, previous, index, v, index == 0);
+                previous = v;
+            }
+
+            if (vehicle.Arrival.HasValue &&
+                vehicle.Departure.HasValue &&
+                vehicle.Arrival == vehicle.Departure &&
+                previous != 0)
+            {
+                yield return RouteBetween(index, previous, 0, vehicle.Departure.Value, index == 0);
+            }
+
+            if (!vehicle.Arrival.HasValue &&
+                !vehicle.Departure.HasValue &&
+                previous != 0)
+            {
+                yield return RouteBetween(index, previous, 0, first, index == 0);
             }
         }
 
@@ -68,81 +107,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
 
         RouterDb IModelMapping.RouterDb => _weightMatrixAlgorithm.Router.Db;
 
-        private Result<Route> BuildRoute((int vehicle, IEnumerable<int> tour) vehicleAndTour)
-        {
-            try
-            {
-                // TODO: we need a better more generic way of handling this. Current rules are:
-                // - use vehicle departure and arrival to close a tour or not.
-                // - close a tour by default when both departure and arrival are null.
-                // PROBLEM: this doesn't support the case where we have a vehicle with arrival and departure null and we generate open-tours.
-                // SUGGESTED FIX: look at the enumerable differently include all visits, even if that means closing the tour in the enumerable.
-                var vehicle = _mappedModel.VehiclePool.Vehicles[vehicleAndTour.vehicle];
-
-                Route route = null;
-                var index = -1;
-                var previous = -1;
-                var first = -1;
-                foreach (var v in vehicleAndTour.tour)
-                {
-                    index++;
-
-                    if (first < 0)
-                    {
-                        first = v;
-                    }
-                    if (previous < 0)
-                    {
-                        previous = v;
-                        continue;
-                    }
-
-                    var localResult = AppendRoute(route, index - 1, previous, index, v);
-                    if (localResult.IsError)
-                    {
-                        return localResult;
-                    }
-
-                    route = localResult.Value;
-                    previous = v;
-                }
-
-                if (vehicle.Arrival.HasValue &&
-                    vehicle.Departure.HasValue &&
-                    vehicle.Arrival == vehicle.Departure &&
-                    previous != 0)
-                {
-                    var localResult = AppendRoute(route, index, previous, 0, vehicle.Departure.Value);
-                    if (localResult.IsError)
-                    {
-                        return localResult;
-                    }
-                    
-                    route = localResult.Value;
-                }
-
-                if (!vehicle.Arrival.HasValue &&
-                    !vehicle.Departure.HasValue &&
-                    previous != 0)
-                {
-                    var localResult = AppendRoute(route, index, previous, 0, first);
-                    if (localResult.IsError)
-                    {
-                        return localResult;
-                    }
-                    
-                    route = localResult.Value;
-                }
-                
-                return new Result<Route>(route);
-            }
-            catch (Exception e)
-            {
-                return new Result<Route>(e.Message + Environment.NewLine + e.StackTrace);
-            }
-        }
-
-        private Result<Route> AppendRoute(Route route, int visit1Index, int visit1, int visit2Index, int visit2)
+        private Result<Route> RouteBetween(int visit1Index, int visit1, int visit2Index, int visit2, bool isFirst)
         {
             var visit2RouterPoint = _weightMatrixAlgorithm.OriginalIndexOf(visit2);
             var visit1RouterPoint = _weightMatrixAlgorithm.OriginalIndexOf(visit1);
@@ -176,7 +141,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
                         visit1Stop.Attributes.AddOrReplace("cost_" + visitCost.Metric.ToLowerInvariant(), visitCost.Value.ToInvariantString());
                     }
 
-                    if (route == null)
+                    if (isFirst)
                     { // this is the first route, update visit1.
                         var visit1Cost = visit1Costs.FirstOrDefault(x => x.Metric == Metrics.Time)?.Value;
                         if (visit1Cost.HasValue)
@@ -230,9 +195,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
                 }
             }
 
-            route = route == null ? localRoute : route.Concatenate(localRoute);
-            
-            return new Result<Route>(route);
+            return new Result<Route>(localRoute);
         }
 
         public RouterPoint GetVisitSnapping(int visit)

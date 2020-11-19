@@ -39,12 +39,12 @@ namespace Itinero.Optimization.Models.Visits
         /// <summary>
         /// Gets or sets the timewindow.
         /// </summary>
-        public TimeWindow TimeWindow { get; set; }
+        public TimeWindow? TimeWindow { get; set; }
         
         /// <summary>
         /// Gets or sets the visit costs.
         /// </summary>
-        public VisitCost[] VisitCosts { get; set; }        
+        public VisitCost[]? VisitCosts { get; set; }        
         
         /// <summary>
         /// Returns the fully qualified type name of this instance.

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Itinero.Optimization.Models.Mapping;
 
 namespace Itinero.Optimization
 {
@@ -20,7 +22,7 @@ namespace Itinero.Optimization
             if (mapping == null) throw new Exception($"No mapping found on result even though it's not in error.");
             var solution = result.Solution;
             if (solution == null) throw new Exception($"No mapping found on result even though it's not in error.");
-            return mapping.BuildRoutes(solution);
+            return solution.Select(x => mapping.BuildRoute(x));
         }
     }
 }

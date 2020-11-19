@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Itinero.LocalGeo;
 using Itinero.Optimization.Models;
+using Itinero.Optimization.Models.Mapping;
 using Itinero.Optimization.Models.Vehicles;
 using Itinero.Optimization.Models.Visits;
 
@@ -135,7 +136,8 @@ namespace Itinero.Optimization
                 Action<IEnumerable<(int vehicle, IEnumerable<int>)>>? internalCallback = null;
                 if (intermediateResultsCallback != null)
                 {
-                    internalCallback = (sol) => intermediateResultsCallback(mappings.mapping.BuildRoutes(sol));
+                    internalCallback = (sol) => intermediateResultsCallback(
+                        sol.Select(x => mappings.mapping.BuildRoute(x)));
                 }
 
                 try

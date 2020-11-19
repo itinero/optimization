@@ -19,12 +19,12 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <LangVersion>latest</LangVersion>
-    <PackageVersion>1.0.0-pre020</PackageVersion>
+    <PackageVersion>1.0.0-pre021</PackageVersion>
     <Title>Itinero.Optimization</Title>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\logo.png" Pack="true" PackagePath=""/>
+    <None Include="..\..\logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);NETSTANDARD20;NETFX_CORE;DOTNET_CORE</DefineConstants>

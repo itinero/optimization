@@ -38,9 +38,8 @@ namespace Itinero.Optimization.Models.TimeWindows
         /// </summary>
         public bool IsEmpty => (this.Min == 0 &&
                                 this.Max == 0) || 
-                               (this.Min == float.MaxValue &&
-                                this.Max == float.MinValue);
-
+                               (this.Min >= float.MaxValue &&
+                                this.Max >= float.MinValue);
 
         /// <summary>
         /// Returns the fully qualified type name of this instance.

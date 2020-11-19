@@ -24,15 +24,6 @@ namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
             _weightMatrixAlgorithm = weightMatrixAlgorithm;
             _edgeBasedSimplification = edgeBasedSimplification;
         }
-        
-        /// <inheritdoc />
-        public IEnumerable<Result<Route>> BuildRoutes(IEnumerable<(int vehicle, IEnumerable<int> tour)> solution)
-        {
-            foreach (var vehicleAndTour in solution)
-            {
-                yield return this.BuildRoute(vehicleAndTour);
-            }
-        }
 
         public bool IsDirected { get; } = true;
 
@@ -55,120 +46,56 @@ namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
 
         RouterDb IModelMapping.RouterDb => _weightMatrixAlgorithm.Router.Db;
 
-        private Result<Route> BuildRoute((int vehicle, IEnumerable<int> tour) vehicleAndTour)
+        /// <inheritdoc />
+        public IEnumerable<Result<Route>> BuildRoutesBetweenVisits((int vehicle, IEnumerable<int> tour) tourAndVehicle)
         {
-            try
+            // TODO: we need a better more generic way of handling this. Current rules are:
+            // - use vehicle departure and arrival to close a tour or not.
+            // - close a tour by default when both departure and arrival are null.
+            // PROBLEM: this doesn't support the case where we have a vehicle with arrival and departure null and we generate open-tours.
+            // SUGGESTED FIX: look at the enumerable differently include all visits, even if that means closing the tour in the enumerable.
+            var vehicle = _mappedModel.VehiclePool.Vehicles[tourAndVehicle.vehicle];
+
+            var first = -1;
+            var index = 0;
+            RouterPoint? previousRouterPoint = null;
+            var previous = -1;
+            foreach (var v in tourAndVehicle.tour)
             {
-                // TODO: we need a better more generic way of handling this. Current rules are:
-                // - use vehicle departure and arrival to close a tour or not.
-                // - close a tour by default when both departure and arrival are null.
-                // PROBLEM: this doesn't support the case where we have a vehicle with arrival and departure null and we generate open-tours.
-                // SUGGESTED FIX: look at the enumerable differently include all visits, even if that means closing the tour in the enumerable.
-                var vehicle = _mappedModel.VehiclePool.Vehicles[vehicleAndTour.vehicle];
-                
-                Route route = null;
-                var first = -1;
-                var index = 0;
-                RouterPoint previousRouterPoint = null;
-                var previous = -1;
-                foreach (var v in vehicleAndTour.tour)
-                {   
-                    // gets the visits on the current segment.
-                    var visits = this.FindOriginalVisits(v);
-                    
-                    // builds the segment route if needed.
-                    Route segmentRoute = null;
-                    if (visits.Count > 1)
-                    {
-                        segmentRoute = this.RouteAlongOriginalVisits(visits, index);
-                    }
-                    
-                    if (first < 0)
-                    {
-                        route = segmentRoute;
-                        first = v;
-                    }
-                    else
-                    {
-                        // append route from previous segment to first arrival location in current segment..
-                        var arrivalRouterPoint = visits[0].routerPoint;
-                        var localResult = this.AppendRoute(route, previousRouterPoint, index, previous,
-                            arrivalRouterPoint, index, v);
-                        if (localResult.IsError)
-                        {
-                            return localResult;
-                        }
-                        route = localResult.Value;
+                // gets the visits on the current segment.
+                var visits = this.FindOriginalVisits(v);
 
-                        // append local segment route if any.
-                        if (segmentRoute != null)
-                        { 
-                            route = route.Concatenate(segmentRoute);
-                        }
+                if (first < 0)
+                {
+                    var segmentRoutes = this.RoutesAlongOriginalVisits(visits, index);
+                    foreach (var segmentRoute in segmentRoutes)
+                    {
+                        yield return segmentRoute;
                     }
-
-                    // keep some data on the previous segment.
-                    previousRouterPoint = visits[visits.Count - 1].routerPoint;
-                    previous = v;
-                    index += visits.Count;
+                    first = v;
                 }
-                
-                // 3 options:
-                // OPEN:
-                //   when:
-                //     -> vehicle.arrival is not set and vehicle.departure is set.
-                //   action: 
-                //     -> none.
-                // FIXED:
-                //   when:
-                //     -> vehicle.arrival is set and vehicle.departure is set but to different visits.
-                //   action:
-                //     -> none, all visits should be there.
-                // CLOSED:
-                //   when:
-                //     ->  vehicle.arrival and vehicle.departure is not set is treated as closed.
-                //     ->  vehicle.arrival and vehicle.departure are set but both to the same visit and 
-                //            it matches the first directed visit.
-                //   action:
-                //     ->  add connection between the last directed visit and the first directed visit and close the tour.
-                
-//                if (vehicle.Arrival.HasValue &&
-//                    vehicle.Departure.HasValue &&
-//                    vehicle.Arrival == vehicle.Departure &&
-//                    previous != 0)
-//                { // CLOSED.
-//                    if (DirectedHelper.ExtractVisit(first) != vehicle.Arrival.Value)
-//                    {
-//                        throw new Exception($"Vehicle should match a tour starting at {vehicle.Departure} but the start of the tour is at:" +
-//                                            $"{DirectedHelper.ExtractVisit(first)}");
-//                    }
-//                    var localResult = AppendRoute(route, index, previous,  0, first);
-//                    if (localResult.IsError)
-//                    {
-//                        return localResult;
-//                    }
-//                    
-//                    route = localResult.Value;
-//                }
-//
-//                if (!vehicle.Arrival.HasValue &&
-//                    !vehicle.Departure.HasValue &&
-//                    previous != 0)
-//                { // CLOSED.
-//                    var localResult = AppendRoute(route, index, previous, 0, first);
-//                    if (localResult.IsError)
-//                    {
-//                        return localResult;
-//                    }
-//                    
-//                    route = localResult.Value;
-//                }
-                
-                return new Result<Route>(route);
-            }
-            catch (Exception e)
-            {
-                return new Result<Route>(e.Message);
+                else
+                {
+                    // append route from previous segment to first arrival location in current segment.
+                    if (previousRouterPoint != null)
+                    {
+                        var arrivalRouterPoint = visits[0].routerPoint;
+                        yield return this.BuildRoute(previousRouterPoint, index, previous,
+                            arrivalRouterPoint, index, v);
+                    }
+
+                    // append local segment route if any.
+                    var segmentRoutes = this.RoutesAlongOriginalVisits(visits, index);
+                    foreach (var segmentRoute in segmentRoutes)
+                    {
+                        yield return segmentRoute;
+                    }
+                }
+
+                // keep some data on the previous segment.
+                previousRouterPoint = visits[visits.Count - 1].routerPoint;
+                previous = v;
+                index += visits.Count;
             }
         }
 
@@ -216,24 +143,27 @@ namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
             return originalVisits;
         }
 
-        private Route RouteAlongOriginalVisits(List<(int visit, RouterPoint routerPoint)> routerPoints, int startIndex)
+        private IEnumerable<Result<Route>> RoutesAlongOriginalVisits(List<(int visit, RouterPoint routerPoint)> routerPoints, int startIndex)
         {
-            Route route = null;
             for (var i = 1; i < routerPoints.Count; i++)
             {
-                var localRoute = _weightMatrixAlgorithm.Router.Calculate(_weightMatrixAlgorithm.Profile,
+                var localRouteResult = _weightMatrixAlgorithm.Router.TryCalculate(_weightMatrixAlgorithm.Profile,
                     routerPoints[i - 1].routerPoint, routerPoints[i].routerPoint);
-                
-                localRoute.SetOrderAndIndex(routerPoints[i - 1].visit, (i - 1) + startIndex,
-                    routerPoints[i].visit, (i) + startIndex);
-                
-                route = route == null ? localRoute : route.Concatenate(localRoute);
-            }
 
-            return route;
+                if (localRouteResult.IsError)
+                {
+                    yield return localRouteResult;
+                    continue;
+                }
+                
+                localRouteResult.Value.SetOrderAndIndex(routerPoints[i - 1].visit, (i - 1) + startIndex,
+                    routerPoints[i].visit, (i) + startIndex);
+
+                yield return localRouteResult;
+            }
         }
 
-        private Result<Route> AppendRoute(Route route, RouterPoint visit1RouterPoint, int directedVisit1Index, int directedVisit1, 
+        private Result<Route> BuildRoute(RouterPoint visit1RouterPoint, int directedVisit1Index, int directedVisit1, 
             RouterPoint visit2RouterPoint, int directedVisit2Index, int directedVisit2)
         {
             var weightHandler = _weightMatrixAlgorithm.Profile.DefaultWeightHandler(_weightMatrixAlgorithm.Router);
@@ -268,10 +198,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed.Simplified
             localRouteRaw.StripSource();
             localRouteRaw.StripTarget();
 
-            var localRoute = _weightMatrixAlgorithm.Router.BuildRoute(_weightMatrixAlgorithm.Profile, weightHandler, visit1RouterPoint, visit2RouterPoint, localRouteRaw);
-            
-            route = route == null ? localRoute.Value : route.Concatenate(localRoute.Value);
-            return new Result<Route>(route);
+            return _weightMatrixAlgorithm.Router.BuildRoute(_weightMatrixAlgorithm.Profile, weightHandler, visit1RouterPoint, visit2RouterPoint, localRouteRaw);
         }
 
         /// <inheritdoc />
