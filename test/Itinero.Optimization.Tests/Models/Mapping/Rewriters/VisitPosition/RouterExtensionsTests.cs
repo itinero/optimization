@@ -33,7 +33,7 @@ namespace Itinero.Optimization.Tests.Models.Mapping.Rewriters.VisitPosition
             var snap = router.Resolve(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), left);
 
             var angle = snap.RelativeAngle(routerDb);
-            Assert.True(angle > 45 && angle < 135);
+            Assert.True(angle > 225 && angle < 315);
         }
         
         [Fact]
@@ -60,7 +60,7 @@ namespace Itinero.Optimization.Tests.Models.Mapping.Rewriters.VisitPosition
             var snap = router.Resolve(Itinero.Osm.Vehicles.Vehicle.Car.Fastest(), right);
 
             var angle = snap.RelativeAngle(routerDb);
-            Assert.True(angle > 180 + 45 && angle < 180 + 135);
+            Assert.True(angle > 45 && angle < 135);
         }
     }
 }
