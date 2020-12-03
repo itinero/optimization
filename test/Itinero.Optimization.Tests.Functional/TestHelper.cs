@@ -12,6 +12,7 @@ namespace Itinero.Optimization.Tests.Functional
             var result = func.TestPerf(name);
             result.WriteStats();
             result.WriteGeoJson(name + ".geojson");
+            result.WriteJson(name + ".json");
             return result;
         }
         

@@ -100,6 +100,23 @@ namespace Itinero.Optimization.Tests.Functional
         }
         
         /// <summary>
+        /// Writes the routes as geojson to the given file names.
+        /// </summary>
+        public static void WriteJson(this Result<Route> result, string fileName)
+        {
+            var directory = new DirectoryInfo("result");
+            if (!directory.Exists)
+            {
+                directory.Create();
+            }
+
+            if (result.IsError) return;
+            var route = result.Value;
+            File.WriteAllText(Path.Combine(directory.FullName,
+                string.Format(fileName)), route.ToJson());
+        }
+        
+        /// <summary>
         /// Writes all the routes to one geojson file.
         /// </summary>
         public static void WriteGeoJsonOneFile(this IEnumerable<Route> routes, string fileName)

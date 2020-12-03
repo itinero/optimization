@@ -1,0 +1,84 @@
+{
+  "type": "FeatureCollection",
+  "name": "stops",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": null,
+        "oneway": null,
+        "highway": null,
+        "maxspeed": null,
+        "profile": null,
+        "distance": "0",
+        "time": "0",
+        "bridge": null,
+        "tunnel": null,
+        "maxheight": null,
+        "index": "0",
+        "order": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.333431,
+          52.072308
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": null,
+        "oneway": null,
+        "highway": null,
+        "maxspeed": null,
+        "profile": null,
+        "distance": "2995.3882",
+        "time": "360.65613",
+        "bridge": null,
+        "tunnel": null,
+        "maxheight": null,
+        "index": "17",
+        "order": "1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.30597,
+          52.061623
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": null,
+        "oneway": null,
+        "highway": null,
+        "maxspeed": null,
+        "profile": null,
+        "distance": "428.053",
+        "time": "68.6738",
+        "bridge": null,
+        "tunnel": null,
+        "maxheight": null,
+        "index": "6",
+        "order": "2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3070045,
+          52.060944
+        ]
+      }
+    }
+  ]
+}

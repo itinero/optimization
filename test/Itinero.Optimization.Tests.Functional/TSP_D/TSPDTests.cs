@@ -16,15 +16,16 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
         /// </summary>
         public static void Run()
         {
-            Run1Wechelderzande();
-            Run2Hengelo();
-            Run3Problem1Spijkenisse();
-            Run4Problem2Hengelo();
-            Run5Problem3();
-            Run6Problem4WechelderzandeWithSimplifcation();
-            Run7WechelderzandeNoLeftVisits();
-            Run8WechelderzandeNoLeftVisits();
-            Run9Problem1Spijkenisse();
+            // Run1Wechelderzande();
+            // Run2Hengelo();
+            // Run3Problem1Spijkenisse();
+            // Run4Problem2Hengelo();
+            // Run5Problem3();
+            // Run6Problem4WechelderzandeWithSimplifcation();
+            // Run7WechelderzandeNoLeftVisits();
+            // Run8WechelderzandeNoLeftVisits();
+            // Run9Problem1Spijkenisse();
+            Run10Problem5DenHaag();
         }
 
         public static void Run1Wechelderzande()
@@ -275,6 +276,30 @@ namespace Itinero.Optimization.Tests.Functional.TSP_D
             func.Run("TSPD-9-spijkenisse-no-left-closed");
             func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60).GetRoutes().First());
             func.Run("TSPD-9-spijkenisse-no-left-fixed");
+        }
+        
+        public static void Run10Problem5DenHaag()
+        {
+            // build routerdb and save the result.
+            var routerDb = Staging.RouterDbBuilder.Build("query10");
+            var vehicle = routerDb.GetSupportedVehicle("car");
+            var router = new Router(routerDb);
+            
+            var locations = Staging.StagingHelpers.GetLocations(
+                Staging.StagingHelpers.GetFeatureCollection("TSP_D.data.problem5-denhaag.geojson"));  
+            
+            // add a new model mapper
+            var optimizerConfiguration = new OptimizerConfiguration(modelMapperRegistry: 
+                new ModelMapperRegistry(new ModelMapperWithRewriter(DirectedModelMapper.Default, new VisitPositionRewriter())));
+            var optimizer = router.Optimizer(configuration: optimizerConfiguration);
+
+            // calculate TSPD.
+            var func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, null, turnPenalty: 60).GetRoutes().First());
+            func.Run("TSPD-10-denhaag-no-left-open");  
+            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, 0, turnPenalty: 60).GetRoutes().First());
+            func.Run("TSPD-10-denhaag-no-left-closed");
+            func = new Func<Result<Route>>(() => optimizer.Optimize("car", locations, out _, 0, locations.Length - 1, turnPenalty: 60).GetRoutes().First());
+            func.Run("TSPD-10-denhaag-no-left-fixed");
         }
     }
 }

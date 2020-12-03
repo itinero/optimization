@@ -36,7 +36,7 @@ namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
             
             // calculate angle at snapLocation for fromLocation ----> snapLocation ----> originalLocation
             // angle is clockwise
-            var angleRadians = DirectionCalculator.Angle(originalLocation, snapLocation, fromLocation);
+            var angleRadians = DirectionCalculator.Angle(fromLocation, snapLocation, originalLocation);
             return angleRadians.ToDegrees().NormalizeDegrees();
         }
     }

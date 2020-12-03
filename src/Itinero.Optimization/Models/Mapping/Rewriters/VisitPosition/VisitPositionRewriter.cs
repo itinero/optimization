@@ -38,12 +38,16 @@ namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
                 "Cannot prevent visits with positions using an undirected mapping.");
 
             // figure out what directions to prevent per visit.
-            var prevent = new bool[model.Visits.Length * 2];
+            // an array with visits to prevent:
+            // - null:  nothing to prevent.
+            // - false: backward to prevent.
+            // - true:  forward to prevent.
+            var prevent = new bool?[model.Visits.Length];
             for (var v = 0; v < model.Visits.Length; v++)
             {
                 // get settings and any per-visit settings.
                 var visitAngleFunc = angleFunc;
-                var visitLeft = _settings.Left;
+                var preventLeft = _settings.Left;
                 if (perVisitSettings != null)
                 {
                     var visitSettings = perVisitSettings(v);
@@ -53,8 +57,7 @@ namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
                 }
                 
                 // don't prevent by default.
-                prevent[v * 2 + 0] = false;
-                prevent[v * 2 + 1] = false;
+                prevent[v] = null;
                 
                 // calculate angle for visit relative to edge direction.
                 var vSnap = mapping.GetVisitSnapping(v);
@@ -66,22 +69,16 @@ namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
                 }
 
                 // determine left/right.
-                var isLeft = angle > 0 && angle < 180;
+                var isLeft = !(angle > 0 && angle < 180);
                 if (isLeft)
                 {
-                    // visit is on the left.
-                    // prevent forward if left is to be prevented.
-                    prevent[v * 2 + 0] = !visitLeft;
-                    // prevent backward if right is to be prevented.
-                    prevent[v * 2 + 1] = visitLeft;
+                    // visit is on the left, prevent forward.
+                    prevent[v] = preventLeft;
                 }
                 else 
                 {
-                    // visit is on the right.
-                    // prevent forward if right is to be prevented.
-                    prevent[v * 2 + 0] = visitLeft;
-                    // prevent backward if left is to be prevented.
-                    prevent[v * 2 + 1] = !visitLeft;
+                    // visit is on the right, prevent backward.
+                    prevent[v] = !preventLeft;
                 }
             }
 
@@ -103,55 +100,80 @@ namespace Itinero.Optimization.Models.Mapping.Rewriters.VisitPosition
             travelCosts = rewrittenTravelCosts;
 
             // rewrite costs.
-            for (var v1 = 0; v1 < model.Visits.Length; v1++)
+            for (var visit = 0; visit < model.Visits.Length; visit++)
             {
-                var v1b = prevent[v1 * 2 + 0];
-                var v1f = prevent[v1 * 2 + 1];
-                for (var v2 = 0; v2 < model.Visits.Length; v2++)
+                // null, nothing to do
+                // false, prevent backward
+                // true, prevent forward.
+                var visitPrevent = prevent[visit];
+                if (visitPrevent == null) continue;
+
+                for (var otherVisit = 0; otherVisit < model.Visits.Length; otherVisit++)
                 {
-                    if (v1 == v2) continue;
+                    //if (v1 == v2) continue;
                     
-                    var v2b = prevent[v2 * 2 + 0];
-                    var v2f = prevent[v2 * 2 + 1];
+                    // treat otherVisit as from.
+                    var bb = travelCosts.Costs[otherVisit * 2 + 0][visit * 2 + 0];
+                    var bf = travelCosts.Costs[otherVisit * 2 + 0][visit * 2 + 1];
+                    var fb = travelCosts.Costs[otherVisit * 2 + 1][visit * 2 + 0];
+                    var ff = travelCosts.Costs[otherVisit * 2 + 1][visit * 2 + 1];
 
-                    var bb = travelCosts.Costs[v1 * 2 + 0][v2 * 2 + 0];
-                    var bf = travelCosts.Costs[v1 * 2 + 0][v2 * 2 + 1];
-                    var fb = travelCosts.Costs[v1 * 2 + 1][v2 * 2 + 0];
-                    var ff = travelCosts.Costs[v1 * 2 + 1][v2 * 2 + 1];
-
-                    if (v1f)
-                    {
-                        ff = float.MaxValue;
+                    if (!visitPrevent.Value)
+                    { // prevent backward.
+                        bb = float.MaxValue;
                         fb = float.MaxValue;
                     }
-                    if (v1b)
-                    {
+                    else
+                    { // prevent forward.
                         bf = float.MaxValue;
-                        bb = float.MaxValue;
-                    }
-                    if (v2f)
-                    {
                         ff = float.MaxValue;
-                        bf = float.MaxValue;
-                    }
-                    if (v2b)
-                    {
-                        fb = float.MaxValue;
-                        bb = float.MaxValue;
                     }
                     
                     if (ff >= float.MaxValue &&
                         fb >= float.MaxValue &&
                         bf >= float.MaxValue &&
                         bb >= float.MaxValue)
-                    {
-                        continue;
+                    { // not reachable anymore, don't prevent direction.
+                        
+                    }
+                    else
+                    { // still reachable, prevent direction.
+                        travelCosts.Costs[otherVisit * 2 + 0][visit * 2 + 0] = bb;
+                        travelCosts.Costs[otherVisit * 2 + 0][visit * 2 + 1] = bf;
+                        travelCosts.Costs[otherVisit * 2 + 1][visit * 2 + 0] = fb;
+                        travelCosts.Costs[otherVisit * 2 + 1][visit * 2 + 1] = ff;
+                    }
+
+                    // treat otherVisit as to.
+                    bb = travelCosts.Costs[visit * 2 + 0][otherVisit * 2 + 0];
+                    bf = travelCosts.Costs[visit * 2 + 0][otherVisit * 2 + 1];
+                    fb = travelCosts.Costs[visit * 2 + 1][otherVisit * 2 + 0];
+                    ff = travelCosts.Costs[visit * 2 + 1][otherVisit * 2 + 1];
+                    if (!visitPrevent.Value)
+                    { // prevent backward.
+                        bb = float.MaxValue;
+                        bf = float.MaxValue;
+                    }
+                    else
+                    { // prevent forward.
+                        fb = float.MaxValue;
+                        ff = float.MaxValue;
                     }
                     
-                    travelCosts.Costs[v1 * 2 + 0][v2 * 2 + 0] = bb;
-                    travelCosts.Costs[v1 * 2 + 0][v2 * 2 + 1] = bf;
-                    travelCosts.Costs[v1 * 2 + 1][v2 * 2 + 0] = fb;
-                    travelCosts.Costs[v1 * 2 + 1][v2 * 2 + 1] = ff;
+                    if (ff >= float.MaxValue &&
+                        fb >= float.MaxValue &&
+                        bf >= float.MaxValue &&
+                        bb >= float.MaxValue)
+                    { // not reachable anymore, don't prevent direction.
+                        
+                    }
+                    else
+                    { // still reachable, prevent direction.
+                        travelCosts.Costs[visit * 2 + 0][otherVisit * 2 + 0] = bb;
+                        travelCosts.Costs[visit * 2 + 0][otherVisit * 2 + 1] = bf;
+                        travelCosts.Costs[visit * 2 + 1][otherVisit * 2 + 0] = fb;
+                        travelCosts.Costs[visit * 2 + 1][otherVisit * 2 + 1] = ff;
+                    }
                 }
             }
 
