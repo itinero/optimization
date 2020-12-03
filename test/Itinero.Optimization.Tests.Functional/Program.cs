@@ -26,21 +26,21 @@ namespace Itinero.Optimization.Tests.Functional
 #endif
 
             // shared tools functional testing.
-            // SeedHeuristicsTest.TestLocations1_GetSeedsKMeans();
-            //
-            // // CVRP_ND tools functional testing.
-            // SeededConstructionHeuristicTests.TestLocations1_SeededConstructionHeuristic();
-            //
-            // // quick hull functional testing.
-            // QuickHullTests.Run();
-            //
-            // // invoke case-specific tests.
-            // TSP.TSPTests.Run();
+            SeedHeuristicsTest.TestLocations1_GetSeedsKMeans();
+            
+            // CVRP_ND tools functional testing.
+            SeededConstructionHeuristicTests.TestLocations1_SeededConstructionHeuristic();
+            
+            // quick hull functional testing.
+            QuickHullTests.Run();
+            
+            // invoke case-specific tests.
+            TSP.TSPTests.Run();
             TSP_D.TSPDTests.Run();
-            // TSP_TW.TSPTWTests.Run();
-            // STSP.STSPTests.Run();
-            // CVRP.CVRPTests.Run();
-            // CVRP_ND.CVRPNDTests.Run();
+            TSP_TW.TSPTWTests.Run();
+            STSP.STSPTests.Run();
+            CVRP.CVRPTests.Run();
+            CVRP_ND.CVRPNDTests.Run();
         }
 
         public static bool DoIntermediates { get; set; } = false;
