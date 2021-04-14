@@ -33,19 +33,19 @@ namespace Itinero.Optimization.Solvers.Shared.EAX
         /// <param name="weightFunc">The weight function.</param>
         /// <param name="maxOffspring">The maximum offspring parameter.</param>
         /// <param name="strategy">The strategy.</param>
-        /// <param name="forwardNearestNeigbours">The forward nearest neighbours.</param>
+        /// <param name="forwardNearestNeighbours">The forward nearest neighbours.</param>
         /// <returns>All details about the new tour.</returns>
         /// <exception cref="ArgumentException"></exception>
         public static (bool success, float weight, Tour newTour) DoEAXWith(this Tour tour1, Tour tour2, Func<int, int, float> weightFunc, 
             int maxOffspring = 30, EAXSelectionStrategyEnum strategy = EAXSelectionStrategyEnum.SingleRandom,
-            NearestNeighbourArray forwardNearestNeigbours = null)
+            NearestNeighbourArray? forwardNearestNeighbours = null)
         {
             // TODO: PERFORMANCE Check if we can reduce allocations here.
             // REMARK: assumed is that whoever calls this know it only supports 'closed' problems
             //     and that they convert the tours if needed.
             
-            if (tour1.First != tour1.Last) throw new ArgumentException($"{nameof(tour1)} is now closed.");
-            if (tour2.First != tour2.Last) throw new ArgumentException($"{nameof(tour2)} is now closed.");
+            if (tour1.First != tour1.Last) throw new ArgumentException($"{nameof(tour1)} is not closed.");
+            if (tour2.First != tour2.Last) throw new ArgumentException($"{nameof(tour2)} is not closed.");
             if (tour1.First != tour2.First &&
                 tour1.Last != tour2.Last) throw new ArgumentException($"{nameof(tour1)} and {nameof(tour2)} must have the same first and last visit.");
             
@@ -150,7 +150,7 @@ namespace Itinero.Optimization.Solvers.Shared.EAX
                         ignoreList[from] = true;
                     } while (from != currentTour.Key);
 
-                    if (forwardNearestNeigbours != null)
+                    if (forwardNearestNeighbours != null)
                     { // only try tours containing nn.
 
                         from = currentTour.Key;
@@ -160,7 +160,7 @@ namespace Itinero.Optimization.Solvers.Shared.EAX
                         {
                             // TODO: this can be optimized by using one array and copying of the data from the cache or use an enumerator to prevent a new array in every loop.
                             // check the nearest neighbours of from
-                            foreach (var nn in forwardNearestNeigbours[from])
+                            foreach (var nn in forwardNearestNeighbours[from])
                             {
                                 var nnTo = nextArrayA[nn];
 

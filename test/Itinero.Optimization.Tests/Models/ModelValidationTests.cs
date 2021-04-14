@@ -153,17 +153,13 @@ namespace Itinero.Optimization.Tests.Models
                     {
                         Latitude = 1,
                         Longitude = 2,
-                        // TimeWindow = new TimeWindow()
-                        // {
-                        //     Min = 100,
-                        //     Max = 10
-                        // }
+                        TimeWindow = new TimeWindow(new [] { 100f, 10 })
                     }
                 }
             };
 
             Assert.False(model.IsValid(out var reason));
-            Assert.Equal("Invalid visit: Time window for visit at index 0 invalid: Max has to be >= min: [100, 10]", reason);
+            Assert.Equal("Invalid visit: Time window for visit at index 0 invalid: Time window not valid: [100, 10]", reason);
         }
 
         /// <summary>

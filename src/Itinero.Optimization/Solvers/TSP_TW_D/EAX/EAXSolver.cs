@@ -1,46 +1,29 @@
-﻿/*
- *  Licensed to SharpSoftware under one or more contributor
- *  license agreements. See the NOTICE file distributed with this work for 
- *  additional information regarding copyright ownership.
- * 
- *  SharpSoftware licenses this file to you under the Apache License, 
- *  Version 2.0 (the "License"); you may not use this file except in 
- *  compliance with the License. You may obtain a copy of the License at
- * 
- *       http://www.apache.org/licenses/LICENSE-2.0
- * 
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
 using System.Threading;
 using Itinero.Logging;
 using Itinero.Optimization.Solvers.Tours;
-using Itinero.Optimization.Solvers.TSP_TW.Operators;
+using Itinero.Optimization.Solvers.TSP_TW_D.Operators;
 using Itinero.Optimization.Strategies;
 using Itinero.Optimization.Strategies.GA;
 using Itinero.Optimization.Strategies.Tools.Selectors;
 
-namespace Itinero.Optimization.Solvers.TSP_TW.EAX
+namespace Itinero.Optimization.Solvers.TSP_TW_D.EAX
 {
+
     /// <summary>
     /// A solver using a GA and the edge-assembly crossover.
     /// </summary> 
-    internal class EAXSolver : Strategy<TSPTWProblem, Candidate<TSPTWProblem, Tour>>
+    internal class EAXSolver : Strategy<TSPTWDProblem, Candidate<TSPTWDProblem, Tour>>
     {
-        private readonly GAStrategy<TSPTWProblem, Candidate<TSPTWProblem, Tour>> _gaStrategy;
+        private readonly GAStrategy<TSPTWDProblem, Candidate<TSPTWDProblem, Tour>> _gaStrategy;
         
         /// <summary>
         /// Creates a new EAX-solver.
         /// </summary>
-        public EAXSolver(Strategy<TSPTWProblem, Candidate<TSPTWProblem, Tour>>? generator = null, 
-            Operator<Candidate<TSPTWProblem, Tour>>? mutation = null, GASettings? settings = null, ISelector<Candidate<TSPTWProblem, Tour>>? selector = null)
+        public EAXSolver(Strategy<TSPTWDProblem, Candidate<TSPTWDProblem, Tour>>? generator = null, 
+            Operator<Candidate<TSPTWDProblem, Tour>>? mutation = null, GASettings? settings = null, ISelector<Candidate<TSPTWDProblem, Tour>>? selector = null)
         {
             generator ??= RandomSolver.Default;
-            mutation ??= new Operator<Candidate<TSPTWProblem, Tour>>[]
+            mutation ??= new Operator<Candidate<TSPTWDProblem, Tour>>[]
             {
                 Random1ShiftPerturber.Default,
                 Local2OptOperator.Default, 
@@ -51,7 +34,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
             };
             var crossOver = EAXOperator.Default;
             
-            _gaStrategy = new GAStrategy<TSPTWProblem, Candidate<TSPTWProblem, Tour>>(generator, crossOver, mutation, settings, selector,
+            _gaStrategy = new GAStrategy<TSPTWDProblem, Candidate<TSPTWDProblem, Tour>>(generator, crossOver, mutation, settings, selector,
                 useParallel: false);
             
             this.Name = $"EAX_{_gaStrategy.Name}";
@@ -59,7 +42,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
 
         public override string Name { get; }
 
-        public override Candidate<TSPTWProblem, Tour> Search(TSPTWProblem problem)
+        public override Candidate<TSPTWDProblem, Tour> Search(TSPTWDProblem problem)
         {
             if (problem.Count < 5)
             { // use brute-force solver when problem is very small.
@@ -76,7 +59,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
                 // TODO: instead of recalculating the fitness value *should* be identical, confirm this with more testing.
                 var tour = new Tour(convertedCandidate.Solution, null);
 
-                return new Candidate<TSPTWProblem, Tour>()
+                return new Candidate<TSPTWDProblem, Tour>()
                 {
                     Problem = problem,
                     Solution = tour,
@@ -95,7 +78,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
                 var tour = convertedCandidate.Solution;
                 tour.InsertAfter(System.Linq.Enumerable.Last(tour), problem.Last.Value);
                 tour = new Tour(tour, problem.Last.Value);
-                return new Candidate<TSPTWProblem, Tour>()
+                return new Candidate<TSPTWDProblem, Tour>()
                 {
                     Problem = problem,
                     Solution = tour,

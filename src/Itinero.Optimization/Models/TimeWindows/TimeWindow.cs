@@ -8,6 +8,19 @@ namespace Itinero.Optimization.Models.TimeWindows
     /// <summary>
     /// Represents a time window.
     /// </summary>
+    /// <remarks>
+    /// The times are interpreted as follows:
+    /// - When even # of values, each pair is one window.
+    /// - When uneven # of values the last value represents a window towards infinity.
+    ///
+    /// For example:
+    /// - no values  : [0, ∞[
+    /// - 1 value    : [x, ∞[
+    /// - 2 values   : [x, y]
+    /// - 3 values   : [x, y], [z, ∞[
+    /// - 4 values   : [w, x], [y, z]
+    ///
+    /// </remarks>
     public class TimeWindow : IEnumerable<(float start, float end)>
     {
         /// <summary>
@@ -42,7 +55,8 @@ namespace Itinero.Optimization.Models.TimeWindows
         /// <returns></returns>
         public override string ToString()
         {
-            if (this.Times == null) return "[0, ∞[";
+            if (this.IsEmpty) return "[0, ∞[";
+            
             var builder = new StringBuilder();
             for (var t = 0; t < this.Times.Count; t++)
             {

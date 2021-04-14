@@ -99,6 +99,11 @@ namespace Itinero.Optimization.Solvers.Shared
         public bool IsEmpty => this.Times == null ||  this.Times.Count == 0;
 
         /// <summary>
+        /// Gets the default, empty, time window.
+        /// </summary>
+        public static TimeWindow Empty => new TimeWindow();
+
+        /// <summary>
         /// Returns the fully qualified type name of this instance.
         /// </summary>
         /// <returns></returns>

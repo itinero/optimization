@@ -108,7 +108,7 @@ namespace Itinero.Optimization.Tests.Models.Mapping
             };
 
             var json = model.ToJson();
-            Assert.Equal("{\"TravelCosts\":[{\"Metric\":\"time\",\"Costs\":[[0.0,1.0],[2.0,3.0]],\"Directed\":false}],\"Visits\":[{\"Latitude\":1.01,\"Longitude\":1.02,\"TimeWindow\":{\"Min\":0.0,\"Max\":0.0,\"IsEmpty\":true},\"VisitCosts\":[{\"Metric\":\"time\",\"Value\":100.0}]},{\"Latitude\":2.01,\"Longitude\":2.02,\"TimeWindow\":{\"Min\":0.0,\"Max\":0.0,\"IsEmpty\":true},\"VisitCosts\":[{\"Metric\":\"time\",\"Value\":200.0}]}],\"VehiclePool\":{\"Vehicles\":[{\"Metric\":\"time\",\"Profile\":\"car\",\"Departure\":null,\"Arrival\":null,\"TurnPentalty\":0.0,\"CapacityConstraints\":[{\"Metric\":\"weight\",\"Capacity\":100.0}]}],\"Reusable\":false}}",
+            Assert.Equal("{\"TravelCosts\":[{\"Metric\":\"time\",\"Costs\":[[0.0,1.0],[2.0,3.0]],\"Directed\":false}],\"Visits\":[{\"Latitude\":1.01,\"Longitude\":1.02,\"TimeWindow\":[],\"VisitCosts\":[{\"Metric\":\"time\",\"Value\":100.0}]},{\"Latitude\":2.01,\"Longitude\":2.02,\"TimeWindow\":[],\"VisitCosts\":[{\"Metric\":\"time\",\"Value\":200.0}]}],\"VehiclePool\":{\"Vehicles\":[{\"Metric\":\"time\",\"Profile\":\"car\",\"Departure\":null,\"Arrival\":null,\"TurnPentalty\":0.0,\"CapacityConstraints\":[{\"Metric\":\"weight\",\"Capacity\":100.0}]}],\"Reusable\":false}}",
                 json);
         }
     }
