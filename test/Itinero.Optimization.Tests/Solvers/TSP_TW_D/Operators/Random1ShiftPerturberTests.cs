@@ -16,7 +16,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW_D.Operators
         [Fact]
         public void Random1ShiftPerturber_ShouldJustUseRandom1ShiftOperation()
         {
-            var problem = new TSPTWDProblem(0, null, WeightMatrixHelpers.Build(5, 10),
+            var problem = new TSPTWDProblem(0, null, WeightMatrixHelpers.BuildDirected(5, 10),
                 2, TimeWindowHelpers.Unlimited(5));
             var tour = new Tour(new[]
             {
@@ -47,12 +47,14 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW_D.Operators
                 }
                 Assert.Equal(count, tour.Count);
                 
-                var content = new HashSet<int>(tour);
-                Assert.Contains(0, content);
-                Assert.Contains(1, content);
-                Assert.Contains(2, content);
-                Assert.Contains(3, content);
-                Assert.Contains(4, content);
+                var solutionList = new List<int>(tour);
+                Assert.Equal(0, solutionList[0]);
+                Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 0)));
+                Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 1)));
+                Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 2)));
+                Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 3)));
+                Assert.True(solutionList.Remove(solutionList.Find(x => DirectedHelper.Extract(x).visit == 4)));
+                Assert.Empty(solutionList);
             }
         }
     }

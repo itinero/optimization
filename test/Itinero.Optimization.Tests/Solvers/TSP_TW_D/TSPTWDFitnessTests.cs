@@ -29,7 +29,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW_D
         [Fact]
         public void TSPTWDFitness_ShouldNotApplyPenaltiesWhenFeasible()
         {
-            var weights = WeightMatrixHelpers.Build(5, 2);
+            var weights = WeightMatrixHelpers.BuildDirected(5, 2);
             var windows = new TimeWindow[5];
             windows[2] = new TimeWindow()
             {
@@ -38,9 +38,15 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW_D
             var problem = new TSPTWDProblem(0, 0, weights, 2, windows);
             
             // create a feasible route.
-            var tour = new Tour(new int[] { 0, 2, 4, 1, 3 }, 0);
+            var tour = new Tour(new[]
+            {
+                DirectedHelper.BuildVisit(0, TurnEnum.ForwardForward),
+                DirectedHelper.BuildVisit(2, TurnEnum.ForwardForward),
+                DirectedHelper.BuildVisit(4, TurnEnum.ForwardForward),
+                DirectedHelper.BuildVisit(1, TurnEnum.ForwardForward),
+                DirectedHelper.BuildVisit(3, TurnEnum.ForwardForward)
+            }, DirectedHelper.BuildVisit(0, TurnEnum.ForwardForward));
 
-            // apply the 1-shift local search.
             var fitness = tour.Fitness(problem);
             Assert.Equal(10, fitness);
         }
@@ -48,7 +54,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW_D
         [Fact]
         public void TSPTWDFitness_ShouldApplyPenaltiesWhenUnfeasible()
         {
-            var weights = WeightMatrixHelpers.Build(5, 2);
+            var weights = WeightMatrixHelpers.BuildDirected(5, 2);
             var windows = new TimeWindow[5];
             windows[2] = new TimeWindow()
             {
@@ -56,8 +62,15 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW_D
             };
             var problem = new TSPTWDProblem(0, 0, weights, 2, windows);
 
-            // create a route with one shift.
-            var tour = new Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
+            // create a route with a violated window.
+            var tour = new Tour(new[]
+            {
+                DirectedHelper.BuildVisit(0, TurnEnum.ForwardForward),
+                DirectedHelper.BuildVisit(1, TurnEnum.ForwardForward),
+                DirectedHelper.BuildVisit(2, TurnEnum.ForwardForward),
+                DirectedHelper.BuildVisit(3, TurnEnum.ForwardForward),
+                DirectedHelper.BuildVisit(4, TurnEnum.ForwardForward)
+            }, DirectedHelper.BuildVisit(0, TurnEnum.ForwardForward));
 
             var fitness = tour.Fitness(problem, timeWindowViolationPenaltyFactor: 1000000);
             Assert.Equal(1000010, fitness);
@@ -66,7 +79,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW_D
         [Fact]
         public void TSPTWDFitness_LastViolated_ShouldApplyPenalty()
         {
-            var weights = WeightMatrixHelpers.Build(5, 2);
+            var weights = WeightMatrixHelpers.BuildDirected(5, 2);
             var windows = new TimeWindow[5];
             windows[4] = new TimeWindow()
             {
@@ -74,8 +87,15 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW_D
             };
             var problem = new TSPTWDProblem(0, 0, weights, 2, windows);
 
-            // create a route with one shift.
-            var tour = new Tour(new int[] { 0, 1, 2, 3, 4 }, 0);
+            // create a route with the last visit violated
+            var tour = new Tour(new[]
+            {
+                DirectedHelper.BuildVisit(0, TurnEnum.ForwardForward),
+                DirectedHelper.BuildVisit(1, TurnEnum.ForwardForward),
+                DirectedHelper.BuildVisit(2, TurnEnum.ForwardForward),
+                DirectedHelper.BuildVisit(3, TurnEnum.ForwardForward),
+                DirectedHelper.BuildVisit(4, TurnEnum.ForwardForward)
+            }, DirectedHelper.BuildVisit(0, TurnEnum.ForwardForward));
 
             var fitness = tour.Fitness(problem, timeWindowViolationPenaltyFactor: 1000000);
             Assert.Equal(5000010, fitness);

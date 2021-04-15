@@ -142,5 +142,20 @@ namespace Itinero.Optimization.Tests.Solvers
         {
             return (x) => array[(int)x];
         }
+        
+        /// <summary>
+        /// Sets all 4 directed weights.
+        /// </summary>
+        /// <param name="weights">The directed weights.</param>
+        /// <param name="from">The from visit.</param>
+        /// <param name="to">The to visit.</param>
+        /// <param name="weight">The weight.</param>
+        internal static void SetDirectedWeights(this float[][] weights, int from, int to, float weight)
+        {
+            weights[from * 2 + 0][to * 2 + 0] = weight;
+            weights[from * 2 + 0][to * 2 + 1] = weight;
+            weights[from * 2 + 1][to * 2 + 0] = weight;
+            weights[from * 2 + 1][to * 2 + 1] = weight;
+        }
     }
 }
