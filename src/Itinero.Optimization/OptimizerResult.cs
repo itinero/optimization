@@ -11,9 +11,9 @@ namespace Itinero.Optimization
         /// <summary>
         /// Creates a new result.
         /// </summary>
-        /// <param name="mappedModel"></param>
-        /// <param name="mapping"></param>
-        /// <param name="solution"></param>
+        /// <param name="mappedModel">The mapped model.</param>
+        /// <param name="mapping">The mapping.</param>
+        /// <param name="solution">The solution.</param>
         public OptimizerResult(MappedModel mappedModel, IModelMapping mapping, 
             IEnumerable<(int vehicle, IEnumerable<int> tour)> solution)
         {
@@ -25,9 +25,9 @@ namespace Itinero.Optimization
         /// <summary>
         /// Creates a new result.
         /// </summary>
-        /// <param name="mappedModel"></param>
-        /// <param name="mapping"></param>
-        /// <param name="errorMessage"></param>
+        /// <param name="mappedModel">The mapped model.</param>
+        /// <param name="mapping">The mapping.</param>
+        /// <param name="errorMessage">The error message.</param>
         public OptimizerResult(MappedModel mappedModel, IModelMapping mapping, string errorMessage)
         {
             this.MappedModel = mappedModel;

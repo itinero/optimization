@@ -30,9 +30,9 @@ namespace Itinero.Optimization.Models.Mapping.Default
     internal class DefaultModelMapping : IModelMapping
     {
         private readonly MappedModel _mappedModel;
-        private readonly WeightMatrixAlgorithm _weightMatrixAlgorithm;
+        private readonly IWeightMatrixAlgorithm<float> _weightMatrixAlgorithm;
 
-        public DefaultModelMapping(MappedModel mappedModel, WeightMatrixAlgorithm weightMatrixAlgorithm)
+        public DefaultModelMapping(MappedModel mappedModel, IWeightMatrixAlgorithm<float> weightMatrixAlgorithm)
         {
             _mappedModel = mappedModel;
             _weightMatrixAlgorithm = weightMatrixAlgorithm;
@@ -121,7 +121,7 @@ namespace Itinero.Optimization.Models.Mapping.Default
                 var originalVisit2 = _weightMatrixAlgorithm.OriginalLocationIndex(visit2);
                 return new Result<Route>(
                     $"Route could not be calculated between visit {originalVisit1}->{originalVisit2} " +
-                    $"between routerpoints {visit1RouterPoint}({routerPoint1})->{visit2RouterPoint}({routerPoint2})");
+                    $"between router points {visit1RouterPoint}({routerPoint1})->{visit2RouterPoint}({routerPoint2})");
             }
             var localRoute = localRouteResult.Value;
 
