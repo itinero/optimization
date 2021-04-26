@@ -16,6 +16,8 @@
  *  limitations under the License.
  */
 
+using System;
+
 namespace Itinero.Optimization.Solvers.Shared.Directed
 {
     /// <summary>
@@ -46,6 +48,12 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
     /// </summary>
     public static class TurnEnumExtensions
     {
+        /// <summary>
+        /// Returns all the possible turns.
+        /// </summary>
+        public static TurnEnum[] All = new[]
+            {TurnEnum.ForwardForward, TurnEnum.ForwardBackward, TurnEnum.BackwardForward, TurnEnum.BackwardBackward};
+        
         /// <summary>
         /// Returns a directed visit for the given turn and visit.
         /// </summary>

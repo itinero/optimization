@@ -40,7 +40,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW
         /// <param name="weights">The weights matrix.</param>
         /// <param name="windows">The time windows.</param>
         /// <param name="visits">The possible visits, all visits are possible if null.</param>
-        public TSPTWProblem(int first, int? last, float[][] weights, TimeWindow[] windows, IEnumerable<int> visits = null)
+        public TSPTWProblem(int first, int? last, float[][] weights, TimeWindow[] windows, IEnumerable<int>? visits = null)
         {
             this.First = first;
             _last = last;

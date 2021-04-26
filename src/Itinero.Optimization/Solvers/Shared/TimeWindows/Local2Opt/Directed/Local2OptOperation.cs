@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Itinero.Optimization.Solvers.Shared.Directed;
 using Itinero.Optimization.Solvers.Tours;
 
@@ -8,7 +7,7 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local2Opt.Directed
     internal static class Local2OptOperation
     {
         /// <summary>
-        /// Runs a local 2-opt search, 
+        /// Runs a local 2-opt local search in a first improvement strategy.
         /// </summary>
         /// <param name="tour">The tour.</param>
         /// <param name="weightFunc">The function to get weights.</param>
@@ -18,101 +17,87 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local2Opt.Directed
         /// <remarks>* 2-opt: Removes two edges and reconnects the two resulting paths in a different way to obtain a new tour.</remarks>
         public static bool Do2Opt(this Tour tour, Func<int, int, float> weightFunc, Func<TurnEnum, float> turnPenaltyFunc, TimeWindow[] windows)
         {
-            var customers = new List<int>(windows.Length + 1);
-            customers.AddRange(tour);
-            if (tour.Last == tour.First)
-            { // add last customer at the end if it's the same as the first one.
-                customers.Add(tour.Last.Value);
+            // iterate over all pairs and see if they can be exchanged.
+            
+            // calculate for each:
+            //     q1: v1->v2->v3->v4
+            //     q2: v5->v6->v7->v8
+            // exchanges:
+            //         v1->v6->v7->v4
+            //         v5->v2->v3->v8
+
+            float QuadWeight(Quad q)
+            {
+                return SequenceWeight(q.Visit1, q.Visit2, q.Visit3, q.Visit4);
             }
 
-            var weight12 = 0.0f;
-            if (windows[customers[0]].Min > weight12)
-            { // wait here!
-                weight12 = windows[customers[0]].Min;
+            float SequenceWeight(int v1, int v2, int v3, int v4)
+            {
+                return weightFunc(DirectedHelper.WeightIdDeparture(v1),
+                    DirectedHelper.WeightIdArrival(v2)) +
+                       weightFunc(DirectedHelper.WeightIdDeparture(v2),
+                    DirectedHelper.WeightIdArrival(v3)) + 
+                       weightFunc(DirectedHelper.WeightIdDeparture(v3),
+                    DirectedHelper.WeightIdArrival(v4)) + 
+                       turnPenaltyFunc(DirectedHelper.ExtractTurn(v2)) + 
+                       turnPenaltyFunc(DirectedHelper.ExtractTurn(v3));
             }
-            for (var edge1 = 0; edge1 < customers.Count - 3; edge1++)
-            { // iterate over all from-edges.
-                var edge11 = customers[edge1];
-                var edge12 = customers[edge1 + 1];
 
-                var weight11 = weight12;
-                weight12 += weightFunc(edge11, edge12);
-                if (windows[edge12].Min > weight12)
-                { // wait here!
-                    weight12 = windows[edge12].Min;
-                }
+            foreach (var q1 in tour.Quadruplets(true, true))
+            {
+                if (q1.Visit2 == Tour.NOT_SET && q1.Visit3 == Tour.NOT_SET) continue;
 
-                float betweenForward = 0;
-                for (var edge2 = edge1 + 2; edge2 < customers.Count - 1; edge2++)
+                var q1Weight = QuadWeight(q1);
+
+                var q1V2 = DirectedHelper.ExtractVisit(q1.Visit2);
+                var q1V3 = DirectedHelper.ExtractVisit(q1.Visit3);
+
+                foreach (var q2 in tour.Quadruplets(true, true))
                 {
-                    // iterate over all to-edges.
-                    var edge20 = customers[edge2 - 1];
-                    var edge21 = customers[edge2];
-                    var edge22 = customers[edge2 + 1];
+                    if (q1.Equals(q2)) continue;
+                    if (q2.Visit2 == Tour.NOT_SET && q2.Visit3 == Tour.NOT_SET) continue;
 
-                    // calculate existing value of the part 11->21->(reverse)->12->22.
-                    // @ 22: no need to take minimum of window into account, is valid now, will stay valid on reduction of arrival-time.
-                    // completely re-calculate between-backward (because window min may be violated) and determine feasible at the same time.
-                    var feasible = true;
-                    var currentWeight = weight11 + weightFunc(edge11, edge21);
-                    var edge21Windows = windows[edge21];
-                    if (!edge21Windows.IsEmpty && 
-                        edge21Windows.Min > currentWeight)
-                    { // wait here!
-                        currentWeight = edge21Windows.Min;
-                    }
-
-                    var previous = edge21;
-                    for (var i = edge2 - 1; i > edge1; i--)
-                    {
-                        var current = customers[i];
-                        var currentWindow = windows[current];
-                        currentWeight += weightFunc(previous, current);
-                        if (!currentWindow.IsEmpty)
-                        {
-                            if (currentWindow.Min > currentWeight)
-                            { // wait here!
-                                currentWeight = currentWindow.Min;
-                            }
-
-                            if (currentWindow.Max < currentWeight)
-                            { // unfeasible.
-                                feasible = false;
-                                break;
-                            }
-                        }
-
-                        previous = current;
-                    }
-
-                    var potential = currentWeight + weightFunc(edge12, edge22);
-
-                    if (!feasible) continue;
-
-                    // new reverse is feasible.
-                    // calculate existing value of the part 11->12->...->21->22.
-                    // @ 22: no need to take minimum of window into account, is valid now, will stay valid on reduction of arrival-time.
-                    betweenForward += weightFunc(edge20, edge21);
-                    if (betweenForward + weight12 < windows[edge21].Min)
-                    {
-                        // take into account minimum-window constraint.
-                        betweenForward = windows[edge21].Min - weight12;
-                    }
-
-                    var existing = weight12 + betweenForward + weightFunc(edge21, edge22);
-                    if (!(existing > potential)) continue; 
+                    var q2Weight = QuadWeight(q2);
                     
-                    // we found an improvement.
-                    tour.ReplaceEdgeFrom(edge11, edge21);
-                    tour.ReplaceEdgeFrom(edge12, edge22);
-                    for (var i = edge1 + 1; i < edge2; i++)
+                    var q2V2 = DirectedHelper.ExtractVisit(q2.Visit2);
+                    var q2V3 = DirectedHelper.ExtractVisit(q2.Visit3);
+
+                    var costBefore = q1Weight + q2Weight;
+
+                    // calculate cost after
+                    var leastCost = float.MaxValue;
+
+                    Quad? bestQ1 = null;
+                    Quad? bestQ2 = null;
+                    
+                    foreach (var q1T2 in TurnEnumExtensions.All)
+                    foreach (var q1T3 in TurnEnumExtensions.All)
+                    foreach (var q2T2 in TurnEnumExtensions.All)
+                    foreach (var q2T3 in TurnEnumExtensions.All)
                     {
-                        tour.ReplaceEdgeFrom(customers[i + 1], customers[i]);
+                        var q1New = new Quad(q1.Visit1, DirectedHelper.BuildVisit(q2V2, q2T2),
+                            DirectedHelper.BuildVisit(q2V3, q2T3), q1.Visit4);
+                        var q2New = new Quad(q2.Visit1, DirectedHelper.BuildVisit(q1V2, q1T2),
+                            DirectedHelper.BuildVisit(q1V3, q1T3), q2.Visit4);
+                        
+                        var costAfter = QuadWeight(q1New) + QuadWeight(q2New);
+
+                        if (!(costAfter < leastCost)) continue;
+                        
+                        leastCost = costAfter;
+                        bestQ1 = q1New;
+                        bestQ2 = q2New;
                     }
+                    
+                    if (costBefore <= leastCost) continue;
+                    
+                    // take action!
+                    
 
                     return true;
                 }
             }
+            
             return false;
         }
     }

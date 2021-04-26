@@ -296,5 +296,17 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
 
             return undirected;
         }
+
+        internal static float UndirectedWeight(this Func<int, int, float> directedWeightFunc, int visit1, int visit2,
+            Func<(float w00, float w01, float w10, float w11), float>? reduce = null)
+        {
+            reduce ??= ReduceMinimum;
+
+            return reduce((
+                directedWeightFunc(visit1 * 2 + 0, visit2 * 2 + 0),
+                directedWeightFunc(visit1 * 2 + 0, visit2 * 2 + 1),
+                directedWeightFunc(visit1 * 2 + 1, visit2 * 2 + 0),
+                directedWeightFunc(visit1 * 2 + 1, visit2 * 2 + 1)));
+        }
     }
 }

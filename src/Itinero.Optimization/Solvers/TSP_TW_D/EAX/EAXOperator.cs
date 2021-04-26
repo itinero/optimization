@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Itinero.Logging;
+using Itinero.Optimization.Solvers.Shared.Directed;
 using Itinero.Optimization.Solvers.Shared.EAX;
+using Itinero.Optimization.Solvers.Shared.EAX.Directed;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Strategies.GA;
 using Itinero.Optimization.Strategies.Random;
@@ -101,8 +103,8 @@ namespace Itinero.Optimization.Solvers.TSP_TW_D.EAX
             var solution1 = candidate1.Solution;
             var solution2 = candidate2.Solution;
             
-            if (solution1.Last != problem.Last) { throw new ArgumentException("Tour and problem have to have the same last customer."); }
-            if (solution2.Last != problem.Last) { throw new ArgumentException("Tour and problem have to have the same last customer."); }
+            if (DirectedHelper.ExtractVisit(solution1.Last) != DirectedHelper.ExtractVisit(problem.Last)) { throw new ArgumentException("Tour and problem have to have the same last customer."); }
+            if (DirectedHelper.ExtractVisit(solution2.Last) != DirectedHelper.ExtractVisit(problem.Last)) { throw new ArgumentException("Tour and problem have to have the same last customer."); }
 
             var originalProblem = problem;
             var originalSolution1 = solution1;
@@ -113,8 +115,8 @@ namespace Itinero.Optimization.Solvers.TSP_TW_D.EAX
                     "Performance warning: EAX operator cannot be applied to 'open' TSP's, converting problem and tours to a closed equivalent.");
 
                 problem = problem.ClosedEquivalent;
-                solution1 = new Tour(solution1, problem.First);
-                solution2 = new Tour(solution2, problem.First);
+                solution1 = new Tour(solution1, solution1.First);
+                solution2 = new Tour(solution2, solution1.First);
             }
             else if (problem.First != problem.Last)
             { // last is set but is not the same as first.
@@ -124,13 +126,13 @@ namespace Itinero.Optimization.Solvers.TSP_TW_D.EAX
                 problem = problem.ClosedEquivalent;
                 solution1 = new Tour(solution1, problem.First);
                 solution2 = new Tour(solution2, problem.First);
-                solution1.Remove(problem.Last.Value);
-                solution2.Remove(problem.Last.Value);
+                // solution1.Remove(problem.Last.Value);
+                // solution2.Remove(problem.Last.Value);
             }
             
             // call the operation.
-            var nearestNeighbours = _nn ? null : problem.NearestNeighbourCache.GetNNearestNeighboursForward(10);
-            var result = solution1.DoEAXWith(solution2, problem.Weight, _maxOffspring, _strategy, nearestNeighbours);
+            //var nearestNeighbours = _nn ? null : problem.NearestNeighbourCache.GetNNearestNeighboursForward(10);
+            var result = solution1.DoEAXWith(solution2, problem.Weight, problem.TurnPenalty, _maxOffspring, _strategy);
             var best = result.newTour;
             var fitness = result.weight;
             

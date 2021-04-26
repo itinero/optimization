@@ -1,22 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Itinero.Algorithms.Weights;
 using Itinero.Optimization.Solvers.Shared;
 using Itinero.Optimization.Solvers.Shared.Directed;
 using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
-using Itinero.Optimization.Solvers.TSP_TW;
 
 namespace Itinero.Optimization.Solvers.TSP_TW_D
 {
-
     /// <summary>
     /// The TSP.
     /// </summary>
     internal sealed class TSPTWDProblem
     {
-        internal readonly float[][] _weights;
+        private readonly float[][] _weights;
         private readonly float[] _turnPenalties;
         private readonly Lazy<NearestNeighbourCache> _nearestNeighbourCacheLazy;
         private readonly Lazy<TSPTWDProblem> _closedEquivalent;
+        private readonly Lazy<TSP_TW.TSPTWProblem> _undirectedEquivalentLazy;
         private readonly bool _behaveAsClosed = false;
         private readonly int? _last;
         private readonly HashSet<int> _visits;
@@ -62,6 +63,8 @@ namespace Itinero.Optimization.Solvers.TSP_TW_D
                 new NearestNeighbourCache(_weights.Length, (x, y) => _weights[x][y]));
             _closedEquivalent = new Lazy<TSPTWDProblem>(() => 
                 new TSPTWDProblem(this, true));
+            _undirectedEquivalentLazy = new Lazy<TSP_TW.TSPTWProblem>(() => new TSP_TW.TSPTWProblem(this.First, _last, 
+                _weights.ConvertToUndirected(), this.Windows, _visits?.Select(DirectedHelper.ExtractVisit)));
 
             if (visits != null)
             {

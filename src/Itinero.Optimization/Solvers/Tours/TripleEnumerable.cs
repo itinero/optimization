@@ -21,7 +21,7 @@ using System.Collections.Generic;
 namespace Itinero.Optimization.Solvers.Tours
 {
     /// <summary>
-    /// Enumerates all triples in an IRoute.
+    /// Enumerates all triples in a tour.
     /// </summary>
     public class TripleEnumerable : IEnumerable<Triple>
     {
@@ -31,7 +31,7 @@ namespace Itinero.Optimization.Solvers.Tours
         /// Creates a new triple enumerable.
         /// </summary>
         /// <param name="tour">The tour to enumerate triples from</param>
-        /// <param name="wrapAround">If true and the tour is a closed way, also inlcude the triples (x, last, first) and (last, first, y)</param>
+        /// <param name="wrapAround">If true and the tour is a closed way, also include the triples (x, last, first) and (last, first, y)</param>
         public TripleEnumerable(Tour tour, bool wrapAround)
         {
             _tour = tour;

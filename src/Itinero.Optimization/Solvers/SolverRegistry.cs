@@ -41,6 +41,7 @@ namespace Itinero.Optimization.Solvers
             CVRP_ND.CVRPNDSolverHook.Default,
             CVRP.CVRPSolverHook.Default,
             STSP.STSPSolverHook.Default,
+            TSP_TW_D.TSPTWDSolverHook.Default,
             TSP_TW.TSPTWSolverHook.Default,
             TSP_D.TSPDSolverHook.Default,
             TSP.TSPSolverHook.Default

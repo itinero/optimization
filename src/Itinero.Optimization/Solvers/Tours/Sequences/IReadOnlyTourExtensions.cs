@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Itinero.Optimization.Strategies.Random;
 
 namespace Itinero.Optimization.Solvers.Tours.Sequences
@@ -236,6 +237,18 @@ namespace Itinero.Optimization.Solvers.Tours.Sequences
                 return null;
             }
             return new ReadOnlyTourWithoutSequence(tour, remove);
+        }
+
+        /// <summary>
+        /// Enumerates all sequences of the given size in the tour. 
+        /// </summary>
+        /// <param name="tour">The tour.</param>
+        /// <param name="size">The size of the sequences.</param>
+        /// <param name="loopAround">Loop around the start of the tour if it's closed.</param>
+        /// <returns>An enumerable of all the sequences.</returns>
+        public static IEnumerable<int[]> Sequences(this IReadOnlyTour tour, int size, bool loopAround = true)
+        {
+            return new SequenceEnumerable(tour, tour.IsClosed(), size);
         }
     }
 }

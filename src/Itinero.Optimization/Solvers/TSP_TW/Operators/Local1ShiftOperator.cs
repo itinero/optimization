@@ -37,10 +37,9 @@ namespace Itinero.Optimization.Solvers.TSP_TW.Operators
             
             candidate.Fitness = candidate.Solution.Fitness(candidate.Problem);
             return true;
-
         }
         
-        private static readonly ThreadLocal<Local1ShiftOperator> DefaultLazy = new ThreadLocal<Local1ShiftOperator>(() => new Local1ShiftOperator());
+        private static readonly ThreadLocal<Local1ShiftOperator> DefaultLazy = new (() => new Local1ShiftOperator());
         public static Local1ShiftOperator Default => DefaultLazy.Value;
     }
 }

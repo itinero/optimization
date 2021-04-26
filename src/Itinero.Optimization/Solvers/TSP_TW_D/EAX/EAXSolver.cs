@@ -8,7 +8,6 @@ using Itinero.Optimization.Strategies.Tools.Selectors;
 
 namespace Itinero.Optimization.Solvers.TSP_TW_D.EAX
 {
-
     /// <summary>
     /// A solver using a GA and the edge-assembly crossover.
     /// </summary> 
@@ -26,7 +25,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW_D.EAX
             mutation ??= new Operator<Candidate<TSPTWDProblem, Tour>>[]
             {
                 Random1ShiftPerturber.Default,
-                Local2OptOperator.Default, 
+                //Local2OptOperator.Default, 
             }.ApplyRandom();
             settings ??= new GASettings()
             {

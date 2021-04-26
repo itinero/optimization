@@ -31,6 +31,20 @@ namespace Itinero.Optimization.Solvers.Tours
         }
         
         /// <summary>
+        /// Gets an enumerable enumerating quadruples in the tour.
+        /// </summary>
+        /// <param name="tour">A tour.</param>
+        /// <param name="wrapAround">When true, and the tour is closed, wrap around start.</param>
+        /// <param name="includePartials">When true, and the tour is open, wrap around start but fills open entries with Tour.NOT_SET.</param>
+        /// <returns>An enumerable enumerating quadruples.</returns>
+        public static IEnumerable<Quad> Quadruplets(this IReadOnlyTour tour, bool wrapAround = true, bool includePartials = false)
+        {
+            if (tour.IsClosed())  return new QuadEnumerable(tour, wrapAround, includePartials);
+            
+            return new QuadEnumerable(tour, false, includePartials);
+        }
+        
+        /// <summary>
         /// Calculates the total weight.
         /// </summary>
         /// <param name="tour">The tour.</param>
