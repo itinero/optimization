@@ -34,6 +34,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW_D
             try
             {
                 var solution = EAX.EAXSolver.Default.Search(tsptw.Value);
+
                 return new Result<IEnumerable<(int vehicle, IEnumerable<int> tour)>>(
                     (new (int vehicle, IEnumerable<int> tour) [] { (0, solution.Solution) }));
             }

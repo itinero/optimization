@@ -36,7 +36,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW_D
                 {
                     Problem = problem,
                     Solution = tour,
-                    Fitness = tour.Weight(problem.Weight)
+                    Fitness = tour.Fitness(problem)
                 };
             }
             else
@@ -79,7 +79,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW_D
                 {
                     Problem = problem,
                     Solution = tour,
-                    Fitness = tour.WeightDirected(problem.Weight, problem.TurnPenalty)
+                    Fitness = tour.Fitness(problem)
                 };
             }
         }

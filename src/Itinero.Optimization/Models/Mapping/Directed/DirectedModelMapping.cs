@@ -6,6 +6,7 @@ using Itinero.Algorithms.Matrices;
 using Itinero.Algorithms.Search;
 using Itinero.Algorithms.Weights;
 using Itinero.Data.Network;
+using Itinero.Optimization.Models.TimeWindows;
 using Itinero.Optimization.Solvers.Shared.Directed;
 
 namespace Itinero.Optimization.Models.Mapping.Directed
@@ -149,14 +150,26 @@ namespace Itinero.Optimization.Models.Mapping.Directed
             var pairFromEdgeId = _weightMatrixAlgorithm.Router.Db.Network.GetEdges(pairFromDepartureId.From.Vertex).First(x => x.To == pairFromDepartureId.Vertex).IdDirected();
             var pairToEdgeId = _weightMatrixAlgorithm.Router.Db.Network.GetEdges(pairToArrivalId.Vertex).First(x => x.To == pairToArrivalId.From.Vertex).IdDirected();
 
-            var pairFromId = DirectedHelper.ExtractVisit(directedVisit1);
-            var pairToId = DirectedHelper.ExtractVisit(directedVisit2);
+            var visit1 = DirectedHelper.ExtractVisit(directedVisit1);
+            var visit2 = DirectedHelper.ExtractVisit(directedVisit2);
             
-            var fromRouterPoint = _weightMatrixAlgorithm.RouterPoints[pairFromId];
-            var toRouterPoint = _weightMatrixAlgorithm.RouterPoints[pairToId];
+            var visit1Stop = _weightMatrixAlgorithm.RouterPoints[visit1];
+            var visit2Stop = _weightMatrixAlgorithm.RouterPoints[visit2];
 
-            fromRouterPoint.Attributes.AddOrReplace("order", directedVisit1Index.ToInvariantString());
-            toRouterPoint.Attributes.AddOrReplace("order", directedVisit2Index.ToInvariantString());
+            visit1Stop.Attributes.AddOrReplace("order", directedVisit1Index.ToInvariantString());
+            visit2Stop.Attributes.AddOrReplace("order", directedVisit2Index.ToInvariantString());
+            
+            var visit1TimeWindow = _mappedModel.Visits[visit1].TimeWindow;
+            if (visit1TimeWindow != null && !visit1TimeWindow.IsEmpty)
+            {
+                visit1Stop.Attributes.AddOrReplace("time_window", visit1TimeWindow.ToJsonArray());
+            }
+            
+            var visit2TimeWindow = _mappedModel.Visits[visit2].TimeWindow;
+            if (visit2TimeWindow != null && !visit2TimeWindow.IsEmpty)
+            {
+                visit2Stop.Attributes.AddOrReplace("time_window", visit2TimeWindow.ToJsonArray());
+            }
             
             var localRouteRawResult = _weightMatrixAlgorithm.Router.TryCalculateRaw(_weightMatrixAlgorithm.Profile, weightHandler, pairFromEdgeId, pairToEdgeId, null);
             if (localRouteRawResult.IsError)
@@ -168,7 +181,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
             localRouteRaw.StripSource();
             localRouteRaw.StripTarget();
 
-            var localRoute = _weightMatrixAlgorithm.Router.BuildRoute(_weightMatrixAlgorithm.Profile, weightHandler, fromRouterPoint, toRouterPoint, localRouteRaw);
+            var localRoute = _weightMatrixAlgorithm.Router.BuildRoute(_weightMatrixAlgorithm.Profile, weightHandler, visit1Stop, visit2Stop, localRouteRaw);
             
             route = route == null ? localRoute.Value : route.Concatenate(localRoute.Value);
             return new Result<Route>(route);

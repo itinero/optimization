@@ -64,7 +64,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW_D
             if (tour.First == tour.Last &&
                 previous != Tour.NOT_SET)
             {
-                var weight = problem.Weight(DirectedHelper.ExtractDepartureWeightId(previous), DirectedHelper.ExtractDepartureWeightId(tour.First));
+                var weight = problem.Weight(DirectedHelper.ExtractDepartureWeightId(previous), DirectedHelper.ExtractArrivalWeightId(tour.First));
                 travelTime += weight;
             }
 

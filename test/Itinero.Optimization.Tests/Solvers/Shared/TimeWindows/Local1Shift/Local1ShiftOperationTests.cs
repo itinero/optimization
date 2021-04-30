@@ -31,7 +31,7 @@ namespace Itinero.Optimization.Tests.Solvers.Shared.TimeWindows.Local1Shift
         [Fact]
         public void Local1ShiftOperation_ShouldMoveViolatedBackward()
         {
-            var weights = WeightMatrixHelpers.Build(5, 2);
+            var weights = WeightMatrixHelpers.Build(5, 2); 
             var windows = new TimeWindow[5];
             windows[2] = new TimeWindow()
             {
