@@ -43,7 +43,7 @@ namespace Itinero.Optimization.Models.Mapping.Directed
             var metric = model.VehiclePool.Vehicles[0].Metric; // this exists because the model was validated.
             var profileName = model.VehiclePool.Vehicles[0].Profile;
             var oneVehicleWithTurnPenalty = model.VehiclePool.Vehicles[0].TurnPentalty > 0;
-            for (var v = 1; v < model.VehiclePool.Vehicles.Length; v++)
+            for (var v = 0; v < model.VehiclePool.Vehicles.Length; v++)
             {
                 var vehicle = model.VehiclePool.Vehicles[v];
                 if (vehicle.Metric != metric)
