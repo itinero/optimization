@@ -44,6 +44,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
             {
                 Random1ShiftPerturber.Default,
                 Local2OptOperator.Default, 
+                Local1ShiftOperator.Default, 
             }.ApplyRandom();
             settings ??= new GASettings()
             {
@@ -70,7 +71,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
                 Logger.Log($"{typeof(EAXSolver)}.{nameof(Search)}", TraceEventType.Warning,
                     "Performance warning: EAX solver cannot be applied to 'open' TSPs, converting problem to a closed equivalent.");
 
-                var convertedProblem = problem.ClosedEquivalent;
+                var convertedProblem = problem.OpenEquivalent;
                 var convertedCandidate = _gaStrategy.Search(convertedProblem);
                 
                 // TODO: instead of recalculating the fitness value *should* be identical, confirm this with more testing.

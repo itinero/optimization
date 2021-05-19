@@ -130,7 +130,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW.EAX
                 Logger.Log($"{typeof(EAXOperator)}.{nameof(Apply)}", TraceEventType.Warning,
                     "Performance warning: EAX operator cannot be applied to 'open' TSP's, converting problem and tours to a closed equivalent.");
 
-                problem = problem.ClosedEquivalent;
+                problem = problem.OpenEquivalent;
                 solution1 = new Tour(solution1, problem.First);
                 solution2 = new Tour(solution2, problem.First);
             }

@@ -60,16 +60,16 @@ namespace Itinero.Optimization.Tests.Functional.TSP_TW_D
                     router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, 0, turnPenalty: 60),
                         visits, out _, intermediateRoutesFunc));
             func.RunWithIntermediates("TSP-TW-D-" + "problem2-closed");
-            func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
-                (intermediateRoutesFunc) =>
-                    router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, visits.Length - 1, turnPenalty: 60),
-                        visits, out _, intermediateRoutesFunc));
-            func.RunWithIntermediates("TSP-TW-D-" + "problem2-fixed");
-            func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
-                (intermediateRoutesFunc) =>
-                    router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, null, turnPenalty: 60),
-                        visits, out _, intermediateRoutesFunc));
-            func.RunWithIntermediates("TSP-TW-D-" + "problem2-open");
+            // func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+            //     (intermediateRoutesFunc) =>
+            //         router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, visits.Length - 1, turnPenalty: 60),
+            //             visits, out _, intermediateRoutesFunc));
+            // func.RunWithIntermediates("TSP-TW-D-" + "problem2-fixed");
+            // func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+            //     (intermediateRoutesFunc) =>
+            //         router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, null, turnPenalty: 60),
+            //             visits, out _, intermediateRoutesFunc));
+            // func.RunWithIntermediates("TSP-TW-D-" + "problem2-open");
         }
     }
 }

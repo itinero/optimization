@@ -37,8 +37,8 @@ namespace Itinero.Optimization.Tests.Functional
             // // invoke case-specific tests.
             // TSP.TSPTests.Run();
             // TSP_D.TSPDTests.Run();
-            // TSP_TW.TSPTWTests.Run();
-            TSP_TW_D.TSPTWDTests.Run();
+            TSP_TW.TSPTWTests.Run();
+            // TSP_TW_D.TSPTWDTests.Run();
             // STSP.STSPTests.Run();
             // CVRP.CVRPTests.Run();
             // CVRP_ND.CVRPNDTests.Run();
@@ -66,7 +66,7 @@ namespace Itinero.Optimization.Tests.Functional
 #if RELEASE
                 if (level == "verbose")
                 {
-                    return;
+                    //return;
                 }
 #endif
                 if (loggingBlacklist.Contains(o))
@@ -104,7 +104,7 @@ namespace Itinero.Optimization.Tests.Functional
 #if RELEASE
                 if (level == "verbose")
                 {
-                    return;
+                    //return;
                 }
 #endif
                 if (loggingBlacklist.Contains(o))

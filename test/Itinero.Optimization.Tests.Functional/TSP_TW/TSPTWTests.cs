@@ -30,8 +30,9 @@ namespace Itinero.Optimization.Tests.Functional.TSP_TW
         /// </summary>
         public static void Run()
         {
-            RunProblem1();
-            RunProblem2();
+            // RunProblem1();
+            // RunProblem2();
+            RunProblem3();
         }
 
         private static void RunProblem1()
@@ -86,6 +87,32 @@ namespace Itinero.Optimization.Tests.Functional.TSP_TW
                     router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, null),
                         visits, out _, intermediateRoutesFunc));
             func.RunWithIntermediates("TSP-TW-" + "problem2-open");
+        }
+        
+        private static void RunProblem3()
+        {
+            var wechelderzande = Staging.RouterDbBuilder.Build("query1");
+            var router = new Router(wechelderzande);
+
+            // get test visits from geojson.
+            var visits = Staging.StagingHelpers.GetVisits(
+                Staging.StagingHelpers.GetFeatureCollection("TSP_TW.data.problem3.geojson"));
+
+            var func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+                (intermediateRoutesFunc) =>
+                    router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, 0),
+                        visits, out _, intermediateRoutesFunc));
+            func.RunWithIntermediates("TSP-TW-" + "problem3-closed");
+            func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+                (intermediateRoutesFunc) =>
+                    router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, visits.Length - 1),
+                        visits, out _, intermediateRoutesFunc));
+            func.RunWithIntermediates("TSP-TW-" + "problem3-fixed");
+            func = new Func<Action<IEnumerable<Result<Route>>>, IEnumerable<Result<Route>>>(
+                (intermediateRoutesFunc) =>
+                    router.Optimize(VehiclePool.FromProfile(router.Db.GetSupportedProfile("car"), 0, null),
+                        visits, out _, intermediateRoutesFunc));
+            func.RunWithIntermediates("TSP-TW-" + "problem3-open");
         }
     }
 }

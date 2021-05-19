@@ -2,31 +2,61 @@
 using System.Collections.Generic;
 using Itinero.Optimization.Solvers.Shared;
 using Itinero.Optimization.Solvers.Shared.NearestNeighbours;
+using Itinero.Optimization.Solvers.Tours;
 
 namespace Itinero.Optimization.Solvers.TSP_TW
 {
     /// <summary>
-    /// The TSP.
+    /// The TSP-TW problem.
     /// </summary>
     internal sealed class TSPTWProblem
     {
-        internal readonly float[][] _weights;
+        private readonly float[][] _weights;
         private readonly Lazy<NearestNeighbourCache> _nearestNeighbourCacheLazy;
         private readonly Lazy<TSPTWProblem> _closedEquivalent;
-        private readonly bool _behaveAsClosed = false;
+        private readonly Lazy<TSPTWProblem> _openEquivalent;
+        private readonly TourTypeEnum _behaveAs = TourTypeEnum.Fixed;
         private readonly int? _last;
         private readonly HashSet<int> _visits;
+        private readonly TimeWindow[] _timeWindows;
+
+        private TimeWindow[]? _closedTimeWindows;
         
-        private TSPTWProblem(TSPTWProblem other, bool behaveAsClosed)
+        private TSPTWProblem(TSPTWProblem other, TourTypeEnum behaveAs)
         {
             _weights = other._weights;
             _nearestNeighbourCacheLazy = other._nearestNeighbourCacheLazy;
             _visits = other._visits;
             this.First = other.First;
             _last = other._last;
-            this.Windows = other.Windows; 
+            _timeWindows = other._timeWindows; 
             
-            _behaveAsClosed = behaveAsClosed;
+            _behaveAs = behaveAs;
+
+            if (_behaveAs == TourTypeEnum.Closed)
+            {
+                _closedTimeWindows = other._timeWindows.SubArray(0, other._timeWindows.Length - 1);
+            }
+            
+            if (_behaveAs == TourTypeEnum.Closed)
+            {
+                _closedEquivalent = new Lazy<TSPTWProblem>(() => this);
+                _openEquivalent = new Lazy<TSPTWProblem>(() => 
+                    new TSPTWProblem(this, TourTypeEnum.Open));
+            }
+            else if (_behaveAs == TourTypeEnum.Open)
+            {
+                _closedEquivalent = new Lazy<TSPTWProblem>(() => 
+                    new TSPTWProblem(this, TourTypeEnum.Closed));
+                _openEquivalent = new Lazy<TSPTWProblem>(() => this);
+            }
+            else
+            {
+                _closedEquivalent = new Lazy<TSPTWProblem>(() => 
+                    new TSPTWProblem(this, TourTypeEnum.Closed));
+                _openEquivalent = new Lazy<TSPTWProblem>(() => 
+                    new TSPTWProblem(this, TourTypeEnum.Open));
+            }
         }
         
         /// <summary>
@@ -45,12 +75,15 @@ namespace Itinero.Optimization.Solvers.TSP_TW
             this.First = first;
             _last = last;
             _weights = weights;
-            this.Windows = windows;
-            
+            _timeWindows = windows;
+
+            _behaveAs = TourTypeEnum.Fixed;
             _nearestNeighbourCacheLazy = new Lazy<NearestNeighbourCache>(() =>
                 new NearestNeighbourCache(_weights.Length, (x, y) => _weights[x][y]));
             _closedEquivalent = new Lazy<TSPTWProblem>(() => 
-                new TSPTWProblem(this, true));
+                new TSPTWProblem(this, TourTypeEnum.Closed));
+            _openEquivalent = new Lazy<TSPTWProblem>(() => 
+                new TSPTWProblem(this, TourTypeEnum.Open));
 
             if (visits != null)
             {
@@ -75,7 +108,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW
         /// </summary>
         public float Weight(int from, int to)
         {
-            if (_behaveAsClosed)
+            if (_behaveAs != TourTypeEnum.Fixed)
             {
                 if (!_last.HasValue && to == this.First)
                 { // make sure all costs to 'first' are '0'.
@@ -99,7 +132,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW
         /// <returns>True if this visit is part of this problem.</returns>
         public bool Contains(int visit)
         {
-            if (_behaveAsClosed &&
+            if (_behaveAs != TourTypeEnum.Fixed &&
                 _last.HasValue &&
                 visit == _last)
             {
@@ -120,7 +153,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW
             get
             {
                 var visits = _visits ?? System.Linq.Enumerable.Range(0, _weights.Length);
-                if (_behaveAsClosed)
+                if (_behaveAs != TourTypeEnum.Fixed)
                 {
                     foreach (var visit in visits)
                     {
@@ -154,7 +187,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW
         {
             get
             {
-                if (_behaveAsClosed)
+                if (_behaveAs != TourTypeEnum.Fixed)
                 {
                     return this.First;
                 }
@@ -165,7 +198,16 @@ namespace Itinero.Optimization.Solvers.TSP_TW
         /// <summary>
         /// Gets the windows.
         /// </summary>
-        public TimeWindow[] Windows { get; private set; }
+        public TimeWindow[] Windows
+        {
+            get
+            {
+                if (_behaveAs is TourTypeEnum.Fixed or TourTypeEnum.Open)
+                    return _timeWindows;
+
+                return _closedTimeWindows;
+            }
+        }
 
         /// <summary>
         /// Gets the number of visits.
@@ -176,7 +218,7 @@ namespace Itinero.Optimization.Solvers.TSP_TW
             {
                 var count = _weights.Length;
                 if (_visits != null) count = _visits.Count;
-                if (_behaveAsClosed &&
+                if (_behaveAs != TourTypeEnum.Fixed &&
                     _last.HasValue)
                 {
                     count--;
@@ -199,17 +241,11 @@ namespace Itinero.Optimization.Solvers.TSP_TW
         /// <summary>
         /// Gets the closed equivalent of this problem.
         /// </summary>
-        internal TSPTWProblem ClosedEquivalent
-        {
-            get
-            {
-                if (this.First != this.Last)
-                {
-                    return _closedEquivalent.Value;
-                }
+        internal TSPTWProblem ClosedEquivalent => _closedEquivalent.Value;
 
-                return this;
-            }
-        }
+        /// <summary>
+        /// Gets the open equivalent of this problem.
+        /// </summary>
+        internal TSPTWProblem OpenEquivalent => _openEquivalent.Value;
     }
 }

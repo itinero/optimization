@@ -39,7 +39,7 @@ namespace Itinero.Optimization.Strategies.Random
             this.Name = "RAN";
             foreach (var t in _operators)
             {
-                this.Name += $"_{t}";
+                this.Name += $"_{t.Name}";
             }
         }
 

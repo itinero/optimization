@@ -185,11 +185,11 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
         {
             var previous = Tour.NOT_SET;
             var time = 0f;
-            var valids = new List<Tuple<int, int>>(); // al list of customer-position pairs.
+            var valids = new List<(int visit, int position)>();
             var fitness = 0f;
             var position = 0;
 
-            // search for invalid customers.
+            // search for valid customers with time window.
             using (var enumerator = tour.GetEnumerator())
             {
                 while (enumerator.MoveNext())
@@ -213,7 +213,7 @@ namespace Itinero.Optimization.Solvers.Shared.TimeWindows.Local1Shift
                         if (enumerator.Current != tour.Last)
                         {
                             // when the last customer is fixed, don't try to relocate.
-                            valids.Add(new Tuple<int, int>(enumerator.Current, position));
+                            valids.Add((enumerator.Current, position));
                         }
                     }
 
