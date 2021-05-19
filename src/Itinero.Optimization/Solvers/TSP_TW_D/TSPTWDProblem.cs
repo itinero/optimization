@@ -91,14 +91,18 @@ namespace Itinero.Optimization.Solvers.TSP_TW_D
         {
             if (_behaveAsClosed)
             {
-                if (!_last.HasValue && to == this.First)
+                var toDetails = DirectedHelper.WeightIdToVisit(to);
+                if (!_last.HasValue && toDetails.visit == this.First)
                 { // make sure all costs to 'first' are '0'.
                     return 0;
                 }
                 else if (_last.HasValue && _last != this.First)
                 { // first and last are different.
                     // pretend '-> first' is '-> last' and remove last altogether.
-                    if (to == this.First) to = _last.Value;
+                    if (toDetails.visit == this.First)
+                    {
+                        to = DirectedHelper.WeightId(_last.Value, toDetails.direction);
+                    }
 
                     return _weights[from][to];
                 }

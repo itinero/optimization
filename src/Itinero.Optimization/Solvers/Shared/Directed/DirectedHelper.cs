@@ -80,6 +80,16 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
             var extracted = Extract(directedVisit);
             return WeightId(extracted.visit, extracted.turn.Departure());
         }
+        
+        /// <summary>
+        /// Extracts direction and visit from weight id.
+        /// </summary>
+        /// <param name="weightId">The weight id.</param>
+        /// <returns>The visit and direction.</returns>
+        public static (int visit, DirectionEnum direction) WeightIdToVisit(int weightId)
+        {
+            return ((weightId - (weightId % 2)) / 2, (DirectionEnum)(weightId % 2));
+        }
 
         /// <summary>
         /// Builds a directed visit from the given visit and it's turn.

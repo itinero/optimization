@@ -1,5 +1,6 @@
 using System.Threading;
 using Itinero.Logging;
+using Itinero.Optimization.Solvers.Shared.Directed;
 using Itinero.Optimization.Solvers.Tours;
 using Itinero.Optimization.Solvers.TSP_TW_D.Operators;
 using Itinero.Optimization.Strategies;
@@ -73,15 +74,16 @@ namespace Itinero.Optimization.Solvers.TSP_TW_D.EAX
                 var convertedProblem = problem.ClosedEquivalent;
                 var convertedCandidate = _gaStrategy.Search(convertedProblem);
                 
-                // TODO: instead of recalculating the fitness adjust it to match the difference by adding last->problem.last.
                 var tour = convertedCandidate.Solution;
-                tour.InsertAfter(System.Linq.Enumerable.Last(tour), problem.Last.Value);
-                tour = new Tour(tour, problem.Last.Value);
+                var lastInTour = System.Linq.Enumerable.Last(tour);
+                var newLast = DirectedHelper.BuildVisit(problem.Last.Value, DirectedHelper.ExtractTurn(tour.First));
+                tour.InsertAfter(lastInTour, newLast);
+                tour = new Tour(tour, newLast);
                 return new Candidate<TSPTWDProblem, Tour>()
                 {
                     Problem = problem,
                     Solution = tour,
-                    Fitness = tour.Fitness(problem)
+                    Fitness = tour.Fitness(problem),
                 };
             }
             else
