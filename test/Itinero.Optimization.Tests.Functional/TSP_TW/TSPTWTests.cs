@@ -30,8 +30,8 @@ namespace Itinero.Optimization.Tests.Functional.TSP_TW
         /// </summary>
         public static void Run()
         {
-            // RunProblem1();
-            // RunProblem2();
+            RunProblem1();
+            RunProblem2();
             RunProblem3();
         }
 
