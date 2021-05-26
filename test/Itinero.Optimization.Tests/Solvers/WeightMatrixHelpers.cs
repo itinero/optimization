@@ -157,5 +157,23 @@ namespace Itinero.Optimization.Tests.Solvers
             weights[from * 2 + 1][to * 2 + 0] = weight;
             weights[from * 2 + 1][to * 2 + 1] = weight;
         }
+        
+        /// <summary>
+        /// Sets all 4 directed weights.
+        /// </summary>
+        /// <param name="weights">The directed weights.</param>
+        /// <param name="from">The from visit.</param>
+        /// <param name="to">The to visit.</param>
+        /// <param name="bb">The weight.</param>
+        /// <param name="bf">The weight.</param>
+        /// <param name="fb">The weight.</param>
+        /// <param name="ff">The weight.</param>
+        internal static void SetDirectedWeights(this float[][] weights, int from, int to, float? bb = null, float? bf = null, float? fb = null, float? ff = null)
+        {
+            if (ff.HasValue) weights[from * 2 + 0][to * 2 + 0] = ff.Value;
+            if (fb.HasValue) weights[from * 2 + 0][to * 2 + 1] = fb.Value;
+            if (bf.HasValue) weights[from * 2 + 1][to * 2 + 0] = bf.Value;
+            if (bb.HasValue) weights[from * 2 + 1][to * 2 + 1] = bb.Value;
+        }
     }
 }

@@ -209,15 +209,13 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW
             problem = problem.ClosedEquivalent; 
             
             Assert.NotNull(problem.Windows);
-            Assert.Equal(4, problem.Windows.Length);
+            Assert.Equal(3, problem.Windows.Length);
             Assert.Equal(original.Windows[0].Min, problem.Windows[0].Min);
             Assert.Equal(original.Windows[0].Max, problem.Windows[0].Max);
             Assert.Equal(original.Windows[1].Min, problem.Windows[1].Min);
             Assert.Equal(original.Windows[1].Max, problem.Windows[1].Max);
             Assert.Equal(original.Windows[2].Min, problem.Windows[2].Min);
             Assert.Equal(original.Windows[2].Max, problem.Windows[2].Max);
-            Assert.Equal(original.Windows[3].Min, problem.Windows[3].Min);
-            Assert.Equal(original.Windows[3].Max, problem.Windows[3].Max);
         }
 
         /// <summary>
@@ -286,7 +284,7 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW
         } 
 
         /// <summary>
-        /// Tests the windows of the 'closed' equivalent of an a 'fixed' TSP-TW problem.
+        /// Tests the windows of the 'closed' equivalent of a 'fixed' TSP-TW problem.
         /// </summary>
         [Fact]
         public void TSPTWProblem_ClosedEquivalentForFixedProblemWindows()
@@ -316,20 +314,18 @@ namespace Itinero.Optimization.Tests.Solvers.TSP_TW
                 }
             });
             
-            // the stuff happens with the weights here but the timewindows should stay identical.
+            // the stuff happens with the weights here but the time windows should stay identical.
             var original = problem;
             problem = problem.ClosedEquivalent; 
             
             Assert.NotNull(problem.Windows);
-            Assert.Equal(4, problem.Windows.Length);
+            Assert.Equal(3, problem.Windows.Length);
             Assert.Equal(original.Windows[0].Min, problem.Windows[0].Min);
             Assert.Equal(original.Windows[0].Max, problem.Windows[0].Max);
             Assert.Equal(original.Windows[1].Min, problem.Windows[1].Min);
             Assert.Equal(original.Windows[1].Max, problem.Windows[1].Max);
             Assert.Equal(original.Windows[2].Min, problem.Windows[2].Min);
             Assert.Equal(original.Windows[2].Max, problem.Windows[2].Max);
-            Assert.Equal(original.Windows[3].Min, problem.Windows[3].Min);
-            Assert.Equal(original.Windows[3].Max, problem.Windows[3].Max);
         }
     }
 }

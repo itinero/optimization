@@ -26,12 +26,11 @@ namespace Itinero.Optimization.Solvers.TSP_TW_D.EAX
             mutation ??= new Operator<Candidate<TSPTWDProblem, Tour>>[]
             {
                 Random1ShiftPerturber.Default,
-                //Local2OptOperator.Default, 
+                Local2OptOperator.Default, 
             }.ApplyRandom();
             settings ??= new GASettings()
             {
-                PopulationSize = 100,
-                StagnationCount = 100
+                PopulationSize = 100
             };
             var crossOver = EAXOperator.Default;
             

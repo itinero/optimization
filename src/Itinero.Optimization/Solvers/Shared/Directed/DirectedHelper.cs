@@ -158,6 +158,17 @@ namespace Itinero.Optimization.Solvers.Shared.Directed
         {
             return (TurnEnum)(directedVisit % 4);
         }
+
+        /// <summary>
+        /// Overwrites the turn part of the given directed visit.
+        /// </summary>
+        /// <param name="directedVisit">The directed visit.</param>
+        /// <param name="turn">The turn.</param>
+        /// <returns>The new directed visit.</returns>
+        public static int OverwriteTurn(int directedVisit, TurnEnum turn)
+        {
+            return BuildVisit(ExtractVisit(directedVisit), turn);
+        }
         
         /// <summary>
         /// Extracts the turn and id.

@@ -58,5 +58,18 @@ namespace Itinero.Optimization.Tests.Solvers.Tours
             Assert.Equal(new Quad(2,3,Tour.NOT_SET,Tour.NOT_SET), s[5]);
             Assert.Equal(new Quad(3,Tour.NOT_SET,Tour.NOT_SET,Tour.NOT_SET), s[6]);
         }
+        
+        [Fact]
+        public void Tour_Quadruplets_6TourOpen_TreeQuadruplets()
+        {
+            var tour = new Tour(new [] {0, 1, 2, 3, 4, 5}, null);
+
+            var s = tour.Quadruplets().ToList();
+            Assert.NotNull(s);
+            Assert.Equal(3, s.Count);
+            Assert.Equal(new Quad(0,1,2,3), s[0]);
+            Assert.Equal(new Quad(1,2,3,4), s[1]);
+            Assert.Equal(new Quad(2,3,4,5), s[2]);
+        }
     }
 }

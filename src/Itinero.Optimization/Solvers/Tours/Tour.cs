@@ -365,6 +365,8 @@ namespace Itinero.Optimization.Solvers.Tours
         /// <returns></returns>
         public int Next(int visit)
         {
+            if (visit < 0 || visit >= _nextArray.Length) throw new IndexOutOfRangeException();
+            
             return _nextArray[visit];
         }
 
@@ -488,9 +490,9 @@ namespace Itinero.Optimization.Solvers.Tours
         /// Returns an enumerable that enumerates all visit pairs that occur in the tour as 1->2. If the tour is a round the pair that contains last->first is also included.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Pair> Pairs()
+        public IEnumerable<Pair> Pairs(int start = Tour.NOT_SET)
         {
-            return new PairEnumerable<Tour>(this, _first == _last);
+            return new PairEnumerable<Tour>(this, _first == _last, start);
         }
 
         /// <summary>
